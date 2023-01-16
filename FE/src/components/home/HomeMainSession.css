@@ -1,0 +1,12 @@
+.main-session {    
+    height: 350px;
+    width: auto;
+
+    background-color: black;
+    color: white;
+}
+
+.main-word {
+    padding-top: 25px;
+    margin-left: 5%;
+}
