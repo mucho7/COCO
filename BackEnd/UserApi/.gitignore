@@ -37,3 +37,8 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### log files ###
+*.log
+*.gz
+*.tar
