@@ -24,4 +24,4 @@
 * IDE checkStyle 컨벤션은 naver-checkStyle을 사용. 전체적인 내용은 링크 참조
 https://bestinu.tistory.com/64
 
-* 개발 파트별, 깃 커밋에 대한 컨벤션은 각각 code.md, git.md를 참조
+* 개발 파트별, 깃 커밋에 대한 컨벤션은 각각 code.md, front.md, git.md를 참조
