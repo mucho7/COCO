@@ -15,7 +15,7 @@
 회원관리 | https://blush-reptile-206.notion.site/0fbf39da35aa400cb4919564a84789f9
 세션 | https://secretive-chauffeur-592.notion.site/webrtc-6cec018cd2654c2a87ad203d955d0c79
 게시판 | 
-세션 기능 | https://www.notion.so/417dbf6546434b3bb8406a62d40f4b82
+세션 기능 | https://rural-hell-1ab.notion.site/417dbf6546434b3bb8406a62d40f4b82
 
 
 # erd 다이어그램
