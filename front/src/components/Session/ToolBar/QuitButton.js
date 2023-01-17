@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
 const Button = styled.button`
-  border: 1px solid purple;
+  border: 1px solid #FCA311;
+  background-color: #FCA311;
   border-radius: 50%;
   height: 50px;
   width: 50px;
@@ -10,7 +11,7 @@ const Button = styled.button`
 function QuitButton(props) {
   return (
     <Button>
-      7
+      종료
     </Button>
   );
 }

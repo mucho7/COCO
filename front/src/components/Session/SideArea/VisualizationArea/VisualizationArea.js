@@ -1,6 +1,9 @@
 import styled from "styled-components";
 
-import VisualizationTitleBar from "./VisualizationAreaTitleBar";
+import VisualizationAreaTitleBar from "./VisualizationAreaTitleBar";
+import VisualizationForm from "./VisualizationForm";
+import VisualizationResult from "./VisualizationResult";
+import { useSelector } from "react-redux";
 
 
 const VisualizationAreaDiv = styled.div`
@@ -12,11 +15,14 @@ const VisualizationAreaDiv = styled.div`
   width: 100%;
 `;
 
+
 function VisualizationArea(props) {
+  const isFormOn = useSelector((state) => state.visualization.isFormOn);
+
   return (
     <VisualizationAreaDiv>
-      <VisualizationTitleBar />
-      <h1>Visualization Area</h1>
+      <VisualizationAreaTitleBar />
+      {isFormOn === true ? <VisualizationForm /> : <VisualizationResult />}
     </VisualizationAreaDiv>
   );
 }

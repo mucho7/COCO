@@ -1,17 +1,22 @@
-import styled from "styled-components";
+import { CustomButton } from "./ToolBar";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { onClickAuthorizationSettingButton } from "../../../store/authorizationSettingSlice";
 
-const Button = styled.button`
-  border: 1px solid purple;
-  border-radius: 50%;
-  height: 50px;
-  width: 50px;
-`;
 
 function AuthorizationButton(props) {
+  const [on, setOn] = useState(false)
+  const dispatch = useDispatch();
   return (
-    <Button>
-      5
-    </Button>
+    <CustomButton 
+      onClick={() => {
+        setOn(!on);
+        dispatch(onClickAuthorizationSettingButton());
+        }} 
+      on={on}
+    >
+      권한
+    </CustomButton>
   );
 }
 

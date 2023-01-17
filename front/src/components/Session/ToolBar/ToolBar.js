@@ -7,6 +7,9 @@ import MicButton from "./MicButton";
 import AuthorizationButton from "./AuthorizationButton";
 import ChatButton from "./ChatButton";
 import QuitButton from "./QuitButton";
+import AuthorizationSetting from "./AuthorizationSetting";
+
+import { useSelector } from "react-redux";
 
 
 const Box = styled.div`
@@ -18,7 +21,16 @@ const Box = styled.div`
   grid-column: span 3;
 `;
 
+const CustomButton = styled.button`
+  border: 1px solid #FCA311;
+  background-color: ${props => props.on ? '#FCA311' : '#E5E5E5'};
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+`;
+
 function ToolBar(props) {
+  const isAuthorizationSettingOn = useSelector((state) => state.authorizationSetting.isAuthorizationSettingOn);
   return (
     <Box>
       <div>
@@ -29,9 +41,12 @@ function ToolBar(props) {
         <AuthorizationButton />
         <ChatButton />
         <QuitButton />
+
+        {isAuthorizationSettingOn && <AuthorizationSetting />}
       </div>
     </Box>
   );
 }
 
 export default ToolBar;
+export {CustomButton};

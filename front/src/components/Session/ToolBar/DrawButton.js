@@ -1,17 +1,13 @@
-import styled from "styled-components";
+import { useState } from "react";
+import { CustomButton } from "./ToolBar";
 
-const Button = styled.button`
-  border: 1px solid purple;
-  border-radius: 50%;
-  height: 50px;
-  width: 50px;
-`;
 
 function DrawButton(props) {
+  const [on, setOn] = useState(false)
   return (
-    <Button>
-      3
-    </Button>
+    <CustomButton onClick={() => setOn(!on)} on={on}>
+      그림
+    </CustomButton>
   );
 }
 

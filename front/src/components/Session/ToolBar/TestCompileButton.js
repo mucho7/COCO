@@ -1,17 +1,13 @@
-import styled from "styled-components";
+import { CustomButton } from "./ToolBar";
+import { useState } from "react";
 
-const Button = styled.button`
-  border: 1px solid purple;
-  border-radius: 50%;
-  height: 50px;
-  width: 50px;
-`;
 
 function TestCompileButton(props) {
+  const [on, setOn] = useState(false)
   return (
-    <Button>
-      1
-    </Button>
+    <CustomButton onClick={() => setOn(!on)} on={on}>
+      테케
+    </CustomButton>
   );
 }
 

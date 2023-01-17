@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
 import ParticipantsInfoBar from "./ParticipantsInfoBar";
-
+import ChatList from "./ChatList";
+import ChatInput from "./ChatInput";
 
 const ChatAreaDiv = styled.div`
   box-sizing: border-box;
@@ -15,8 +16,12 @@ const ChatAreaDiv = styled.div`
 function ChatArea(props) {
   return (
     <ChatAreaDiv>
+      {/* 참여자 정보 인퍼페이스 */}
       <ParticipantsInfoBar />
-      <h1>Chat Area</h1>
+      {/* 메세지 컨텐츠 칸 */}
+      <ChatList />
+      {/* 메세지 입력 칸 */}
+      <ChatInput />
     </ChatAreaDiv>
   );
 }

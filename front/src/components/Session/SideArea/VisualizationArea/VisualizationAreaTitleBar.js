@@ -1,18 +1,18 @@
 import styled from "styled-components";
 
 
-const VisualizationTitleBarDiv = styled.div`
+const VisualizationAreaTitleBarDiv = styled.div`
   height: 35px;
   background-color: #14213D;
   color: white;
 `
 
-function VisualizationTitleBar() {
+function VisualizationAreaTitleBar() {
   return (
-    <VisualizationTitleBarDiv>
+    <VisualizationAreaTitleBarDiv>
       <p>Visualization</p>
-    </VisualizationTitleBarDiv>
+    </VisualizationAreaTitleBarDiv>
   )
 }
 
-export default VisualizationTitleBar;
+export default VisualizationAreaTitleBar;

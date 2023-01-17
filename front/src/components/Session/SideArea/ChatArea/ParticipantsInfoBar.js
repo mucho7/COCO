@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 
 const ParticipantsInfoBarDiv = styled.div`
-  height: 45px;
+  flex: 1;
   background-color: #14213D;
   color: white;
 `

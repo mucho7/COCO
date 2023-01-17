@@ -6,6 +6,7 @@ import ToolBar from "../ToolBar";
 
 
 const NormalSessionDiv = styled.div`
+  box-sizing: border-box;
   display: grid;
   grid-template-columns: 9fr 3fr;
   grid-template-rows: 11fr 1fr;

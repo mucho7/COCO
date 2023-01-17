@@ -1,17 +1,22 @@
-import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { onClickVisualizeButton } from "../../../store/visualizeSlice";
+import { useState } from "react";
+import { CustomButton } from "./ToolBar";
 
-const Button = styled.button`
-  border: 1px solid purple;
-  border-radius: 50%;
-  height: 50px;
-  width: 50px;
-`;
 
 function VisualizeButton(props) {
+  const dispatch = useDispatch();
+  const [on, setOn] = useState(false)
   return (
-    <Button>
-      2
-    </Button>
+    <CustomButton 
+      onClick={() => {
+        setOn(!on);
+        dispatch(onClickVisualizeButton());
+      }}
+      on={on}
+    >
+      시각
+    </CustomButton>
   );
 }
 
