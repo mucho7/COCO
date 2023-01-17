@@ -18,7 +18,6 @@ function CommuArticles(props) {
 
 const CommuArticle = styled.article`
     height: 60px;
-    border: solid pink;
     padding-left: 10%;
     padding-right: 10%;
 

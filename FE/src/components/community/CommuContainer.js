@@ -1,7 +1,8 @@
 import styled from "styled-components"
 import CommuArticles from "./CommuArticles"
 
-function CommuContainer(params) {
+
+function CommuContainer() {
 
     const someArticle = [
         {title: "1st Article", content: "1st Article"},
@@ -18,9 +19,6 @@ function CommuContainer(params) {
 }
 
 const CommuSection = styled.section`
-    margin-left: 10%;
-    margin-right: 10%;
-
     height: 600px;
 
     border: solid black;

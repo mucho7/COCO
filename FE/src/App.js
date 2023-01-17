@@ -1,10 +1,13 @@
+import  { Navbar } from './components/navbar';
 import { Route, Routes  } from "react-router-dom"
+import styled from "styled-components";
 
 import  { HomePage, LoginPage, SigninPage, ProfilePage, CommuPage } from './pages'
 
 function App() {
   return (
-    <div className="App">
+    <SidePaddingBox className="App">
+      <Navbar/>
         <Routes>
           <Route path="/" element={<HomePage/>}/>
           <Route path="/community" element={<CommuPage/>}/>
@@ -12,8 +15,15 @@ function App() {
           <Route path="/useri/login" element={<LoginPage/>}/>
           <Route path="/useri/user_id" element={<ProfilePage/>}/>
         </Routes> 
-    </div>
+    </SidePaddingBox>
   );
 }
+
+const SidePaddingBox = styled.div`
+  padding-left: 10%;
+  padding-right: 10%;
+
+`
+
 
 export default App;
