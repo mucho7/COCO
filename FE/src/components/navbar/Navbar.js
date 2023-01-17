@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import NavbarItem from "./NavbarItem"
+import NavbarSearch from './NavbarSearch'
 
 function Navbar() {
 
@@ -19,10 +20,7 @@ function Navbar() {
         <Nav className="navbar">
             <NavbarItem navList={[{name: "Div for Logo", url: "/"}]}/>
             <NavbarItem navList={leftNavList}/>
-            <section style={{border: "solid"}}>
-                <h2 hidden>SearchBar</h2>
-                <span>SearchBar</span>
-            </section>
+            <NavbarSearch/>
             <NavbarItem navList={rightNavList}/>
         </Nav>
     )
@@ -32,7 +30,8 @@ const Nav = styled.nav`
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    margin: 10px;
+    padding-top: 13px;
+    padding-bottom: 13px;
 `
 
 export default Navbar
