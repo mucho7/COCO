@@ -1,10 +1,5 @@
-.navbar-list {
-    display: flex;
-    justify-content: space-evenly;
-    width: 300px;
-}
-
 .navbar-item {
     text-decoration: none;
     color: black;
+    margin: 5px;
 }

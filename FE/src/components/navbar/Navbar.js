@@ -1,37 +1,48 @@
-import styled from "styled-components";
 import NavbarItem from "./NavbarItem"
 import NavbarSearch from './NavbarSearch'
+
+import { Grid, Container} from '@mui/material'
 
 function Navbar() {
 
     // 차후에 정확히 설정해야할 route들
     const leftNavList = [
-        {name: "Session", url: "/",},
-        {name: "Community", url: "/community",},
-        {name: "Group", url: "/group",},
+        {name: "Session", bold: false, url: "/",},
+        {name: "Community", bold: false, url: "/community",},
+        {name: "Group", bold: false, url: "/group",},
     ]
     const rightNavList = [
-        {name: "Log In", url: "/useri/login",},
-        {name: "Sign In", url: "/useri",},
+        {name: "Log In", bold: false, url: "/useri/login",},
+        {name: "Sign Up", bold: true, url: "/useri",},
         {name: "Profile", url: "/useri/user_id",},
     ]
 
     return (
-        <Nav className="navbar">
-            <NavbarItem navList={[{name: "Div for Logo", url: "/"}]}/>
-            <NavbarItem navList={leftNavList}/>
-            <NavbarSearch/>
-            <NavbarItem navList={rightNavList}/>
-        </Nav>
+        <Container fixed>
+            <Grid container spacing={1} style={Nav}>
+                <Grid item xs={1}>
+                    <NavbarItem navList={[{name: "COCO", url: "/", bold: true}]}/>
+                </Grid>
+                <Grid item xs={4}>
+                    <NavbarItem navList={leftNavList}/>
+                </Grid>
+                <Grid item xs={4}>
+                    <NavbarSearch/>
+                </Grid>
+                <Grid item xs={3}>
+                    <NavbarItem navList={rightNavList}/>
+                </Grid>
+            </Grid>
+        </Container>
     )
 }
 
-const Nav = styled.nav`
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    padding-top: 13px;
-    padding-bottom: 13px;
-`
+const Nav ={
+    display: 'flex',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    paddingTop: '13px',
+}
+
 
 export default Navbar

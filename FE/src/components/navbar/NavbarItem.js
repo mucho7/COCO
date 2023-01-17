@@ -6,12 +6,17 @@ function NavbarItem(props) {
     return (
         <div className='navbar-list'>
             {props.navList.map(item => {
-                // 리스트 컴포넌트를 Link로 바꿔야함
-                return <Link className='navbar-item' to={item.url} key={item.name}>{item.name}</Link>
+                if (item.bold === true) {
+                    return <Link className='navbar-item' to={item.url} key={item.name}><b>{item.name}</b></Link>
+                } else {
+                    return <Link className='navbar-item' to={item.url} key={item.name}>{item.name}</Link>
+                }
             })}
         </div>
     )
 }
+
+
 
 // props를 활용한 크기 조절이 필요함
 

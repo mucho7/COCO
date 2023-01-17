@@ -10,16 +10,17 @@ function LoginForm () {
     })
     return (
         <Container fixed>
+            <h2>로그인</h2><hr/>
             <Box component="form">
-                <Grid container spacing={2} style={{padding: '2rem'}}>
-                    <Grid item xs={12}>
+                <Grid container spacing={2} style={{padding: '2rem', justifyContent: 'center'}}>
+                    <Grid item xs={8}>
                         <TextField ref={inputRef} id="outlined" label="ID" fullWidth />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={8}>
                         <TextField id="outlined-password" label="Password" fullWidth />
                     </Grid>
-                    <Grid item xs={12}>
-                        <Button variant="contained" className="submit" fullWidth> 로그인 </Button>
+                    <Grid item xs={6}>
+                        <Button variant="contained" className="submit" style={{height: '3rem'}} fullWidth> <b>로그인</b></Button>
                     </Grid>
                 </Grid>
             </Box>
