@@ -1,4 +1,4 @@
-package com.ssafy.coco.api.dto.response;
+package com.ssafy.coco.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 @Data
 @AllArgsConstructor
-public class JwtTokenResponseDto {
+public class JwtTokenDto {
 
 	private String grantType;
 	private String accessToken;

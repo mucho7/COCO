@@ -1,4 +1,4 @@
-package com.ssafy.coco.utility;
+package com.ssafy.coco.utility.jwt;
 
 import java.security.Key;
 import java.util.Arrays;
@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import com.ssafy.coco.api.dto.response.JwtTokenResponseDto;
+import com.ssafy.coco.api.dto.JwtTokenDto;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -39,10 +39,6 @@ public class JwtTokenGenerator {
 
 	private static Integer validTime;
 
-	public static final String PREFIX = "SSAFY8Project1A703";
-	public static final String HEADER = "JWTTokenHeader";
-	public static final String ISSUEDBY = "CoCo";
-
 	@Autowired
 	public JwtTokenGenerator(@Value("${jwt.secret}") String secretKey, @Value("${jwt.expiration}") Integer validTime) {
 		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -51,7 +47,7 @@ public class JwtTokenGenerator {
 	}
 
 	// 유저 정보를 토대로 AccessToken, RefreshToken을 생성하는 메서드
-	public JwtTokenResponseDto createToken(Authentication authentication) {
+	public JwtTokenDto createToken(Authentication authentication) {
 		String authorities = authentication.getAuthorities().stream()
 			.map(GrantedAuthority::getAuthority)
 			.collect(Collectors.joining(","));
@@ -73,7 +69,7 @@ public class JwtTokenGenerator {
 			.signWith(uniqueKey, SignatureAlgorithm.HS256)
 			.compact();
 
-		return JwtTokenResponseDto.builder()
+		return JwtTokenDto.builder()
 			.grantType("Bearer")
 			.accessToken(accessToken)
 			.refreshToken(refreshToken)
@@ -124,5 +120,7 @@ public class JwtTokenGenerator {
 			return e.getClaims();
 		}
 	}
+
+
 
 }

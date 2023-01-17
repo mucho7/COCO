@@ -1,5 +1,6 @@
 package com.ssafy.coco.api.controller;
 
+import com.ssafy.coco.api.dto.JwtTokenDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/member")
-public class MemberApiController {
+public class MemberController {
 	private final MemberService memberService;
 
 	@PostMapping()
@@ -38,14 +39,12 @@ public class MemberApiController {
 
 	@PostMapping("/login")
 	@ApiOperation(value="로그인", notes = "ID와 암호화된 PW가 DB에 있는 정보와 일치하는 경우 로그인을 승인한다.")
-	public String login(@RequestBody @ApiParam(value = "로그인 요청 정보", required = true) MemberLoginRequestDto requestDto){
+	public JwtTokenDto login(@RequestBody @ApiParam(value = "로그인 요청 정보", required = true) MemberLoginRequestDto requestDto){
 		String userId=requestDto.getId();
 		String password=requestDto.getPassword();
 
-		MemberResponseDto member=memberService.findById(userId);
-		if(member.getPassword().equals(password)){
-			return JwtTo
-		}
+		JwtTokenDto jwtToken=memberService.login(userId, password);
+		return jwtToken;
 
 	}
 

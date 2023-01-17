@@ -27,7 +27,7 @@ import com.ssafy.coco.data.MemberRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class MemberApiControllerTest {
+public class MemberControllerTest {
 
 	@LocalServerPort
 	private int port;
