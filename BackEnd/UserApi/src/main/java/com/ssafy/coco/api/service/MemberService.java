@@ -89,7 +89,7 @@ public class MemberService {
 		// Step 1. 로그인 ID/비밀번호 기반으로 Authentication 객체 생성
 		// 이 때, 인증 여부를 확인하는 authenticated 값을 false로 한다.
 
-		// System.out.println(id + " " + password);
+		// System.out.println("로그인 시도 ID: " + id + ", 입력한 비밀번호: " + password);
 
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(id, password);
 
@@ -103,6 +103,8 @@ public class MemberService {
 
 		// Step 3. 인증된 정보를 기반으로 JwtToken 생성
 		JwtTokenDto jwtToken = jwtTokenGenerator.createToken(authentication);
+
+		// System.out.println(jwtToken);
 
 		return jwtToken;
 	}

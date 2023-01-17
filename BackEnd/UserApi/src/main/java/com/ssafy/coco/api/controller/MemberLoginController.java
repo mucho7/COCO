@@ -30,7 +30,7 @@ public class MemberLoginController {
 		String password = requestDto.getPassword();
 
 		JwtTokenDto jwtToken = memberService.login(userId, password);
-		System.out.println(jwtToken);
+		
 		return jwtToken;
 	}
 
