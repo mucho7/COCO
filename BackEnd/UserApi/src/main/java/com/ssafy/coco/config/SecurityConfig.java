@@ -1,8 +1,5 @@
 package com.ssafy.coco.config;
 
-import com.ssafy.coco.utility.jwt.JwtAuthenticationFilter;
-import com.ssafy.coco.utility.jwt.JwtTokenGenerator;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,29 +10,41 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.ssafy.coco.utility.jwt.JwtAuthenticationFilter;
+import com.ssafy.coco.utility.jwt.JwtTokenGenerator;
+
+import lombok.RequiredArgsConstructor;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtTokenGenerator jwtTokenGenerator;
+	private final JwtTokenGenerator jwtTokenGenerator;
 
-    @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        http.httpBasic().disable()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers("/member/login").permitAll()
-                .antMatchers("/member/test").hasRole("USER")
-                .anyRequest().authenticated()
-                .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenGenerator), UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
+	// Spring Security 설정 관련 레퍼런스 링크:
+	// https://kimchanjung.github.io/programming/2020/07/02/spring-security-02/
+	// https://ruzun88.github.io/spring/security/403-forbidden.html#config-%E1%84%89%E1%85%A5%E1%86%AF%E1%84%8C%E1%85%A5%E1%86%BC-%E1%84%83%E1%85%A9%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%87%E1%85%A9%E1%84%80%E1%85%B5
+	// https://sybarits.github.io/2020/11/08/rest-api-security.html
+	@Bean
+	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http
+			.httpBasic().disable()
+			.csrf().disable()
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and()
+			.authorizeRequests()
+			.antMatchers("/swagger*/**").permitAll()
+			.antMatchers("/member/info").authenticated()
+			// .antMatchers("/login").permitAll()
+			.anyRequest().permitAll()
+			.and()
+			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenGenerator),
+				UsernamePasswordAuthenticationFilter.class);
+		return http.build();
+	}
 
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+	}
 }

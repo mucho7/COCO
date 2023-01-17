@@ -2,13 +2,12 @@ package com.ssafy.coco.api.service;
 
 import javax.transaction.Transactional;
 
-import com.ssafy.coco.api.dto.JwtTokenDto;
-import com.ssafy.coco.utility.jwt.JwtTokenGenerator;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.coco.api.dto.JwtTokenDto;
 import com.ssafy.coco.api.dto.request.MemberDeleteRequestDto;
 import com.ssafy.coco.api.dto.request.MemberRatingUpdateRequestDto;
 import com.ssafy.coco.api.dto.request.MemberRegisterRequestDto;
@@ -16,6 +15,7 @@ import com.ssafy.coco.api.dto.request.MemberUpdateRequestDto;
 import com.ssafy.coco.api.dto.response.MemberResponseDto;
 import com.ssafy.coco.data.Member;
 import com.ssafy.coco.data.MemberRepository;
+import com.ssafy.coco.utility.jwt.JwtTokenGenerator;
 
 import lombok.RequiredArgsConstructor;
 
@@ -85,18 +85,24 @@ public class MemberService {
 	}
 
 	@Transactional
-	public JwtTokenDto login(String id, String password){
+	public JwtTokenDto login(String id, String password) {
 		// Step 1. 로그인 ID/비밀번호 기반으로 Authentication 객체 생성
 		// 이 때, 인증 여부를 확인하는 authenticated 값을 false로 한다.
-		UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(id, password);
+
+		// System.out.println(id + " " + password);
+
+		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(id, password);
+
+		// System.out.println(authenticationToken);
 
 		// Step 2. 실제 검증 (사용자 비밀번호 체크 등)이 이루어지는 부분
 		// authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행
-		Authentication authentication=authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
+		// System.out.println(authentication);
 
 		// Step 3. 인증된 정보를 기반으로 JwtToken 생성
-		JwtTokenDto jwtToken=jwtTokenGenerator.createToken(authentication);
+		JwtTokenDto jwtToken = jwtTokenGenerator.createToken(authentication);
 
 		return jwtToken;
 	}

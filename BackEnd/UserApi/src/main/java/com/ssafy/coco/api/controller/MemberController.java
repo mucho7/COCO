@@ -1,6 +1,5 @@
 package com.ssafy.coco.api.controller;
 
-import com.ssafy.coco.api.dto.JwtTokenDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.coco.api.dto.request.MemberDeleteRequestDto;
-import com.ssafy.coco.api.dto.request.MemberLoginRequestDto;
 import com.ssafy.coco.api.dto.request.MemberRatingUpdateRequestDto;
 import com.ssafy.coco.api.dto.request.MemberRegisterRequestDto;
 import com.ssafy.coco.api.dto.request.MemberUpdateRequestDto;
@@ -37,16 +35,6 @@ public class MemberController {
 		return memberService.RegisterMember(requestDto);
 	}
 
-	@PostMapping("/login")
-	@ApiOperation(value="로그인", notes = "ID와 암호화된 PW가 DB에 있는 정보와 일치하는 경우 로그인을 승인한다.")
-	public JwtTokenDto login(@RequestBody @ApiParam(value = "로그인 요청 정보", required = true) MemberLoginRequestDto requestDto){
-		String userId=requestDto.getId();
-		String password=requestDto.getPassword();
-
-		JwtTokenDto jwtToken=memberService.login(userId, password);
-		return jwtToken;
-	}
-
 	@PutMapping("/info/{id}")
 	@ApiOperation(value = "정보 변경", notes = "갱신된 사용자 정보를 {id}를 PK로 가지는 레코드에 적용한다.")
 	public String UpdateMember(@PathVariable @ApiParam(value = "회원정보를 수정할 사용자의 {id}", required = true) String id,
@@ -61,7 +49,7 @@ public class MemberController {
 		return memberService.findById(id);
 	}
 
-	@PutMapping("/delete/{id}")
+	@PutMapping("/info/delete/{id}")
 	@ApiOperation(value = "회원 탈퇴", notes = "{id}의 사용자 정보에 탈퇴일(del_flag)을 기록한다.")
 	public String DeleteMember(@PathVariable @ApiParam(value = "탈퇴할 회원 ID", required = true) String id,
 		@RequestBody @ApiParam(value = "회원이 탈퇴를 요청한 시각", required = true) MemberDeleteRequestDto requestDto) {
@@ -69,7 +57,7 @@ public class MemberController {
 		return memberService.DeleteMember(id, requestDto);
 	}
 
-	@PutMapping("/rating")
+	@PutMapping("/info/rating")
 	@ApiOperation(value = "평판 점수 변경", notes = "사용자의 평판점수를 변경한다.")
 	public String RatingUpdate(@RequestBody MemberRatingUpdateRequestDto requestDto) {
 		return memberService.RatingUpdate(requestDto);

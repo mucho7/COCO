@@ -1,6 +1,7 @@
 package com.ssafy.coco.data;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,8 @@ import javax.persistence.Id;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -22,7 +25,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @ToString
-public class Member {
+public class Member implements UserDetails {
 	@Id
 	@Column(name = "user_id")
 	private String id;
@@ -63,5 +66,38 @@ public class Member {
 
 	public void DeleteMember(LocalDateTime time) {
 		this.delFlag = time;
+	}
+
+	// 아래 함수들은 UserDetails를 상속받기 때문에 어쩔 수 없이 오버라이드한 메소드.
+	// 필요 없을 경우 상속을 제거하고 아래 함수들은 빼도 될 것 같다.
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return null;
+	}
+
+	@Override
+	public String getUsername() {
+		return id;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return delFlag != null;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 }
