@@ -45,7 +45,6 @@ public class MemberController {
 
 		JwtTokenDto jwtToken=memberService.login(userId, password);
 		return jwtToken;
-
 	}
 
 	@PutMapping("/info/{id}")
