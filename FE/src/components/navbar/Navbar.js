@@ -42,6 +42,8 @@ const Nav ={
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: '13px',
+    paddingBottom: '13px',
+
 }
 
 
