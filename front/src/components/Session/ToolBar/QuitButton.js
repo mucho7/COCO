@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const Button = styled.button`
   border: 1px solid #FCA311;
@@ -9,8 +10,10 @@ const Button = styled.button`
 `;
 
 function QuitButton(props) {
+  const navigate = useNavigate();
+  
   return (
-    <Button>
+    <Button onClick={() => {navigate("/sessionlist")}}>
       종료
     </Button>
   );

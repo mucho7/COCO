@@ -1,11 +1,17 @@
 import { CustomButton } from "./ToolBar";
-import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { onClickChatButton } from "../../../store/toolBarActionSlice";
 
 
 function ChatButton(props) {
-  const [on, setOn] = useState(false)
+  const isChatButtonOn = useSelector((state) => state.toolBarAction.isChatButtonOn);
+  const dispatch = useDispatch();
+
   return (
-    <CustomButton onClick={() => setOn(!on)} on={on}>
+    <CustomButton 
+      onClick={() => {dispatch(onClickChatButton());}} 
+      on={isChatButtonOn}
+    >
       채팅
     </CustomButton>
   );

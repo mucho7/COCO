@@ -1,11 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
-import visualizationSlice from "./visualizeSlice";
+import visualizeSlice from "./visualizeSlice";
 import authorizationSettingSlice from "./authorizationSettingSlice";
+import sessionListSlice from "./sessionListSlice";
+import toolBarActionSlice from "./toolBarActionSlice";
+import compileSlice from "./compileSlice";
 
 const store = configureStore({
   reducer: {
-    visualization: visualizationSlice.reducer,
-    authorizationSetting: authorizationSettingSlice.reducer
+    visualize: visualizeSlice.reducer,
+    compile: compileSlice.reducer,
+    authorizationSetting: authorizationSettingSlice.reducer,
+    sessionList: sessionListSlice.reducer,
+    toolBarAction: toolBarActionSlice.reducer,
   }
 })
 

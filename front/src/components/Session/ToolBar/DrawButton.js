@@ -1,11 +1,17 @@
-import { useState } from "react";
 import { CustomButton } from "./ToolBar";
+import { useSelector, useDispatch } from "react-redux";
+import { onClickDrawButton } from "../../../store/toolBarActionSlice";
 
 
 function DrawButton(props) {
-  const [on, setOn] = useState(false)
+  const isDrawButtonOn = useSelector((state) => state.toolBarAction.isDrawButtonOn);
+  const dispatch = useDispatch();
+
   return (
-    <CustomButton onClick={() => setOn(!on)} on={on}>
+    <CustomButton 
+      onClick={() => {dispatch(onClickDrawButton());}} 
+      on={isDrawButtonOn}
+    >
       그림
     </CustomButton>
   );

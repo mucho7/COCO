@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 import { useDispatch } from "react-redux";
-import { onClickVisualizeButton } from "../../../../store/visualizeSlice";
+import { onVisualizeSubmit } from '../../../../store/visualizeSlice';
 
 const VisualizationFormDiv = styled.div`
 
@@ -14,7 +14,7 @@ function VisualizationForm() {
 
   function handleSubmitVisualize(event) {
     event.preventDefault();
-    dispatch(onClickVisualizeButton());
+    dispatch(onVisualizeSubmit());
   }
 
   return (

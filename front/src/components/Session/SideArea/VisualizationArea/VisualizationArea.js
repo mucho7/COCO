@@ -17,12 +17,14 @@ const VisualizationAreaDiv = styled.div`
 
 
 function VisualizationArea(props) {
-  const isFormOn = useSelector((state) => state.visualization.isFormOn);
+  const isVisualizeSubmit = useSelector((state) => state.visualize.isVisualizeSubmit);
+  const isVisualizeButtonOn = useSelector((state) => state.toolBarAction.isVisualizeButtonOn);
 
   return (
     <VisualizationAreaDiv>
       <VisualizationAreaTitleBar />
-      {isFormOn === true ? <VisualizationForm /> : <VisualizationResult />}
+      {isVisualizeButtonOn && !isVisualizeSubmit && <VisualizationForm />}
+      {isVisualizeSubmit && <VisualizationResult />}
     </VisualizationAreaDiv>
   );
 }

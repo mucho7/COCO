@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
-import TestCompileButton from "./TestCompileButton";
+import CompileButton from "./CompileButton";
 import VisualizeButton from "./VisualizeButton";
 import DrawButton from "./DrawButton";
 import MicButton from "./MicButton";
-import AuthorizationButton from "./AuthorizationButton";
+import AuthorizeButton from "./AuthorizeButton";
 import ChatButton from "./ChatButton";
 import QuitButton from "./QuitButton";
 import AuthorizationSetting from "./AuthorizationSetting";
@@ -30,19 +30,19 @@ const CustomButton = styled.button`
 `;
 
 function ToolBar(props) {
-  const isAuthorizationSettingOn = useSelector((state) => state.authorizationSetting.isAuthorizationSettingOn);
+  const isAuthorizeButtonOn = useSelector((state) => state.toolBarAction.isAuthorizeButtonOn);
   return (
     <Box>
       <div>
-        <TestCompileButton />
+        <CompileButton />
         <VisualizeButton />
         <DrawButton />
         <MicButton />
-        <AuthorizationButton />
+        <AuthorizeButton />
         <ChatButton />
         <QuitButton />
 
-        {isAuthorizationSettingOn && <AuthorizationSetting />}
+        {isAuthorizeButtonOn && <AuthorizationSetting />}
       </div>
     </Box>
   );

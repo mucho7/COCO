@@ -1,15 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = { isVisualizeSubmit: false }
 
-const visualizationSlice = createSlice({
-  name: 'visualizationSlice',
-  initialState: { isFormOn: false },
+const visualizeSlice = createSlice({
+  name: 'visualize',
+  initialState,
   reducers: {
-    onClickVisualizeButton: (state, action) => {
-      state.isFormOn = !state.isFormOn;
+    onVisualizeSubmit: (state) => {
+      state.isVisualizeSubmit = !state.isVisualizeSubmit;
     }
   }
 });
 
-export default visualizationSlice;
-export const {onClickVisualizeButton} = visualizationSlice.actions;
+export default visualizeSlice;
+export const {onVisualizeSubmit} = visualizeSlice.actions;

@@ -1,11 +1,17 @@
 import { CustomButton } from "./ToolBar";
-import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { onClickMicButton } from "../../../store/toolBarActionSlice";
 
 
 function MicButton(props) {
-  const [on, setOn] = useState(false)
+  const isMicButtonOn = useSelector((state) => state.toolBarAction.isMicButtonOn);
+  const dispatch = useDispatch();
+
   return (
-    <CustomButton onClick={() => setOn(!on)} on={on}>
+    <CustomButton 
+      onClick={() => {dispatch(onClickMicButton());}} 
+      on={isMicButtonOn}
+    >
       음성
     </CustomButton>
   );

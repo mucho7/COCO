@@ -10,7 +10,7 @@ const VisualizationAreaTitleBarDiv = styled.div`
 function VisualizationAreaTitleBar() {
   return (
     <VisualizationAreaTitleBarDiv>
-      <p>Visualization</p>
+      <p>Visualize</p>
     </VisualizationAreaTitleBarDiv>
   )
 }
