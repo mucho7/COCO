@@ -13,10 +13,10 @@ function LoginForm () {
             <h2>로그인</h2><hr/>
             <Box component="form">
                 <Grid container spacing={2} style={{padding: '2rem', justifyContent: 'center'}}>
-                    <Grid item xs={8}>
+                    <Grid item xs={7}>
                         <TextField ref={inputRef} id="outlined" label="ID" fullWidth />
                     </Grid>
-                    <Grid item xs={8}>
+                    <Grid item xs={7}>
                         <TextField id="outlined-password" label="Password" fullWidth />
                     </Grid>
                     <Grid item xs={6}>

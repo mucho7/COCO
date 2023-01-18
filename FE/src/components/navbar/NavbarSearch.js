@@ -5,7 +5,7 @@ export default function NavbarSearch() {
   return (
     <Paper
       component="form"
-      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}
+      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', height: '2rem' }}
     >
       <InputBase
         sx={{ ml: 1, flex: 1 }}

@@ -1,7 +1,7 @@
 import NavbarItem from "./NavbarItem"
 import NavbarSearch from './NavbarSearch'
 
-import { Grid, Container} from '@mui/material'
+import { Grid } from '@mui/material'
 
 function Navbar() {
 
@@ -18,12 +18,12 @@ function Navbar() {
     ]
 
     return (
-        <Container fixed>
+        <div>
             <Grid container spacing={1} style={Nav}>
                 <Grid item xs={1}>
                     <NavbarItem navList={[{name: "COCO", url: "/", bold: true}]}/>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={3}>
                     <NavbarItem navList={leftNavList}/>
                 </Grid>
                 <Grid item xs={4}>
@@ -33,13 +33,13 @@ function Navbar() {
                     <NavbarItem navList={rightNavList}/>
                 </Grid>
             </Grid>
-        </Container>
+        </div>
     )
 }
 
 const Nav ={
     display: 'flex',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: '13px',
 }
