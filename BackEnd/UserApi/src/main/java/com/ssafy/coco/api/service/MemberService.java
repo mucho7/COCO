@@ -110,6 +110,7 @@ public class MemberService {
 		return jwtToken;
 	}
 
+	// JWT 토큰으로부터 사용자 ID를 추출해주되, 유효한 refreshToken을 가지고 있을 때만 반환해주도록.
 	@Transactional
 	public Member ExtractMemberFromJwtToken(JwtExtractRequestDto requestDto) {
 		Authentication authentication = jwtTokenGenerator.getAuthentication(requestDto.getAccessToken());
