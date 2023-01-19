@@ -13,7 +13,15 @@ function SessionDetail() {
   const navigate = useNavigate();
 
   function enterSession() {
-    navigate("/normal");  
+    switch (session.mode) {
+      case "normal":
+        navigate("/normal");
+        break;
+      case "relay":
+        navigate("/relay");
+        break;
+      default:
+    } 
   }
 
   return (

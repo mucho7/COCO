@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
 import IdeArea from "../IdeArea";
-import SideArea from "../SideArea";
-// import ToolBar from "../ToolBar";
+import RelaySideArea from "../SideArea/RelaySideArea";
+import ToolBar from "../ToolBar";
 
 
 const Box = styled.div`
@@ -16,10 +16,9 @@ const Box = styled.div`
 function RelaySession(props) {
   return (
     <Box>
-      <h1>dsfsdfe</h1>
       <IdeArea />
-      <SideArea />
-      {/* <ToolBar /> */}
+      <RelaySideArea />
+      <ToolBar />
     </Box>
   );
 }
