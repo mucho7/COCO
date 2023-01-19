@@ -33,7 +33,12 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class JwtTokenGenerator {
 
-	// reference : https://gksdudrb922.tistory.com/217
+	/** ===== 레퍼런스 =====
+	 * 기본 골격 : https://gksdudrb922.tistory.com/217
+	 *
+	 * spring boot + jwt + refresh token
+	 * https://aejeong.com/entry/Spring-boot-JWT-RefreshToken-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0
+	 */
 
 	private Key uniqueKey;
 

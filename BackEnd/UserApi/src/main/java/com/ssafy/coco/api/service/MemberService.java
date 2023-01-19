@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.coco.api.dto.JwtTokenDto;
+import com.ssafy.coco.api.dto.request.JwtExtractRequestDto;
 import com.ssafy.coco.api.dto.request.MemberDeleteRequestDto;
 import com.ssafy.coco.api.dto.request.MemberRatingUpdateRequestDto;
 import com.ssafy.coco.api.dto.request.MemberRegisterRequestDto;
@@ -109,4 +110,9 @@ public class MemberService {
 		return jwtToken;
 	}
 
+	@Transactional
+	public Member ExtractMemberFromJwtToken(JwtExtractRequestDto requestDto) {
+		Authentication authentication = jwtTokenGenerator.getAuthentication(requestDto.getAccessToken());
+
+	}
 }

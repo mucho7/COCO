@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.coco.api.dto.request.JwtExtractRequestDto;
 import com.ssafy.coco.api.dto.request.MemberDeleteRequestDto;
 import com.ssafy.coco.api.dto.request.MemberRatingUpdateRequestDto;
 import com.ssafy.coco.api.dto.request.MemberRegisterRequestDto;
 import com.ssafy.coco.api.dto.request.MemberUpdateRequestDto;
 import com.ssafy.coco.api.dto.response.MemberResponseDto;
 import com.ssafy.coco.api.service.MemberService;
+import com.ssafy.coco.data.Member;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -59,8 +61,16 @@ public class MemberController {
 
 	@PutMapping("/rating")
 	@ApiOperation(value = "평판 점수 변경", notes = "사용자의 평판점수를 변경한다.")
-	public String RatingUpdate(@RequestBody MemberRatingUpdateRequestDto requestDto) {
+	public String RatingUpdate(
+		@RequestBody @ApiParam(value = "평판점수 변경 요청 정보", required = true) MemberRatingUpdateRequestDto requestDto) {
 		return memberService.RatingUpdate(requestDto);
+	}
+
+	@PostMapping("/extract")
+	@ApiOperation(value = "Jwt 토큰 정보 추출", notes = "제공된 Jwt로부터 사용자 정보를 추출해 반환한다.")
+	public Member ExtractMemberFromJwtToken(@RequestBody JwtExtractRequestDto requestDto) {
+		return memberService.ExtractMemberFromJwtToken(requestDto);
+
 	}
 
 }
