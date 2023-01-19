@@ -31,8 +31,8 @@ public class SwaggerConfig {
 	//  Swagger-UI 2.x 확인
 	//	http://localhost:8080/swagger-ui.html
 
-	private String version = "0.0.1 SNAPSHOT";
-	private String title = "CoCo 회원관리 백엔드 API 테스트" + version;
+	private String version = "0.0.1-SNAPSHOT";
+	private String title = "CoCo 회원관리 백엔드 API 테스트";
 
 	private ApiInfo apiInfo() {
 		String descript = "CoCo 백엔드 API 테스트 환경<br/>";
@@ -44,24 +44,13 @@ public class SwaggerConfig {
 			.contact(new Contact("CoCo", "https://edu.ssafy.com", "ssafy@ssafy.com"))
 			.license("SSAFY License")
 			.licenseUrl("ssafy@ssafy.com")
-			.version("0.0.1 SNAPSHOT")
+			.version(version)
 			.build();
 	}
 
 	@Bean
 	public Docket allApi() {
 		return getDocket("전체", Predicates.or(PathSelectors.regex("/*.*")));
-	}
-
-	// API마다 구분짓기 위한 설정.
-	@Bean
-	public Docket userApi() {
-		return getDocket("회원", Predicates.or(PathSelectors.regex("/member.*")));
-	}
-
-	@Bean
-	public Docket loginApi() {
-		return getDocket("로그인", Predicates.or(PathSelectors.regex("/login.*")));
 	}
 
 	public Docket getDocket(String groupName, Predicate<String> predicate) {

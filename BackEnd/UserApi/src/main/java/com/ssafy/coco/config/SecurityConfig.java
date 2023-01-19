@@ -33,10 +33,9 @@ public class SecurityConfig {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 			.authorizeRequests()
-			.antMatchers("/swagger*/**").permitAll()
-			.antMatchers("/member/info").authenticated()
-			// .antMatchers("/login").permitAll()
-			.anyRequest().permitAll()
+			.antMatchers("/swagger*/**", "/login", "/check/**").permitAll()
+			.antMatchers("/member/info", "/member/info/**").hasAnyRole("user", "admin")
+			// .anyRequest().permitAll()
 			.and()
 			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenGenerator),
 				UsernamePasswordAuthenticationFilter.class);

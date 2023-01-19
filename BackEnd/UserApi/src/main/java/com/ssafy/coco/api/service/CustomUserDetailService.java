@@ -21,7 +21,7 @@ public class CustomUserDetailService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return memberRepository.findById(username)
+		return memberRepository.findByUserId(username)
 			.map(this::createUserDetail)
 			.orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
 	}
@@ -30,7 +30,7 @@ public class CustomUserDetailService implements UserDetailsService {
 		return User.builder()
 			.username(member.getUsername())
 			.password(passwordEncoder.encode(member.getPassword()))
-			.roles("user")
+			.roles(member.getRole())
 			.build();
 	}
 

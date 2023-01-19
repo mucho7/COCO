@@ -27,43 +27,43 @@ public class MemberService {
 	private final JwtTokenGenerator jwtTokenGenerator;
 
 	@Transactional
-	public String RegisterMember(MemberRegisterRequestDto requestDto) {
-		return memberRepository.save(requestDto.toEntity()).getUserId();
+	public Long RegisterMember(MemberRegisterRequestDto requestDto) {
+		return memberRepository.save(requestDto.toEntity()).getId();
 	}
 
 	@Transactional
-	public String UpdateInfo(String id, MemberUpdateRequestDto requestDto) {
-		Member member = memberRepository.findById(id)
-			.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. 사용자 ID: " + id));
-		System.out.println(member.getDelFlag() + ", 탈퇴했는가? : " + member.getDelFlag() != null);
+	public String UpdateInfo(String userId, MemberUpdateRequestDto requestDto) {
+		Member member = memberRepository.findByUserId(userId)
+			.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. 사용자 ID: " + userId));
+		// System.out.println(member.getDelFlag() + ", 탈퇴했는가? : " + member.getDelFlag() != null);
 		if (member.getDelFlag() != null)
-			throw new IllegalArgumentException("해당 사용자는 탈퇴한 사용자입니다. 사용자 ID: " + id);
+			throw new IllegalArgumentException("해당 사용자는 탈퇴한 사용자입니다. 사용자 ID: " + userId);
 		else
 			member.UpdateInfo(requestDto.getPassword(), requestDto.getName(), requestDto.getEmail());
-		return id;
+		return userId;
 	}
 
-	public MemberResponseDto findById(String id) {
-		Member entity = memberRepository.findById(id)
-			.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. 사용자 ID: " + id));
+	public MemberResponseDto findByUserId(String userId) {
+		Member entity = memberRepository.findByUserId(userId)
+			.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. 사용자 ID: " + userId));
 
 		return new MemberResponseDto(entity);
 	}
 
 	@Transactional
-	public String DeleteMember(String id, MemberDeleteRequestDto requestDto) {
-		Member member = memberRepository.findById(id)
-			.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. 사용자 ID: " + id));
+	public String DeleteMember(String userId, MemberDeleteRequestDto requestDto) {
+		Member member = memberRepository.findByUserId(userId)
+			.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. 사용자 ID: " + userId));
 		if (member.getDelFlag() != null) // error code: 500
-			throw new IllegalArgumentException("해당 사용자는 이미 탈퇴한 사용자입니다. 사용자 ID: " + id);
+			throw new IllegalArgumentException("해당 사용자는 이미 탈퇴한 사용자입니다. 사용자 ID: " + userId);
 		else
 			member.DeleteMember(requestDto.getTime());
-		return id;
+		return userId;
 	}
 
 	@Transactional
 	public String RatingUpdate(MemberRatingUpdateRequestDto requestDto) {
-		Member member = memberRepository.findById(requestDto.getUserId())
+		Member member = memberRepository.findByUserId(requestDto.getUserId())
 			.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. 사용자 ID: " + requestDto.getUserId()));
 		if (member.getDelFlag() != null) // error code: 500
 			throw new IllegalArgumentException("해당 사용자는 탈퇴한 사용자입니다. 사용자 ID: " + requestDto.getUserId());
@@ -73,8 +73,8 @@ public class MemberService {
 	}
 
 	@Transactional
-	public boolean IdCheck(String id) {
-		Long count = memberRepository.countById(id);
+	public boolean IdCheck(String userId) {
+		Long count = memberRepository.countByUserId(userId);
 		return count == 0;
 	}
 
@@ -89,7 +89,7 @@ public class MemberService {
 		// Step 1. 로그인 ID/비밀번호 기반으로 Authentication 객체 생성
 		// 이 때, 인증 여부를 확인하는 authenticated 값을 false로 한다.
 
-		// System.out.println("로그인 시도 ID: " + id + ", 입력한 비밀번호: " + password);
+		System.out.println("로그인 시도 ID: " + id + ", 입력한 비밀번호: " + password);
 
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(id, password);
 
@@ -104,7 +104,7 @@ public class MemberService {
 		// Step 3. 인증된 정보를 기반으로 JwtToken 생성
 		JwtTokenDto jwtToken = jwtTokenGenerator.createToken(authentication);
 
-		// System.out.println(jwtToken);
+		System.out.println("생성된 JwtTokenDto: " + jwtToken);
 
 		return jwtToken;
 	}
