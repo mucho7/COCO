@@ -19,10 +19,6 @@ function ProfilePage(params) {
 
     ]
 
-    const ooCLickHandler = () => {
-        
-    }
-
     return (
         <div>
             <BackgroundBox>

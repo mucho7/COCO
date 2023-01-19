@@ -10,7 +10,6 @@
 import { useState } from 'react'
 import { Grid, Box, Container, Button, TextField } from '@mui/material'
 
-
 function SigninForm() {
     const [inputID, setInputID ] = useState()
     const [inputPassword, setInputPassword] = useState()
@@ -18,7 +17,11 @@ function SigninForm() {
     const [inputEmail, setInputEmail] = useState()
     
     const [isEmailValid, setIsEmailValid] = useState(false)
+    const [isPasswordValid, setIsPasswordValid] = useState(false)
+
     // const [passwordValidation, setPasswordValidation] = useState(false)
+
+    const emailValidation = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}')
 
     const onTypingHandler = (e) => {
         // 4개의 케이스에 따라 각자의 스테이트에 저장
@@ -36,16 +39,41 @@ function SigninForm() {
             case 'outlined-email':
                 setInputEmail(e.target.value)
                 break
+            default:
+                // nothing
         }
     }
 
-    const onClickHandler = (e) => {
-        if (isEmailValid === true) {
-            setIsEmailValid(false)
-        } else {
-            setIsEmailValid(true)
-        }
+    const test_user_info = {
+        user_id: inputID, 
+        password: inputPassword,
+        name: 'test',
+        email_id: inputEmail,
     }
+
+    async function axios_test() {
+        const response = await fetch('', {
+            method: 'POST',
+            body: test_user_info,
+            headers: {
+                
+            }
+        })
+        const data = await response.json()
+        console.log(data)
+    } 
+
+    const onClickHandler = (e) => {
+        setIsEmailValid(!(emailValidation.test(test_user_info.email_id)))
+        setIsPasswordValid(!(inputPassword === inputCheckPassword))
+        console.log(isEmailValid)
+        console.log(isPasswordValid)
+
+        if (!isEmailValid && !isPasswordValid){ axios_test()}
+    }
+
+
+
 
     return (
         <Container fixed>
@@ -53,16 +81,17 @@ function SigninForm() {
             <Box component="form">
                 <Grid container spacing={2} style={{padding: '2rem', justifyContent: 'center'}}>
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} error={isEmailValid} helperText={isEmailValid ? "필수 입력입니다" : ""}id="outlined-id" label="ID"  fullWidth/>
+                        <TextField onChange={onTypingHandler} error={false} helperText={isEmailValid ? "필수 입력입니다" : ""}id="outlined-id" label="ID"  fullWidth/>
                     </Grid>
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} error={isEmailValid} helperText={isEmailValid ? "필수 입력입니다" : ""}id="outlined-password" type="password" label="Password" fullWidth/>
+                        {/* 유효성 검사도 함수로 뺍시다 */}
+                        <TextField onChange={onTypingHandler} error={isPasswordValid} helperText={isPasswordValid ? "비밀번호가 일치하지 않습니다." : ""}id="outlined-password" type="password" label="Password" fullWidth/>
                     </Grid>
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} error={isEmailValid} helperText={isEmailValid ? "비밀번호 다르다" : ""} id="outlined-password-check" type="password" label="Password Check" fullWidth/>
+                        <TextField onChange={onTypingHandler} error={isPasswordValid} helperText={isPasswordValid ? "비밀번호가 일치하지 않습니다." : ""} id="outlined-password-check" type="password" label="Password Check" fullWidth/>
                     </Grid>
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} error={isEmailValid} helperText={isEmailValid ? "이메일이 아닙니다" : ""} id="outlined-email" label="E-Mail" fullWidth/>
+                        <TextField onChange={onTypingHandler} error={isEmailValid} helperText={isEmailValid ? "유효한 이메일을 입력해주십시오." : ""} id="outlined-email" label="E-Mail" fullWidth/>
                     </Grid>
                     <Grid item xs={6}>
                         <Button onClick={onClickHandler} variant="contained" className="submit" fullWidth style={{height:"3rem"}}> <b>회원가입</b></Button>
