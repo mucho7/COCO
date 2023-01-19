@@ -43,18 +43,19 @@ public class MemberControllerTest {
 		memberRepository.deleteAll();
 	}
 
+	private String testId = "test";
+	private String testPw = "iamtestdata";
+	private String testName = "나시험";
+	private String testEmail = "test@ssafy.com";
+
 	@Test
 	public void MemberRegisterTest() throws Exception {
-		String userId = "ssafy";
-		String password = "ssafy";
-		String name = "김싸피";
-		String email = "ssafy@ssafy.com";
 
 		MemberRegisterRequestDto requestDto = MemberRegisterRequestDto.builder()
-			.userId(userId)
-			.password(password)
-			.name(name)
-			.email(email)
+			.userId(testId)
+			.password(testPw)
+			.name(testName)
+			.email(testEmail)
 			.build();
 
 		String url = "http://localhost:" + port + "/member";
@@ -63,18 +64,18 @@ public class MemberControllerTest {
 
 		List<Member> all = memberRepository.findAll();
 
-		assertThat(all.get(0).getUserId()).isEqualTo(userId);
-		assertThat(all.get(0).getEmail()).isEqualTo(email);
+		assertThat(all.get(0).getUserId()).isEqualTo(testId);
+		assertThat(all.get(0).getEmail()).isEqualTo(testEmail);
 		assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 	}
 
 	@Test
 	public void MemberUpdateTest() throws Exception {
 		Member registeredMember = memberRepository.save(Member.builder()
-			.userId("ssafy")
-			.password("ssafy")
-			.email("ssafy@ssafy.com")
-			.name("김싸피")
+			.userId(testId)
+			.password(testPw)
+			.email(testEmail)
+			.name(testName)
 			.build()
 		);
 
@@ -108,10 +109,10 @@ public class MemberControllerTest {
 	@Test
 	public void MemberDeleteTest() throws Exception {
 		Member registeredMember = memberRepository.save(Member.builder()
-			.userId("ssafy")
-			.password("ssafy")
-			.email("ssafy@ssafy.com")
-			.name("김싸피")
+			.userId(testId)
+			.password(testPw)
+			.email(testEmail)
+			.name(testName)
 			.build()
 		);
 
@@ -136,10 +137,10 @@ public class MemberControllerTest {
 	@Test
 	public void MemberRatingUpdateTest() throws Exception {
 		Member registeredMember = memberRepository.save(Member.builder()
-			.userId("ssafy")
-			.password("ssafy")
-			.email("ssafy@ssafy.com")
-			.name("김싸피")
+			.userId(testId)
+			.password(testPw)
+			.email(testEmail)
+			.name(testName)
 			.build()
 		);
 

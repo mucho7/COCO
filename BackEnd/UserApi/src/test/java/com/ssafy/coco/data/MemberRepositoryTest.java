@@ -22,19 +22,20 @@ public class MemberRepositoryTest {
 		memberRepository.deleteAll();
 	}
 
+	// 아래 테스트 값은 자신이 DB에 넣고자 하는 값과 데이터 타입에 따라 유동적으로 수정해서 넣으시면 됩니다.
+	private String testId = "test";
+	private String testPw = "iamtestdata";
+	private String testName = "나시험";
+	private String testEmail = "test@ssafy.com";
+
 	@Test
 	public void SignInTest() {
-		// 아래 테스트 값은 자신이 DB에 넣고자 하는 값과 데이터 타입에 따라 유동적으로 수정해서 넣으시면 됩니다.
-		String id = "ssafy2";
-		String password = "ssafy";
-		String name = "김싸피";
-		String email = "ssafy2@ssafy.com";
 
 		memberRepository.save(Member.builder()
-			.id(id)
-			.password(password)
-			.name(name)
-			.email(email)
+			.userId(testId)
+			.password(testPw)
+			.name(testName)
+			.email(testEmail)
 			.build()
 		);
 
@@ -42,7 +43,7 @@ public class MemberRepositoryTest {
 
 		Member member = all.get(0);
 
-		assertThat(member.getUserId()).isEqualTo(id);
+		assertThat(member.getUserId()).isEqualTo(testId);
 	}
 
 }
