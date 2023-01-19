@@ -81,8 +81,8 @@ public class MemberControllerTest {
 
 		String targetId = registeredMember.getUserId();
 		String expectedPassword = "";
-		String expectedEmail = "ssafy_kim@ssafy.com";
-		String expectedName = "김싸피";
+		String expectedEmail = "test_na@ssafy.com";
+		String expectedName = "나검사";
 
 		MemberUpdateRequestDto requestDto = MemberUpdateRequestDto.builder()
 			.email(expectedEmail)
@@ -91,7 +91,7 @@ public class MemberControllerTest {
 			.name(expectedName)
 			.build();
 
-		String url = "http://localhost:" + port + "/member/" + targetId;
+		String url = "http://localhost:" + port + "/member/info" + targetId;
 
 		HttpEntity<MemberUpdateRequestDto> requestEntity = new HttpEntity<>(requestDto);
 
@@ -122,7 +122,7 @@ public class MemberControllerTest {
 
 		MemberDeleteRequestDto requestDto = MemberDeleteRequestDto.builder().time(LocalDateTime.now()).build();
 
-		String url = "http://localhost:" + port + "/member/delete/" + targetId;
+		String url = "http://localhost:" + port + "/member/info/delete/" + targetId;
 
 		HttpEntity<MemberDeleteRequestDto> requestEntity = new HttpEntity<>(requestDto);
 
@@ -153,7 +153,7 @@ public class MemberControllerTest {
 			.amount(amount)
 			.build();
 
-		String url = "http://localhost:" + port + "/member/rating";
+		String url = "http://localhost:" + port + "/member/info/rating";
 
 		HttpEntity<MemberRatingUpdateRequestDto> requestEntity = new HttpEntity<>(requestDto);
 
