@@ -28,7 +28,7 @@ public class MemberService {
 
 	@Transactional
 	public String RegisterMember(MemberRegisterRequestDto requestDto) {
-		return memberRepository.save(requestDto.toEntity()).getId();
+		return memberRepository.save(requestDto.toEntity()).getUserId();
 	}
 
 	@Transactional
@@ -63,13 +63,13 @@ public class MemberService {
 
 	@Transactional
 	public String RatingUpdate(MemberRatingUpdateRequestDto requestDto) {
-		Member member = memberRepository.findById(requestDto.getId())
-			.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. 사용자 ID: " + requestDto.getId()));
+		Member member = memberRepository.findById(requestDto.getUserId())
+			.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. 사용자 ID: " + requestDto.getUserId()));
 		if (member.getDelFlag() != null) // error code: 500
-			throw new IllegalArgumentException("해당 사용자는 탈퇴한 사용자입니다. 사용자 ID: " + requestDto.getId());
+			throw new IllegalArgumentException("해당 사용자는 탈퇴한 사용자입니다. 사용자 ID: " + requestDto.getUserId());
 		else
 			member.UpdateRating(requestDto.getAmount());
-		return requestDto.getId();
+		return requestDto.getUserId();
 	}
 
 	@Transactional

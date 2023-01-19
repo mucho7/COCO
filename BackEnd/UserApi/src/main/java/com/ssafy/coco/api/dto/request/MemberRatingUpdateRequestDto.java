@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class MemberRatingUpdateRequestDto {
-	private String id;
+	private String userId;
 	private Integer amount;
 
 	@Builder
-	public MemberRatingUpdateRequestDto(String id, Integer amount) {
-		this.id = id;
+	public MemberRatingUpdateRequestDto(String userId, Integer amount) {
+		this.userId = userId;
 		this.amount = amount;
 	}
 

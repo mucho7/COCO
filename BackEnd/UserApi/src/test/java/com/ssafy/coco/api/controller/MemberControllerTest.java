@@ -45,13 +45,13 @@ public class MemberControllerTest {
 
 	@Test
 	public void MemberRegisterTest() throws Exception {
-		String id = "ssafy";
+		String userId = "ssafy";
 		String password = "ssafy";
 		String name = "김싸피";
 		String email = "ssafy@ssafy.com";
 
 		MemberRegisterRequestDto requestDto = MemberRegisterRequestDto.builder()
-			.id(id)
+			.userId(userId)
 			.password(password)
 			.name(name)
 			.email(email)
@@ -63,7 +63,7 @@ public class MemberControllerTest {
 
 		List<Member> all = memberRepository.findAll();
 
-		assertThat(all.get(0).getId()).isEqualTo(id);
+		assertThat(all.get(0).getUserId()).isEqualTo(userId);
 		assertThat(all.get(0).getEmail()).isEqualTo(email);
 		assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 	}
@@ -71,14 +71,14 @@ public class MemberControllerTest {
 	@Test
 	public void MemberUpdateTest() throws Exception {
 		Member registeredMember = memberRepository.save(Member.builder()
-			.id("ssafy")
+			.userId("ssafy")
 			.password("ssafy")
 			.email("ssafy@ssafy.com")
 			.name("김싸피")
 			.build()
 		);
 
-		String targetId = registeredMember.getId();
+		String targetId = registeredMember.getUserId();
 		String expectedPassword = "";
 		String expectedEmail = "ssafy_kim@ssafy.com";
 		String expectedName = "김싸피";
@@ -108,7 +108,7 @@ public class MemberControllerTest {
 	@Test
 	public void MemberDeleteTest() throws Exception {
 		Member registeredMember = memberRepository.save(Member.builder()
-			.id("ssafy")
+			.userId("ssafy")
 			.password("ssafy")
 			.email("ssafy@ssafy.com")
 			.name("김싸피")
@@ -117,7 +117,7 @@ public class MemberControllerTest {
 
 		Thread.sleep(2000); // 시간차 적용이 되는지 확인하기 위해 임의로 2초 딜레이 걸어둠.
 
-		String targetId = registeredMember.getId();
+		String targetId = registeredMember.getUserId();
 
 		MemberDeleteRequestDto requestDto = MemberDeleteRequestDto.builder().time(LocalDateTime.now()).build();
 
@@ -136,7 +136,7 @@ public class MemberControllerTest {
 	@Test
 	public void MemberRatingUpdateTest() throws Exception {
 		Member registeredMember = memberRepository.save(Member.builder()
-			.id("ssafy")
+			.userId("ssafy")
 			.password("ssafy")
 			.email("ssafy@ssafy.com")
 			.name("김싸피")
@@ -145,10 +145,10 @@ public class MemberControllerTest {
 
 		Integer amount = 12;
 
-		String targetId = registeredMember.getId();
+		String targetId = registeredMember.getUserId();
 
 		MemberRatingUpdateRequestDto requestDto = MemberRatingUpdateRequestDto.builder()
-			.id(targetId)
+			.userId(targetId)
 			.amount(amount)
 			.build();
 

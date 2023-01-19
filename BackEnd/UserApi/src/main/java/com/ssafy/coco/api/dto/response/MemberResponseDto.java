@@ -19,7 +19,7 @@ public class MemberResponseDto {
 	private LocalDateTime delFlag;
 
 	public MemberResponseDto(Member entity) {
-		this.id = entity.getId();
+		this.id = entity.getUserId();
 		this.password = entity.getPassword();
 		this.name = entity.getName();
 		this.email = entity.getEmail();

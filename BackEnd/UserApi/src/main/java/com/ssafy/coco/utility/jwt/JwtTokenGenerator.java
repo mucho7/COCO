@@ -102,13 +102,13 @@ public class JwtTokenGenerator {
 			Jwts.parserBuilder().setSigningKey(uniqueKey).build().parseClaimsJws(token);
 			return true;
 		} catch (SecurityException | MalformedJwtException e) {
-			log.info("유효하지 않은 JWT 토큰 !! -> " + token);
+			log.info("유효하지 않은 JWT 토큰 !! -> " + token + '\n', e);
 		} catch (ExpiredJwtException e) {
-			log.info("만료된 JWT 토큰 !! -> " + token);
+			log.info("만료된 JWT 토큰 !! -> " + token + '\n', e);
 		} catch (UnsupportedJwtException e) {
-			log.info("지원하지 않는 형식의 JWT 토큰 !! -> " + token);
+			log.info("지원하지 않는 형식의 JWT 토큰 !! -> " + token + '\n', e);
 		} catch (IllegalArgumentException e) {
-			log.info("JWT에서 빈 문자열을 반환하였습니다 !! -> " + token);
+			log.info("JWT에서 빈 문자열을 반환하였습니다 !! -> " + token + '\n', e);
 		}
 		return false;
 	}
@@ -120,7 +120,5 @@ public class JwtTokenGenerator {
 			return e.getClaims();
 		}
 	}
-
-
 
 }

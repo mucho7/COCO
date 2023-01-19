@@ -42,7 +42,7 @@ public class MemberRepositoryTest {
 
 		Member member = all.get(0);
 
-		assertThat(member.getId()).isEqualTo(id);
+		assertThat(member.getUserId()).isEqualTo(id);
 	}
 
 }

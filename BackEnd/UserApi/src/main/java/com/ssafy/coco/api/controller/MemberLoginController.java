@@ -26,11 +26,11 @@ public class MemberLoginController {
 	@ApiOperation(value = "로그인", notes = "ID와 암호화된 PW가 DB에 있는 정보와 일치하는 경우 로그인을 승인한다.")
 	public JwtTokenDto login(
 		@RequestBody @ApiParam(value = "로그인 요청 정보", required = true) MemberLoginRequestDto requestDto) {
-		String userId = requestDto.getId();
+		String userId = requestDto.getUserId();
 		String password = requestDto.getPassword();
 
 		JwtTokenDto jwtToken = memberService.login(userId, password);
-		
+
 		return jwtToken;
 	}
 
