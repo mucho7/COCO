@@ -1,14 +1,19 @@
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom'
+import { Button } from '@mui/material'
 import './NavbarItem.css';
 
 function NavbarItem(props) {
     
     return (
-        <NavContainer className='navbar-list'>
+        <NavContainer>
             {props.navList.map(item => {
                 if (item.bold === true) {
-                    return <Link className='navbar-item' to={item.url} key={item.name}><b>{item.name}</b></Link>
+                    return ( 
+                        <Link className='navbar-item' to={item.url} key={item.name}>
+                            <Button variant="contained" className="submit" fullWidth style={{height:"2.5rem", backgroundColor: "#FCA311"}}> <b>{item.name}</b></Button>
+                        </Link>
+                    )
                 } else {
                     return <Link className='navbar-item' to={item.url} key={item.name}>{item.name}</Link>
                 }
@@ -21,6 +26,8 @@ const NavContainer = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+    vertical-align: middle;
 `
 
 

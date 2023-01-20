@@ -96,17 +96,15 @@ function SigninForm() {
         })
         const data = await response.json()
         console.log('들어옴', data)
-        // return에 따라 출력될 오류 메시지
-        // ID, nickname, E-mail 중복
     } 
 
     // 제출
-    const onClickHandler = (e) => {
+    const onClickHandler = () => {
         setIsEmailValid(!(emailValidation.test(inputEmail)))
         setIsPasswordValid(passwordValidation())
         setIsIdValid(idValidation())
-
-        if (!(isEmailValid.isVaild) && !(isPasswordValid.isVaild)){axios_test()}
+        // 처음 입력됐을 때 이상하게도 그냥 넘어가는 경향이 있음
+        if (!(isEmailValid.isVaild) && !(isPasswordValid.isVaild)){axios_test()} else { alert('다시!!')}
     }
 
 
