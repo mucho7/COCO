@@ -16,16 +16,50 @@ function SigninForm() {
     const [inputCheckPassword, setInputChcekPassword] = useState()
     const [inputEmail, setInputEmail] = useState()
     
+    const [isIdValid, setIsIdValid] = useState({isVaild: false})
     const [isEmailValid, setIsEmailValid] = useState(false)
-    const [isPasswordValid, setIsPasswordValid] = useState(false)
+    const [isPasswordValid, setIsPasswordValid] = useState({isVaild: false})
 
     // const [passwordValidation, setPasswordValidation] = useState(false)
 
+    // 유효성 검사
     const emailValidation = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}')
+    function idValidation() {
+        const idForm = /^[a-z0-9]{4,16}$/
+        const idErrorMessage = {
+            null: "필수 입력입니다.",   
+            form: "ID는 4글자부터 16글자 까지입니다.",
+        }
+        if (inputID === undefined || inputID === '') {
+            return {isVaild: true, message: idErrorMessage.null}
+        } else if (!idForm.test(inputID)) {
+            return {isVaild: true, message: idErrorMessage.form}
+        } else {
+            return {isValid: false}
+        }
+    }
+    function passwordValidation() {
+        const passwordForm = /^[a-z0-9]{4,12}$/
+        const passwordErrorMessage = {
+            null: "필수 입력입니다.",
+            form: "비밀번호가 취약합니다.",
+            same: "비밀번호가 일치하지 않습니다.",
+        }
+        if (inputPassword === undefined || inputPassword === '') {
+            return {isVaild: true, message: passwordErrorMessage.null}
+        } else if (inputPassword !== inputCheckPassword) {
+            return {isVaild: true, message: passwordErrorMessage.same}
+        } else if (!passwordForm.test(inputPassword)) {
+            return {isVaild: true, message: passwordErrorMessage.form}
+        }
+        else {
+            return {isValid: false}
+        }
+    }
 
+    // case를 이용한 typing
     const onTypingHandler = (e) => {
         // 4개의 케이스에 따라 각자의 스테이트에 저장
-        console.log(e.target.id)
         switch (e.target.id) {
             case 'outlined-id':
                 setInputID(e.target.value)
@@ -44,13 +78,14 @@ function SigninForm() {
         }
     }
 
+    // 임시 유저정보
     const test_user_info = {
         user_id: inputID, 
         password: inputPassword,
         name: 'test',
         email_id: inputEmail,
     }
-
+    // URL 주소를 절대주소로 입력해주세요
     async function axios_test() {
         const response = await fetch('', {
             method: 'POST',
@@ -60,16 +95,18 @@ function SigninForm() {
             }
         })
         const data = await response.json()
-        console.log(data)
+        console.log('들어옴', data)
+        // return에 따라 출력될 오류 메시지
+        // ID, nickname, E-mail 중복
     } 
 
+    // 제출
     const onClickHandler = (e) => {
-        setIsEmailValid(!(emailValidation.test(test_user_info.email_id)))
-        setIsPasswordValid(!(inputPassword === inputCheckPassword))
-        console.log(isEmailValid)
-        console.log(isPasswordValid)
+        setIsEmailValid(!(emailValidation.test(inputEmail)))
+        setIsPasswordValid(passwordValidation())
+        setIsIdValid(idValidation())
 
-        if (!isEmailValid && !isPasswordValid){ axios_test()}
+        if (!(isEmailValid.isVaild) && !(isPasswordValid.isVaild)){axios_test()}
     }
 
 
@@ -81,14 +118,13 @@ function SigninForm() {
             <Box component="form">
                 <Grid container spacing={2} style={{padding: '2rem', justifyContent: 'center'}}>
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} error={false} helperText={isEmailValid ? "필수 입력입니다" : ""}id="outlined-id" label="ID"  fullWidth/>
+                        <TextField onChange={onTypingHandler} error={isIdValid.isVaild} helperText={isIdValid.isVaild ? isIdValid.message : ""}id="outlined-id" label="ID"  fullWidth/>
                     </Grid>
                     <Grid item xs={7}>
-                        {/* 유효성 검사도 함수로 뺍시다 */}
-                        <TextField onChange={onTypingHandler} error={isPasswordValid} helperText={isPasswordValid ? "비밀번호가 일치하지 않습니다." : ""}id="outlined-password" type="password" label="Password" fullWidth/>
+                        <TextField onChange={onTypingHandler} error={isPasswordValid.isVaild} helperText={isPasswordValid.isVaild ? isPasswordValid.message : ""}id="outlined-password" type="password" label="Password" fullWidth/>
                     </Grid>
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} error={isPasswordValid} helperText={isPasswordValid ? "비밀번호가 일치하지 않습니다." : ""} id="outlined-password-check" type="password" label="Password Check" fullWidth/>
+                        <TextField onChange={onTypingHandler} error={isPasswordValid.isVaild} helperText={isPasswordValid.isVaild ? isPasswordValid.message : ""} id="outlined-password-check" type="password" label="Password Check" fullWidth/>
                     </Grid>
                     <Grid item xs={7}>
                         <TextField onChange={onTypingHandler} error={isEmailValid} helperText={isEmailValid ? "유효한 이메일을 입력해주십시오." : ""} id="outlined-email" label="E-Mail" fullWidth/>
