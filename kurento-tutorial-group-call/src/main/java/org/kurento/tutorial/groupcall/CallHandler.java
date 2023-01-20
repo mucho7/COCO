@@ -72,6 +72,7 @@ public class CallHandler extends TextWebSocketHandler {
         user.receiveVideoFrom(sender, sdpOffer);
         break;
       case "leaveRoom":
+        noticeLeaving(user); //
         leaveRoom(user);
         break;
       case "onIceCandidate":
@@ -96,6 +97,17 @@ public class CallHandler extends TextWebSocketHandler {
   public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
     UserSession user = registry.removeBySession(session);
     roomManager.getRoom(user.getRoomName()).leave(user);
+  }
+
+  private void noticeLeaving(UserSession user) throws Exception {
+    // 해당 룸에 있는 참여자들에게 user님이 떠났다고 알리기
+    final List<UserSession> participantsList = roomManager.getRoom(user.getRoomName()).getParticipantsList(user);
+
+    final JsonObject chat = new JsonObject();
+    chat.addProperty("id", "noticeLeaving");
+    chat.addProperty("userName", user.getName());
+
+    noticeMessage(participantsList, chat);
   }
 
   private void sendChat(JsonObject params) throws Exception {

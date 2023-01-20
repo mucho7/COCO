@@ -52,8 +52,8 @@ ws.onmessage = function(message) {
 	case 'noticeChat':
 	    noticeChat(parsedMessage.userName, parsedMessage.chat);
 	    break;
-	case 'noticeLeave':
-	    noticeLeave(parsedMessage.userName, '나갔습니다...')
+	case 'noticeLeaving':
+	    notifyLeaving(parsedMessage.userName);
 	default:
 		console.error('Unrecognized message', parsedMessage);
 	}
@@ -74,6 +74,13 @@ btnSendChat.onclick = () => {
     sendMessage(message);
 
     noticeChat("[me]", chat);
+}
+
+function notifyLeaving(user) {
+    let li = document.createElement('li')
+    let text = document.createTextNode(`${user}님이 나갔습니다.`)
+    li.appendChild(text)
+    ulChat.appendChild(li)
 }
 
 function noticeChat(user, chat) {
