@@ -11,7 +11,7 @@ import FormLabel from '@mui/material/FormLabel';
 import Typography from '@mui/material/Typography';
 
 import { useDispatch } from 'react-redux';
-import { sessionListActions } from '../../store/sessionListSlice';
+import { createSession } from '../../store/sessionListSlice';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -19,7 +19,7 @@ function CreateSession() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const createSession = (event) => {
+  const handleCreateSession = (event) => {
     event.preventDefault();
     const sessionData = new FormData(event.currentTarget);
     const payload = {
@@ -27,7 +27,8 @@ function CreateSession() {
       content: sessionData.get('content'),
       mode: sessionData.get('mode')
     }
-    dispatch(sessionListActions.createSession(payload));
+    // 백엔드의 "/room" URI로 POST 요청 보내는 함수로 변경
+    dispatch(createSession(payload));
     navigate("/sessionlist");
   }
   
@@ -37,7 +38,7 @@ function CreateSession() {
       <Typography component="h1" variant="h5">
         세션 생성
       </Typography>
-      <Box component="form" noValidate sx={{ mt: 3 }} onSubmit={createSession}>
+      <Box component="form" noValidate sx={{ mt: 3 }} onSubmit={handleCreateSession}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField

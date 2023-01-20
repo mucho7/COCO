@@ -1,13 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = { isCompileSubmit: false }
+const initialState = { 
+  isCompileSubmit: false, 
+  submitData: {
+    testInput: "",
+    useVisualize: false,
+    variableName: "",
+    selectLine: "",
+    iterationVariable: ""
+  }
+}
 
 const compileSlice = createSlice({
   name: 'compile',
   initialState,
   reducers: {
-    onCompileSubmit: (state) => {
-      state.isCompileSubmit = !state.isCompileSubmit;
+    onCompileSubmit: (state, action) => {
+      state.isCompileSubmit = action.payload.isCompileSubmit;
+      state.submitData = action.payload.submitData;
     }
   }
 });

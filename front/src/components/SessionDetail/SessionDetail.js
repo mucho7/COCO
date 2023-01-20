@@ -3,15 +3,19 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
+
+import { deleteSession } from "../../store/sessionListSlice";
 
 function SessionDetail() {
   const { sessionId } = useParams();
   const sessionList = useSelector((state) => state.sessionList.sessionList);
   const session = sessionList.filter((session) => session.id === Number(sessionId))[0];
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  // WebRTC 서버로 연결하는 동작으로 변경
   function enterSession() {
     switch (session.mode) {
       case "normal":
@@ -22,6 +26,19 @@ function SessionDetail() {
         break;
       default:
     } 
+  }
+
+  // 백엔드의 /room/{room_id}로 delete 요청보내는 동작으로 변경
+  function handleDeleteSession() {
+    let idx
+    for (let i=0; i < sessionList.length; i++) {
+      if (sessionList[i].id === Number(sessionId)) {
+        idx = i;
+        break;
+      }
+    }
+    dispatch(deleteSession(idx))
+    navigate("/sessionlist");
   }
 
   return (
@@ -38,7 +55,7 @@ function SessionDetail() {
         <Stack spacing={2} direction="row" sx={{  display: "flex", justifyContent: "flex-end", mr: 2 }}>
           <Button variant="contained" onClick={enterSession}>참여</Button>
           <Button variant="contained">수정</Button>
-          <Button variant="contained">삭제</Button>
+          <Button variant="contained" onClick={handleDeleteSession}>삭제</Button>
         </Stack>
       </Box>
     </Container>

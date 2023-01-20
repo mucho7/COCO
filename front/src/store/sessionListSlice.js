@@ -15,10 +15,15 @@ const sessionListSlice = createSlice({
         id, title, content, mode
       }
       state.sessionList.push(newSession);
+    },
+    deleteSession(state, action) {
+      const idx = action.payload;
+      state.sessionList = state.sessionList.splice(state.sessionList, idx);
     }
   }
 });
 
-export const sessionListActions = sessionListSlice.actions;
+export const {createSession, deleteSession} = sessionListSlice.actions;
+// export const sessionListActions = sessionListSlice.actions;
 
 export default sessionListSlice;

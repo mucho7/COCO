@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isCompileButtonOn: false,
-  isVisualizeButtonOn: false,
   isDrawButtonOn: false,
   isMicButtonOn: false,
   isAuthorizeButtonOn: false,
@@ -16,15 +15,6 @@ const toolBarActionSlice = createSlice({
   reducers: {
     onClickCompileButton(state) {
       state.isCompileButtonOn = !state.isCompileButtonOn;
-      if (state.isCompileButtonOn) {
-        state.isVisualizeButtonOn = false;
-      }
-    },
-    onClickVisualizeButton(state) {
-      state.isVisualizeButtonOn = !state.isVisualizeButtonOn;
-      if (state.isVisualizeButtonOn) {
-        state.isCompileButtonOn = false;
-      }
     },
     onClickDrawButton(state) {
       state.isDrawButtonOn = !state.isDrawButtonOn;
@@ -47,7 +37,6 @@ const toolBarActionSlice = createSlice({
 export default toolBarActionSlice;
 export const { 
   onClickCompileButton, 
-  onClickVisualizeButton, 
   onClickDrawButton,
   onClickMicButton,
   onClickAuthorizeButton,

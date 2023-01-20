@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 import CompileButton from "./CompileButton";
-import VisualizeButton from "./VisualizeButton";
 import DrawButton from "./DrawButton";
 import MicButton from "./MicButton";
 import AuthorizeButton from "./AuthorizeButton";
@@ -35,7 +34,6 @@ function ToolBar(props) {
     <Box>
       <div>
         <CompileButton />
-        <VisualizeButton />
         <DrawButton />
         <MicButton />
         <AuthorizeButton />
