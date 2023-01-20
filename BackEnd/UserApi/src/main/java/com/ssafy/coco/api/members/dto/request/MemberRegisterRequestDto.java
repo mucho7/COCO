@@ -1,6 +1,6 @@
-package com.ssafy.coco.api.dto.request;
+package com.ssafy.coco.api.members.dto.request;
 
-import com.ssafy.coco.data.Member;
+import com.ssafy.coco.api.members.data.Member;
 
 import lombok.Builder;
 import lombok.Getter;

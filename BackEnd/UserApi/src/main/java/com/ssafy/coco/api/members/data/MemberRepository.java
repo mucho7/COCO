@@ -1,4 +1,4 @@
-package com.ssafy.coco.data;
+package com.ssafy.coco.api.members.data;
 
 import java.util.Optional;
 

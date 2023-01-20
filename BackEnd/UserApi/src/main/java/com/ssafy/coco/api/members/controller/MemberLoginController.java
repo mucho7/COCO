@@ -1,13 +1,13 @@
-package com.ssafy.coco.api.controller;
+package com.ssafy.coco.api.members.controller;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.coco.api.dto.JwtTokenDto;
-import com.ssafy.coco.api.dto.request.MemberLoginRequestDto;
-import com.ssafy.coco.api.service.MemberService;
+import com.ssafy.coco.api.members.dto.request.MemberLoginRequestDto;
+import com.ssafy.coco.api.members.service.MemberService;
+import com.ssafy.coco.api.tokens.dto.JwtTokenDto;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

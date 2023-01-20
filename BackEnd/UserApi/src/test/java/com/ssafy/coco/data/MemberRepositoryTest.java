@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.ssafy.coco.api.members.data.Member;
+import com.ssafy.coco.api.members.data.MemberRepository;
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class MemberRepositoryTest {

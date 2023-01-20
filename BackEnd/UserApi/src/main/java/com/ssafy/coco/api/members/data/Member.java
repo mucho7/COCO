@@ -1,4 +1,4 @@
-package com.ssafy.coco.data;
+package com.ssafy.coco.api.members.data;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -15,6 +15,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @ToString
 public class Member implements UserDetails {
@@ -71,9 +74,6 @@ public class Member implements UserDetails {
 	public void DeleteMember(LocalDateTime time) {
 		this.delFlag = time;
 	}
-
-	// 아래 함수들은 UserDetails를 상속받기 때문에 어쩔 수 없이 오버라이드한 메소드.
-	// 필요 없을 경우 상속을 제거하고 아래 함수들은 빼도 될 것 같다.
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

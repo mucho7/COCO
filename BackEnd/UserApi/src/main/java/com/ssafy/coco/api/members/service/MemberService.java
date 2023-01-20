@@ -1,31 +1,40 @@
-package com.ssafy.coco.api.service;
+package com.ssafy.coco.api.members.service;
 
 import javax.transaction.Transactional;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.ssafy.coco.api.dto.JwtTokenDto;
-import com.ssafy.coco.api.dto.request.JwtExtractRequestDto;
-import com.ssafy.coco.api.dto.request.MemberDeleteRequestDto;
-import com.ssafy.coco.api.dto.request.MemberRatingUpdateRequestDto;
-import com.ssafy.coco.api.dto.request.MemberRegisterRequestDto;
-import com.ssafy.coco.api.dto.request.MemberUpdateRequestDto;
-import com.ssafy.coco.api.dto.response.MemberResponseDto;
-import com.ssafy.coco.data.Member;
-import com.ssafy.coco.data.MemberRepository;
-import com.ssafy.coco.utility.jwt.JwtTokenGenerator;
+import com.ssafy.coco.api.members.data.Member;
+import com.ssafy.coco.api.members.data.MemberRepository;
+import com.ssafy.coco.api.members.dto.request.MemberDeleteRequestDto;
+import com.ssafy.coco.api.members.dto.request.MemberRatingUpdateRequestDto;
+import com.ssafy.coco.api.members.dto.request.MemberRegisterRequestDto;
+import com.ssafy.coco.api.members.dto.request.MemberUpdateRequestDto;
+import com.ssafy.coco.api.members.dto.response.MemberResponseDto;
+import com.ssafy.coco.api.tokens.JwtTokenGenerator;
+import com.ssafy.coco.api.tokens.dto.JwtTokenDto;
+import com.ssafy.coco.api.tokens.service.JwtTokenService;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
-public class MemberService {
+public class MemberService implements UserDetailsService {
 	private final MemberRepository memberRepository;
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
 	private final JwtTokenGenerator jwtTokenGenerator;
+
+	private final JwtTokenService jwtService;
+
+	private final PasswordEncoder passwordEncoder;
 
 	@Transactional
 	public Long RegisterMember(MemberRegisterRequestDto requestDto) {
@@ -94,26 +103,37 @@ public class MemberService {
 
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(id, password);
 
-		// System.out.println(authenticationToken);
+		System.out.println(authenticationToken);
 
 		// Step 2. 실제 검증 (사용자 비밀번호 체크 등)이 이루어지는 부분
 		// authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행
 		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-		// System.out.println(authentication);
+		System.out.println(authentication.getPrincipal());
 
 		// Step 3. 인증된 정보를 기반으로 JwtToken 생성
-		JwtTokenDto jwtToken = jwtTokenGenerator.createToken(authentication);
+		UserDetails userDetails = (User)authentication.getPrincipal();
+		JwtTokenDto jwtToken = jwtTokenGenerator.createToken(userDetails.getUsername(), userDetails.getAuthorities());
 
 		System.out.println("생성된 JwtTokenDto: " + jwtToken);
+		jwtService.login(jwtToken);
 
 		return jwtToken;
 	}
 
-	// JWT 토큰으로부터 사용자 ID를 추출해주되, 유효한 refreshToken을 가지고 있을 때만 반환해주도록.
-	@Transactional
-	public Member ExtractMemberFromJwtToken(JwtExtractRequestDto requestDto) {
-		Authentication authentication = jwtTokenGenerator.getAuthentication(requestDto.getAccessToken());
-
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		return memberRepository.findByUserId(username)
+			.map(this::createUserDetail)
+			.orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
 	}
+
+	private UserDetails createUserDetail(Member member) {
+		return User.builder()
+			.username(member.getUsername())
+			.password(passwordEncoder.encode(member.getPassword()))
+			.roles(member.getRole())
+			.build();
+	}
+
 }

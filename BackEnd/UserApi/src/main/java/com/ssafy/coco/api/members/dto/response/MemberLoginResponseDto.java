@@ -1,4 +1,4 @@
-package com.ssafy.coco.api.dto.response;
+package com.ssafy.coco.api.members.dto.response;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

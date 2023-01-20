@@ -58,7 +58,7 @@ public class SwaggerConfig {
 			.groupName(groupName)
 			.apiInfo(apiInfo())
 			.select()
-			.apis(RequestHandlerSelectors.basePackage("com.ssafy.coco.api.controller"))
+			.apis(RequestHandlerSelectors.basePackage("com.ssafy.coco.api"))
 			.paths(predicate)
 			.apis(RequestHandlerSelectors.any())
 			.build()

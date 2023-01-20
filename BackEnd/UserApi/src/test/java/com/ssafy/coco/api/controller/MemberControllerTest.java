@@ -18,12 +18,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.ssafy.coco.api.dto.request.MemberDeleteRequestDto;
-import com.ssafy.coco.api.dto.request.MemberRatingUpdateRequestDto;
-import com.ssafy.coco.api.dto.request.MemberRegisterRequestDto;
-import com.ssafy.coco.api.dto.request.MemberUpdateRequestDto;
-import com.ssafy.coco.data.Member;
-import com.ssafy.coco.data.MemberRepository;
+import com.ssafy.coco.api.members.data.Member;
+import com.ssafy.coco.api.members.data.MemberRepository;
+import com.ssafy.coco.api.members.dto.request.MemberDeleteRequestDto;
+import com.ssafy.coco.api.members.dto.request.MemberRatingUpdateRequestDto;
+import com.ssafy.coco.api.members.dto.request.MemberRegisterRequestDto;
+import com.ssafy.coco.api.members.dto.request.MemberUpdateRequestDto;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

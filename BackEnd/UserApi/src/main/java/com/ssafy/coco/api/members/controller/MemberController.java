@@ -1,4 +1,8 @@
-package com.ssafy.coco.api.controller;
+package com.ssafy.coco.api.members.controller;
+
+import java.util.Enumeration;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,14 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.coco.api.dto.request.JwtExtractRequestDto;
-import com.ssafy.coco.api.dto.request.MemberDeleteRequestDto;
-import com.ssafy.coco.api.dto.request.MemberRatingUpdateRequestDto;
-import com.ssafy.coco.api.dto.request.MemberRegisterRequestDto;
-import com.ssafy.coco.api.dto.request.MemberUpdateRequestDto;
-import com.ssafy.coco.api.dto.response.MemberResponseDto;
-import com.ssafy.coco.api.service.MemberService;
-import com.ssafy.coco.data.Member;
+import com.ssafy.coco.api.members.dto.request.MemberDeleteRequestDto;
+import com.ssafy.coco.api.members.dto.request.MemberRatingUpdateRequestDto;
+import com.ssafy.coco.api.members.dto.request.MemberRegisterRequestDto;
+import com.ssafy.coco.api.members.dto.request.MemberUpdateRequestDto;
+import com.ssafy.coco.api.members.dto.response.MemberResponseDto;
+import com.ssafy.coco.api.members.service.MemberService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -68,9 +70,12 @@ public class MemberController {
 
 	@PostMapping("/extract")
 	@ApiOperation(value = "Jwt 토큰 정보 추출", notes = "제공된 Jwt로부터 사용자 정보를 추출해 반환한다.")
-	public Member ExtractMemberFromJwtToken(@RequestBody JwtExtractRequestDto requestDto) {
-		return memberService.ExtractMemberFromJwtToken(requestDto);
-
+	public String ExtractMemberFromJwtToken(HttpServletRequest request) {
+		Enumeration<String> headerNames = request.getHeaderNames();
+		while (headerNames.hasMoreElements()) {
+			System.out.println("request.getHeaderNames()==>" + headerNames.nextElement());
+		}
+		return request.getHeader("auth");
 	}
 
 }

@@ -1,8 +1,8 @@
-package com.ssafy.coco.api.dto.response;
+package com.ssafy.coco.api.members.dto.response;
 
 import java.time.LocalDateTime;
 
-import com.ssafy.coco.data.Member;
+import com.ssafy.coco.api.members.data.Member;
 
 import lombok.Getter;
 
