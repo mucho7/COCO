@@ -8,7 +8,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import com.ssafy.coco.api.tokens.JwtTokenGenerator;
+import com.ssafy.coco.api.tokens.JwtTokenProvider;
 import com.ssafy.coco.api.tokens.data.RefreshToken;
 import com.ssafy.coco.api.tokens.data.RefreshTokenRepository;
 import com.ssafy.coco.api.tokens.dto.JwtTokenDto;
@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JwtTokenService {
 
-	private final JwtTokenGenerator jwtTokenGenerator;
+	private final JwtTokenProvider jwtTokenProvider;
 	private final RefreshTokenRepository refreshTokenRepository;
 
 	@Transactional
@@ -40,14 +40,15 @@ public class JwtTokenService {
 	}
 
 	public Optional<RefreshToken> getRefreshToken(String refreshToken) {
-		return refreshTokenRepository.findByRefreshToken(refreshToken);
+		
+		return refreshTokenRepository.findByRefreshToken(refreshToken.substring(7));
 	}
 
 	public Map<String, String> validateRefreshToken(String refreshToken) {
 		System.out.println(refreshToken);
 		RefreshToken newRefreshToken = getRefreshToken(refreshToken).get();
 		// System.out.println("new refreshToken: " + newRefreshToken);
-		String createdAccessToken = jwtTokenGenerator.validateRefreshToken(newRefreshToken);
+		String createdAccessToken = jwtTokenProvider.validateRefreshToken(newRefreshToken);
 		return createRefreshInfo(createdAccessToken);
 	}
 

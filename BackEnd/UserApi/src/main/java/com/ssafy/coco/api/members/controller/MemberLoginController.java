@@ -42,9 +42,11 @@ public class MemberLoginController {
 
 		JwtTokenDto jwtToken = memberService.login(userId, password);
 
+		System.out.println(jwtToken);
+
 		if (jwtToken != null) {
 
-			response.setHeader("authorization", "bearer " + jwtToken.getAccessToken());
+			response.setHeader("Authorization", "bearer " + jwtToken.getAccessToken());
 			response.setHeader("refreshToken", "bearer " + jwtToken.getRefreshToken());
 
 			return ResponseEntity.ok().body("로그인 성공");

@@ -63,7 +63,7 @@ public class SwaggerConfig {
 			.apis(RequestHandlerSelectors.any())
 			.build()
 			.securityContexts(Arrays.asList(securityContext()))
-			.securitySchemes(Arrays.asList(apiKey()));
+			.securitySchemes(Arrays.asList(accessToken()));
 	}
 
 	// swagger ui 설정.
@@ -72,8 +72,8 @@ public class SwaggerConfig {
 		return UiConfigurationBuilder.builder().displayRequestDuration(true).validatorUrl("").build();
 	}
 
-	private ApiKey apiKey() {
-		return new ApiKey("JWT", "auth", "header");
+	private ApiKey accessToken() {
+		return new ApiKey("JWT", "Authorization", "header");
 	}
 
 	private SecurityContext securityContext() {

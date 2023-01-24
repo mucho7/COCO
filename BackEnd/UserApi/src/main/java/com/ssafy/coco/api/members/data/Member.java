@@ -1,10 +1,14 @@
 package com.ssafy.coco.api.members.data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -43,9 +47,9 @@ public class Member implements UserDetails {
 	private String name;
 	@Column(length = 64, nullable = false)
 	private String email;
-	@Column(length = 10)
-	@ColumnDefault("user")
-	private String role;
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Builder.Default
+	private List<String> roles = new ArrayList<>();
 	@ColumnDefault("0")
 	private Integer rating;
 	@CreationTimestamp
@@ -71,6 +75,10 @@ public class Member implements UserDetails {
 		this.rating += amount;
 	}
 
+	public void UpdatePassword(String password) {
+		this.password = password;
+	}
+
 	public void DeleteMember(LocalDateTime time) {
 		this.delFlag = time;
 	}
@@ -87,7 +95,7 @@ public class Member implements UserDetails {
 
 	@Override
 	public boolean isAccountNonExpired() {
-		return delFlag != null;
+		return true;
 	}
 
 	@Override

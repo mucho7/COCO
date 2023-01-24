@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.coco.api.members.dto.MailDto;
 import com.ssafy.coco.api.members.dto.request.MemberDeleteRequestDto;
 import com.ssafy.coco.api.members.dto.request.MemberRatingUpdateRequestDto;
 import com.ssafy.coco.api.members.dto.request.MemberRegisterRequestDto;
 import com.ssafy.coco.api.members.dto.request.MemberUpdateRequestDto;
+import com.ssafy.coco.api.members.dto.request.SendPasswordRequestDto;
 import com.ssafy.coco.api.members.dto.response.MemberResponseDto;
 import com.ssafy.coco.api.members.service.MemberService;
 
@@ -31,7 +33,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 	private final MemberService memberService;
 
-	@PostMapping()
+	@PostMapping("/register")
 	@ApiOperation(value = "회원 가입", notes = "넘겨받은 회원정보를 바탕으로 회원을 DB에 등록한다.")
 	public Long RegisterMember(
 		@RequestBody @ApiParam(value = "회원가입 정보", required = true) MemberRegisterRequestDto requestDto) {
@@ -53,7 +55,7 @@ public class MemberController {
 		return memberService.findByUserId(id);
 	}
 
-	@PutMapping("/info/delete/{id}")
+	@PutMapping("/delete/{id}")
 	@ApiOperation(value = "회원 탈퇴", notes = "{id}의 사용자 정보에 탈퇴일(del_flag)을 기록한다.")
 	public String DeleteMember(@PathVariable @ApiParam(value = "탈퇴할 회원 ID", required = true) String id,
 		@RequestBody @ApiParam(value = "회원이 탈퇴를 요청한 시각", required = true) MemberDeleteRequestDto requestDto) {
@@ -75,7 +77,25 @@ public class MemberController {
 		while (headerNames.hasMoreElements()) {
 			System.out.println("request.getHeaderNames()==>" + headerNames.nextElement());
 		}
-		return request.getHeader("auth");
+		return request.getHeader("Authorization");
+	}
+
+	@PostMapping("/sendMail")
+	public String sendPassword(
+		@RequestBody @ApiParam(value = "임시 비밀번호 발급 요청 정보", required = true) SendPasswordRequestDto requestDto) {
+
+		String userId = requestDto.getUserId();
+		String email = requestDto.getEmail();
+
+		boolean isAvaliable = memberService.ExistUserByIdAndEmail(userId, email);
+
+		if (isAvaliable) {
+			MailDto mailDto = memberService.createMailAndMakeTempPassword(userId, email);
+			memberService.sendMail(mailDto);
+			return "입력하신 이메일로 임시 비밀번호를 보내드렸습니다.";
+		} else {
+			return "입력한 정보에 해당하는 사용자가 없습니다.";
+		}
 	}
 
 }

@@ -1,20 +1,22 @@
 package com.ssafy.coco.api.tokens;
 
 import java.util.Base64;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
+import com.ssafy.coco.api.members.data.MemberRepository;
 import com.ssafy.coco.api.tokens.data.RefreshToken;
+import com.ssafy.coco.api.tokens.data.RefreshTokenRepository;
 import com.ssafy.coco.api.tokens.dto.JwtTokenDto;
 
 import io.jsonwebtoken.Claims;
@@ -25,11 +27,13 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SecurityException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class JwtTokenGenerator {
+@RequiredArgsConstructor
+public class JwtTokenProvider {
 
 	/** ===== 레퍼런스 =====
 	 * Spring Security & Jwt 로그인 적용하기
@@ -37,15 +41,20 @@ public class JwtTokenGenerator {
 	 *
 	 * jwt refresh token 적용기
 	 * https://velog.io/@jkijki12/Jwt-Refresh-Token-%EC%A0%81%EC%9A%A9%EA%B8%B0
+	 *
+	 * https://velog.io/@solchan/%EB%B0%B1%EC%97%85-Refresh-Token-%EB%B0%9C%EA%B8%89%EA%B3%BC-Access-Token-%EC%9E%AC%EB%B0%9C%EA%B8%89
 	 */
 
 	@Value("${jwt.secret}")
 	private String uniqueKey;
 
-	private int accessTokenValidTime = 1000 * 60 * 30; // AccessToken 유효시간 : 30분
-	private int refreshTokenValidTime = 1000 * 60 * 60; // RefreshToken 유효시간 : 60분
+	private int accessTokenValidTime = 1000 * 60; // AccessToken 유효시간 : 30분
+	private int refreshTokenValidTime = 1000 * 120; // RefreshToken 유효시간 : 60분
 
-	private UserDetailsService userDetailsService;
+	private final UserDetailsService userDetailsService;
+	private final MemberRepository memberRepository;
+
+	private final RefreshTokenRepository refreshTokenRepository;
 
 	@PostConstruct
 	protected void init() {
@@ -53,13 +62,13 @@ public class JwtTokenGenerator {
 	}
 
 	// 유저 정보를 토대로 AccessToken, RefreshToken을 생성하는 메서드
-	public JwtTokenDto createToken(String userId, Collection<? extends GrantedAuthority> roles) {
+	public JwtTokenDto createToken(String userId, List<String> roles) {
 		Claims claims = Jwts.claims().setSubject(userId);
 		claims.put("roles", roles);
 
 		Date now = new Date();
 
-		// Access Token 생성 (Access Token 유효기간: 30분)
+		// Access Token 생성
 		String accessToken = Jwts.builder()
 			.setClaims(claims)
 			.setIssuedAt(now)
@@ -67,7 +76,7 @@ public class JwtTokenGenerator {
 			.signWith(SignatureAlgorithm.HS256, uniqueKey)
 			.compact();
 
-		// Refresh Token 생성 (Refresh Token 유효기간: 3일)
+		// Refresh Token 생성
 		String refreshToken = Jwts.builder()
 			.setExpiration(new Date(now.getTime() + refreshTokenValidTime)) // Refresh Token의 만료 날짜 설정.
 			.signWith(SignatureAlgorithm.HS256, uniqueKey)
@@ -84,7 +93,10 @@ public class JwtTokenGenerator {
 
 	// Jwt 토큰을 복호화하여 인증 정보 조회
 	public Authentication getAuthentication(String token) {
-		UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserId(token));
+		String userId = this.getUserId(token);
+		System.out.println("토큰에서 추출한 userId: " + userId);
+		UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
+		System.out.println("loadUserByUserName 이후 추출한 userdetails: " + userDetails);
 		return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
 	}
 
@@ -93,23 +105,22 @@ public class JwtTokenGenerator {
 		return Jwts.parser().setSigningKey(uniqueKey).parseClaimsJws(token).getBody().getSubject();
 	}
 
-	public String validateRefreshToken(RefreshToken requestToken) {
-		// Refresh Token 객체에서 refreshToken 추출
-		String refreshToken = requestToken.getRefreshToken();
-		System.out.println(refreshToken);
-		try {
-			// Refresh Token 검증
-			Jws<Claims> claims = Jwts.parser().setSigningKey(uniqueKey).parseClaimsJws(refreshToken);
+	public List<String> getRoles(String userId) {
+		return memberRepository.findByUserId(userId).get().getRoles();
+	}
 
-			if (!claims.getBody().getExpiration().before(new Date())) {
-				return recreateAccessToken(requestToken.getUserId(), "user"); // TODO : 사용자 권한 하드코딩한거 고치는 방법 찾아보기
-			}
-		} catch (Exception e) {
-			//  Refresh Token이 만료된 경우 로그인 필요
-			e.printStackTrace();
-			return null;
-		}
-		return null;
+	public JwtTokenDto resolveToken(HttpServletRequest request) {
+		JwtTokenDto tokenDto = new JwtTokenDto();
+		if (request.getHeader("authorization") != null)
+			tokenDto.setAccessToken(request.getHeader("authorization").substring(7));
+		if (request.getHeader("refreshToken") != null)
+			tokenDto.setRefreshToken(request.getHeader("refreshToken").substring(7));
+		return tokenDto;
+	}
+
+	public boolean existsRefreshToken(String refreshToken) {
+		return refreshTokenRepository.existsByRefreshToken(refreshToken);
+
 	}
 
 	// 토큰 정보를 검증하는 메서드
@@ -127,6 +138,30 @@ public class JwtTokenGenerator {
 			log.info("JWT에서 빈 문자열을 반환하였습니다 !! -> " + token + '\n', e);
 		}
 		return false;
+	}
+
+	// refreshToken에 대한 유효성 검사
+	public String validateRefreshToken(RefreshToken requestToken) {
+		// Refresh Token 객체에서 refreshToken 추출
+		String refreshToken = requestToken.getRefreshToken().substring(7);
+		System.out.println(refreshToken);
+		try {
+			// Refresh Token 검증
+			Jws<Claims> claims = Jwts.parser().setSigningKey(uniqueKey).parseClaimsJws(refreshToken);
+			System.out.println(claims);
+
+			if (!claims.getBody().getExpiration().before(new Date())) {
+				String userId = requestToken.getUserId();
+				System.out.println("토큰 상의 UserID: " + userId + ", claims상의 UserId: " + claims.getBody().getId());
+				return recreateAccessToken(claims.getBody().getId().toString(),
+					claims.getBody().get("roles")); // TODO : 사용자 권한 하드코딩한거 고치는 방법 찾아보기
+			}
+		} catch (Exception e) {
+			//  Refresh Token이 만료된 경우 로그인 필요
+			e.printStackTrace();
+			return null;
+		}
+		return null;
 	}
 
 	// refresh token을 받아 유효성을 검증하고, 유효성 통과시 새로운 access token을 생성하여 반환해준다.

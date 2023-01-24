@@ -11,7 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.ssafy.coco.api.tokens.JwtAuthenticationFilter;
-import com.ssafy.coco.api.tokens.JwtTokenGenerator;
+import com.ssafy.coco.api.tokens.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-	private final JwtTokenGenerator jwtTokenGenerator;
+	private final JwtTokenProvider jwtTokenProvider;
 
 	/**
 	 * ===== Spring Security 설정 관련 레퍼런스 링크 =====
@@ -37,16 +37,21 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
-			.httpBasic().disable()
-			.csrf().disable()
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.httpBasic()
+			.disable()
+			.csrf()
+			.disable()
+			.sessionManagement()
+			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 			.authorizeRequests()
-			.antMatchers("/swagger*/**", "/login", "/check/**").permitAll()
-			.antMatchers("/member/**", "/member", "/refresh").authenticated()
+			.antMatchers("/swagger*/**", "/login", "/check/**", "/member/register", "/token", "/member/sendEmail")
+			.permitAll()
+			.antMatchers("/member/info/**", "/member/rating", "/member/extract")
+			.hasAnyRole("USER", "ADMIN")
 			// .anyRequest().permitAll()
 			.and()
-			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenGenerator),
+			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
 				UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}

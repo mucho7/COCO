@@ -27,7 +27,7 @@ public class TokenRefreshController {
 
 	private final JwtTokenService jwtTokenService;
 
-	@PostMapping("/refresh")
+	@PostMapping
 	@ApiOperation(value = "AccessToken 재발급", notes = "RefreshToken의 유효시간이 남아있는지 검사하고, 유효한 경우 새로운 AccessToken을 생성하여 반환한다.")
 	public ResponseEntity<?> validateRefreshToken(HttpServletRequest request, HttpServletResponse response) {
 		// log.info("refresh controller 실행");

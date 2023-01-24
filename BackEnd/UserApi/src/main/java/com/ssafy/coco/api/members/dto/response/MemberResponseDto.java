@@ -1,6 +1,7 @@
 package com.ssafy.coco.api.members.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.ssafy.coco.api.members.data.Member;
 
@@ -13,7 +14,7 @@ public class MemberResponseDto {
 	private String password;
 	private String name;
 	private String email;
-	private String role;
+	private List<String> roles;
 	private Integer rating;
 	private LocalDateTime regTime;
 	private LocalDateTime delFlag;
@@ -24,7 +25,7 @@ public class MemberResponseDto {
 		this.name = entity.getName();
 		this.email = entity.getEmail();
 		this.rating = entity.getRating();
-		this.role = entity.getRole();
+		this.roles = entity.getRoles();
 		this.regTime = entity.getRegTime();
 		this.delFlag = entity.getDelFlag();
 	}

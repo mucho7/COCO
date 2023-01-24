@@ -1,5 +1,7 @@
 package com.ssafy.coco.api.members.dto.request;
 
+import java.util.Collections;
+
 import com.ssafy.coco.api.members.data.Member;
 
 import lombok.Builder;
@@ -28,6 +30,7 @@ public class MemberRegisterRequestDto {
 			.password(password)
 			.name(name)
 			.email(email)
+			.roles(Collections.singletonList("ROLE_USER"))
 			.build();
 	}
 }
