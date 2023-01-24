@@ -1,5 +1,8 @@
 package com.ssafy.coco.api.members.controller;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,16 +34,24 @@ public class MemberLoginController {
 		@ApiResponse(code = 403, message = "아이디 또는 비밀번호 오류"),
 		@ApiResponse(code = 500, message = "내부 서버 오류")
 	})
-	public JwtTokenDto login(
-		@RequestBody @ApiParam(value = "로그인 요청 정보", required = true) MemberLoginRequestDto requestDto) {
+	public ResponseEntity login(
+		@RequestBody @ApiParam(value = "로그인 요청 정보", required = true) MemberLoginRequestDto requestDto,
+		HttpServletResponse response) {
 		String userId = requestDto.getUserId();
 		String password = requestDto.getPassword();
 
-		// System.out.println("id: " + userId + ", pw: " + password);
-
 		JwtTokenDto jwtToken = memberService.login(userId, password);
 
-		return jwtToken;
+		if (jwtToken != null) {
+
+			response.setHeader("authorization", "bearer " + jwtToken.getAccessToken());
+			response.setHeader("refreshToken", "bearer " + jwtToken.getRefreshToken());
+
+			return ResponseEntity.ok().body("로그인 성공");
+		}
+
+		return ResponseEntity.internalServerError().body("내부 서버 오류");
+
 	}
 
 }
