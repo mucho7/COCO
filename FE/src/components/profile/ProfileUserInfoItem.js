@@ -1,22 +1,41 @@
 import styled from "styled-components"
 
 function ProfileUserInfoItem(props) {
-    return (
-        <Col>
-            {props.userInfo.map((item) => {
-                return (
-                    <UserInfoBox key={item.name}>
-                        <UserInfoNameBox>
-                            {item.name}
-                        </UserInfoNameBox>
-                        <UserInfoContentBox>
-                            {item.content}
-                        </UserInfoContentBox>
-                    </UserInfoBox>
-                )
-            })}
-        </Col>
-    )
+    if (props.userInfo[0]) {
+        return (
+            <Col>
+                {props.userInfo.map((item) => {
+                    return (
+                        <UserInfoBox key={item.name}>
+                            <UserInfoNameBox>
+                                {item.name}
+                            </UserInfoNameBox>
+                            <UserInfoContentBox>
+                                {item.content}
+                            </UserInfoContentBox>
+                        </UserInfoBox>
+                    )
+                })}
+            </Col>
+        )
+    } else {
+        return (
+            <Col>
+                {props.userInfo.map((item) => {
+                    return (
+                        <UserInfoBox key={item.name}>
+                            <UserInfoNameBox>
+                                {item.name}
+                            </UserInfoNameBox>
+                            <UserInfoContentBox>
+                                {item.content}
+                            </UserInfoContentBox>
+                        </UserInfoBox>
+                    )
+                })}
+            </Col>
+        )
+    }
 }
 
 const UserInfoBox = styled.div `

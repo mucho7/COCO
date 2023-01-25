@@ -73,20 +73,20 @@ function SigninForm() {
 
     // 임시 유저정보
     const temp_user_info = {
-        user_id: inputID, 
+        userId: inputID, 
         password: inputPassword,
         name: 'test',
-        email_id: inputEmail,
+        email: inputEmail,
     }
-    // URL 주소를 절대주소로 입력해주세요
     async function axios_test() {
         console.log('들어간다')
-
-        const response = await fetch('https://70.12.247.183:8080/member/register', {
+        
+        // URL 주소를 절대주소로 입력해주세요
+        const response = await fetch('/member/register', {
             method: 'POST',
-            body: temp_user_info,
+            body: JSON.stringify(temp_user_info),
             headers: {
-                
+                "Content-Type": `application/json`,
             }
         })
         const data = await response.json()
@@ -99,6 +99,7 @@ function SigninForm() {
         setIsPasswordValid(passwordValidation())
         setIsIdValid(idValidation())
         // 처음 입력됐을 때 이상하게도 그냥 넘어가는 경향이 있음
+        // useState는 비동기 고쳐야함
         if (!(isEmailValid.isVaild) && !(isPasswordValid.isVaild)){axios_test()} else { alert('다시!!')}
     }
 

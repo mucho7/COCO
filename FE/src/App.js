@@ -2,7 +2,7 @@ import  { Navbar } from './components/navbar';
 import { Route, Routes  } from "react-router-dom"
 import styled from "styled-components";
 
-import  { HomePage, LoginPage, SigninPage, ProfilePage, CommuPage, ProfileUpdatePage } from './pages'
+import  { HomePage, LoginPage, SigninPage, ProfilePage, CommuPage,  } from './pages'
 
 function App() {
   return (
@@ -14,7 +14,6 @@ function App() {
         <Route path="/useri" element={<SigninPage/>}/>
         <Route path="/useri/login" element={<LoginPage/>}/>
         <Route path="/useri/user_id" element={<ProfilePage/>}/>
-        <Route path="/useri/user_id/update" element={<ProfileUpdatePage/>}/>
       </Routes> 
     </SidePaddingBox>
   );
