@@ -8,15 +8,15 @@ const CompileResultDiv = styled.div`
 
 function CompileResult() {
   const isCompileSubmit = useSelector((state) => state.compile.isCompileSubmit);
-  const result = useSelector((state) => state.compile.submitData);
+  const testInput = useSelector((state) => state.compile.testInput);
+  const visualizationDto = useSelector((state) => state.compile.visualizationDto);
 
   const resultDiv = (
     <div>
-      <p>예제 입력: {result.testInput}</p>
-      <p>시각화? {result.useVisualize}</p>
-      <p>변수명: {result.variableName}</p>
-      <p>라인: {result.selectLine}</p>
-      <p>반복 변수: {result.iterationVariable}</p>
+      <p>예제 입력: {testInput}</p>
+      <p>변수명: {visualizationDto?.variable}</p>
+      <p>라인: {visualizationDto?.line}</p>
+      <p>반복 변수: {visualizationDto?.iterationVariableVector}</p>
     </div>
   )
   
