@@ -35,9 +35,10 @@ public class RoomController {
 	// 	return ResponseEntity.ok(roomService.getRoomList());
 	// }
 
-	@PostMapping
-	public String RegisterRoom(@RequestBody RoomRegisterRequestDto requestDto) {
-		return roomService.RegisterRoom(requestDto);
+	@GetMapping
+	public List<Room> GetRoomList(@RequestParam String mode, @RequestParam(required = false) String hostId,
+		@RequestParam(required = false) String title) {
+		return roomService.GetRoomList(mode, hostId, title);
 	}
 
 	@GetMapping("/{id}")
@@ -45,10 +46,9 @@ public class RoomController {
 		return roomService.findByRoomId(id);
 	}
 
-	@GetMapping
-	public List<Room> ReadRoom(@RequestParam String mode, @RequestParam(required = false) String hostId,
-		@RequestParam(required = false) String title) {
-		return roomService.ReadRoom(mode, hostId, title);
+	@PostMapping
+	public String RegisterRoom(@RequestBody RoomRegisterRequestDto requestDto) {
+		return roomService.RegisterRoom(requestDto);
 	}
 
 	@PutMapping("/{id}")
@@ -56,8 +56,18 @@ public class RoomController {
 		return roomService.UpdateRoom(requestDto, id);
 	}
 
+	@PutMapping("/{id}/{userId}")
+	public String UpdateRoomEnter(@PathVariable String id, @PathVariable String userId) {
+		return roomService.UpdateRoomEnter(id, userId);
+	}
+
+	@PutMapping("/{id}/leave")
+	public String UpdateRoomLeave(@PathVariable String id) {
+		return roomService.UpdateRoomLeave(id);
+	}
+
 	@DeleteMapping("/{id}")
-	public String UpdateRoom(@PathVariable String id) {
+	public String DeleteRoom(@PathVariable String id) {
 		return roomService.DeleteRoom(id);
 	}
 }

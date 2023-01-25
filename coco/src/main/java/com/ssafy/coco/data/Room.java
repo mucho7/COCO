@@ -39,7 +39,7 @@ public class Room {
 	private String mode;
 	@ColumnDefault("0")
 	private Integer isLive;
-	@Column
+	@ColumnDefault("0")
 	private Integer numberUsers;
 	@ColumnDefault("10")
 	private Integer max;
@@ -64,5 +64,13 @@ public class Room {
 		this.isLive = isLive;
 		this.numberUsers = numberUsers;
 		this.max = max;
+	}
+
+	public void UpdateRoomIsLive() {
+		this.isLive = 1;
+	}
+
+	public void UpdateRoomNumberUsers(Integer amount) {
+		this.numberUsers += amount;
 	}
 }

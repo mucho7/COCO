@@ -20,21 +20,13 @@ import lombok.RequiredArgsConstructor;
 public class RoomService {
 	private final RoomRepository roomRepository;
 
-	@Transactional
-	public String RegisterRoom(RoomRegisterRequestDto requestDto) {
-		return roomRepository.save(requestDto.toEntity()).getRoomId();
-	}
-
-	//
-	// public List<Room> getRoomList() {
-	// 	return roomRepository.findAll();
-	// }
-	public List<Room> ReadRoom(String mode, String hostId, String title) {
+	public List<Room> GetRoomList(String mode, String hostId, String title) {
 		Specification<Room> spec = Specification.where(RoomSpecification.equalMode(mode));
-		if (hostId != null) {
+
+		if (hostId != null && hostId.length() != 0) {
 			spec = spec.and(RoomSpecification.equalHostId(hostId));
 		}
-		if (title != null) {
+		if (title != null && title.length() != 0) {
 			spec = spec.and(RoomSpecification.likeTitle(title));
 		}
 
@@ -49,11 +41,47 @@ public class RoomService {
 	}
 
 	@Transactional
+	public String RegisterRoom(RoomRegisterRequestDto requestDto) {
+		return roomRepository.save(requestDto.toEntity()).getRoomId();
+	}
+
+	@Transactional
 	public String UpdateRoom(RoomUpdateRequestDto requestDto, String roomId) {
 		Room room = roomRepository.findById(roomId)
 			.orElseThrow(() -> new IllegalArgumentException("해당 방은 없습니다. 방 ID: " + roomId));
 		room.UpdateRoom(requestDto.getTitle(), requestDto.getContent(), requestDto.getMode(), requestDto.getIsLive(),
 			requestDto.getNumberUsers(), requestDto.getMax());
+		return roomId;
+	}
+
+	@Transactional
+	public String UpdateRoomEnter(String roomId, String userId) {
+		Room room = roomRepository.findById(roomId)
+			.orElseThrow(() -> new IllegalArgumentException("해당 방은 없습니다. 방 ID: " + roomId));
+
+		if (room.getHostId().equals(userId)) { // 호스트가 방에 입장할 때
+			room.UpdateRoomIsLive();
+			room.UpdateRoomNumberUsers(1);
+		} else { // 일반 사용자가 방에 입장할 때
+			if (room.getNumberUsers() >= room.getMax()) { // error code: 500
+				throw new IllegalArgumentException("꽉찬 방입니다.");
+			} else if (room.getIsLive() == 0) { // error code: 500
+				throw new IllegalArgumentException("호스트가 아직 입장하지 않았습니다.");
+			} else { // 입장하기
+				room.UpdateRoomNumberUsers(1);
+			}
+		}
+
+		return userId;
+	}
+
+	@Transactional
+	public String UpdateRoomLeave(String roomId) {
+		Room room = roomRepository.findById(roomId)
+			.orElseThrow(() -> new IllegalArgumentException("해당 방은 없습니다. 방 ID: " + roomId));
+
+		room.UpdateRoomNumberUsers(-1);
+
 		return roomId;
 	}
 
