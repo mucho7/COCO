@@ -86,7 +86,7 @@ function SigninForm() {
             method: 'POST',
             body: JSON.stringify(temp_user_info),
             headers: {
-                
+                "Content-Type": `application/json`,
             }
         })
         const data = await response.json()
@@ -99,6 +99,7 @@ function SigninForm() {
         setIsPasswordValid(passwordValidation())
         setIsIdValid(idValidation())
         // 처음 입력됐을 때 이상하게도 그냥 넘어가는 경향이 있음
+        // useState는 비동기 고쳐야함
         if (!(isEmailValid.isVaild) && !(isPasswordValid.isVaild)){axios_test()} else { alert('다시!!')}
     }
 
