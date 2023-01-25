@@ -41,7 +41,7 @@ public class Member implements UserDetails {
 
 	@Column(length = 32, nullable = false)
 	private String userId;
-	@Column(length = 32, nullable = false)
+	@Column(length = 255, nullable = false)
 	private String password;
 	@Column(length = 16, nullable = false)
 	private String name;
@@ -73,10 +73,10 @@ public class Member implements UserDetails {
 
 	public void UpdateRating(Integer amount) {
 		this.rating += amount;
-	}
-
-	public void UpdatePassword(String password) {
-		this.password = password;
+		if (this.rating > 10000)
+			this.rating = 10000;
+		else if (this.rating < 0)
+			this.rating = 0;
 	}
 
 	public void DeleteMember(LocalDateTime time) {

@@ -9,7 +9,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -48,6 +47,7 @@ public class MemberService {
 
 	@Transactional
 	public Long RegisterMember(MemberRegisterRequestDto requestDto) {
+		requestDto.setPassword(passwordEncoder.encode(requestDto.getPassword()));
 		return memberRepository.save(requestDto.toEntity()).getId();
 	}
 
@@ -59,7 +59,8 @@ public class MemberService {
 		if (member.getDelFlag() != null)
 			throw new IllegalArgumentException("해당 사용자는 탈퇴한 사용자입니다. 사용자 ID: " + userId);
 		else
-			member.UpdateInfo(requestDto.getPassword(), requestDto.getName(), requestDto.getEmail());
+			member.UpdateInfo(passwordEncoder.encode(requestDto.getPassword()), requestDto.getName(),
+				requestDto.getEmail());
 		return userId;
 	}
 
@@ -113,9 +114,13 @@ public class MemberService {
 		// Step 1. 로그인 ID/비밀번호 기반으로 Authentication 객체 생성
 		// 이 때, 인증 여부를 확인하는 authenticated 값을 false로 한다.
 
-		System.out.println("로그인 시도 ID: " + id + ", 입력한 비밀번호: " + password);
+		String encodedPassword = passwordEncoder.encode(password);
 
-		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(id, password);
+		System.out.println("로그인 시도 ID: " + id + ", 입력한 비밀번호: " + password);
+		System.out.println("인코딩된 password: " + encodedPassword);
+
+		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(id,
+			password);
 
 		System.out.println(authenticationToken);
 
@@ -123,11 +128,11 @@ public class MemberService {
 		// authenticate 매서드가 실행될 때 MemberService 에서 만든 loadUserByUsername 메서드가 실행
 		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-		System.out.println(authentication.getPrincipal());
+		System.out.println("principal: " + authentication.getPrincipal());
 
 		// Step 3. 인증된 정보를 기반으로 JwtToken 생성
-		UserDetails userDetails = (User)authentication.getPrincipal();
-		System.out.println(userDetails.toString());
+		UserDetails userDetails = (Member)authentication.getPrincipal();
+		System.out.println("userDetails: " + userDetails.toString());
 		String userId = userDetails.getUsername();
 		List<String> roles = memberRepository.findByUserId(userId).get().getRoles();
 		JwtTokenDto jwtToken = jwtTokenProvider.createToken(userId, roles);
@@ -152,7 +157,8 @@ public class MemberService {
 
 	private void updatePassword(String userId, String tempPassword) {
 		Member member = memberRepository.findByUserId(userId).get();
-		member.UpdatePassword(tempPassword); // TODO: 추후 MD5로 변환하여 저장하는 로직 필요함.
+		String encodedPassword = passwordEncoder.encode(tempPassword);
+		member.setPassword(encodedPassword); // TODO: 추후 MD5로 변환하여 저장하는 로직 필요함.
 		memberRepository.save(member);
 	}
 
@@ -163,7 +169,7 @@ public class MemberService {
 			'w', 'x', 'y', 'z'};
 		StringBuilder tempPassword = new StringBuilder();
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 8; i++) {
 			int idx = (int)(charSet.length * Math.random());
 			tempPassword.append(charSet[idx]);
 		}

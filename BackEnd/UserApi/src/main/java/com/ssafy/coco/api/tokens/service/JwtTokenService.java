@@ -40,14 +40,14 @@ public class JwtTokenService {
 	}
 
 	public Optional<RefreshToken> getRefreshToken(String refreshToken) {
-		
+
 		return refreshTokenRepository.findByRefreshToken(refreshToken.substring(7));
 	}
 
 	public Map<String, String> validateRefreshToken(String refreshToken) {
-		System.out.println(refreshToken);
+		System.out.println("-> JWTTokenService#validateRefreshToken: " + refreshToken);
 		RefreshToken newRefreshToken = getRefreshToken(refreshToken).get();
-		// System.out.println("new refreshToken: " + newRefreshToken);
+		System.out.println("new refreshToken: " + newRefreshToken);
 		String createdAccessToken = jwtTokenProvider.validateRefreshToken(newRefreshToken);
 		return createRefreshInfo(createdAccessToken);
 	}

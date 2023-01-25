@@ -48,8 +48,8 @@ public class JwtTokenProvider {
 	@Value("${jwt.secret}")
 	private String uniqueKey;
 
-	private int accessTokenValidTime = 1000 * 60; // AccessToken 유효시간 : 30분
-	private int refreshTokenValidTime = 1000 * 120; // RefreshToken 유효시간 : 60분
+	private int accessTokenValidTime = 1000 * 60 * 30; // AccessToken 유효시간 : 30분
+	private int refreshTokenValidTime = 1000 * 60 * 60; // RefreshToken 유효시간 : 60분
 
 	private final UserDetailsService userDetailsService;
 	private final MemberRepository memberRepository;
@@ -143,18 +143,22 @@ public class JwtTokenProvider {
 	// refreshToken에 대한 유효성 검사
 	public String validateRefreshToken(RefreshToken requestToken) {
 		// Refresh Token 객체에서 refreshToken 추출
-		String refreshToken = requestToken.getRefreshToken().substring(7);
+		System.out.println(requestToken);
+		String refreshToken = requestToken.getRefreshToken().trim();
+		if (refreshToken.startsWith("bearer "))
+			refreshToken = refreshToken.substring(7);
 		System.out.println(refreshToken);
 		try {
 			// Refresh Token 검증
 			Jws<Claims> claims = Jwts.parser().setSigningKey(uniqueKey).parseClaimsJws(refreshToken);
-			System.out.println(claims);
+			System.out.println("claim의 body: " + claims);
+			System.out.println("claim의 body get: " + claims.getBody().get("Id"));
 
 			if (!claims.getBody().getExpiration().before(new Date())) {
 				String userId = requestToken.getUserId();
 				System.out.println("토큰 상의 UserID: " + userId + ", claims상의 UserId: " + claims.getBody().getId());
-				return recreateAccessToken(claims.getBody().getId().toString(),
-					claims.getBody().get("roles")); // TODO : 사용자 권한 하드코딩한거 고치는 방법 찾아보기
+				return recreateAccessToken(userId, (memberRepository.findByUserId(userId)).get().getRoles());
+				// TODO : 사용자 권한 하드코딩한거 고치는 방법 찾아보기
 			}
 		} catch (Exception e) {
 			//  Refresh Token이 만료된 경우 로그인 필요

@@ -7,8 +7,10 @@ import com.ssafy.coco.api.members.data.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class MemberRegisterRequestDto {
 	private String userId;
