@@ -1,4 +1,5 @@
 import styled  from 'styled-components'
+import { useState, useEffect } from 'react'
 import { Button } from '@mui/material'
 import { AccountCircle } from '@mui/icons-material'
 import { ProfileUserInfoItem, ProfileUserTrophy } from '../components/profile'
@@ -9,14 +10,15 @@ function ProfilePage(params) {
     //     {name: },
     //     {},
     //     {},
-    // ]
+    // 
+//]
 
+// Axios로 교체될 정보
     const userInfo = [
         {name: 'User ID', content: 'SSAFY_Gorilla'},
         {name: 'User Name', content: '채치수'},
         {name: 'User E-Mail', content: 'SSAFY@edu.ssafy.com'},
         {name: 'Since', content: '23.01.01'},
-
     ]
 
     return (

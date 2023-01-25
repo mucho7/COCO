@@ -1,11 +1,4 @@
-// 테스트를 위해 모든 validation을 email에 연결해둠
-// 차후에 처리가 필요함
-// 이메일 더블체크와 이메일 여부 판단만 코드가 구현되어 있음
-// 입력 여부를 판단하는 함수도 추가 필요
-
 // custom hook에 대한 이해가 필요함
-// input을 핸들링 하는 과정에서 4개나 되는 똑같은 함수들이 돌아감 이를 해결하고 싶은 마음이 굴뚝 같으나 일단 기능 구현을 해봄
-
 
 import { useState } from 'react'
 import { Grid, Box, Container, Button, TextField } from '@mui/material'
@@ -22,7 +15,7 @@ function SigninForm() {
 
     // const [passwordValidation, setPasswordValidation] = useState(false)
 
-    // 유효성 검사
+    // validation
     const emailValidation = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}')
     function idValidation() {
         const idForm = /^[a-z0-9]{4,16}$/
@@ -79,7 +72,7 @@ function SigninForm() {
     }
 
     // 임시 유저정보
-    const test_user_info = {
+    const temp_user_info = {
         user_id: inputID, 
         password: inputPassword,
         name: 'test',
@@ -87,9 +80,11 @@ function SigninForm() {
     }
     // URL 주소를 절대주소로 입력해주세요
     async function axios_test() {
-        const response = await fetch('', {
+        console.log('들어간다')
+
+        const response = await fetch('https://70.12.247.183:8080/member/register', {
             method: 'POST',
-            body: test_user_info,
+            body: temp_user_info,
             headers: {
                 
             }
