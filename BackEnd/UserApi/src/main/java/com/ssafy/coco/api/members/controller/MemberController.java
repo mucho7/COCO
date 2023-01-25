@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +35,7 @@ import lombok.RequiredArgsConstructor;
 @Api(tags = "회원 관리 API")
 @RequiredArgsConstructor
 @RestController
-
+@CrossOrigin("*")
 public class MemberController {
 	private final MemberService memberService;
 
