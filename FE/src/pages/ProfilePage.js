@@ -1,18 +1,10 @@
 import styled  from 'styled-components'
-import { useState, useEffect } from 'react'
+
 import { Button } from '@mui/material'
 import { AccountCircle } from '@mui/icons-material'
 import { ProfileUserInfoItem, ProfileUserTrophy } from '../components/profile'
 
 function ProfilePage(params) {
-
-    // const userTrophy = [
-    //     {name: },
-    //     {},
-    //     {},
-    // 
-//]
-
 // Axios로 교체될 정보
     const userInfo = [
         {name: 'User ID', content: 'SSAFY_Gorilla'},
