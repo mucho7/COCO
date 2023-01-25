@@ -19,6 +19,7 @@ var ws = new WebSocket('wss://' + location.host + '/groupcall');
 var participants = {};
 var name;
 let btnSendChat = document.getElementById('btnSendChat'); //
+let btnVideoOnOff = document.getElementById('btnVideoOnOff'); //
 
 window.onbeforeunload = function() {
 	ws.close();
@@ -90,6 +91,32 @@ function noticeChat(user, chat) {
     ulChat.appendChild(li)
 }
 
+btnVideoOnOff.onclick = onOffVideo;
+
+function onOffVideo() {
+    let name = document.getElementById('name').value;
+//    console.log("video enabled:", participants[name].rtcPeer.videoEnabled);
+    console.log("audio enabled:", participants[name].rtcPeer.audioEnabled);
+    participants[name].rtcPeer.videoEnabled = !participants[name].rtcPeer.videoEnabled;
+
+//    var audioTracks = participants[name].rtcPeer.pc.getLocalStreams()[0].getAudioTracks();
+//    // Uncaught TypeError: Cannot read properties of undefined (reading 'getLocalStreams')
+//    // if MediaStream has reference to microphone
+//    if (audioTracks[0]) {
+//        audioTracks[0].enabled = false;
+//    }
+
+}
+
+//function muteMicrophone(name) {
+//    var audioTracks = participants[name].rtcPeer.pc.getLocalStreams()[0].getAudioTracks();
+//
+//    // if MediaStream has reference to microphone
+//    if (audioTracks[0]) {
+//        audioTracks[0].enabled = false;
+//    }
+//}
+
 function register() {
 	name = document.getElementById('name').value;
 	var room = document.getElementById('roomName').value;
@@ -160,6 +187,9 @@ function onExistingParticipants(msg) {
 		  }
 		  this.generateOffer (participant.offerToReceiveVideo.bind(participant));
 	});
+
+//    console.log("getLocalStream...", participants[name].rtcPeer.getLocalStream()); //
+//	console.log("getLocalStream...", participant.rtcPeer.getLocalStream()); //
 
 	msg.data.forEach(receiveVideo);
 }
