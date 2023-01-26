@@ -55,16 +55,27 @@ public class MemberService {
 	}
 
 	@Transactional
-	public String UpdateInfo(String userId, MemberUpdateRequestDto requestDto) {
-		Member member = memberRepository.findByUserId(userId)
-			.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. 사용자 ID: " + userId));
-		// System.out.println(member.getDelFlag() + ", 탈퇴했는가? : " + member.getDelFlag() != null);
-		if (member.getDelFlag() != null)
-			throw new IllegalArgumentException("해당 사용자는 탈퇴한 사용자입니다. 사용자 ID: " + userId);
-		else
-			member.UpdateInfo(passwordEncoder.encode(requestDto.getPassword()), requestDto.getName(),
-				requestDto.getEmail());
-		return userId;
+	public String UpdateInfo(String userId, MemberUpdateRequestDto requestDto, HttpServletRequest request) {
+		String accessToken = request.getHeader("Authorization");
+		String tokenOwner=jwtTokenProvider.getUserId(accessToken);
+		if(tokenOwner.equals(userId)) {
+			Member member = memberRepository.findByUserId(userId)
+				.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. 사용자 ID: " + userId));
+			// System.out.println(member.getDelFlag() + ", 탈퇴했는가? : " + member.getDelFlag() != null);
+			if (member.getDelFlag() != null)
+				throw new IllegalArgumentException("해당 사용자는 탈퇴한 사용자입니다. 사용자 ID: " + userId);
+			else {
+				if(requestDto.getPassword()!=null){
+					member.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+				}
+				if(requestDto.getName()!=null)
+					member.setName(requestDto.getName());
+				if(requestDto.getEmail()!=null)
+					member.setEmail(requestDto.getEmail());
+			}
+			return userId;
+		}
+		return null;
 	}
 
 	public MemberResponseDto findByUserId(String userId) {
@@ -80,7 +91,10 @@ public class MemberService {
 
 	@Transactional
 	public String DeleteMember(String id, HttpServletRequest request) {
-		String accessToken=request.getHeader("Authentication");
+		String accessToken=request.getHeader("Authorization");
+		System.out.println("accessToken : "+accessToken);
+		if(accessToken.startsWith("bearer "))
+			accessToken=accessToken.substring(7);
 		String tokenOwnerId = jwtTokenProvider.getUserId(accessToken);
 
 		if(tokenOwnerId.equals(id)) {
@@ -143,14 +157,17 @@ public class MemberService {
 		// Step 3. 인증된 정보를 기반으로 JwtToken 생성
 		UserDetails userDetails = (Member)authentication.getPrincipal();
 		System.out.println("userDetails: " + userDetails.toString());
-		String userId = userDetails.getUsername();
-		List<String> roles = memberRepository.findByUserId(userId).get().getRoles();
-		JwtTokenDto jwtToken = jwtTokenProvider.createToken(userId, roles);
+		if(((Member)userDetails).getDelFlag()==null) {
+			String userId = userDetails.getUsername();
+			List<String> roles = memberRepository.findByUserId(userId).get().getRoles();
+			JwtTokenDto jwtToken = jwtTokenProvider.createToken(userId, roles);
 
-		System.out.println("생성된 JwtTokenDto: " + jwtToken);
-		jwtService.login(jwtToken);
+			System.out.println("생성된 JwtTokenDto: " + jwtToken);
+			jwtService.login(jwtToken);
 
-		return jwtToken;
+			return jwtToken;
+		}
+		else return null;
 	}
 
 	@Transactional

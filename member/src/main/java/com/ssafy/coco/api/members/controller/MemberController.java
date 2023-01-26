@@ -1,5 +1,6 @@
 package com.ssafy.coco.api.members.controller;
 
+import java.net.http.HttpResponse;
 import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,6 +44,7 @@ public class MemberController {
 	private final MemberService memberService;
 
 	// CI/CD 정상 동작 테스트를 위한 메서드. 및 URI
+	@ApiOperation(value = "Hello", notes = "CI/CD 정상 동작 테스트를 위한 API")
 	@GetMapping("/member/hello")
 	public String hello(){
 		return "member";
@@ -57,10 +59,12 @@ public class MemberController {
 
 	@PutMapping("/member/info/{id}")
 	@ApiOperation(value = "정보 변경", notes = "갱신된 사용자 정보를 {id}를 PK로 가지는 레코드에 적용한다.")
-	public String UpdateMember(@PathVariable @ApiParam(value = "회원정보를 수정할 사용자의 {id}", required = true) String id,
-		@RequestBody @ApiParam(value = "수정할 내용이 담긴 데이터 객체", required = true) MemberUpdateRequestDto requestDto) {
-
-		return memberService.UpdateInfo(id, requestDto);
+	public ResponseEntity UpdateMember(@PathVariable @ApiParam(value = "회원정보를 수정할 사용자의 {id}", required = true) String id,
+		@RequestBody @ApiParam(value = "수정할 내용이 담긴 데이터 객체", required = true) MemberUpdateRequestDto requestDto, HttpServletRequest request) {
+		String updatedUserId=memberService.UpdateInfo(id, requestDto, request);
+		if(updatedUserId==null)
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(id+" 사용자의 수정 권한이 없는 사용자입니다.");
+		return ResponseEntity.ok(updatedUserId);
 	}
 
 	@GetMapping("/member/info/{id}")
@@ -94,6 +98,7 @@ public class MemberController {
 	}
 
 	@PostMapping("/tempPassword")
+	@ApiOperation(value = "임시 비밀번호 발급 API", notes = "비밀번호를 재설정하려는 ID와 이메일을 받아 회원 본인인지 확인하고, 맞다면 8자 구성의 임시 비밀번호를 반환한다.")
 	public String getTempPassword(
 		@RequestBody @ApiParam(value = "임시 비밀번호 발급 요청 정보", required = true) SendPasswordRequestDto requestDto) {
 		String userId = requestDto.getUserId();
@@ -133,7 +138,7 @@ public class MemberController {
 			return ResponseEntity.ok().body("로그인 성공");
 		}
 
-		return ResponseEntity.internalServerError().body("내부 서버 오류");
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ID 비밀번호를 다시 확인하세요.");
 	}
 
 	@PostMapping("/logout")

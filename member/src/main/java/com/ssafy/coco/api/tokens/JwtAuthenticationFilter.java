@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		String accessToken = tokenDto.getAccessToken();
 		String refreshToken = tokenDto.getRefreshToken();
 
-		System.out.println(tokenDto);
+		// System.out.println("RequestHeader에서 추출한 JWT Token : " + tokenDto);
 
 		// Step 2. 토큰의 유효성 검사
 		if (tokenDto.getAccessToken() != null) {
@@ -65,7 +65,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	// SecurityContext 에 Authentication 객체를 저장.
 	public void setAuthentication(String token) {
-		System.out.println("setAuthentication의 token: " + token);
+		System.out.println("[setAuthentication@JwtAuthenticationFilter] token: " + token);
 		// 토큰으로부터 유저 정보를 받아옵니다.
 		Authentication authentication = jwtTokenProvider.getAuthentication(token);
 		// SecurityContext 에 Authentication 객체를 저장합니다.
