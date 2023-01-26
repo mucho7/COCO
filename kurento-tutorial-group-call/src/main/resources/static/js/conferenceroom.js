@@ -34,11 +34,14 @@ ws.onmessage = function(message) {
 	switch (parsedMessage.id) {
 	case 'existingParticipants':
 		onExistingParticipants(parsedMessage);
+		countUsers(0);
 		break;
 	case 'newParticipantArrived':
 		onNewParticipant(parsedMessage);
+		countUsers(0);
 		break;
 	case 'participantLeft':
+	    countUsers(-1);
 	    notifyLeaving(parsedMessage.name);
 		onParticipantLeft(parsedMessage);
 		break;
@@ -100,6 +103,7 @@ function noticeChat(user, chat) {
 btnVideoOnOff.onclick = onOffVideo;
 
 function onOffVideo() {
+    console.log("participants: ", participants); //
     let name = document.getElementById('name').value;
 //    console.log("video enabled:", participants[name].rtcPeer.videoEnabled);
 //    console.log("audio enabled:", participants[name].rtcPeer.audioEnabled);
@@ -139,6 +143,12 @@ function turnVideoOffFromHost() {
 //         // participants[key].rtcPeer.audioEnabled
 //    }
 //}
+
+function countUsers(number) {
+    let count = Object.keys(participants).length + number;
+    document.getElementById('numberOfUsers').innerText = '인원수: ' + count;
+//    return Object.keys(participants).length;
+}
 
 function register() {
 	name = document.getElementById('name').value;
