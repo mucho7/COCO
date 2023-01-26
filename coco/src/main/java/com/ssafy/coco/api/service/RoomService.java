@@ -1,9 +1,12 @@
 package com.ssafy.coco.api.service;
 
+import static org.springframework.data.domain.Sort.Order.*;
+
 import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +32,7 @@ public class RoomService {
 		if (title != null && title.length() != 0) {
 			spec = spec.and(RoomSpecification.likeTitle(title));
 		}
-
-		return roomRepository.findAll(spec);
+		return roomRepository.findAll(spec, Sort.by(desc("hostRating")));
 	}
 
 	public RoomDetailResponseDto findByRoomId(String roomId) {
