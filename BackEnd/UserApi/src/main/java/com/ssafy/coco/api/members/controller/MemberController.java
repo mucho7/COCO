@@ -5,6 +5,7 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,7 +77,7 @@ public class MemberController {
 		return memberService.RatingUpdate(requestDto);
 	}
 
-	@PostMapping("/extract")
+	@PostMapping("/extract") // TODO : accessToken에서 회원 ID 추출 로직 추가
 	@ApiOperation(value = "Jwt 토큰 정보 추출", notes = "제공된 AccessToken으로부터 사용자 ID를 추출해 반환한다.")
 	public String ExtractMemberFromJwtToken(HttpServletRequest request) {
 		Enumeration<String> headerNames = request.getHeaderNames();
@@ -86,6 +87,10 @@ public class MemberController {
 		return request.getHeader("Authorization");
 	}
 
+	/**
+	 * 만들어두긴 했으나, 내부 네트워크 환경에서 smtp 서버에 연결 불가로 인해 시연이 불가능할 것으로 판단.
+	 * 추후 사용을 위해 남겨두긴 하겠지만, 현재 프로젝트에서는 사용하지 않는 API.
+	 */
 	@PostMapping("/sendMail")
 	public String sendPassword(
 		@RequestBody @ApiParam(value = "임시 비밀번호 발급 요청 정보", required = true) SendPasswordRequestDto requestDto) {
@@ -104,6 +109,21 @@ public class MemberController {
 		}
 	}
 
+	@PostMapping("/tempPassword")
+	public String getTempPassword(
+		@RequestBody @ApiParam(value = "임시 비밀번호 발급 요청 정보", required = true) SendPasswordRequestDto requestDto) {
+		String userId = requestDto.getUserId();
+		String userEmail = requestDto.getEmail();
+
+		boolean isValidInformation = memberService.ExistUserByIdAndEmail(userId, userEmail);
+
+		if (isValidInformation) {
+			String tempPassword = memberService.getTmpPassword(userId);
+			return userId + " 님의 임시 비밀번호는 [ " + tempPassword + " ] 입니다.";
+		}
+		else return "입력하신 정보에 일치하는 회원이 없습니다.";
+	}
+
 	@PostMapping("/login")
 	@ApiOperation(value = "로그인", notes = "ID와 암호화된 PW가 DB에 있는 정보와 일치하는 경우 로그인을 승인한다.")
 	@ApiResponses({
@@ -119,7 +139,7 @@ public class MemberController {
 
 		JwtTokenDto jwtToken = memberService.login(userId, password);
 
-		System.out.println(jwtToken);
+		System.out.println("로그인 - " + jwtToken);
 
 		if (jwtToken != null) {
 
@@ -130,7 +150,17 @@ public class MemberController {
 		}
 
 		return ResponseEntity.internalServerError().body("내부 서버 오류");
+	}
 
+	@PostMapping("/logout")
+	@ApiOperation(value = "로그아웃", notes = "Http 헤더로부터 refreshToken을 추출하여 DB에서 삭제 한다.")
+	public ResponseEntity logout(HttpServletRequest request) {
+		String refreshToken = request.getHeader("refreshToken");
+		if (refreshToken != null) {
+			boolean isLogoutSuccessful = memberService.logout(refreshToken);
+			return ResponseEntity.ok().body("정상적으로 로그아웃되었습니다.");
+		}
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body("토큰 값이 유효하지 않습니다.");
 	}
 
 }

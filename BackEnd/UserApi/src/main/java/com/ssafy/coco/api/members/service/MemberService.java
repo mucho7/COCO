@@ -1,5 +1,6 @@
 package com.ssafy.coco.api.members.service;
 
+import java.security.MessageDigest;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -143,6 +144,12 @@ public class MemberService {
 		return jwtToken;
 	}
 
+	@Transactional
+	public boolean logout(String refreshToken){
+		System.out.println("[logout@MemberService] 로그아웃 요청한 refreshToken: "+refreshToken);
+		return jwtService.logout(refreshToken);
+	}
+
 	public MailDto createMailAndMakeTempPassword(String userId, String email) {
 		String tempPassword = makeTempPassword();
 		MailDto mailDto = new MailDto();
@@ -155,10 +162,17 @@ public class MemberService {
 		return mailDto;
 	}
 
+	public String getTmpPassword(String userId){
+		String tempPassword=makeTempPassword();
+		String sha256Password = tempPassword; // TODO: sha256으로 한번 인코딩 한 뒤 DB에 저장해야함 (프론트에서 sha256으로 한번 변환되어 백으로 올 예정이라..)
+		updatePassword(userId, sha256Password);
+		return tempPassword;
+	}
+
 	private void updatePassword(String userId, String tempPassword) {
 		Member member = memberRepository.findByUserId(userId).get();
 		String encodedPassword = passwordEncoder.encode(tempPassword);
-		member.setPassword(encodedPassword); // TODO: 추후 MD5로 변환하여 저장하는 로직 필요함.
+		member.setPassword(encodedPassword);
 		memberRepository.save(member);
 	}
 

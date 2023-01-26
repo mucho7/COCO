@@ -39,6 +39,15 @@ public class JwtTokenService {
 		refreshTokenRepository.save(refreshToken);
 	}
 
+	@Transactional
+	public boolean logout(String refreshToken){
+		if(refreshTokenRepository.existsByRefreshToken(refreshToken)){
+			refreshTokenRepository.deleteByRefreshToken(refreshToken);
+			return true;
+		}
+		return false;
+	}
+
 	public Optional<RefreshToken> getRefreshToken(String refreshToken) {
 
 		return refreshTokenRepository.findByRefreshToken(refreshToken.substring(7));
