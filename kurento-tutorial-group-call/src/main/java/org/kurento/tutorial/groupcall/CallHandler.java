@@ -32,6 +32,8 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+// import sun.tools.jconsole.JConsole;
+
 /**
  * 
  * @author Ivan Gracia (izanmail@gmail.com)
@@ -72,7 +74,7 @@ public class CallHandler extends TextWebSocketHandler {
         user.receiveVideoFrom(sender, sdpOffer);
         break;
       case "leaveRoom":
-        noticeLeaving(user); //
+        // noticeLeaving(user); //
         leaveRoom(user);
         break;
       case "onIceCandidate":
@@ -87,6 +89,9 @@ public class CallHandler extends TextWebSocketHandler {
       case "sendChat":
         log.info("...receive Chat from client...");
         sendChat(jsonMessage);
+        break;
+      case "controlOtherVideos":
+        controlOtherVideos(jsonMessage);
         break;
       default:
         break;
@@ -124,6 +129,19 @@ public class CallHandler extends TextWebSocketHandler {
     chat.addProperty("chat", params.get("chat").getAsString());
 
     noticeMessage(participantsList, chat);
+  }
+
+  private void controlOtherVideos(JsonObject params) throws Exception {
+    final String roomName = params.get("roomName").getAsString();
+    final String userName = params.get("userName").getAsString();
+
+    final UserSession userSession = registry.getByName(userName);
+    final List<UserSession> participantsList = roomManager.getRoom(roomName).getParticipantsList(userSession);
+
+    final JsonObject message = new JsonObject();
+    message.addProperty("id", "turnVideoOff");
+
+    noticeMessage(participantsList, message);
   }
 
   private void noticeMessage(List<UserSession> users, JsonObject message) throws IOException {

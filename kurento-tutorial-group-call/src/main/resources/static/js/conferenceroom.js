@@ -20,6 +20,8 @@ var participants = {};
 var name;
 let btnSendChat = document.getElementById('btnSendChat'); //
 let btnVideoOnOff = document.getElementById('btnVideoOnOff'); //
+//let btnAllVideoOn = document.getElementById('btnAllVideoOn'); //
+let btnOtherVideosOff = document.getElementById('btnOtherVideosOff'); //
 
 window.onbeforeunload = function() {
 	ws.close();
@@ -37,6 +39,7 @@ ws.onmessage = function(message) {
 		onNewParticipant(parsedMessage);
 		break;
 	case 'participantLeft':
+	    notifyLeaving(parsedMessage.name);
 		onParticipantLeft(parsedMessage);
 		break;
 	case 'receiveVideoAnswer':
@@ -53,8 +56,11 @@ ws.onmessage = function(message) {
 	case 'noticeChat':
 	    noticeChat(parsedMessage.userName, parsedMessage.chat);
 	    break;
-	case 'noticeLeaving':
-	    notifyLeaving(parsedMessage.userName);
+//	case 'noticeLeaving':
+//	    notifyLeaving(parsedMessage.userName);
+    case 'turnVideoOff':
+        turnVideoOffFromHost();
+        break;
 	default:
 		console.error('Unrecognized message', parsedMessage);
 	}
@@ -105,8 +111,34 @@ function onOffVideo() {
 //    if (audioTracks[0]) {
 //        audioTracks[0].enabled = false;
 //    }
-
 }
+
+btnOtherVideosOff.onclick = clickOtherVideosOff;
+function clickOtherVideosOff() {
+    var roomName = document.getElementById('roomName').value;
+    var userName = document.getElementById('name').value;
+    var message = {
+        id : 'controlOtherVideos',
+        roomName : roomName,
+        userName: userName
+    }
+    sendMessage(message);
+}
+
+function turnVideoOffFromHost() {
+    let name = document.getElementById('name').value;
+    participants[name].rtcPeer.videoEnabled = false;
+//    console.log("audio enabled:", participants[name].rtcPeer.audioEnabled);
+}
+
+//function onAllVideo() {
+//    for(key in participants){
+//         console.log(key);
+//         console.log(participants[key]);
+////         participants[key].rtcPeer.videoEnabled = true;
+//         // participants[key].rtcPeer.audioEnabled
+//    }
+//}
 
 function register() {
 	name = document.getElementById('name').value;
