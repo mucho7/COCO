@@ -93,6 +93,9 @@ public class CallHandler extends TextWebSocketHandler {
       case "controlOtherVideos":
         controlOtherVideos(jsonMessage);
         break;
+      case "hostLeft":
+        hostLeft(jsonMessage, user);
+        break;
       default:
         break;
     }
@@ -102,6 +105,7 @@ public class CallHandler extends TextWebSocketHandler {
   public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
     UserSession user = registry.removeBySession(session);
     roomManager.getRoom(user.getRoomName()).leave(user);
+    // TODO: if session == host이면 hostLeft();
   }
 
   private void noticeLeaving(UserSession user) throws Exception {
@@ -129,6 +133,17 @@ public class CallHandler extends TextWebSocketHandler {
     chat.addProperty("chat", params.get("chat").getAsString());
 
     noticeMessage(participantsList, chat);
+  }
+
+  private void hostLeft(JsonObject params, UserSession user) throws Exception {
+    final String roomName = params.get("roomName").getAsString();
+    
+    final List<UserSession> participantsList = roomManager.getRoom(roomName).getParticipantsList(user); // 해당 룸에 있는 다른 모든 참여자들에게
+
+    final JsonObject message = new JsonObject();
+    message.addProperty("id", "leaveByHost");
+
+    noticeMessage(participantsList, message);
   }
 
   private void controlOtherVideos(JsonObject params) throws Exception {

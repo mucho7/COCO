@@ -22,6 +22,7 @@ let btnSendChat = document.getElementById('btnSendChat'); //
 let btnVideoOnOff = document.getElementById('btnVideoOnOff'); //
 //let btnAllVideoOn = document.getElementById('btnAllVideoOn'); //
 let btnOtherVideosOff = document.getElementById('btnOtherVideosOff'); //
+let btnHostLeave = document.getElementById('btnHostLeave'); //
 
 window.onbeforeunload = function() {
 	ws.close();
@@ -34,16 +35,20 @@ ws.onmessage = function(message) {
 	switch (parsedMessage.id) {
 	case 'existingParticipants':
 		onExistingParticipants(parsedMessage);
-		countUsers(0);
+//		countUsers(0);
+		countUsers();
 		break;
 	case 'newParticipantArrived':
 		onNewParticipant(parsedMessage);
-		countUsers(0);
+//		countUsers(0);
+		countUsers();
 		break;
 	case 'participantLeft':
-	    countUsers(-1);
-	    notifyLeaving(parsedMessage.name);
+//	    countUsers(-1);
+//	    notifyLeaving(parsedMessage.name);
 		onParticipantLeft(parsedMessage);
+	    countUsers();
+	    notifyLeaving(parsedMessage.name);
 		break;
 	case 'receiveVideoAnswer':
 		receiveVideoResponse(parsedMessage);
@@ -63,6 +68,9 @@ ws.onmessage = function(message) {
 //	    notifyLeaving(parsedMessage.userName);
     case 'turnVideoOff':
         turnVideoOffFromHost();
+        break;
+    case 'leaveByHost':
+        leaveRoom();
         break;
 	default:
 		console.error('Unrecognized message', parsedMessage);
@@ -84,6 +92,16 @@ btnSendChat.onclick = () => {
     sendMessage(message);
 
     noticeChat("[me]", chat);
+}
+
+btnHostLeave.onclick = () => {
+    console.log("buttonHoseLeave click...")
+    let roomName = document.getElementById('roomName').value;
+    var message = {
+        id : 'hostLeft',
+        roomName : roomName,
+    }
+    sendMessage(message);
 }
 
 function notifyLeaving(user) {
@@ -144,8 +162,8 @@ function turnVideoOffFromHost() {
 //    }
 //}
 
-function countUsers(number) {
-    let count = Object.keys(participants).length + number;
+function countUsers() {
+    let count = Object.keys(participants).length;// + number;
     document.getElementById('numberOfUsers').innerText = '인원수: ' + count;
 //    return Object.keys(participants).length;
 }
@@ -236,10 +254,13 @@ function leaveRoom() {
 		participants[key].dispose();
 	}
 
+    // TODO: 세션 방 목록 페이지로 이동하기
 	document.getElementById('join').style.display = 'block';
 	document.getElementById('room').style.display = 'none';
 
 	ws.close();
+
+	// host면 btnHostLeave.onclick = () => { ...
 }
 
 function receiveVideo(sender) {
