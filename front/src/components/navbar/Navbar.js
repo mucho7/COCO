@@ -7,7 +7,7 @@ function Navbar() {
 
     // 차후에 정확히 설정해야할 route들
     const leftNavList = [
-        {name: "Session", bold: false, url: "/",},
+        {name: "Session", bold: false, url: "/room",},
         {name: "Community", bold: false, url: "/community",},
         {name: "Group", bold: false, url: "/group",},
     ]
