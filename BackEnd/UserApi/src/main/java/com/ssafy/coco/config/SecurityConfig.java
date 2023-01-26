@@ -45,11 +45,16 @@ public class SecurityConfig {
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 			.authorizeRequests()
-			.antMatchers("/swagger*/**", "/login", "/check/**", "/member/register", "/token", "/member/sendEmail")
-			.permitAll()
-			.antMatchers("/member/info/**", "/member/rating", "/member/extract")
+			// .antMatchers("/swagger*/**", "/login", "/check/**", "/member/register", "/token", "/sendEmail", "/tempPassword")
+			// .permitAll()
+			.antMatchers("/member/info/**", "/member/rating", "/member/extract", "/logout")
 			.hasAnyRole("USER", "ADMIN")
-			// .anyRequest().permitAll()
+			.anyRequest().permitAll()
+			.and()
+			.logout()
+			.logoutUrl("/logout")
+			.logoutSuccessUrl("/") // Front와 연동 성공시 로그아웃 이후 연결 페이지 합의 볼 것.
+			.invalidateHttpSession(true)
 			.and()
 			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
 				UsernamePasswordAuthenticationFilter.class);

@@ -42,6 +42,7 @@ public class JwtTokenService {
 	@Transactional
 	public boolean logout(String refreshToken){
 		if(refreshTokenRepository.existsByRefreshToken(refreshToken)){
+			log.info("DB에서 refresh 토큰 조회에 성공했습니다. "+refreshToken);
 			refreshTokenRepository.deleteByRefreshToken(refreshToken);
 			return true;
 		}

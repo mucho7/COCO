@@ -5,6 +5,7 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.coco.api.members.dto.MailDto;
+import com.ssafy.coco.api.deprecated.mail.dto.MailDto;
 import com.ssafy.coco.api.members.dto.request.MemberDeleteRequestDto;
 import com.ssafy.coco.api.members.dto.request.MemberLoginRequestDto;
 import com.ssafy.coco.api.members.dto.request.MemberRatingUpdateRequestDto;
@@ -38,7 +39,14 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @CrossOrigin("*")
 public class MemberController {
+
 	private final MemberService memberService;
+
+	// CI/CD 정상 동작 테스트를 위한 메서드. 및 URI
+	@GetMapping("/member/hello")
+	public String hello(){
+		return "member";
+	}
 
 	@PostMapping("/member/register")
 	@ApiOperation(value = "회원 가입", notes = "넘겨받은 회원정보를 바탕으로 회원을 DB에 등록한다.")
@@ -64,10 +72,9 @@ public class MemberController {
 
 	@PutMapping("/member/delete/{id}")
 	@ApiOperation(value = "회원 탈퇴", notes = "{id}의 사용자 정보에 탈퇴일(del_flag)을 기록한다.")
-	public String DeleteMember(@PathVariable @ApiParam(value = "탈퇴할 회원 ID", required = true) String id,
-		@RequestBody @ApiParam(value = "회원이 탈퇴를 요청한 시각", required = true) MemberDeleteRequestDto requestDto) {
+	public String DeleteMember(@PathVariable @ApiParam(value = "탈퇴할 회원 ID", required = true) String id, HttpServletRequest request) {
 
-		return memberService.DeleteMember(id, requestDto);
+		return memberService.DeleteMember(id, request);
 	}
 
 	@PutMapping("/member/rating")
@@ -85,28 +92,6 @@ public class MemberController {
 			System.out.println("request.getHeaderNames()==>" + headerNames.nextElement());
 		}
 		return request.getHeader("Authorization");
-	}
-
-	/**
-	 * 만들어두긴 했으나, 내부 네트워크 환경에서 smtp 서버에 연결 불가로 인해 시연이 불가능할 것으로 판단.
-	 * 추후 사용을 위해 남겨두긴 하겠지만, 현재 프로젝트에서는 사용하지 않는 API.
-	 */
-	@PostMapping("/sendMail")
-	public String sendPassword(
-		@RequestBody @ApiParam(value = "임시 비밀번호 발급 요청 정보", required = true) SendPasswordRequestDto requestDto) {
-
-		String userId = requestDto.getUserId();
-		String email = requestDto.getEmail();
-
-		boolean isAvaliable = memberService.ExistUserByIdAndEmail(userId, email);
-
-		if (isAvaliable) {
-			MailDto mailDto = memberService.createMailAndMakeTempPassword(userId, email);
-			memberService.sendMail(mailDto);
-			return "입력하신 이메일로 임시 비밀번호를 보내드렸습니다.";
-		} else {
-			return "입력한 정보에 해당하는 사용자가 없습니다.";
-		}
 	}
 
 	@PostMapping("/tempPassword")
@@ -158,7 +143,9 @@ public class MemberController {
 		String refreshToken = request.getHeader("refreshToken");
 		if (refreshToken != null) {
 			boolean isLogoutSuccessful = memberService.logout(refreshToken);
-			return ResponseEntity.ok().body("정상적으로 로그아웃되었습니다.");
+			if(isLogoutSuccessful)
+				return ResponseEntity.ok().body("정상적으로 로그아웃되었습니다.");
+			else return ResponseEntity.internalServerError().body("로그아웃 중 문제가 발생하였습니다. 유효하지 않은 토큰입니다.");
 		}
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body("토큰 값이 유효하지 않습니다.");
 	}

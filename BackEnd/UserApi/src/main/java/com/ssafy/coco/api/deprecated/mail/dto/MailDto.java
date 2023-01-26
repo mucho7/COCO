@@ -1,4 +1,4 @@
-package com.ssafy.coco.api.members.dto;
+package com.ssafy.coco.api.deprecated.mail.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

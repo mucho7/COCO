@@ -48,11 +48,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				if (validateRefreshToken && isRefreshToken) {
 					// Refresh Token으로 사용자 ID 가져오기
 					String userId = jwtTokenProvider.getUserId(refreshToken);
-					// 이메일로 권한정보 받아오기
+					// UserId로 권한정보 받아오기
 					List<String> roles = jwtTokenProvider.getRoles(userId);
 					// 토큰 발급
 					JwtTokenDto jwtToken = jwtTokenProvider.createToken(userId, roles);
-					// 헤더에 어세스 토큰 추가
+					// 헤더에 토큰 정보(AccessToken, refreshToken) 추가
 					response.setHeader("Authorization", "bearer " + jwtToken.getAccessToken());
 					response.setHeader("refreshToken", "bearer " + jwtToken.getRefreshToken());
 					// 컨텍스트에 넣기

@@ -24,13 +24,12 @@ public class SecurityUtil {
 			log.debug("[SecurityUtil] Security Context에 인증 정보가 없습니다.");
 			throw new RuntimeException("Security Context에 인증 정보가 없습니다.");
 		}
-		String userId=null;
-		if(authentication.getPrincipal() instanceof Member) {
+		String userId = null;
+		if (authentication.getPrincipal() instanceof Member) {
 			UserDetails springSecurityUser = (Member)authentication.getPrincipal();
-			userId= springSecurityUser.getUsername();
-		}
-		else if(authentication.getPrincipal() instanceof String)
-			userId=(String) authentication.getPrincipal();
+			userId = springSecurityUser.getUsername();
+		} else if (authentication.getPrincipal() instanceof String)
+			userId = (String)authentication.getPrincipal();
 
 		return Optional.ofNullable(userId);
 	}

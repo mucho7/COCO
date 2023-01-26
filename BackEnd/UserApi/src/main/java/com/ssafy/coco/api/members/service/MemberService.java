@@ -1,8 +1,11 @@
 package com.ssafy.coco.api.members.service;
 
-import java.security.MessageDigest;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import org.springframework.mail.MailSender;
@@ -16,7 +19,7 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.coco.api.members.data.Member;
 import com.ssafy.coco.api.members.data.MemberRepository;
-import com.ssafy.coco.api.members.dto.MailDto;
+import com.ssafy.coco.api.deprecated.mail.dto.MailDto;
 import com.ssafy.coco.api.members.dto.request.MemberDeleteRequestDto;
 import com.ssafy.coco.api.members.dto.request.MemberRatingUpdateRequestDto;
 import com.ssafy.coco.api.members.dto.request.MemberRegisterRequestDto;
@@ -43,7 +46,6 @@ public class MemberService {
 
 	private final JwtTokenService jwtService;
 
-	private final MailSender mailSender;
 	private final PasswordEncoder passwordEncoder;
 
 	@Transactional
@@ -77,14 +79,21 @@ public class MemberService {
 	}
 
 	@Transactional
-	public String DeleteMember(String userId, MemberDeleteRequestDto requestDto) {
-		Member member = memberRepository.findByUserId(userId)
-			.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. 사용자 ID: " + userId));
-		if (member.getDelFlag() != null) // error code: 500
-			throw new IllegalArgumentException("해당 사용자는 이미 탈퇴한 사용자입니다. 사용자 ID: " + userId);
-		else
-			member.DeleteMember(requestDto.getTime());
-		return userId;
+	public String DeleteMember(String id, HttpServletRequest request) {
+		String accessToken=request.getHeader("Authentication");
+		String tokenOwnerId = jwtTokenProvider.getUserId(accessToken);
+
+		if(tokenOwnerId.equals(id)) {
+
+			Member member = memberRepository.findByUserId(id)
+				.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. 사용자 ID: " + id));
+			if (member.getDelFlag() != null) // error code: 500
+				throw new IllegalArgumentException("해당 사용자는 이미 탈퇴한 사용자입니다. 사용자 ID: " + id);
+			else
+				member.DeleteMember(LocalDateTime.now());
+			return id;
+		}
+		else return null;
 	}
 
 	@Transactional
@@ -125,7 +134,7 @@ public class MemberService {
 
 		System.out.println(authenticationToken);
 
-		// Step 2. 실제 검증 (사용자 비밀번호 체크 등)이 이루어지는 부분
+		// Step 2. 실제 검증 (사용자 비밀번호	 체크 등)이 이루어지는 부분
 		// authenticate 매서드가 실행될 때 MemberService 에서 만든 loadUserByUsername 메서드가 실행
 		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
@@ -145,38 +154,26 @@ public class MemberService {
 	}
 
 	@Transactional
-	public boolean logout(String refreshToken){
-		System.out.println("[logout@MemberService] 로그아웃 요청한 refreshToken: "+refreshToken);
+	public boolean logout(String refreshToken) {
+		System.out.println("[logout@MemberService] 로그아웃 요청한 refreshToken: " + refreshToken);
 		return jwtService.logout(refreshToken);
 	}
 
-	public MailDto createMailAndMakeTempPassword(String userId, String email) {
+	public String getTmpPassword(String userId) {
 		String tempPassword = makeTempPassword();
-		MailDto mailDto = new MailDto();
-		mailDto.setAddress(email);
-		mailDto.setTitle("[CoCo] 임시 비밀번호가 발급되었습니다.");
-		mailDto.setMessage(
-			"안녕하세요. CoCo입니다. \n" + userId + "님의 임시 비밀번호는 [ " + tempPassword
-				+ " ] 입니다. \n\n임시 비밀번호로 로그인 후 반드시 비밀번호를 변경해주세요.");
-		updatePassword(userId, tempPassword);
-		return mailDto;
-	}
-
-	public String getTmpPassword(String userId){
-		String tempPassword=makeTempPassword();
 		String sha256Password = tempPassword; // TODO: sha256으로 한번 인코딩 한 뒤 DB에 저장해야함 (프론트에서 sha256으로 한번 변환되어 백으로 올 예정이라..)
 		updatePassword(userId, sha256Password);
 		return tempPassword;
 	}
 
-	private void updatePassword(String userId, String tempPassword) {
+	public void updatePassword(String userId, String tempPassword) {
 		Member member = memberRepository.findByUserId(userId).get();
 		String encodedPassword = passwordEncoder.encode(tempPassword);
 		member.setPassword(encodedPassword);
 		memberRepository.save(member);
 	}
 
-	private String makeTempPassword() {
+	public String makeTempPassword() {
 		char[] charSet = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
 			'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a',
 			'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
@@ -188,16 +185,6 @@ public class MemberService {
 			tempPassword.append(charSet[idx]);
 		}
 		return tempPassword.toString();
-	}
-
-	public void sendMail(MailDto mailDto) {
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setTo(mailDto.getAddress());
-		message.setSubject(mailDto.getTitle());
-		message.setText(mailDto.getMessage());
-		message.setFrom("vmflzh01@naver.com");
-		System.out.println("보낸 메일 정보: " + message);
-		mailSender.send(message);
 	}
 
 }
