@@ -10,7 +10,7 @@ function DrawButton(props) {
   return (
     <CustomButton 
       onClick={() => {dispatch(onClickDrawButton());}} 
-      on={isDrawButtonOn}
+      isButtonOn={isDrawButtonOn}
     >
       그림
     </CustomButton>

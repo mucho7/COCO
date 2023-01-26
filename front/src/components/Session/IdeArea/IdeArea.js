@@ -5,8 +5,7 @@ import { useState } from "react";
 import { onChangeCode } from "../../../store/compileSlice";
 import { useSelector, useDispatch } from "react-redux";
 
-// import DrawLayer from "./DrawLayer";
-import DrawLayer from "./testlayer";
+import DrawLayer from "./DrawLayer";
 
 
 const IdeAreaDiv = styled.div`

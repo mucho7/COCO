@@ -13,7 +13,7 @@ function QuitButton(props) {
   const navigate = useNavigate();
   
   return (
-    <Button onClick={() => {navigate("/sessionlist")}}>
+    <Button onClick={() => {navigate("/room")}}>
       종료
     </Button>
   );
