@@ -73,7 +73,6 @@ public class MemberController {
 	@PutMapping("/member/delete/{id}")
 	@ApiOperation(value = "회원 탈퇴", notes = "{id}의 사용자 정보에 탈퇴일(del_flag)을 기록한다.")
 	public String DeleteMember(@PathVariable @ApiParam(value = "탈퇴할 회원 ID", required = true) String id, HttpServletRequest request) {
-
 		return memberService.DeleteMember(id, request);
 	}
 
