@@ -31,9 +31,9 @@ function LoginForm () {
 
     async function axios_test() {
 
-        const response = await fetch('https://70.12.247.183:8080/login', {
+        const response = await fetch('http://localhost/login', {
             method: 'POST',
-            body: temp_user_info,
+            body: JSON.stringify(temp_user_info),
             headers: {
                 "Content-Type": `application/json`,
             }
@@ -54,10 +54,10 @@ function LoginForm () {
                 <Grid container spacing={2} style={{padding: '2rem', justifyContent: 'center'}}>
                     {/* map을 활용한 반복문으로 고쳤으면 함 */}
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} ref={inputRef} id="outlined" label="ID" fullWidth />
+                        <TextField onChange={onTypingHandler} ref={inputRef} id="outlined-id" label="ID" fullWidth />
                     </Grid>
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} id="outlined-password" label="Password" fullWidth />
+                        <TextField onChange={onTypingHandler} id="outlined-password" label="Password" type="password" fullWidth />
                     </Grid>
                     <Grid item xs={6}>
                         <Button onClick={onClickHandler} variant="contained" className="submit" style={{height: '3rem'}} fullWidth> <b>로그인</b></Button>
