@@ -35,11 +35,6 @@ function SigninForm() {
         }
     }, [inputID])
 
-    // 실시간 ID validation
-    useEffect(() => {
-        setIsOkToSubmit(idValidation()) 
-    }, [inputID, idValidation])
-
     const passwordValidation = useCallback(() => {
         const passwordForm = /^[a-z0-9]{4,12}$/
         const passwordErrorMessage = {
@@ -61,10 +56,6 @@ function SigninForm() {
             setIsPasswordValid({isValid: false})
         }
     }, [inputPassword, inputCheckPassword])
-
-    useEffect(() => {
-        setIsOkToSubmit(passwordValidation())
-    }, [inputPassword, inputCheckPassword, passwordValidation])
 
     // case를 이용한 typing
     const onTypingHandler = (e) => {
@@ -112,6 +103,8 @@ function SigninForm() {
     // 제출
     const onClickHandler = () => {
         setIsEmailValid(!(emailValidation.test(inputEmail)))
+        passwordValidation()
+        idValidation()
         if (isOkToSubmit){axios_test()} else { alert('다시!!')}
     }
 
