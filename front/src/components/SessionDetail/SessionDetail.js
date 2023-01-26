@@ -9,9 +9,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { deleteSession } from "../../store/sessionListSlice";
 
 function SessionDetail() {
-  const { sessionId } = useParams();
+  const { roomId } = useParams();
   const sessionList = useSelector((state) => state.sessionList.sessionList);
-  const session = sessionList.filter((session) => session.id === Number(sessionId))[0];
+  const session = sessionList.filter((session) => session.id === Number(roomId))[0];
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -32,13 +32,13 @@ function SessionDetail() {
   function handleDeleteSession() {
     let idx
     for (let i=0; i < sessionList.length; i++) {
-      if (sessionList[i].id === Number(sessionId)) {
+      if (sessionList[i].id === Number(roomId)) {
         idx = i;
         break;
       }
     }
     dispatch(deleteSession(idx))
-    navigate("/sessionlist");
+    navigate("/room");
   }
 
   return (

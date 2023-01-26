@@ -23,13 +23,14 @@ function CreateSession() {
     event.preventDefault();
     const sessionData = new FormData(event.currentTarget);
     const payload = {
+      // host_id, host_rating, max 추가로 전달
       title: sessionData.get('title'),
       content: sessionData.get('content'),
       mode: sessionData.get('mode')
     }
     // 백엔드의 "/room" URI로 POST 요청 보내는 함수로 변경
     dispatch(createSession(payload));
-    navigate("/sessionlist");
+    navigate("/room");
   }
   
   
@@ -83,7 +84,7 @@ function CreateSession() {
           fullWidth
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
-          onClick={() => {navigate("/sessionlist");}}
+          onClick={() => {navigate("/room");}}
         >
           취소
         </Button>

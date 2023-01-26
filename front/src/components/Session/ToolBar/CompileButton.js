@@ -21,7 +21,7 @@ function CompileButton(props) {
       onClick={handleOnClick} 
       on={isCompileButtonOn}
     >
-      테케
+      컴파
     </CustomButton>
   );
 }

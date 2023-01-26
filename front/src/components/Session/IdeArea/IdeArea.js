@@ -5,7 +5,8 @@ import { useState } from "react";
 import { onChangeCode } from "../../../store/compileSlice";
 import { useSelector, useDispatch } from "react-redux";
 
-import DrawLayer from "./DrawLayer";
+// import DrawLayer from "./DrawLayer";
+import DrawLayer from "./testlayer";
 
 
 const IdeAreaDiv = styled.div`
@@ -33,7 +34,7 @@ function IdeArea(props) {
       <TextField
         label="메세지를 입력하세요."
         multiline
-        maxRows={50}
+        maxRows={20}
         sx={{ m: 2, width: "75%", ' .MuiOutlinedInput-root': {
           color: 'white',
           }, }}

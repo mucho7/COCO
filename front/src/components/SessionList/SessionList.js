@@ -10,7 +10,7 @@ function SessionList() {
   const navigate = useNavigate();
 
   function goToDetail(id) {
-    navigate(`/session/${id}`);
+    navigate(`/room/${id}`);
   }
 
   return (
@@ -26,7 +26,7 @@ function SessionList() {
           );
         })}
       </Box>
-      <button onClick={() => {navigate("/create-session");}}>만들기</button>
+      <button onClick={() => {navigate("/room/create");}}>만들기</button>
     </Container>
   )
 }

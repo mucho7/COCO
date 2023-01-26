@@ -19,6 +19,7 @@ function DrawLayer(props) {
   const contextRef = useRef(null)
   const [isDrawing, setIsDrawing] = useState(false);
   const [drawColor, setDrawColor] = useState("#000000");
+  const [isEraseMode, setIsEraseMode] = useState(false);
 
   
   useEffect(() => {
@@ -54,10 +55,13 @@ function DrawLayer(props) {
     if (!isDrawing) {
       return
     }
-    // console.log(nativeEvent)
     const {offsetX, offsetY} = nativeEvent;
-    contextRef.current.lineTo(offsetX, offsetY);
-    contextRef.current.stroke()
+    if (isEraseMode) {
+      contextRef.current.clearRect(offsetX-5, offsetY-5, 10, 10);
+    } else {
+      contextRef.current.lineTo(offsetX, offsetY);
+      contextRef.current.stroke()
+    }
   }
 
 
@@ -65,13 +69,16 @@ function DrawLayer(props) {
     contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
   }
 
+  const erase = () => {
+    setIsEraseMode(!isEraseMode);
+  }
+
   const onColorChange = (event) => {
     // console.log(event.target.value);
     setDrawColor(event.target.value);
-    console.log(drawColor);
+    // canvasRef.current.getContext("2d").strokeStyle = drawColor;
+    contextRef.current.strokeStyle = drawColor;
   }
-
-  
 
   return (
     <DrawDiv id="canvas">
@@ -83,7 +90,8 @@ function DrawLayer(props) {
         ref={canvasRef}
       />
       <button onClick={eraseAll}>전부 지우기</button>
-      <input type="color" id="color" onChange={onColorChange} />
+      <button onClick={erase}>{ isEraseMode ? "그리기" : "지우개" }</button>
+      <input type="color" id="color" onInput={onColorChange} />
     </DrawDiv>
   );
 }
