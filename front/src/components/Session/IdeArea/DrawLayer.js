@@ -22,7 +22,7 @@ function DrawLayer(props) {
   const [isEraseMode, setIsEraseMode] = useState(false);
 
   
-  useEffect(() => {
+  function initCanvas() {
     const drawDiv = document.querySelector("#canvas")
     const canvas = canvasRef.current;
     canvas.width = drawDiv.clientWidth * 2;
@@ -36,7 +36,32 @@ function DrawLayer(props) {
     context.strokeStyle = "#ffffff";
     context.lineWidth = 5;
     contextRef.current = context;
+  }
+  
+  // 리사이즈시 다시 지정 크기로 리사이즈 시킴
+  // 리사이즈시 캔버스 크기 조정하고, 그 위에 기존에 그려졌던 정보 다시 그리기
+  useEffect(() => {
+    initCanvas();
+    // window.addEventListener("resize", initCanvas);
+    window.addEventListener("resize", () => {
+      // let imageData = canvasRef.current.toDataURL();
+      // let img = new Image();
+      // // console.log(imageData)
+      // // console.log(img)
+      // initCanvas();
+      // img.onload = function() {
+      //   contextRef.drawImage(img, 0, 0);
+      // };
+      // img.src = imageData;
+      let image = contextRef.current.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height)
+      initCanvas();
+      contextRef.current.putImageData(image, 0, 0)
+    });
+    return () => {
+      window.removeEventListener("resize", initCanvas);
+    }
   }, []);
+
 
   const startDrawing = ({nativeEvent}) => {
     const {offsetX, offsetY} = nativeEvent;
