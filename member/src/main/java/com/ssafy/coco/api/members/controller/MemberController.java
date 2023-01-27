@@ -61,6 +61,7 @@ public class MemberController {
 	@ApiOperation(value = "정보 변경", notes = "갱신된 사용자 정보를 {id}를 PK로 가지는 레코드에 적용한다.")
 	public ResponseEntity UpdateMember(@PathVariable @ApiParam(value = "회원정보를 수정할 사용자의 {id}", required = true) String id,
 		@RequestBody @ApiParam(value = "수정할 내용이 담긴 데이터 객체", required = true) MemberUpdateRequestDto requestDto, HttpServletRequest request) {
+		System.out.println("[UpdateMember@MemberController] id: "+id+", requestDto: "+requestDto);
 		String updatedUserId=memberService.UpdateInfo(id, requestDto, request);
 		if(updatedUserId==null)
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(id+" 사용자의 수정 권한이 없는 사용자입니다.");

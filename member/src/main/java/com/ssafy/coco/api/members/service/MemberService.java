@@ -1,15 +1,11 @@
 package com.ssafy.coco.api.members.service;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -19,8 +15,6 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.coco.api.members.data.Member;
 import com.ssafy.coco.api.members.data.MemberRepository;
-import com.ssafy.coco.api.deprecated.mail.dto.MailDto;
-import com.ssafy.coco.api.members.dto.request.MemberDeleteRequestDto;
 import com.ssafy.coco.api.members.dto.request.MemberRatingUpdateRequestDto;
 import com.ssafy.coco.api.members.dto.request.MemberRegisterRequestDto;
 import com.ssafy.coco.api.members.dto.request.MemberUpdateRequestDto;
@@ -28,6 +22,7 @@ import com.ssafy.coco.api.members.dto.response.MemberResponseDto;
 import com.ssafy.coco.api.tokens.JwtTokenProvider;
 import com.ssafy.coco.api.tokens.dto.JwtTokenDto;
 import com.ssafy.coco.api.tokens.service.JwtTokenService;
+import com.ssafy.coco.utility.SHA256Converter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -48,6 +43,8 @@ public class MemberService {
 
 	private final PasswordEncoder passwordEncoder;
 
+	private final SHA256Converter sha256Converter;
+
 	@Transactional
 	public Long RegisterMember(MemberRegisterRequestDto requestDto) {
 		requestDto.setPassword(passwordEncoder.encode(requestDto.getPassword()));
@@ -57,20 +54,23 @@ public class MemberService {
 	@Transactional
 	public String UpdateInfo(String userId, MemberUpdateRequestDto requestDto, HttpServletRequest request) {
 		String accessToken = request.getHeader("Authorization");
-		String tokenOwner=jwtTokenProvider.getUserId(accessToken);
-		if(tokenOwner.equals(userId)) {
+		if (accessToken.startsWith("bearer "))
+			accessToken = accessToken.substring(7);
+		String tokenOwner = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
+		System.out.println("[UpdateInfo@MemberService] userId: " + userId + ", requestDto: " + requestDto);
+		if (tokenOwner.equals(userId)) {
 			Member member = memberRepository.findByUserId(userId)
 				.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. 사용자 ID: " + userId));
 			// System.out.println(member.getDelFlag() + ", 탈퇴했는가? : " + member.getDelFlag() != null);
 			if (member.getDelFlag() != null)
 				throw new IllegalArgumentException("해당 사용자는 탈퇴한 사용자입니다. 사용자 ID: " + userId);
 			else {
-				if(requestDto.getPassword()!=null){
+				if (requestDto.getPassword() != null) {
 					member.setPassword(passwordEncoder.encode(requestDto.getPassword()));
 				}
-				if(requestDto.getName()!=null)
+				if (requestDto.getName() != null)
 					member.setName(requestDto.getName());
-				if(requestDto.getEmail()!=null)
+				if (requestDto.getEmail() != null)
 					member.setEmail(requestDto.getEmail());
 			}
 			return userId;
@@ -91,13 +91,13 @@ public class MemberService {
 
 	@Transactional
 	public String DeleteMember(String id, HttpServletRequest request) {
-		String accessToken=request.getHeader("Authorization");
-		System.out.println("accessToken : "+accessToken);
-		if(accessToken.startsWith("bearer "))
-			accessToken=accessToken.substring(7);
-		String tokenOwnerId = jwtTokenProvider.getUserId(accessToken);
+		String accessToken = request.getHeader("Authorization");
+		System.out.println("accessToken : " + accessToken);
+		if (accessToken.startsWith("bearer "))
+			accessToken = accessToken.substring(7);
+		String tokenOwnerId = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
 
-		if(tokenOwnerId.equals(id)) {
+		if (tokenOwnerId.equals(id)) {
 
 			Member member = memberRepository.findByUserId(id)
 				.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. 사용자 ID: " + id));
@@ -106,8 +106,8 @@ public class MemberService {
 			else
 				member.DeleteMember(LocalDateTime.now());
 			return id;
-		}
-		else return null;
+		} else
+			return null;
 	}
 
 	@Transactional
@@ -157,7 +157,7 @@ public class MemberService {
 		// Step 3. 인증된 정보를 기반으로 JwtToken 생성
 		UserDetails userDetails = (Member)authentication.getPrincipal();
 		System.out.println("userDetails: " + userDetails.toString());
-		if(((Member)userDetails).getDelFlag()==null) {
+		if (((Member)userDetails).getDelFlag() == null) {
 			String userId = userDetails.getUsername();
 			List<String> roles = memberRepository.findByUserId(userId).get().getRoles();
 			JwtTokenDto jwtToken = jwtTokenProvider.createToken(userId, roles);
@@ -166,8 +166,8 @@ public class MemberService {
 			jwtService.login(jwtToken);
 
 			return jwtToken;
-		}
-		else return null;
+		} else
+			return null;
 	}
 
 	@Transactional
@@ -178,8 +178,15 @@ public class MemberService {
 
 	public String getTmpPassword(String userId) {
 		String tempPassword = makeTempPassword();
-		String sha256Password = tempPassword; // TODO: sha256으로 한번 인코딩 한 뒤 DB에 저장해야함 (프론트에서 sha256으로 한번 변환되어 백으로 올 예정이라..)
-		updatePassword(userId, sha256Password);
+
+		try {
+			String sha256Password = sha256Converter.encrypt(
+				tempPassword); // TODO: sha256으로 한번 인코딩 한 뒤 DB에 저장해야함 (프론트에서 sha256으로 한번 변환되어 백으로 올 예정이라..)
+			updatePassword(userId, tempPassword);
+			// updatePassword(userId, sha256Password);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return tempPassword;
 	}
 

@@ -1,8 +1,10 @@
 package com.ssafy.coco.api.tokens;
 
+import java.sql.Ref;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +50,7 @@ public class JwtTokenProvider {
 	@Value("${jwt.secret}")
 	private String uniqueKey;
 
-	private int accessTokenValidTime = 1000 * 60 * 90; // AccessToken 유효시간 : 90분
+	private int accessTokenValidTime = 1000 * 30 ; // AccessToken 유효시간 : 90분
 	private int refreshTokenValidTime = 1000 * 60 * 60 * 12; // RefreshToken 유효시간 : 12시간
 
 	private final UserDetailsService userDetailsService;
@@ -93,7 +95,7 @@ public class JwtTokenProvider {
 
 	// Jwt 토큰을 복호화하여 인증 정보 조회
 	public Authentication getAuthentication(String token) {
-		String userId = this.getUserId(token);
+		String userId = this.getUserIdFromAccessToken(token);
 		System.out.println("토큰에서 추출한 userId: " + userId);
 		UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
 		System.out.println("loadUserByUserName 이후 추출한 userdetails: " + userDetails);
@@ -101,8 +103,18 @@ public class JwtTokenProvider {
 	}
 
 	// Jwt 토큰에서 회원 ID 추출
-	public String getUserId(String token) {
+	public String getUserIdFromAccessToken(String token) {
 		return Jwts.parser().setSigningKey(uniqueKey).parseClaimsJws(token).getBody().getSubject();
+	}
+
+	// RefreshToken에는 기본적으로 사용자 ID가 없음. 따라서 refreshToken Repository를 찾아서 사용자 ID를 가져오는 방식 사용.
+	public String getUserIdFromRefreshToken(String refreshToken){
+		Optional<RefreshToken> refreshTokenDto=refreshTokenRepository.findByRefreshToken(refreshToken);
+
+		if(refreshTokenDto.isPresent()){
+			return refreshTokenDto.get().getUserId();
+		}
+		else return null;
 	}
 
 	public List<String> getRoles(String userId) {
@@ -129,13 +141,13 @@ public class JwtTokenProvider {
 			Jws<Claims> claims = Jwts.parser().setSigningKey(uniqueKey).parseClaimsJws(token);
 			return !claims.getBody().getExpiration().before(new Date());
 		} catch (SecurityException | MalformedJwtException e) {
-			log.info("유효하지 않은 JWT 토큰 !! -> " + token + '\n', e);
+			log.info("유효하지 않은 Access Token !! -> " + token );
 		} catch (ExpiredJwtException e) {
-			log.info("만료된 JWT 토큰 !! -> " + token + '\n', e);
+			log.info("만료된 Access Token !! -> " + token);
 		} catch (UnsupportedJwtException e) {
-			log.info("지원하지 않는 형식의 JWT 토큰 !! -> " + token + '\n', e);
+			log.info("지원하지 않는 형식의 Access Token !! -> " + token);
 		} catch (IllegalArgumentException e) {
-			log.info("JWT에서 빈 문자열을 반환하였습니다 !! -> " + token + '\n', e);
+			log.info("Access Token이 빈 문자열을 반환하였습니다 !! -> " + token);
 		}
 		return false;
 	}

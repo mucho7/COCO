@@ -48,7 +48,7 @@ public class SecurityConfig {
 			// .antMatchers("/swagger*/**", "/login", "/check/**", "/member/register", "/token", "/sendEmail", "/tempPassword")
 			// .permitAll()
 			.antMatchers("/member/info/**", "/member/rating", "/member/extract", "/logout")
-			.hasAnyRole("USER", "ADMIN")
+			.authenticated()
 			.anyRequest().permitAll()
 			.and()
 			.logout()
