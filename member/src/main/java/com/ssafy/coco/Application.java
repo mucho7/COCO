@@ -1,15 +1,11 @@
-package com.function.member;
+package com.ssafy.coco;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.GetMapping;
 
 @SpringBootApplication
-public class MemberApplication {
-
+public class Application {
 	public static void main(String[] args) {
-		SpringApplication.run(MemberApplication.class, args);
+		SpringApplication.run(Application.class, args);
 	}
-
-
 }
