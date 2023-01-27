@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Button, Modal, Box, Typography, TextField, Grid } from '@mui/material'
 
 function ProfilePasswordUpdateButton(params) {
@@ -38,20 +38,23 @@ function ProfilePasswordUpdateButton(params) {
             same: "비밀번호가 일치하지 않습니다.",
         }
         if (inputUpdatedPassword === undefined || inputUpdatedPassword === '') {
-            return {isVaild: true, message: passwordErrorMessage.null}
+            setIsOkToSubmit(false)
+            setIsPasswordValid({isVaild: true, message: passwordErrorMessage.null})
         } else if (inputUpdatedPassword !== inputUpdatedCheckPassword) {
-            return {isVaild: true, message: passwordErrorMessage.same}
+            setIsOkToSubmit(false)
+            setIsPasswordValid({isVaild: true, message: passwordErrorMessage.same})
         } else if (!passwordForm.test(inputUpdatedPassword)) {
-            return {isVaild: true, message: passwordErrorMessage.form}
+            setIsOkToSubmit(false)
+            setIsPasswordValid({isVaild: true, message: passwordErrorMessage.form})
         }
         else {
-            return {isValid: false}
+            setIsPasswordValid({isValid: false})
         }
     }
 
-    useEffect(() => {
-        setIsOkToSubmit(passwordValidation())
-    }, [inputPassword, inputUpdatedPassword, inputUpdatedCheckPassword])
+    // useEffect(() => {
+    //     setIsOkToSubmit(passwordValidation())
+    // }, [inputPassword, inputUpdatedPassword, inputUpdatedCheckPassword])
 
     async function updatePassword() {
         console.log('들어간다')
@@ -60,7 +63,7 @@ function ProfilePasswordUpdateButton(params) {
         const response = await fetch(`/member/info/${params.user.user_id}`, {
             method: 'PUT',
             body: JSON.stringify({
-                password: {inputPassword}
+                password: inputPassword
             }),
             headers: {
                 "Content-Type": `application/json`,
@@ -71,7 +74,9 @@ function ProfilePasswordUpdateButton(params) {
     } 
 
     const passwordChangeHandler = () => {
-        if (isOkToSubmit) {updatePassword()}
+        passwordValidation()
+
+        if (isOkToSubmit) {updatePassword()} else { alert('다시!!')}
     }
 
     return (
