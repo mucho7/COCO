@@ -1,8 +1,11 @@
 package com.ssafy.coco.utility;
 
+import org.springframework.stereotype.Component;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+@Component
 public class SHA256Converter {
 	public String encrypt(String password) throws NoSuchAlgorithmException{
 		MessageDigest messageDigest=MessageDigest.getInstance("SHA-256");

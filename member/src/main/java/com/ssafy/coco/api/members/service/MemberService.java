@@ -179,6 +179,7 @@ public class MemberService {
 	public String getTmpPassword(String userId) {
 		String tempPassword = makeTempPassword();
 
+
 		try {
 			String sha256Password = sha256Converter.encrypt(
 				tempPassword); // TODO: sha256으로 한번 인코딩 한 뒤 DB에 저장해야함 (프론트에서 sha256으로 한번 변환되어 백으로 올 예정이라..)
