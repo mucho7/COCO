@@ -1,17 +1,21 @@
 import { useEffect, useState, useRef }  from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useCookies } from 'react-cookie'
 import { Box, Container, Grid, Button, TextField } from '@mui/material'
 
 function LoginForm () {
+    const navigate = useNavigate()
+    const [ setCookie ] = useCookies(['userInfo'])
     const [inputID, setInputID ] = useState()
     const [inputPassword, setInputPassword] = useState()
     
+    // 로그인에 들어오면 ID칸에 autofocus
     const inputRef = useRef()
     useEffect(() => {
         inputRef.current.focus()
     })
 
     const onTypingHandler = (e) => {
-        // 4개의 케이스에 따라 각자의 스테이트에 저장
         switch (e.target.id) {
             case 'outlined-id':
                 setInputID(e.target.value)
@@ -30,7 +34,6 @@ function LoginForm () {
     }
 
     async function axios_test() {
-
         const response = await fetch('http://localhost/login', {
             method: 'POST',
             body: JSON.stringify(temp_user_info),
@@ -38,12 +41,25 @@ function LoginForm () {
                 "Content-Type": `application/json`,
             }
         })
-        const data = await response.json()
-        // 영구 저장 및 리덕스를 활용한 전역변수 저장이 필요함
-        console.log('들어옴', data)
+        .catch(error => {
+            console.log(error)
+            alert('다시 시도해주세요')
+        })
+        const result = await response.json()
+        setCookie(
+            'userInfo',
+            {
+                user_id: temp_user_info.user_id,
+                jwt_token: result.data.Authorization,
+                refresh_token: result.data.refreshToken
+            },
+            {path: '/'}
+        )
+        navigate("/")
     }   
 
-    const onClickHandler = () => {
+    const onClickHandler = (e) => {
+        e.preventDefault()
         axios_test()
     }
 
