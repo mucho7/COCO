@@ -10,10 +10,12 @@ function LoginForm () {
     const [inputPassword, setInputPassword] = useState()
     
     // 로그인에 들어오면 ID칸에 autofocus
-    const inputRef = useRef()
+    // 정상작동하지 않음
+    const inputRef = useRef(null)
     useEffect(() => {
+        console.log('aurofocus가 정상적으로 작동하지 않음')
         inputRef.current.focus()
-    })
+    }, [])
 
     const onTypingHandler = (e) => {
         switch (e.target.id) {
@@ -29,34 +31,39 @@ function LoginForm () {
     }
 
     const temp_user_info = {
-        user_id: inputID, 
+        userId: inputID, 
         password: inputPassword,
     }
 
     async function axios_test() {
-        const response = await fetch('http://localhost/login', {
+        const response = await fetch('http://localhost:8080/login', {
             method: 'POST',
             body: JSON.stringify(temp_user_info),
             headers: {
                 "Content-Type": `application/json`,
             }
         })
+        .then(result => {
+            console.log(result.headers)
+            setCookie(
+                'userInfo',
+                {
+                    user_id: temp_user_info.userId,
+                    jwt_token: result.data.Authorization,
+                    
+                    refresh_token: result.data.refreshToken,
+                },
+                {path: '/'}
+            )
+            navigate("/")
+        })
         .catch(error => {
             console.log(error)
             alert('다시 시도해주세요')
         })
-        const result = await response.json()
-        setCookie(
-            'userInfo',
-            {
-                user_id: temp_user_info.user_id,
-                jwt_token: result.data.Authorization,
-                refresh_token: result.data.refreshToken
-            },
-            {path: '/'}
-        )
-        navigate("/")
-    }   
+        const result = await response
+        console.log(result)
+    }
 
     const onClickHandler = (e) => {
         e.preventDefault()
@@ -83,5 +90,4 @@ function LoginForm () {
         </Container>
     )   
 }
-
 export default LoginForm
