@@ -1,5 +1,4 @@
-import Box from '@mui/material/Box';
-import Container from "@mui/material/Container";
+import { Container, Box, } from '@mui/material';
 
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
