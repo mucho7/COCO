@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import styled from "styled-components";
 
 import IdeArea from "../IdeArea";
@@ -15,6 +16,12 @@ const NormalSessionDiv = styled.div`
 `;
 
 function NormalSession(props) {
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      window.resizeTo(1600, 900)
+    });
+  }, [])
+  
   return (
     <NormalSessionDiv>
       <IdeArea />

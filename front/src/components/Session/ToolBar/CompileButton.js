@@ -19,7 +19,7 @@ function CompileButton(props) {
   return (
     <CustomButton 
       onClick={handleOnClick} 
-      on={isCompileButtonOn}
+      isButtonOn={isCompileButtonOn}
     >
       컴파
     </CustomButton>

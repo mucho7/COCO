@@ -19,7 +19,7 @@ function SessionList() {
         <hr />
         {sessionList.map((session) => {
           return (
-            <Box onClick={() => goToDetail(session.id)}>
+            <Box key={session.id} onClick={() => goToDetail(session.id)}>
               {session.id} : {session.title}
             </Box>
           );

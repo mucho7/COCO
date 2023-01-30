@@ -22,7 +22,7 @@ const Box = styled.div`
 
 const CustomButton = styled.button`
   border: 1px solid #FCA311;
-  background-color: ${props => props.on ? '#FCA311' : '#E5E5E5'};
+  background-color: ${props => props.isButtonOn ? '#FCA311' : '#E5E5E5'};
   border-radius: 50%;
   height: 50px;
   width: 50px;
