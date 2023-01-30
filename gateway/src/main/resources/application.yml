@@ -6,7 +6,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://i8a703.p.ssafy.io:8761/eureka
 
 
 spring:
@@ -17,18 +17,18 @@ spring:
     gateway:
       routes:
         - id: sessionFunction
-          uri: http://localhost:9001/
+          uri: http://i8a703.p.ssafy.io:8011/
           predicates:
             - Path=/sessionFunction/**
         - id: board
-          uri: http://localhost:9002/
+          uri: http://i8a703.p.ssafy.io:8013/
           predicates:
             - Path=/board/**
         - id: member
-          uri: http://localhost:9003/
+          uri: http://i8a703.p.ssafy.io:8012/
           predicates:
             - Path=/member/**
         - id: session
-          uri: http://localhost:9004/
+          uri: http://i8a703.p.ssafy.io:8014/
           predicates:
             - Path=/session/**
