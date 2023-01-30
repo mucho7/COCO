@@ -58,12 +58,20 @@ public class Room {
 
 	public void UpdateRoom(String title, String content, String mode, Integer isLive, Integer numberUsers,
 		Integer max) {
-		this.title = title;
-		this.content = content;
-		this.mode = mode;
-		this.isLive = isLive;
-		this.numberUsers = numberUsers;
-		this.max = max;
+		if (title != null && title.length() != 0) {
+			this.title = title;
+		}
+		if (content != null && content.length() != 0) {
+			this.content = content;
+		}
+		if (mode != null && mode.length() != 0) {
+			this.mode = mode;
+		}
+		// this.isLive = isLive;
+		// this.numberUsers = numberUsers;
+		if (max != null) {
+			this.max = max;
+		}
 	}
 
 	public void UpdateRoomIsLive() {
