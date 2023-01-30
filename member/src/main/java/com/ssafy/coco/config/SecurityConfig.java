@@ -1,7 +1,9 @@
 package com.ssafy.coco.config;
 
+import org.apache.catalina.filters.CorsFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -47,6 +49,7 @@ public class SecurityConfig {
 			.authorizeRequests()
 			// .antMatchers("/swagger*/**", "/login", "/check/**", "/member/register", "/token", "/sendEmail", "/tempPassword")
 			// .permitAll()
+			.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 			.antMatchers("/member/info/**", "/member/rating", "/member/extract", "/logout")
 			.authenticated()
 			.anyRequest().permitAll()
