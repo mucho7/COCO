@@ -25,7 +25,7 @@ function NavbarItem(props) {
 const NavContainer = styled.div`
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     vertical-align: middle;
 `

@@ -1,20 +1,24 @@
 import NavbarItem from "./NavbarItem"
 import NavbarSearch from './NavbarSearch'
+import { useCookies } from 'react-cookie'
 
 import { Grid } from '@mui/material'
 
 function Navbar() {
-
+    const [ cookie, ] = useCookies(['userInfo'])
+    console.log(cookie)
     // 차후에 정확히 설정해야할 route들
     const leftNavList = [
-        {name: "Session", bold: false, url: "/normal",},
+        {name: "Session", bold: false, url: "/room",},
         {name: "Community", bold: false, url: "/community",},
-        {name: "Group", bold: false, url: "/group",},
     ]
     const rightNavList = [
         {name: "Log In", bold: false, url: "/useri/login",},
         {name: "Sign Up", bold: true, url: "/useri",},
-        {name: "Profile", url: "/useri/user_id",},
+    ]
+    const logedInNavList = [
+        {name: "Profile", bold: false, url: "/useri/user_id",},
+        {name: "Log Out", bold: true, url: "/",},
     ]
 
     return (
@@ -26,11 +30,16 @@ function Navbar() {
                 <Grid item xs={3}>
                     <NavbarItem navList={leftNavList}/>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={5}>
                     <NavbarSearch/>
                 </Grid>
                 <Grid item xs={3}>
+                    {cookie.jwt_token === null
+                    ?
+                    <NavbarItem navList={logedInNavList}/>
+                    :
                     <NavbarItem navList={rightNavList}/>
+                }
                 </Grid>
             </Grid>
         </div>
