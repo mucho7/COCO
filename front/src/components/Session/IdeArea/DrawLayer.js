@@ -18,10 +18,11 @@ function DrawLayer(props) {
   const canvasRef = useRef(null)
   const contextRef = useRef(null)
   const [isDrawing, setIsDrawing] = useState(false);
-  const [drawColor, setDrawColor] = useState("#000000");
+  const [drawColor, setDrawColor] = useState("#ffffff");
+  const [isEraseMode, setIsEraseMode] = useState(false);
 
   
-  useEffect(() => {
+  function initCanvas() {
     const drawDiv = document.querySelector("#canvas")
     const canvas = canvasRef.current;
     canvas.width = drawDiv.clientWidth * 2;
@@ -32,10 +33,35 @@ function DrawLayer(props) {
     const context = canvas.getContext("2d");
     context.scale(2, 2);
     context.lineCap = "round";
-    context.strokeStyle = drawColor;
+    context.strokeStyle = "#ffffff";
     context.lineWidth = 5;
     contextRef.current = context;
+  }
+  
+  // 리사이즈시 다시 지정 크기로 리사이즈 시킴
+  // 리사이즈시 캔버스 크기 조정하고, 그 위에 기존에 그려졌던 정보 다시 그리기
+  useEffect(() => {
+    initCanvas();
+    // window.addEventListener("resize", initCanvas);
+    window.addEventListener("resize", () => {
+      // let imageData = canvasRef.current.toDataURL();
+      // let img = new Image();
+      // // console.log(imageData)
+      // // console.log(img)
+      // initCanvas();
+      // img.onload = function() {
+      //   contextRef.drawImage(img, 0, 0);
+      // };
+      // img.src = imageData;
+      let image = contextRef.current.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height)
+      initCanvas();
+      contextRef.current.putImageData(image, 0, 0)
+    });
+    return () => {
+      window.removeEventListener("resize", initCanvas);
+    }
   }, []);
+
 
   const startDrawing = ({nativeEvent}) => {
     const {offsetX, offsetY} = nativeEvent;
@@ -54,10 +80,13 @@ function DrawLayer(props) {
     if (!isDrawing) {
       return
     }
-    // console.log(nativeEvent)
     const {offsetX, offsetY} = nativeEvent;
-    contextRef.current.lineTo(offsetX, offsetY);
-    contextRef.current.stroke()
+    if (isEraseMode) {
+      contextRef.current.clearRect(offsetX-5, offsetY-5, 10, 10);
+    } else {
+      contextRef.current.lineTo(offsetX, offsetY);
+      contextRef.current.stroke()
+    }
   }
 
 
@@ -65,13 +94,14 @@ function DrawLayer(props) {
     contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
   }
 
-  const onColorChange = (event) => {
-    // console.log(event.target.value);
-    setDrawColor(event.target.value);
-    console.log(drawColor);
+  const erase = () => {
+    setIsEraseMode(!isEraseMode);
   }
 
-  
+  const onColorChange = (event) => {
+    setDrawColor(event.target.value);
+    contextRef.current.strokeStyle = drawColor;
+  }
 
   return (
     <DrawDiv id="canvas">
@@ -83,7 +113,8 @@ function DrawLayer(props) {
         ref={canvasRef}
       />
       <button onClick={eraseAll}>전부 지우기</button>
-      <input type="color" id="color" onChange={onColorChange} />
+      <button onClick={erase}>{ isEraseMode ? "그리기" : "지우개" }</button>
+      <input type="color" id="color" onInput={onColorChange} />
     </DrawDiv>
   );
 }
