@@ -36,11 +36,11 @@ function Navbar() {
                 <NavbarSearch/>
             </Grid>
             <Grid item xs={3}>
-                {cookie.userInfo !== 'undefined'
+                {cookie.userInfo === 'undefined'
                 ?
-                <NavbarItem navList={navlist.loged}/>
-                :
                 <NavbarItem navList={navlist.right}/>
+                :
+                <NavbarItem navList={navlist.loged}/>
             }
             </Grid>
         </Grid>

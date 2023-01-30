@@ -35,19 +35,9 @@ function LoginForm () {
                 "Content-Type": `application/json`,
             }
         })
-        .then(result => {
-            console.log(result.headers)
-            setCookie(
-                'userInfo',
-                {
-                    user_id: temp_user_info.userId,
-                    jwt_token: result.data.Authorization,
-                    refresh_token: result.data.refreshToken,
-                },
-                {path: '/'}
-            )
-            navigate("/")
-        })
+        // .then(result => {
+            
+        // })
         .catch(error => {
             console.log(error)
             // check용 더미 token
@@ -60,13 +50,24 @@ function LoginForm () {
                 },
                 {path: '/'}
             )
-            console.log(cookie)
+            // 기능 확인 후 삭제할 것
+            console.log('기능확인을 위해 강제 로그인합니다')
+            alert('기능확인을 위해 강제 로그인합니다')
             navigate('/')
 
-            alert('다시 시도해주세요')
+            // alert('다시 시도해주세요')
         })
         const result = await response.headers
-        console.log(result)
+        setCookie(
+            'userInfo',
+            {
+                user_id: temp_user_info.userId,
+                jwt_token: result.get('Authorization'),
+                refresh_token: result.get('refreshToken'),
+            },
+            {path: '/'}
+        )
+        navigate("/")
     }
 
     const onClickHandler = (e) => {
