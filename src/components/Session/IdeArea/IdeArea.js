@@ -1,12 +1,9 @@
 import styled from "styled-components";
-import TextField from "@mui/material/TextField";
 
-import { useState } from "react";
-import { onChangeCode } from "../../../store/compileSlice";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
-// import DrawLayer from "./DrawLayer";
-import DrawLayer from "./testlayer";
+import Ide from "./Ide";
+import DrawLayer from "./DrawLayer";
 
 
 const IdeAreaDiv = styled.div`
@@ -18,29 +15,13 @@ const IdeAreaDiv = styled.div`
 
 
 function IdeArea(props) {
-  const [code, setCode] = useState("");
-  const dispatch = useDispatch();
   const isDrawButtonOn = useSelector((state) => state.toolBarAction.isDrawButtonOn);
 
-  function handleChangeCode(event) {
-    setCode(event.target.value);
-    dispatch(onChangeCode(event.target.value));
-  }
 
   return (
     <IdeAreaDiv>
       {isDrawButtonOn && <DrawLayer />}
-      <h1>IDE Area</h1>
-      <TextField
-        label="메세지를 입력하세요."
-        multiline
-        maxRows={20}
-        sx={{ m: 2, width: "75%", ' .MuiOutlinedInput-root': {
-          color: 'white',
-          }, }}
-        value={code}
-        onChange={handleChangeCode}
-      />
+      <Ide />
     </IdeAreaDiv>
   );
 }

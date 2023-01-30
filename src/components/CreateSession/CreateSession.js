@@ -24,9 +24,10 @@ function CreateSession() {
     const sessionData = new FormData(event.currentTarget);
     const payload = {
       // host_id, host_rating, max 추가로 전달
-      title: sessionData.get('title'),
-      content: sessionData.get('content'),
-      mode: sessionData.get('mode')
+      title: sessionData.get("title"),
+      content: sessionData.get("content"),
+      mode: sessionData.get("mode"),
+      max: sessionData.get("max")
     }
     // 백엔드의 "/room" URI로 POST 요청 보내는 함수로 변경
     dispatch(createSession(payload));
@@ -69,6 +70,17 @@ function CreateSession() {
               <FormControlLabel value="normal" control={<Radio />} label="normal" />
               <FormControlLabel value="relay" control={<Radio />} label="relay" />
             </RadioGroup>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              required
+              fullWidth
+              id="max"
+              label="최대 참여자 수"
+              name="max"
+              type="number"
+              autoComplete="max"
+            />
           </Grid>
         </Grid>
         <Button
