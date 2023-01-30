@@ -6,7 +6,6 @@ function CommuArticles(props) {
     return (
         <CommuArticle>
             {props.articles.map(article => {
-                console.log('yes')
                 return (
                     <Card sx={{ width: '100%', height: 'auto', margin: '4px'}} key={article.title}>
                         <CardActionArea>
