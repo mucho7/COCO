@@ -2,23 +2,15 @@ import styled from "styled-components"
 import { useState } from "react"
 
 function ProfileUserInfoForm(props) {
-    const [inputPassword, setInputPassword] = useState()
-    // const [inputCheckPassword, setInputChcekPassword] = useState()
-    // const [inputEmail, setInputEmail] = useState()
+    const [inputEmail, setInputEmail] = useState()
     
     const onTypingHandler = (e) => {
         // 4개의 케이스에 따라 각자의 스테이트에 저장
         switch (e.target.id) {
             case 'User E-Mail':
-                setInputPassword(e.target.value)
-                console.log(e.target.value)
+                setInputEmail(e.target.value)
+                console.log(e.target.value, inputEmail)
                 break
-            // case 'outlined-password-check':
-            //     setInputChcekPassword(e.target.value)
-            //     break
-            // case 'outlined-email':
-            //     setInputEmail(e.target.value)
-            //     break
             default:
                 // nothing
         }

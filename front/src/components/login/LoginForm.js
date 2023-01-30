@@ -1,17 +1,23 @@
 import { useEffect, useState, useRef }  from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useCookies } from 'react-cookie'
 import { Box, Container, Grid, Button, TextField } from '@mui/material'
 
 function LoginForm () {
+    const navigate = useNavigate()
+    const [ setCookie ] = useCookies(['userInfo'])
     const [inputID, setInputID ] = useState()
     const [inputPassword, setInputPassword] = useState()
     
-    const inputRef = useRef()
+    // 로그인에 들어오면 ID칸에 autofocus
+    // 정상작동하지 않음
+    const inputRef = useRef(null)
     useEffect(() => {
+        console.log('aurofocus가 정상적으로 작동하지 않음')
         inputRef.current.focus()
-    })
+    }, [])
 
     const onTypingHandler = (e) => {
-        // 4개의 케이스에 따라 각자의 스테이트에 저장
         switch (e.target.id) {
             case 'outlined-id':
                 setInputID(e.target.value)
@@ -25,25 +31,42 @@ function LoginForm () {
     }
 
     const temp_user_info = {
-        user_id: inputID, 
+        userId: inputID, 
         password: inputPassword,
     }
 
     async function axios_test() {
-
-        const response = await fetch('https://70.12.247.183:8080/login', {
+        const response = await fetch('http://localhost:8080/login', {
             method: 'POST',
-            body: temp_user_info,
+            body: JSON.stringify(temp_user_info),
             headers: {
                 "Content-Type": `application/json`,
             }
         })
-        const data = await response.json()
-        // 영구 저장 및 리덕스를 활용한 전역변수 저장이 필요함
-        console.log('들어옴', data)
-    }   
+        .then(result => {
+            console.log(result.headers)
+            setCookie(
+                'userInfo',
+                {
+                    user_id: temp_user_info.userId,
+                    jwt_token: result.data.Authorization,
+                    
+                    refresh_token: result.data.refreshToken,
+                },
+                {path: '/'}
+            )
+            navigate("/")
+        })
+        .catch(error => {
+            console.log(error)
+            alert('다시 시도해주세요')
+        })
+        const result = await response
+        console.log(result)
+    }
 
-    const onClickHandler = () => {
+    const onClickHandler = (e) => {
+        e.preventDefault()
         axios_test()
     }
 
@@ -54,10 +77,10 @@ function LoginForm () {
                 <Grid container spacing={2} style={{padding: '2rem', justifyContent: 'center'}}>
                     {/* map을 활용한 반복문으로 고쳤으면 함 */}
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} ref={inputRef} id="outlined" label="ID" fullWidth />
+                        <TextField onChange={onTypingHandler} ref={inputRef} id="outlined-id" label="ID" fullWidth />
                     </Grid>
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} id="outlined-password" label="Password" fullWidth />
+                        <TextField onChange={onTypingHandler} id="outlined-password" label="Password" type="password" fullWidth />
                     </Grid>
                     <Grid item xs={6}>
                         <Button onClick={onClickHandler} variant="contained" className="submit" style={{height: '3rem'}} fullWidth> <b>로그인</b></Button>
@@ -67,5 +90,4 @@ function LoginForm () {
         </Container>
     )   
 }
-
 export default LoginForm
