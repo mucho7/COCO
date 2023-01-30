@@ -5,9 +5,9 @@ import { Box, Container, Grid, Button, TextField } from '@mui/material'
 
 function LoginForm () {
     const navigate = useNavigate()
-    const [cookie, setCookie ] = useCookies(['userInfo'])
-    const [inputID, setInputID ] = useState()
-    const [inputPassword, setInputPassword] = useState()
+    const [ cookie, setCookie ] = useCookies(['userInfo'])
+    const [ inputID, setInputID ] = useState()
+    const [ inputPassword, setInputPassword ] = useState()
 
     const temp_user_info = {
         userId: inputID, 

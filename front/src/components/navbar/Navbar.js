@@ -5,10 +5,7 @@ import { useCookies } from 'react-cookie'
 import { Grid } from '@mui/material'
 
 function Navbar() {
-    const [ cookie, ] = useCookies(['userInfo'])
-    console.log('/ 에서의 cookie 확인')
-    console.log(cookie.userInfo.jwt_token)
-    console.log('/ 에서의 cookie 확인')
+    const [ cookie ] = useCookies(['userInfo'])
 
     // 차후에 정확히 설정해야할 route들
     const navlist = {
@@ -22,33 +19,31 @@ function Navbar() {
         ],
         loged: [
             {name: "Profile", bold: false, url: "/useri/user_id",},
-            {name: "Log Out", bold: true, url: "/",},
+            {name: "Log Out", bold: true, url: "/useri/logout",},
         ]
 
     }
 
     return (
-        <div>
-            <Grid container spacing={1} style={Nav}>
-                <Grid item xs={1}>
-                    <NavbarItem navList={[{name: "COCO", url: "/", bold: true}]}/>
-                </Grid>
-                <Grid item xs={3}>
-                    <NavbarItem navList={navlist.left}/>
-                </Grid>
-                <Grid item xs={5}>
-                    <NavbarSearch/>
-                </Grid>
-                <Grid item xs={3}>
-                    {cookie.userInfo.jwt_token !== null
-                    ?
-                    <NavbarItem navList={navlist.loged}/>
-                    :
-                    <NavbarItem navList={navlist.right}/>
-                }
-                </Grid>
+        <Grid container spacing={1} style={Nav}>
+            <Grid item xs={1}>
+                <NavbarItem navList={[{name: "COCO", url: "/", bold: true}]}/>
             </Grid>
-        </div>
+            <Grid item xs={3}>
+                <NavbarItem navList={navlist.left}/>
+            </Grid>
+            <Grid item xs={5}>
+                <NavbarSearch/>
+            </Grid>
+            <Grid item xs={3}>
+                {cookie.userInfo !== 'undefined'
+                ?
+                <NavbarItem navList={navlist.loged}/>
+                :
+                <NavbarItem navList={navlist.right}/>
+            }
+            </Grid>
+        </Grid>
     )
 }
 

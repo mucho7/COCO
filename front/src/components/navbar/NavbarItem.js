@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Button } from '@mui/material'
 
 function NavbarItem(props) {
-    
+
     return (
         <NavContainer>
             {props.navList.map(item => {
