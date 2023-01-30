@@ -16,7 +16,9 @@ function SessionDetail() {
   function enterSession() {
     switch (session.mode) {
       case "normal":
-        navigate("/normal");
+        // navigate("/normal");
+        const sessionWindow = window.open("http://localhost:3000/normal", "sessionWindow", "popup")
+        sessionWindow.resizeTo(1600, 900);
         break;
       case "relay":
         navigate("/relay");

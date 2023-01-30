@@ -10,7 +10,7 @@ function MicButton(props) {
   return (
     <CustomButton 
       onClick={() => {dispatch(onClickMicButton());}} 
-      on={isMicButtonOn}
+      isButtonOn={isMicButtonOn}
     >
       음성
     </CustomButton>

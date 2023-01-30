@@ -10,7 +10,7 @@ function ChatButton(props) {
   return (
     <CustomButton 
       onClick={() => {dispatch(onClickChatButton());}} 
-      on={isChatButtonOn}
+      isButtonOn={isChatButtonOn}
     >
       채팅
     </CustomButton>
