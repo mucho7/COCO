@@ -17,7 +17,7 @@ function SigninForm() {
     // const [passwordValidation, setPasswordValidation] = useState(false)
 
     // validation
-    const emailValidation = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}')
+    const emailValidation = new RegExp('[a-z0-9_.]+@[a-z]+.[a-z]{2,3}')
     const idValidation = useCallback(() => {
         const idForm = /^[a-z0-9]{4,16}$/
         const idErrorMessage = {
@@ -105,7 +105,7 @@ function SigninForm() {
         setIsEmailValid(!(emailValidation.test(inputEmail)))
         passwordValidation()
         idValidation()
-        if (isOkToSubmit){axios_test()} else { alert('다시!!')}
+        if (isOkToSubmit){axios_test()} else { alert('잘못된 접근입니다.')}
     }
 
 
