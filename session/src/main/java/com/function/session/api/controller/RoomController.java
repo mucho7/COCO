@@ -18,6 +18,8 @@ import com.function.session.api.dto.response.RoomDetailResponseDto;
 import com.function.session.api.service.RoomService;
 import com.function.session.data.Room;
 
+import io.swagger.annotations.ApiOperation;
+
 // @RequestMapping("/room")
 @RestController
 public class RoomController {
@@ -30,37 +32,46 @@ public class RoomController {
 	}
 
 	@GetMapping("/room")
+	@ApiOperation(value = "세션 방 목록 조회")
 	public List<Room> GetRoomList(@RequestParam String mode, @RequestParam(required = false) String hostId,
 		@RequestParam(required = false) String title) {
 		return roomService.GetRoomList(mode, hostId, title);
 	}
 
 	@GetMapping("/room/{id}")
+	@ApiOperation(value = "세션 방 상세 보기")
 	public RoomDetailResponseDto findById(@PathVariable String id) {
 		return roomService.findByRoomId(id);
 	}
 
 	@PostMapping("/room")
+	@ApiOperation(value = "세션 방 생성")
 	public String RegisterRoom(@RequestBody RoomRegisterRequestDto requestDto) {
 		return roomService.RegisterRoom(requestDto);
 	}
 
 	@PutMapping("/room/{id}")
+	@ApiOperation(value = "세션 방 수정")
 	public String UpdateRoom(@PathVariable String id, @RequestBody RoomUpdateRequestDto requestDto) {
 		return roomService.UpdateRoom(requestDto, id);
 	}
 
 	@PutMapping("/room/{id}/{userId}")
+	@ApiOperation(value = "세션 방 입장", notes = "- 호스트가 입장하면, is_live가 1이 된다.\n"
+		+ "- 일반 사용자가 입장을 시도하면, (is_live == 1) && (참여자수 < max) 일때만 입장가능하다.\n"
+		+ "- 참여자수 + 1")
 	public String UpdateRoomEnter(@PathVariable String id, @PathVariable String userId) {
 		return roomService.UpdateRoomEnter(id, userId);
 	}
 
 	@PutMapping("/room/{id}/leave")
+	@ApiOperation(value = "세션 방 나가기", notes = "참여자수 - 1")
 	public String UpdateRoomLeave(@PathVariable String id) {
 		return roomService.UpdateRoomLeave(id);
 	}
 
 	@DeleteMapping("/room/{id}")
+	@ApiOperation(value = "세션 방 삭제")
 	public String DeleteRoom(@PathVariable String id) {
 		return roomService.DeleteRoom(id);
 	}
