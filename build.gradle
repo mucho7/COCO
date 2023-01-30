@@ -69,6 +69,9 @@ dependencies {
 
     // Spring 자동 리로드
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // eureka
+//    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 }
 
 dependencyManagement{
