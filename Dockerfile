@@ -1,10 +1,11 @@
-FROM    node:16-alpine
+FROM node:18.13.0-alpine3.17 as builder
 
-COPY    ./package* /usr/src/app/
-WORKDIR /usr/src/app
-RUN     npm install
+RUN npm install -g serve
 
-COPY . /usr/src/app
+RUN mkdir /app
+WORKDIR /app
 
-EXPOSE 3000
-CMD    npm start
+RUN mkdir ./build
+COPY ./build ./build
+
+ENTRYPOINT ["serve","-s","build"]
