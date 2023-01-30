@@ -70,9 +70,13 @@ public class MemberController {
 
 	@GetMapping("/member/info/{id}")
 	@ApiOperation(value = "정보 조회", notes = "{id}에 해당하는 사용자 정보를 DB에서 가져온다.")
-	public MemberResponseDto findById(
+	public ResponseEntity findById(
 		@PathVariable @ApiParam(value = "회원정보를 조회할 사용자의 {id}", required = true) String id) {
-		return memberService.findByUserId(id);
+		MemberResponseDto member=memberService.findByUserId(id);
+		if(member.getDelFlag()!=null)
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("탈퇴한 사용자입니다.");
+		else
+			return ResponseEntity.ok(member);
 	}
 
 	@PutMapping("/member/delete/{id}")
