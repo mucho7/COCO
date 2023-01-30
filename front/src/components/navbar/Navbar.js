@@ -6,20 +6,26 @@ import { Grid } from '@mui/material'
 
 function Navbar() {
     const [ cookie, ] = useCookies(['userInfo'])
-    console.log(cookie)
+    console.log('/ 에서의 cookie 확인')
+    console.log(cookie.userInfo.jwt_token)
+    console.log('/ 에서의 cookie 확인')
+
     // 차후에 정확히 설정해야할 route들
-    const leftNavList = [
-        {name: "Session", bold: false, url: "/room",},
-        {name: "Community", bold: false, url: "/community",},
-    ]
-    const rightNavList = [
-        {name: "Log In", bold: false, url: "/useri/login",},
-        {name: "Sign Up", bold: true, url: "/useri",},
-    ]
-    const logedInNavList = [
-        {name: "Profile", bold: false, url: "/useri/user_id",},
-        {name: "Log Out", bold: true, url: "/",},
-    ]
+    const navlist = {
+        left: [
+            {name: "Session", bold: false, url: "/room",},
+            {name: "Community", bold: false, url: "/community",},
+        ],
+        right: [
+            {name: "Log In", bold: false, url: "/useri/login",},
+            {name: "Sign Up", bold: true, url: "/useri",},
+        ],
+        loged: [
+            {name: "Profile", bold: false, url: "/useri/user_id",},
+            {name: "Log Out", bold: true, url: "/",},
+        ]
+
+    }
 
     return (
         <div>
@@ -28,17 +34,17 @@ function Navbar() {
                     <NavbarItem navList={[{name: "COCO", url: "/", bold: true}]}/>
                 </Grid>
                 <Grid item xs={3}>
-                    <NavbarItem navList={leftNavList}/>
+                    <NavbarItem navList={navlist.left}/>
                 </Grid>
                 <Grid item xs={5}>
                     <NavbarSearch/>
                 </Grid>
                 <Grid item xs={3}>
-                    {cookie.jwt_token === null
+                    {cookie.userInfo.jwt_token !== null
                     ?
-                    <NavbarItem navList={logedInNavList}/>
+                    <NavbarItem navList={navlist.loged}/>
                     :
-                    <NavbarItem navList={rightNavList}/>
+                    <NavbarItem navList={navlist.right}/>
                 }
                 </Grid>
             </Grid>
