@@ -1,21 +1,21 @@
-import { useEffect, useState, useRef }  from 'react'
+import { useState }  from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 import { Box, Container, Grid, Button, TextField } from '@mui/material'
 
 function LoginForm () {
     const navigate = useNavigate()
-    const [ setCookie ] = useCookies(['userInfo'])
+    const [setCookie ] = useCookies(['userInfo'])
     const [inputID, setInputID ] = useState()
     const [inputPassword, setInputPassword] = useState()
     
-    // 로그인에 들어오면 ID칸에 autofocus
-    // 정상작동하지 않음
-    const inputRef = useRef(null)
-    useEffect(() => {
-        console.log('aurofocus가 정상적으로 작동하지 않음')
-        inputRef.current.focus()
-    }, [])
+    // // 로그인에 들어오면 ID칸에 autofocus
+    // // 정상작동하지 않음
+    // mui 내부기능으로 대체함
+    // const inputRef = useRef(null)
+    // useEffect(() => {
+    //     inputRef.current.focus()
+    // }, [])
 
     const onTypingHandler = (e) => {
         switch (e.target.id) {
@@ -72,12 +72,11 @@ function LoginForm () {
 
     return (
         <Container fixed>
-            <h2>로그인</h2><hr/>
             <Box component="form">
                 <Grid container spacing={2} style={{padding: '2rem', justifyContent: 'center'}}>
                     {/* map을 활용한 반복문으로 고쳤으면 함 */}
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} ref={inputRef} id="outlined-id" label="ID" fullWidth />
+                        <TextField onChange={onTypingHandler} autoFocus id="outlined-id" label="ID" fullWidth />
                     </Grid>
                     <Grid item xs={7}>
                         <TextField onChange={onTypingHandler} id="outlined-password" label="Password" type="password" fullWidth />

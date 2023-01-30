@@ -113,7 +113,6 @@ function SigninForm() {
 
     return (
         <Container fixed>
-            <h2>회원 가입</h2><hr/>
             <Box component="form">
                 <Grid container spacing={2} style={{padding: '2rem', justifyContent: 'center'}}>
                     <Grid item xs={7}>
