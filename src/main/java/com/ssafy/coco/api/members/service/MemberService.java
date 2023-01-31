@@ -52,11 +52,8 @@ public class MemberService {
 	}
 
 	@Transactional
-	public String UpdateInfo(String userId, MemberUpdateRequestDto requestDto, HttpServletRequest request) {
-		String accessToken = request.getHeader("Authorization");
-		if (accessToken.startsWith("bearer "))
-			accessToken = accessToken.substring(7);
-		String tokenOwner = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
+	public String UpdateInfo(String userId, MemberUpdateRequestDto requestDto, String accessToken) {
+		String tokenOwner = getUserIdFromAccessToken(accessToken);
 		System.out.println("[UpdateInfo@MemberService] userId: " + userId + ", requestDto: " + requestDto);
 		if (tokenOwner.equals(userId)) {
 			Member member = memberRepository.findByUserId(userId)
@@ -90,12 +87,8 @@ public class MemberService {
 	}
 
 	@Transactional
-	public String DeleteMember(String id, HttpServletRequest request) {
-		String accessToken = request.getHeader("Authorization");
-		System.out.println("accessToken : " + accessToken);
-		if (accessToken.startsWith("bearer "))
-			accessToken = accessToken.substring(7);
-		String tokenOwnerId = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
+	public String DeleteMember(String id, String accessToken) {
+		String tokenOwnerId = getUserIdFromAccessToken(accessToken);
 
 		if (tokenOwnerId.equals(id)) {
 
@@ -179,7 +172,6 @@ public class MemberService {
 	public String getTmpPassword(String userId) {
 		String tempPassword = makeTempPassword();
 
-
 		try {
 			String sha256Password = sha256Converter.encrypt(
 				tempPassword); // TODO: sha256으로 한번 인코딩 한 뒤 DB에 저장해야함 (프론트에서 sha256으로 한번 변환되어 백으로 올 예정이라..)
@@ -191,11 +183,16 @@ public class MemberService {
 		return tempPassword;
 	}
 
-	public void updatePassword(String userId, String tempPassword) {
-		Member member = memberRepository.findByUserId(userId).get();
-		String encodedPassword = passwordEncoder.encode(tempPassword);
-		member.setPassword(encodedPassword);
-		memberRepository.save(member);
+	public String updatePassword(String userId, String tempPassword) {
+		Member member = memberRepository.findByUserId(userId)
+			.orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 사용자가 없습니다."));
+		if(member.getDelFlag()==null) {
+			String encodedPassword = passwordEncoder.encode(tempPassword);
+			member.setPassword(encodedPassword);
+			memberRepository.save(member);
+			return member.getUserId();
+		}
+		else return "[error] 해당 사용자는 탈퇴한 사용자입니다.";
 	}
 
 	public String makeTempPassword() {
@@ -212,4 +209,15 @@ public class MemberService {
 		return tempPassword.toString();
 	}
 
+	public String changePassword(String accessToken, String newPassword) {
+		String tokenOwner = getUserIdFromAccessToken(accessToken);
+		return updatePassword(tokenOwner,newPassword);
+	}
+
+	private String getUserIdFromAccessToken(String accessToken) {
+		if (accessToken.startsWith("bearer "))
+			accessToken = accessToken.substring(7);
+		System.out.println("[getUserIdFromAccessToken@MemberService] AccessToken: " + accessToken);
+		return jwtTokenProvider.getUserIdFromAccessToken(accessToken);
+	}
 }

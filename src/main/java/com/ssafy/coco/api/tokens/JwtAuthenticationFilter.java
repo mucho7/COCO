@@ -52,13 +52,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 					System.out.println("재발급 과정에서의 refreshtoken에 있는 사용자 ID: "+userId);
 					// UserId로 권한정보 받아오기
 					List<String> roles = jwtTokenProvider.getRoles(userId);
-					System.out.println("[doFilterInternal@JwtAuthenticationFilter: roles: "+roles);
+					System.out.println("[doFilterInternal@JwtAuthenticationFilter] roles: "+roles);
 					// 토큰 발급
 					JwtTokenDto newJwtToken = jwtTokenProvider.createToken(userId, roles);
 					// 헤더에 토큰 정보(AccessToken, refreshToken) 추가
 					response.setHeader("Authorization", "bearer " + newJwtToken.getAccessToken());
 					response.setHeader("refreshToken", "bearer " + newJwtToken.getRefreshToken());
 					// 컨텍스트에 넣기
+					System.out.println("[doFilterInternal@JwtAuthenticationFilter] newJwtToken:\n"+newJwtToken);
 					this.setAuthentication(newJwtToken.getAccessToken());
 				}
 			}
@@ -71,6 +72,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		System.out.println("[setAuthentication@JwtAuthenticationFilter] token: " + token);
 		// 토큰으로부터 유저 정보를 받아옵니다.
 		Authentication authentication = jwtTokenProvider.getAuthentication(token);
+		System.out.println("[setAuthentication@JwtAuthenticationFilter] authentication: "+authentication);
 		// SecurityContext 에 Authentication 객체를 저장합니다.
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 	}

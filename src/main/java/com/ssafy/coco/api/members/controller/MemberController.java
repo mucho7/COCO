@@ -23,6 +23,7 @@ import com.ssafy.coco.api.members.dto.request.MemberLoginRequestDto;
 import com.ssafy.coco.api.members.dto.request.MemberRatingUpdateRequestDto;
 import com.ssafy.coco.api.members.dto.request.MemberRegisterRequestDto;
 import com.ssafy.coco.api.members.dto.request.MemberUpdateRequestDto;
+import com.ssafy.coco.api.members.dto.request.PasswordChangeRequestDto;
 import com.ssafy.coco.api.members.dto.request.SendPasswordRequestDto;
 import com.ssafy.coco.api.members.dto.response.MemberResponseDto;
 import com.ssafy.coco.api.members.service.MemberService;
@@ -62,7 +63,7 @@ public class MemberController {
 	public ResponseEntity UpdateMember(@PathVariable @ApiParam(value = "회원정보를 수정할 사용자의 {id}", required = true) String id,
 		@RequestBody @ApiParam(value = "수정할 내용이 담긴 데이터 객체", required = true) MemberUpdateRequestDto requestDto, HttpServletRequest request) {
 		System.out.println("[UpdateMember@MemberController] id: "+id+", requestDto: "+requestDto);
-		String updatedUserId=memberService.UpdateInfo(id, requestDto, request);
+		String updatedUserId=memberService.UpdateInfo(id, requestDto, request.getHeader("Authorization"));
 		if(updatedUserId==null)
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(id+" 사용자의 수정 권한이 없는 사용자입니다.");
 		return ResponseEntity.ok(updatedUserId);
@@ -82,7 +83,7 @@ public class MemberController {
 	@PutMapping("/member/delete/{id}")
 	@ApiOperation(value = "회원 탈퇴", notes = "{id}의 사용자 정보에 탈퇴일(del_flag)을 기록한다.")
 	public String DeleteMember(@PathVariable @ApiParam(value = "탈퇴할 회원 ID", required = true) String id, HttpServletRequest request) {
-		return memberService.DeleteMember(id, request);
+		return memberService.DeleteMember(id, request.getHeader("Authorization"));
 	}
 
 	@PutMapping("/member/rating")
@@ -157,6 +158,16 @@ public class MemberController {
 			else return ResponseEntity.internalServerError().body("로그아웃 중 문제가 발생하였습니다. 유효하지 않은 토큰입니다.");
 		}
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body("토큰 값이 유효하지 않습니다.");
+	}
+
+	@PostMapping("/member/changePassword")
+	@ApiOperation(value="비밀번호 변경", notes = "Request Header의 AccessToken으로부터 사용자 ID를 추출하여 해당 사용자의 비밀번호를 변경한다.")
+	public ResponseEntity changePassword(@RequestBody@ApiParam(value = "새로운 비밀번호", required = true) PasswordChangeRequestDto requestDto, HttpServletRequest request){
+		String accessToken=request.getHeader("Authorization");
+		String result=memberService.changePassword(accessToken, requestDto.getNewPassword());
+		if(result.startsWith("[error] "))
+			return ResponseEntity.badRequest().body(result.split(" ")[1]);
+		else return ResponseEntity.ok(result);
 	}
 
 }

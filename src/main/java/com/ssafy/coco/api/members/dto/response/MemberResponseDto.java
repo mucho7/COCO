@@ -11,6 +11,8 @@ import lombok.Getter;
 public class MemberResponseDto {
 
 	private String id;
+
+	private String password;
 	private String name;
 	private String email;
 	private List<String> roles;
@@ -20,6 +22,7 @@ public class MemberResponseDto {
 
 	public MemberResponseDto(Member entity) {
 		this.id = entity.getUserId();
+		this.password=entity.getPassword();
 		this.name = entity.getName();
 		this.email = entity.getEmail();
 		this.rating = entity.getRating();
