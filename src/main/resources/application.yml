@@ -17,11 +17,11 @@ spring:
     gateway:
       routes:
         - id: sessionFunction
-          uri: http://i8a703.p.ssafy.io:8011/
+          uri: http://i8a703.p.ssafy.io:8013/
           predicates:
             - Path=/sessionFunction/**
         - id: board
-          uri: http://i8a703.p.ssafy.io:8013/
+          uri: http://i8a703.p.ssafy.io:8011/
           predicates:
             - Path=/board/**
         - id: member
