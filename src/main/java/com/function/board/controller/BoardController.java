@@ -50,23 +50,23 @@ public class BoardController {
 
 	@ApiOperation(value = "게시글 목록 페이징")
 	@GetMapping("/list")
-	public Page<PagingDto> paging(Pageable pageable) {
+	public ResponseEntity<Page<PagingDto>> paging(Pageable pageable) {
 		Page<Board> boardList = boardRepository.findAll(pageable);
-
-		Page<PagingDto> pagingList = boardList.map(
-			board -> PagingDto.builder()
-				.title(board.getTitle())
-				.content(board.getContent())
-				.createdAt(board.getCreatedAt())
-				.build());
-		return pagingList;
+		return ResponseEntity.ok(boardList.map(PagingDto::new));
 	}
 
-	@ApiOperation(value = "board_id로 게시글 조회")
+	@ApiOperation(value = "{board_id}로 게시글 조회")
 	@GetMapping("/{id}")
 	public ResponseEntity<BoardResponseDto> findById(@PathVariable("id") Long id) {
 		boardService.updateView(id);
 		return ResponseEntity.ok(boardService.findById(id));
+	}
+
+	@ApiOperation(value = "제목(title)에 {keyword}가 포함된 게시글 검색")
+	@GetMapping("/search")
+	public ResponseEntity<Page<PagingDto>> searchTitle(String keyword, Pageable pageable) {
+		Page<Board> searchList = boardService.searchByTitle(keyword, pageable);
+		return ResponseEntity.ok(searchList.map(PagingDto::new));
 	}
 
 	@ApiOperation(value = "게시글 수정")

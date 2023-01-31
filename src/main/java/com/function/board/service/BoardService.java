@@ -3,6 +3,8 @@ package com.function.board.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,10 +35,15 @@ public class BoardService {
 			.collect(Collectors.toList());
 	}
 
+	@Transactional(readOnly = true)
 	public BoardResponseDto findById(Long boardId) {
 		Board entity = boardRepository.findById(boardId)
 			.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 		return new BoardResponseDto(entity);
+	}
+	@Transactional(readOnly = true)
+	public Page<Board> searchByTitle(String keyword, Pageable pageable) {
+		return boardRepository.findByTitleContaining(keyword, pageable);
 	}
 
 	@Transactional
