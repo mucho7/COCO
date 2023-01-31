@@ -46,7 +46,7 @@ public class BoardController {
 		return boardService.findAll();
 	}
 
-	@GetMapping("/page")
+	@GetMapping("/list")
 	public Page<PagingDto> paging(@PageableDefault(size = 5, sort = "title") Pageable pageable) {
 		Page<Board> boardList = boardRepository.findAll(pageable);
 
