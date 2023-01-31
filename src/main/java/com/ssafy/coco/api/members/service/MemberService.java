@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import com.ssafy.coco.api.tokens.dto.JwtTokenDto;
 import com.ssafy.coco.api.tokens.service.JwtTokenService;
 import com.ssafy.coco.utility.SHA256Converter;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -53,7 +55,7 @@ public class MemberService {
 
 	@Transactional
 	public String UpdateInfo(String userId, MemberUpdateRequestDto requestDto, String accessToken) {
-		String tokenOwner = getUserIdFromAccessToken(accessToken);
+		String tokenOwner = SecurityContextHolder.getContext().getAuthentication().getName();
 		System.out.println("[UpdateInfo@MemberService] userId: " + userId + ", requestDto: " + requestDto);
 		if (tokenOwner.equals(userId)) {
 			Member member = memberRepository.findByUserId(userId)
@@ -88,7 +90,7 @@ public class MemberService {
 
 	@Transactional
 	public String DeleteMember(String id, String accessToken) {
-		String tokenOwnerId = getUserIdFromAccessToken(accessToken);
+		String tokenOwnerId = SecurityContextHolder.getContext().getAuthentication().getName();
 
 		if (tokenOwnerId.equals(id)) {
 
@@ -210,14 +212,8 @@ public class MemberService {
 	}
 
 	public String changePassword(String accessToken, String newPassword) {
-		String tokenOwner = getUserIdFromAccessToken(accessToken);
-		return updatePassword(tokenOwner,newPassword);
-	}
-
-	private String getUserIdFromAccessToken(String accessToken) {
-		if (accessToken.startsWith("bearer "))
-			accessToken = accessToken.substring(7);
-		System.out.println("[getUserIdFromAccessToken@MemberService] AccessToken: " + accessToken);
-		return jwtTokenProvider.getUserIdFromAccessToken(accessToken);
+		String userId= SecurityContextHolder.getContext().getAuthentication().getName();
+		System.out.println("[changePassword@MemberService] UserID from Authentication: "+userId);
+		return updatePassword(userId,newPassword);
 	}
 }
