@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CommentService {
+
 	private final CommentRepository commentRepository;
 	private final BoardRepository boardRepository;
 
@@ -45,6 +46,12 @@ public class CommentService {
 		return comments.stream()
 			.map(CommentResponseDto::new)
 			.collect(Collectors.toList());
+	}
+
+	public CommentResponseDto findById(Long commentId) {
+		Comment entity = commentRepository.findById(commentId)
+			.orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다."));
+		return new CommentResponseDto(entity);
 	}
 
 	@Transactional

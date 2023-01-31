@@ -2,6 +2,10 @@ package com.function.board.controller;
 
 import java.util.List;
 
+import javax.ws.rs.core.Response;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,21 +32,28 @@ public class CommentController {
 
 	@ApiOperation(value = "댓글 생성")
 	@PostMapping("/{board_id}/comment")
-	public Long save(@PathVariable("board_id") Long boardId, @RequestBody CommentSaveRequestDto requestDto) {
-		return commentService.save(boardId, requestDto);
+	public ResponseEntity<Long> save(@PathVariable("board_id") Long boardId, @RequestBody CommentSaveRequestDto requestDto) {
+		commentService.save(boardId, requestDto);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
-	@ApiOperation(value = "댓글 목록 조회")
+	@ApiOperation(value = "{board_id}의 댓글 목록 조회")
 	@GetMapping("/{board_id}/comment")
-	public List<CommentResponseDto> findAll(@PathVariable("board_id") Long boardId) {
-		return commentService.findAllByBoard(boardId);
+	public ResponseEntity<List<CommentResponseDto>> findAll(@PathVariable("board_id") Long boardId) {
+		return ResponseEntity.ok(commentService.findAllByBoard(boardId));
+	}
+
+	@ApiOperation(value = "{comment_id}에 해당하는 댓글 단건 조회")
+	@GetMapping("/{board_id}/comment/{comment_id}")
+	public ResponseEntity<CommentResponseDto> findById(@PathVariable("comment_id") Long commentId) {
+		return ResponseEntity.ok(commentService.findById(commentId));
 	}
 
 	@ApiOperation(value = "댓글 수정")
 	@PutMapping("/{board_id}/comment/{comment_id}")
-	public Long update(@PathVariable("comment_id") Long commentId,
+	public ResponseEntity<Long> update(@PathVariable("comment_id") Long commentId,
 		@RequestBody CommentUpdateRequestDto requestDto) {
-		return commentService.update(commentId, requestDto);
+		return ResponseEntity.ok(commentService.update(commentId, requestDto));
 	}
 
 	@ApiOperation(value = "댓글 삭제")
