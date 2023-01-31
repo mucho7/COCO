@@ -3,6 +3,8 @@ package com.function.board.controller;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.function.board.domain.board.Board;
@@ -19,6 +20,7 @@ import com.function.board.dto.board.BoardListResponseDto;
 import com.function.board.dto.board.BoardResponseDto;
 import com.function.board.dto.board.BoardSaveRequestDto;
 import com.function.board.dto.board.BoardUpdateRequestDto;
+import com.function.board.dto.common.PagingDto;
 import com.function.board.service.BoardService;
 
 import io.swagger.annotations.ApiOperation;
@@ -45,9 +47,17 @@ public class BoardController {
 	}
 
 	@GetMapping("/page")
-	public Page<Board> paging(@RequestParam(value = "page", defaultValue = "0") int page) {
-		Page<Board> boardList = boardService.paging(page, 5);
-		return boardList;
+	public Page<PagingDto> paging(@PageableDefault(size = 5, sort = "title") Pageable pageable) {
+		Page<Board> boardList = boardRepository.findAll(pageable);
+
+		Page<PagingDto> pagingList = boardList.map(
+			board -> PagingDto.builder()
+				.id(board.getId())
+				.title(board.getTitle())
+				.content(board.getContent())
+				.createdAt(board.getCreatedAt())
+				.build());
+		return pagingList;
 	}
 
 	@ApiOperation(value = "board_id로 게시글 조회")
