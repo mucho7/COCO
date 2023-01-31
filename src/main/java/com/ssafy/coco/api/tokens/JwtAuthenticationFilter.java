@@ -40,6 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			}
 			// Access Token이 만료되었으며, Refresh Token이 존재하는 상황
 			else if (!jwtTokenProvider.validateToken(accessToken) && refreshToken != null) {
+				System.out.println("만료된 AccessToken : "+accessToken);
 				System.out.println("헤더에서 refreshToken을 발견하여 재발급 처리를 진행합니다.");
 				// 재발급 후, 컨텍스트에 다시 넣기
 				// Refresh Token 검증
@@ -49,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				if (validateRefreshToken && isRefreshToken) {
 					// Refresh Token으로 사용자 ID 가져오기
 					String userId = jwtTokenProvider.getUserIdFromRefreshToken(refreshToken);
-					System.out.println("재발급 과정에서의 refreshtoken에 있는 사용자 ID: "+userId);
+					System.out.println("재발급 과정에서 refreshtoken을 기반으로 DB에 등록된 사용자 ID: "+userId);
 					// UserId로 권한정보 받아오기
 					List<String> roles = jwtTokenProvider.getRoles(userId);
 					System.out.println("[doFilterInternal@JwtAuthenticationFilter] roles: "+roles);
@@ -58,6 +59,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 					// 헤더에 토큰 정보(AccessToken, refreshToken) 추가
 					response.setHeader("Authorization", "bearer " + newJwtToken.getAccessToken());
 					response.setHeader("refreshToken", "bearer " + newJwtToken.getRefreshToken());
+					request.setAttribute("Authorization", "bearer "+newJwtToken.getAccessToken());
+					request.setAttribute("refreshToken", "bearer "+newJwtToken.getRefreshToken());
 					// 컨텍스트에 넣기
 					System.out.println("[doFilterInternal@JwtAuthenticationFilter] newJwtToken:\n"+newJwtToken);
 					this.setAuthentication(newJwtToken.getAccessToken());

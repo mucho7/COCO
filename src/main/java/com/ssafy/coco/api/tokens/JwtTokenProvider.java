@@ -50,7 +50,7 @@ public class JwtTokenProvider {
 	@Value("${jwt.secret}")
 	private String uniqueKey;
 
-	private int accessTokenValidTime = 1000 * 60  ; // AccessToken 유효시간 : 90분
+	private int accessTokenValidTime = 1000 * 60 * 90; // AccessToken 유효시간 : 90분
 	private int refreshTokenValidTime = 1000 * 60 * 60 * 12; // RefreshToken 유효시간 : 12시간
 
 	private final UserDetailsService userDetailsService;
@@ -108,13 +108,13 @@ public class JwtTokenProvider {
 	}
 
 	// RefreshToken에는 기본적으로 사용자 ID가 없음. 따라서 refreshToken Repository를 찾아서 사용자 ID를 가져오는 방식 사용.
-	public String getUserIdFromRefreshToken(String refreshToken){
-		Optional<RefreshToken> refreshTokenDto=refreshTokenRepository.findByRefreshToken(refreshToken);
+	public String getUserIdFromRefreshToken(String refreshToken) {
+		Optional<RefreshToken> refreshTokenDto = refreshTokenRepository.findByRefreshToken(refreshToken);
 
-		if(refreshTokenDto.isPresent()){
+		if (refreshTokenDto.isPresent()) {
 			return refreshTokenDto.get().getUserId();
-		}
-		else return null;
+		} else
+			return null;
 	}
 
 	public List<String> getRoles(String userId) {
@@ -141,7 +141,7 @@ public class JwtTokenProvider {
 			Jws<Claims> claims = Jwts.parser().setSigningKey(uniqueKey).parseClaimsJws(token);
 			return !claims.getBody().getExpiration().before(new Date());
 		} catch (SecurityException | MalformedJwtException e) {
-			log.info("유효하지 않은 Access Token !! -> " + token );
+			log.info("유효하지 않은 Access Token !! -> " + token);
 		} catch (ExpiredJwtException e) {
 			log.info("만료된 Access Token !! -> " + token);
 		} catch (UnsupportedJwtException e) {

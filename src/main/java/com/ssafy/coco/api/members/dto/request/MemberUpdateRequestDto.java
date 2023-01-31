@@ -11,13 +11,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class MemberUpdateRequestDto {
-	private String password;
 	private String name;
 	private String email;
 
 	@Builder
 	public MemberUpdateRequestDto(String password, String name, String email) {
-		this.password = password;
 		this.name = name;
 		this.email = email;
 	}
