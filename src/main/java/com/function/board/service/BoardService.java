@@ -26,13 +26,11 @@ public class BoardService {
 		return boardRepository.save(requestDto.toEntity()).getId();
 	}
 
-	@Transactional
-	public Long update(Long boardId, BoardUpdateRequestDto requestDto) {
-		Board board = boardRepository.findById(boardId)
-			.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
-
-		board.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getCode());
-		return boardId;
+	@Transactional(readOnly = true)
+	public List<BoardListResponseDto> findAll() {
+		return boardRepository.findAll().stream()
+			.map(BoardListResponseDto::new)
+			.collect(Collectors.toList());
 	}
 
 	public BoardResponseDto findById(Long boardId) {
@@ -41,11 +39,13 @@ public class BoardService {
 		return new BoardResponseDto(entity);
 	}
 
-	@Transactional(readOnly = true)
-	public List<BoardListResponseDto> findAll() {
-		return boardRepository.findAll().stream()
-			.map(BoardListResponseDto::new)
-			.collect(Collectors.toList());
+	@Transactional
+	public Long update(Long boardId, BoardUpdateRequestDto requestDto) {
+		Board board = boardRepository.findById(boardId)
+			.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+
+		board.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getCode());
+		return boardId;
 	}
 
 	@Transactional
