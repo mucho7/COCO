@@ -64,9 +64,6 @@ public class MemberService {
 			if (member.getDelFlag() != null)
 				throw new IllegalArgumentException("해당 사용자는 탈퇴한 사용자입니다. 사용자 ID: " + userId);
 			else {
-				if (requestDto.getPassword() != null) {
-					member.setPassword(passwordEncoder.encode(requestDto.getPassword()));
-				}
 				if (requestDto.getName() != null)
 					member.setName(requestDto.getName());
 				if (requestDto.getEmail() != null)
