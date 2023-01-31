@@ -1,6 +1,9 @@
 server:
   port: 8011
+<<<<<<< HEAD
+=======
 
+>>>>>>> 85a856767eda48ac7f760ea668f9bd253787440a
 
 spring:
   application:
@@ -13,5 +16,9 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
+<<<<<<< HEAD
+      defaultZone: http://i8a703.p.ssafy.io:8761/eureka
+=======
       defaultZone : http://i8a703.p.ssafy.io:8761/eureka
 
+>>>>>>> 85a856767eda48ac7f760ea668f9bd253787440a
