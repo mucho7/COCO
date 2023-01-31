@@ -97,6 +97,9 @@ public class CallHandler extends TextWebSocketHandler {
 			case "hostLeft":
 				hostLeft(jsonMessage, user);
 				break;
+			case "startRelay":
+				startReading(user);
+				break;
 			default:
 				break;
 		}
@@ -118,6 +121,17 @@ public class CallHandler extends TextWebSocketHandler {
 		chat.addProperty("userName", user.getName());
 
 		noticeMessage(participantsList, chat);
+	}
+
+	// 1분 릴레이 코딩
+	private void startReading(UserSession user) throws Exception {
+		final List<UserSession> participantsList = roomManager.getRoom(user.getRoomName()).getParticipantsList(user);
+		participantsList.add(user);
+
+		final JsonObject message = new JsonObject();
+		message.addProperty("id", "startReading");
+
+		noticeMessage(participantsList, message);
 	}
 
 	private void sendChat(JsonObject params) throws Exception {

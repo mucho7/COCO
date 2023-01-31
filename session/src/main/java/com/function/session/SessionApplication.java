@@ -57,8 +57,7 @@ public class SessionApplication implements WebSocketConfigurer {
 
 	private Connector createStandardConnector() {
 		Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
-		// connector.setPort(8080);
-		connector.setPort(9004);
+		connector.setPort(8013);
 
 		return connector;
 	}
