@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+// import { useEffect } from "react";
+// import { useDispatch } from "react-redux";
 import ScrollToBottom from 'react-scroll-to-bottom'
 
-import { receiveChat } from "../../../../store/sessionSlice";
+// import { receiveChat } from "../../../../store/sessionSlice";
 
 
 const ChatListDiv = styled.div`
@@ -17,23 +17,23 @@ const ChatListDiv = styled.div`
 function ChatList(props) {
   // const scrollRef = useRef();
   // const chatList = props.chatList;
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  const newMessage = dispatch(receiveChat());
-  useEffect(() => {
-    if (typeof newMessage === String) {
-      noticeChat(newMessage);
-    }
-  }, [newMessage])
+  // const newMessage = dispatch(receiveChat());
+  // useEffect(() => {
+  //   if (typeof newMessage === String) {
+  //     noticeChat(newMessage);
+  //   }
+  // }, [newMessage])
 
-  function noticeChat(chat) {
-    let ul = document.querySelector("#chatList");
-    let li = document.createElement("li");
-    let text = document.createTextNode(`${chat}`);
-    li.appendChild(text);
-    ul.appendChild(li);
-    console.log(chat)
-  }
+  // function noticeChat(chat) {
+  //   let ul = document.querySelector("#chatList");
+  //   let li = document.createElement("li");
+  //   let text = document.createTextNode(`${chat}`);
+  //   li.appendChild(text);
+  //   ul.appendChild(li);
+  //   console.log(chat)
+  // }
   
   return (
     <ChatListDiv>

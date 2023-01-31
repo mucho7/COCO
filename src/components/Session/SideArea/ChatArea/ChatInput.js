@@ -33,7 +33,7 @@ function ChatInput({ handleChatSubmit }) {
   function handleSubmit(event) {
     event.preventDefault();
     handleChatSubmit(chatInput);
-    dispatch(sendChat(chatInput));
+    // dispatch(sendChat(chatInput));
     setChatInput("");
   }
 
