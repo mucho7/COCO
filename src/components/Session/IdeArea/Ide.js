@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
 import { onChangeCode } from "../../../store/compileSlice";
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
 
 import * as Y from 'yjs'
 import { WebrtcProvider } from 'y-webrtc'
@@ -14,68 +13,31 @@ function Ide(props) {
   const [userLanguage, setUserLanguage] = useState("java");
   const [userTheme, setUserTheme] = useState("vs-dark");
   
-  const [editorRef, setEditorRef] = useState(null);
+  const dispatch = useDispatch();
+  
+  // function handleChangeCode(event) {
+    //   setUserCode(event.target.value);
+    //   dispatch(onChangeCode(event.target.value));
+    // }
+  
+    
+  // WebRTC
+  const editorRef = useRef(null);
+  
+  function handleEditorDidMount(editor, monaco) {
+    editorRef.current = editor;
+    const ydoc = new Y.Doc();
+    const provider = new WebrtcProvider("monaco", ydoc);
+    const yText = ydoc.getText("monaco");
 
-  const handleEditorDidMount = (editor) => {
-    setEditorRef(editor);
+    const monacoBinding = new MonacoBinding(
+      yText,
+      editorRef.current.getModel(),
+      new Set([editorRef.current]),
+      provider.awareness
+    );
   }
 
-  const dispatch = useDispatch();
-
-  // function handleChangeCode(event) {
-  //   setUserCode(event.target.value);
-  //   dispatch(onChangeCode(event.target.value));
-  // }
-
-  useEffect(() => {
-    if (editorRef) {
-      const ydoc = new Y.Doc();
-      let provider = null;
-      try {
-        provider = new WebrtcProvider("monaco", ydoc, {
-          signaling: [
-            "wss://signaling.yjs.dev",
-            'wss://y-webrtc-signaling-eu.herokuapp.com', 
-            'wss://y-webrtc-signaling-us.herokuapp.com'
-          ]
-        });
-
-        const yText = ydoc.getText("monaco");
-        const yUndoManager = new Y.UndoManager(yText);
-        const awareness = provider.awareness;
-        awareness.setLocalStateField("user", {
-          name: "User1",
-          color: "#ffffff",
-        });
-
-        const getBinding = new MonacoBinding(yText, editorRef, awareness, {
-          yUndoManager,
-        });
-      } catch (error) {
-        alert("error");
-      }
-
-      return () => {
-        if (provider) {
-          provider.disconnect();
-          ydoc.destroy();
-        }
-      };
-    }
-  }, [editorRef])
-
-  // awareness.on("change", changes => {
-  //   // Whenever somebody updates their awareness information,
-  //   // we log all awareness information from all users.
-  //   console.log(Array.from(awareness.getStates().values()))
-  // })
-
-  // awareness.setLocalStateField('user', {
-  //   // Define a print name that should be displayed
-  //   name: 'Emmanuelle Charpentier',
-  //   // Define a color that should be associated to the user:
-  //   color: '#ffb61e' // should be a hex color
-  // })
 
   return (
     <Editor 
@@ -92,9 +54,7 @@ function Ide(props) {
         dispatch(onChangeCode(value))
       }}
       sx={{m: 0}}
-      onDidCreateEditor={(editor) => {
-        handleEditorDidMount(editor);
-      }}
+      onMount={handleEditorDidMount}
     />
   );
 }

@@ -1,6 +1,9 @@
 import styled from "styled-components";
-import { useRef, useEffect } from "react";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import ScrollToBottom from 'react-scroll-to-bottom'
+
+import { receiveChat } from "../../../../store/sessionSlice";
 
 
 const ChatListDiv = styled.div`
@@ -13,20 +16,31 @@ const ChatListDiv = styled.div`
 
 function ChatList(props) {
   // const scrollRef = useRef();
-  const chatList = props.chatList;
+  // const chatList = props.chatList;
+  const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-  // }, [chatList])
+  const newMessage = dispatch(receiveChat());
+  useEffect(() => {
+    if (typeof newMessage === String) {
+      noticeChat(newMessage);
+    }
+  }, [newMessage])
+
+  function noticeChat(chat) {
+    let ul = document.querySelector("#chatList");
+    let li = document.createElement("li");
+    let text = document.createTextNode(`${chat}`);
+    li.appendChild(text);
+    ul.appendChild(li);
+    console.log(chat)
+  }
   
   return (
     <ChatListDiv>
-      <ScrollToBottom className={{height: "60%", width: "90%", overflow: "auto"}}>
-        {
-          chatList.map((chat, index) => {
-            return <p key={index}>{chat}</p>
-          })
-        }
+      <ScrollToBottom>
+        <ul id="chatList">
+
+        </ul>
       </ScrollToBottom>
     </ChatListDiv>
   )

@@ -2,6 +2,9 @@ import styled from "styled-components";
 import TextField from "@mui/material/TextField";
 import Box from '@mui/material/Box';
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+
+import { sendChat } from "../../../../store/sessionSlice";
 
 
 const boxSx = {
@@ -21,6 +24,7 @@ const ChatSubmitButton = styled.button`
 
 function ChatInput({ handleChatSubmit }) {
   const [chatInput, setChatInput] = useState("");
+  const dispatch = useDispatch();
 
   function handleChangeChatInput(event) {
     setChatInput(event.target.value);
@@ -29,6 +33,7 @@ function ChatInput({ handleChatSubmit }) {
   function handleSubmit(event) {
     event.preventDefault();
     handleChatSubmit(chatInput);
+    dispatch(sendChat(chatInput));
     setChatInput("");
   }
 

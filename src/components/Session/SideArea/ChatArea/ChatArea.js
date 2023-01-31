@@ -15,19 +15,31 @@ const ChatAreaDiv = styled.div`
   overflow: auto;
 `;
 
+
 function ChatArea(props) {
-  const [chatList, setChatList] = useState(['dsafsd', 'dfewf', 'fewgeg']);
+  // const [chatList, setChatList] = useState(['dsafsd', 'dfewf', 'fewgeg']);
+
+  let message;
 
   function handleChatSubmit(chatInput) {
-    setChatList([...chatList, chatInput]);
+    // setChatList([...chatList, chatInput]);
+    message = {
+      id: "sendChat",
+      chat: chatInput
+    }
+    // sendMessage(message);
+    // noticeChat("[me]", chatInput);
   }
+
 
   return (
     <ChatAreaDiv>
       {/* 참여자 정보 인퍼페이스 */}
       <ParticipantsInfoBar />
       {/* 메세지 컨텐츠 칸 */}
-      <ChatList chatList={chatList} />
+      <ChatList 
+        // chatList={chatList} 
+      />
       {/* 메세지 입력 칸 */}
       <ChatInput handleChatSubmit={handleChatSubmit} />
     </ChatAreaDiv>

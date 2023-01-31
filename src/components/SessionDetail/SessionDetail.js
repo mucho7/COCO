@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { deleteSession } from "../../store/sessionListSlice";
+import { createWebsocket } from "../../store/sessionSlice";
 
 function SessionDetail() {
   const { roomId } = useParams();
@@ -22,6 +23,7 @@ function SessionDetail() {
         // navigate("/normal");
         const sessionWindow = window.open("http://localhost:3000/normal", "sessionWindow", "popup")
         sessionWindow.resizeTo(1600, 900);
+        dispatch(createWebsocket());
         break;
       case "relay":
         navigate("/relay");
