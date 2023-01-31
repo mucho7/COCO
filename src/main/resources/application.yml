@@ -1,24 +1,17 @@
 server:
-  port: 9001
+  port: 9002
+
 
 spring:
   application:
     name: boardService
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    #    url: jdbc:mysql://i8a703.p.ssafy.io:3306/project1db?serverTimezone=UTC&characterEncoding=UTF-8
-    url: jdbc:mysql://localhost:3306/project1db?serverTimezone=UTC&characterEncoding=UTF-8
-    username: root
-    password: 1234
-  #    password: cossafyco
 
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
+
 
 eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://127.0.0.1:8761/eureka
+      defaultZone : http://127.0.0.1:8761/eureka
+
