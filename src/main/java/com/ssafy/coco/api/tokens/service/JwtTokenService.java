@@ -41,10 +41,15 @@ public class JwtTokenService {
 
 	@Transactional
 	public boolean logout(String refreshToken){
+		if(refreshToken.startsWith("bearer "))
+			refreshToken = refreshToken.substring(7);
 		if(refreshTokenRepository.existsByRefreshToken(refreshToken)){
 			log.info("DB에서 refresh 토큰 조회에 성공했습니다. "+refreshToken);
 			refreshTokenRepository.deleteByRefreshToken(refreshToken);
 			return true;
+		}
+		else{
+			System.out.println("DB에서 refreshToken 조회에 실패했습니다.");
 		}
 		return false;
 	}
