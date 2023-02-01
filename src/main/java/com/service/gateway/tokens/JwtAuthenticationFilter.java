@@ -3,71 +3,91 @@ package com.service.gateway.tokens;
 import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.springframework.cloud.gateway.filter.GatewayFilter;
+import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.stereotype.Component;
+import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.web.reactive.function.server.ServerRequest;
 
 import com.service.gateway.tokens.dto.JwtTokenDto;
 
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.gateway.filter.GatewayFilter;
+import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
-@RequiredArgsConstructor
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+@Component
+public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAuthenticationFilter.Config> {
 
 	private final JwtTokenProvider jwtTokenProvider;
 
+	public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider){
+		super(Config.class);
+		this.jwtTokenProvider=jwtTokenProvider;
+	}
+
+
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws
-		IOException,
-		ServletException {
+	public GatewayFilter apply(Config config) {
 
-		// Step 1. RequestHeader에서 jwt 토큰 추출
-		JwtTokenDto tokenDto = jwtTokenProvider.resolveToken(request);
-		String accessToken = tokenDto.getAccessToken();
-		String refreshToken = tokenDto.getRefreshToken();
+		return ((exchange, chain) -> {
+			ServerHttpRequest request = exchange.getRequest();
+			ServerHttpResponse response = exchange.getResponse();
 
-		// System.out.println("RequestHeader에서 추출한 JWT Token : " + tokenDto);
+			// Step 1. RequestHeader에서 jwt 토큰 추출
+			JwtTokenDto tokenDto = jwtTokenProvider.resolveToken(request);
+			String accessToken = tokenDto.getAccessToken();
+			String refreshToken = tokenDto.getRefreshToken();
 
-		// Step 2. 토큰의 유효성 검사
-		if (tokenDto.getAccessToken() != null) {
-			if (jwtTokenProvider.validateToken(accessToken)) {
-				setAuthentication(accessToken);
-			}
-			// Access Token이 만료되었으며, Refresh Token이 존재하는 상황
-			else if (!jwtTokenProvider.validateToken(accessToken) && refreshToken != null) {
-				System.out.println("만료된 AccessToken : "+accessToken);
-				System.out.println("헤더에서 refreshToken을 발견하여 재발급 처리를 진행합니다.");
-				// 재발급 후, 컨텍스트에 다시 넣기
-				// Refresh Token 검증
-				boolean validateRefreshToken = jwtTokenProvider.validateToken(refreshToken);
-				// Refresh Token 저장소 존재유무 확인
-				boolean isRefreshToken = jwtTokenProvider.existsRefreshToken(refreshToken);
-				if (validateRefreshToken && isRefreshToken) {
-					// Refresh Token으로 사용자 ID 가져오기
-					String userId = jwtTokenProvider.getUserIdFromRefreshToken(refreshToken);
-					System.out.println("재발급 과정에서 refreshtoken을 기반으로 DB에 등록된 사용자 ID: "+userId);
-					// UserId로 권한정보 받아오기
-					List<String> roles = jwtTokenProvider.getRoles(userId);
-					System.out.println("[doFilterInternal@JwtAuthenticationFilter] roles: "+roles);
-					// 토큰 발급
-					JwtTokenDto newJwtToken = jwtTokenProvider.createToken(userId, roles);
-					// 헤더에 토큰 정보(AccessToken, refreshToken) 추가
-					response.setHeader("Authorization", "bearer " + newJwtToken.getAccessToken());
-					response.setHeader("refreshToken", "bearer " + newJwtToken.getRefreshToken());
-					// request.setAttribute("Authorization", "bearer "+newJwtToken.getAccessToken());
-					// request.setAttribute("refreshToken", "bearer "+newJwtToken.getRefreshToken());
-					// 컨텍스트에 넣기
-					System.out.println("[doFilterInternal@JwtAuthenticationFilter] newJwtToken:\n"+newJwtToken);
-					this.setAuthentication(newJwtToken.getAccessToken());
+			// Step 2. 토큰의 유효성 검사
+			if (tokenDto.getAccessToken() != null) {
+				if (jwtTokenProvider.validateToken(accessToken)) {
+					setAuthentication(accessToken);
+				}
+				// Access Token이 만료되었으며, Refresh Token이 존재하는 상황
+				else if (!jwtTokenProvider.validateToken(accessToken) && refreshToken != null) {
+					System.out.println("만료된 AccessToken : "+accessToken);
+					System.out.println("헤더에서 refreshToken을 발견하여 재발급 처리를 진행합니다.");
+					// 재발급 후, 컨텍스트에 다시 넣기
+					// Refresh Token 검증
+					boolean validateRefreshToken = jwtTokenProvider.validateToken(refreshToken);
+					// Refresh Token 저장소 존재유무 확인
+					boolean isRefreshToken = jwtTokenProvider.existsRefreshToken(refreshToken);
+					if (validateRefreshToken && isRefreshToken) {
+						// Refresh Token으로 사용자 ID 가져오기
+						String userId = jwtTokenProvider.getUserIdFromRefreshToken(refreshToken);
+						System.out.println("재발급 과정에서 refreshtoken을 기반으로 DB에 등록된 사용자 ID: "+userId);
+						// UserId로 권한정보 받아오기
+						List<String> roles = jwtTokenProvider.getRoles(userId);
+						System.out.println("[doFilterInternal@JwtAuthenticationFilter] roles: "+roles);
+						// 토큰 발급
+						JwtTokenDto newJwtToken = jwtTokenProvider.createToken(userId, roles);
+						// 헤더에 토큰 정보(AccessToken, refreshToken) 추가
+						response.getHeaders().add("Authorization", "bearer " + newJwtToken.getAccessToken());
+						response.getHeaders().add("refreshToken", "bearer " + newJwtToken.getRefreshToken());
+						// request.setAttribute("Authorization", "bearer "+newJwtToken.getAccessToken());
+						// request.setAttribute("refreshToken", "bearer "+newJwtToken.getRefreshToken());
+						// 컨텍스트에 넣기
+						System.out.println("[doFilterInternal@JwtAuthenticationFilter] newJwtToken:\n"+newJwtToken);
+						this.setAuthentication(newJwtToken.getAccessToken());
+					}
 				}
 			}
-		}
-		chain.doFilter(request, response);
+			return chain.filter(exchange).then(Mono.fromRunnable(() -> {
+
+			}));
+		});
+
+
 	}
 
 	// SecurityContext 에 Authentication 객체를 저장.
@@ -79,5 +99,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		// SecurityContext 에 Authentication 객체를 저장합니다.
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 	}
+
+	@Getter @Setter
+	public static class Config {
+		String baseMessage;
+		private boolean preLogger;
+		private boolean postLogger;
+	}
+
 
 }

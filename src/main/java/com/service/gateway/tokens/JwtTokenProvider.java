@@ -6,9 +6,10 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -119,12 +120,14 @@ public class JwtTokenProvider {
 		return memberRepository.findByUserId(userId).get().getRoles();
 	}
 
-	public JwtTokenDto resolveToken(HttpServletRequest request) {
+	public JwtTokenDto resolveToken(ServerHttpRequest request) {
 		JwtTokenDto tokenDto = new JwtTokenDto();
-		if (request.getHeader("authorization") != null)
-			tokenDto.setAccessToken(request.getHeader("authorization").substring(7));
-		if (request.getHeader("refreshToken") != null)
-			tokenDto.setRefreshToken(request.getHeader("refreshToken").substring(7));
+		HttpHeaders requestHeader=request.getHeaders();
+		if (requestHeader!=null) {
+			tokenDto.setAccessToken(requestHeader.get("Authorization").get(0).substring(7));
+			tokenDto.setRefreshToken(requestHeader.get("refreshToken").get(0).substring(7));
+		}
+		System.out.println("[resolveToken@JwtTokenProvider]"+tokenDto);
 		return tokenDto;
 	}
 
