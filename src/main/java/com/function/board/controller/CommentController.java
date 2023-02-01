@@ -24,46 +24,46 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/board")
+@RequestMapping("/comment")
 @RequiredArgsConstructor
 public class CommentController {
 
 	private final CommentService commentService;
 
 	@ApiOperation(value = "댓글 생성")
-	@PostMapping("/{board_id}/comment")
+	@PostMapping("/{board_id}")
 	public ResponseEntity<Long> save(@PathVariable("board_id") Long boardId, @RequestBody CommentSaveRequestDto requestDto) {
 		commentService.save(boardId, requestDto);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
 	@ApiOperation(value = "{board_id}의 댓글 목록 조회")
-	@GetMapping("/{board_id}/comment")
+	@GetMapping("/{board_id}")
 	public ResponseEntity<List<CommentResponseDto>> findAll(@PathVariable("board_id") Long boardId) {
 		return ResponseEntity.ok(commentService.findAllByBoard(boardId));
 	}
 
 	@ApiOperation(value = "댓글 목록 페이징")
-	@GetMapping("/{board_id}/comment/list")
+	@GetMapping("/{board_id}/list")
 	public ResponseEntity<Page<CommentResponseDto>> paging(@PathVariable("board_id") Long boardId, Pageable pageable) {
 		return ResponseEntity.ok(commentService.findAllByBoardPaging(boardId, pageable));
 	}
 
 	@ApiOperation(value = "{comment_id}에 해당하는 댓글 단건 조회")
-	@GetMapping("/{board_id}/comment/{comment_id}")
+	@GetMapping("/{board_id}/{comment_id}")
 	public ResponseEntity<CommentResponseDto> findById(@PathVariable("comment_id") Long commentId) {
 		return ResponseEntity.ok(commentService.findById(commentId));
 	}
 
 	@ApiOperation(value = "댓글 수정")
-	@PutMapping("/{board_id}/comment/{comment_id}")
+	@PutMapping("/{board_id}/{comment_id}")
 	public ResponseEntity<Long> update(@PathVariable("comment_id") Long commentId,
 		@RequestBody CommentUpdateRequestDto requestDto) {
 		return ResponseEntity.ok(commentService.update(commentId, requestDto));
 	}
 
 	@ApiOperation(value = "댓글 삭제")
-	@DeleteMapping("/{board_id}/comment/{comment_id}")
+	@DeleteMapping("/{board_id}/{comment_id}")
 	public void delete(@PathVariable("comment_id") Long commentId) {
 		commentService.delete(commentId);
 	}
