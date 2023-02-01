@@ -36,3 +36,7 @@ spring:
           uri: http://i8a703.p.ssafy.io:8014/
           predicates:
             - Path=/session/**
+        - id: comment
+          uri: http://i8a703.p.ssafy.io:8011/
+          predicates:
+            - Path=/comment/**
