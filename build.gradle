@@ -26,7 +26,6 @@ dependencies {
 	// mysql 드라이버 버전에 맞게 드라이버 설치
 	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.30'
 
-	implementation('org.springframework.boot:spring-boot-starter-web')
 	implementation('org.springframework.boot:spring-boot-starter-mustache')
 	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
 
