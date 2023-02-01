@@ -16,6 +16,10 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: uniqueCheck
+          uri: http://i8a703.p.ssafy.io:8012/
+          predicates:
+            - Path=/check/**
         - id: sessionFunction
           uri: http://i8a703.p.ssafy.io:8013/
           predicates:
