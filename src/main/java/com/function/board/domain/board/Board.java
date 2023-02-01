@@ -46,6 +46,7 @@ public class Board extends BaseTimeEntity {
 	@Column(name = "writer", nullable = false)
 	private String writer;
 	private int hit = 0;
+	@Column(columnDefinition = "TEXT")
 	private String code;
 
 	@Builder
