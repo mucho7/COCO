@@ -50,20 +50,20 @@ public class CommentController {
 	}
 
 	@ApiOperation(value = "{comment_id}에 해당하는 댓글 단건 조회")
-	@GetMapping("/{board_id}/{comment_id}")
+	@GetMapping("/{board_id}/read/{comment_id}")
 	public ResponseEntity<CommentResponseDto> findById(@PathVariable("comment_id") Long commentId) {
 		return ResponseEntity.ok(commentService.findById(commentId));
 	}
 
 	@ApiOperation(value = "댓글 수정")
-	@PutMapping("/{board_id}/{comment_id}")
+	@PutMapping("/{board_id}/modify/{comment_id}")
 	public ResponseEntity<Long> update(@PathVariable("comment_id") Long commentId,
 		@RequestBody CommentUpdateRequestDto requestDto) {
 		return ResponseEntity.ok(commentService.update(commentId, requestDto));
 	}
 
 	@ApiOperation(value = "댓글 삭제")
-	@DeleteMapping("/{board_id}/{comment_id}")
+	@DeleteMapping("/{board_id}/delete/{comment_id}")
 	public void delete(@PathVariable("comment_id") Long commentId) {
 		commentService.delete(commentId);
 	}

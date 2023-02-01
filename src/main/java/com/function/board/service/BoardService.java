@@ -42,10 +42,10 @@ public class BoardService {
 		return new BoardResponseDto(entity);
 	}
 
-	@Transactional(readOnly = true)
-	public Page<Board> searchByTitle(String keyword, Pageable pageable) {
-		return boardRepository.findByTitleContaining(keyword, pageable);
-	}
+	// @Transactional(readOnly = true)
+	// public Page<Board> searchByTitle(String keyword, Pageable pageable) {
+	// 	return boardRepository.findByTitleContaining(keyword, pageable);
+	// }
 
 	@Transactional
 	public Long update(Long boardId, BoardUpdateRequestDto requestDto) {

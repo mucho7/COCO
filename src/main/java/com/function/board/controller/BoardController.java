@@ -19,6 +19,7 @@ import com.function.board.domain.board.BoardRepository;
 import com.function.board.dto.board.BoardListResponseDto;
 import com.function.board.dto.board.BoardResponseDto;
 import com.function.board.dto.board.BoardSaveRequestDto;
+import com.function.board.dto.board.BoardSearchCondition;
 import com.function.board.dto.board.BoardUpdateRequestDto;
 import com.function.board.service.BoardService;
 
@@ -41,13 +42,13 @@ public class BoardController {
 	}
 
 	@ApiOperation(value = "게시글 목록 조회")
-	@GetMapping()
+	@GetMapping("/list")
 	public ResponseEntity<List<BoardListResponseDto>> boardList() {
 		return ResponseEntity.ok(boardService.findAll());
 	}
 
 	@ApiOperation(value = "게시글 목록 페이징")
-	@GetMapping("/list")
+	@GetMapping()
 	public ResponseEntity<Page<BoardListResponseDto>> paging(Pageable pageable) {
 		return ResponseEntity.ok(boardRepository.findAll(pageable)
 			.map(BoardListResponseDto::new));
@@ -60,11 +61,17 @@ public class BoardController {
 		return ResponseEntity.ok(boardService.findById(id));
 	}
 
-	@ApiOperation(value = "제목(title)에 {keyword}가 포함된 게시글 검색")
+	// @ApiOperation(value = "제목(title)에 {keyword}가 포함된 게시글 검색")
+	// @GetMapping("/searchTitle")
+	// public ResponseEntity<Page<BoardListResponseDto>> searchTitle(String keyword, Pageable pageable) {
+	// 	return ResponseEntity.ok(boardService.searchByTitle(keyword, pageable)
+	// 		.map(BoardListResponseDto::new));
+	// }
+
+	@ApiOperation(value = "조건 설정 및 키워드 이용하여 게시글 검색")
 	@GetMapping("/search")
-	public ResponseEntity<Page<BoardListResponseDto>> searchTitle(String keyword, Pageable pageable) {
-		return ResponseEntity.ok(boardService.searchByTitle(keyword, pageable)
-			.map(BoardListResponseDto::new));
+	public ResponseEntity<Page<BoardListResponseDto>> searchPage(BoardSearchCondition condition, Pageable pageable) {
+		return ResponseEntity.ok(boardRepository.searchPage(condition, pageable));
 	}
 
 	@ApiOperation(value = "게시글 수정")
