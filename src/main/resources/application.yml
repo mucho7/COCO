@@ -10,7 +10,7 @@ eureka:
       defaultZone: http://i8a703.p.ssafy.io:8761/eureka
 
 jwt:
-  token: jwt.secret=PorkCurtletFriedChickenSundubuJJigaeGrilledPorkBelly
+  secret: PorkCurtletFriedChickenSundubuJJigaeGrilledPorkBelly
 
 
 spring:
@@ -44,6 +44,12 @@ spring:
           uri: http://i8a703.p.ssafy.io:8011/
           predicates:
             - Path=/comment/**
+      default-filters:
+        - name: JwtAuthenticationFilter
+          args:
+            baseMessage: Spring Cloud Gateway Global Filter
+            preLogger: true
+            postLogger: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
@@ -64,4 +70,5 @@ spring:
   data:
     web:
       pageable:
-        one-indexed-parameters: 'true'
+        one-indexed-parameters: true
+
