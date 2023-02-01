@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { receiveChat } from "../../../store/sessionSlice";
 
 import IdeArea from "../IdeArea";
 import SideArea from "../SideArea";
@@ -21,7 +23,20 @@ const NormalSessionDiv = styled.div`
 
 function NormalSession(props) {
   let ws = useRef(null);
+  const dispatch = useDispatch();
+  let sendingMessage = useSelector((state) => state.session.sendMessage);
+  let userName = useSelector((state) => state.session.userName);
+  let roomName = useSelector((state) => state.session.roomName);
+
+  console.log("xx", userName, roomName);
+  // console.log(sendingMessage)
   
+  function sendMessage(message) {
+    let jsonMessage = JSON.stringify(message);
+    console.log('Sending message: ' + jsonMessage);
+    ws.current.send(jsonMessage);
+  }
+
   useEffect(() => {
     window.addEventListener("resize", () => {
       window.resizeTo(1600, 900)
@@ -33,6 +48,13 @@ function NormalSession(props) {
       ws.current.onopen = () => {
         console.log(ws.current);
         register();
+        const msg = {
+          id: "sendChat",
+          userName: userName,
+          roomName: roomName,
+          chat: "test message"
+        }
+        sendMessage(msg);
       }
       let participants = {};
       let name;
@@ -62,6 +84,9 @@ function NormalSession(props) {
                   }
               });
               break;
+          case "noticeChat":
+            noticeChat(parsedMessage.userName, parsedMessage.chat);
+            break;
           default:
             console.error('Unrecognized message', parsedMessage);
         }
@@ -70,8 +95,8 @@ function NormalSession(props) {
       function register() {
         let message = {
           id : 'joinRoom',
-          name : "testUser",
-          room : "testRoom",
+          name : userName,
+          room : roomName,
         }
         sendMessage(message);
       }
@@ -98,35 +123,35 @@ function NormalSession(props) {
       }
 
       function onExistingParticipants(msg) {
-        var constraints = {
-          audio : true,
-          video : {
-            mandatory : {
-              maxWidth : 320,
-              maxFrameRate : 15,
-              minFrameRate : 15
-            }
-          }
-        };
-        console.log("testUser" + " registered in room " + "roomName");
-        var participant = new Participant(name);
-        participants[name] = participant;
-        var video = participant.getVideoElement();
+        // var constraints = {
+        //   audio : true,
+        //   video : {
+        //     mandatory : {
+        //       maxWidth : 320,
+        //       maxFrameRate : 15,
+        //       minFrameRate : 15
+        //     }
+        //   }
+        // };
+        console.log(userName + " registered in room " + roomName);
+        // var participant = new Participant(name);
+        // participants[name] = participant;
+        // var video = participant.getVideoElement();
       
-        var options = {
-              localVideo: video,
-              mediaConstraints: constraints,
-              onicecandidate: participant.onIceCandidate.bind(participant)
-            }
-        participant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options,
-          function (error) {
-            if(error) {
-              return console.error(error);
-            }
-            this.generateOffer (participant.offerToReceiveVideo.bind(participant));
-        });
+        // var options = {
+        //       localVideo: video,
+        //       mediaConstraints: constraints,
+        //       onicecandidate: participant.onIceCandidate.bind(participant)
+        //     }
+        // participant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options,
+        //   function (error) {
+        //     if(error) {
+        //       return console.error(error);
+        //     }
+        //     this.generateOffer (participant.offerToReceiveVideo.bind(participant));
+        // });
       
-        msg.data.forEach(receiveVideo);
+        // msg.data.forEach(receiveVideo);
       }
 
       function leaveRoom() {
@@ -171,17 +196,10 @@ function NormalSession(props) {
       }
 
       function noticeChat(user, chat) {
-          // let li = document.createElement('li')
-          // let text = document.createTextNode(`${user}: ${chat}`)
-          // li.appendChild(text)
-          // ulChat.appendChild(li)
+        dispatch(receiveChat({user, chat}));
       }
   
-      function sendMessage(message) {
-        var jsonMessage = JSON.stringify(message);
-        console.log('Sending message: ' + jsonMessage);
-        ws.current.send(jsonMessage);
-      }
+      
 
       const PARTICIPANT_MAIN_CLASS = 'participant main';
       const PARTICIPANT_CLASS = 'participant';
@@ -206,9 +224,9 @@ function NormalSession(props) {
         container.appendChild(video);
         container.appendChild(span);
         container.onclick = switchContainerClass;
-        document.getElementById('participants').appendChild(container);
+        // document.getElementById('participants').appendChild(container);
 
-        span.appendChild(document.createTextNode(name));
+        // span.appendChild(document.createTextNode(name));
 
         video.id = 'video-' + name;
         video.autoplay = true;
@@ -271,12 +289,25 @@ function NormalSession(props) {
         };
       }
 
-      return () => {
-        ws.current.close();
-      }
+      // return () => {
+      //   ws.current.close();
+      // }
     }
-  }, [])
+  }, [userName, roomName])
 
+  useEffect(() => {
+    console.log(sendingMessage);
+    if (ws.current && sendingMessage) {
+      // console.log(sendingMessage)
+      const msg = {
+        id: "sendChat",
+        userName: userName,
+        roomName: roomName,
+        chat: sendingMessage
+      }
+      sendMessage(msg);
+    }
+  }, [sendingMessage])
   
   
   return (

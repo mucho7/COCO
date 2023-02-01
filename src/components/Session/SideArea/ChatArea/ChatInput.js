@@ -2,7 +2,7 @@ import styled from "styled-components";
 import TextField from "@mui/material/TextField";
 import Box from '@mui/material/Box';
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { sendChat } from "../../../../store/sessionSlice";
 
@@ -24,6 +24,8 @@ const ChatSubmitButton = styled.button`
 
 function ChatInput({ handleChatSubmit }) {
   const [chatInput, setChatInput] = useState("");
+  // const userName = useSelector((state) => state.session.userName);
+  // const roomName = useSelector((state) => state.session.roomName);
   const dispatch = useDispatch();
 
   function handleChangeChatInput(event) {
@@ -33,7 +35,7 @@ function ChatInput({ handleChatSubmit }) {
   function handleSubmit(event) {
     event.preventDefault();
     handleChatSubmit(chatInput);
-    // dispatch(sendChat(chatInput));
+    dispatch(sendChat(chatInput));
     setChatInput("");
   }
 

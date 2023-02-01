@@ -1,7 +1,9 @@
 import styled from "styled-components";
 // import { useEffect } from "react";
 // import { useDispatch } from "react-redux";
-import ScrollToBottom from 'react-scroll-to-bottom'
+import ScrollToBottom from 'react-scroll-to-bottom';
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 // import { receiveChat } from "../../../../store/sessionSlice";
 
@@ -34,7 +36,19 @@ function ChatList(props) {
   //   ul.appendChild(li);
   //   console.log(chat)
   // }
+
+  const newMessage = useSelector((state) => state.session.newMessage);
+  // console.log(newMessage, "aaa");
   
+  useEffect(() => {
+    if (newMessage) {
+      const ul = document.querySelector("#chatList");
+      const li = document.createElement("li");
+      li.innerText = `${newMessage.user} : ${newMessage.chat}`;
+      ul.appendChild(li);
+    }
+  }, [newMessage])
+
   return (
     <ChatListDiv>
       <ScrollToBottom>

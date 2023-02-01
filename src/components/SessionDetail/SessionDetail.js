@@ -7,23 +7,34 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { deleteSession } from "../../store/sessionListSlice";
-import { createWebsocket } from "../../store/sessionSlice";
+import { setSocketInfo } from "../../store/sessionSlice";
+import { useState } from "react";
 
 function SessionDetail() {
+  const [userName, setUserName] = useState("");
+  const [roomName, setRoomName] = useState("");
+
   const { roomId } = useParams();
   const sessionList = useSelector((state) => state.sessionList.sessionList);
   const session = sessionList.filter((session) => session.id === Number(roomId))[0];
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  function handleChangeUserName(event) {
+    setUserName(event.target.value)
+  }
+  function handleChangeRoomName(event) {
+    setRoomName(event.target.value)
+  }
+
   // WebRTC 서버로 연결하는 동작으로 변경
   function enterSession() {
     switch (session.mode) {
       case "normal":
-        // navigate("/normal");
-        const sessionWindow = window.open("http://localhost:3000/normal", "sessionWindow", "popup")
-        sessionWindow.resizeTo(1600, 900);
-        dispatch(createWebsocket());
+        dispatch(setSocketInfo({userName, roomName}));
+        navigate("/normal");
+        // const sessionWindow = window.open("http://localhost:3000/normal", "sessionWindow", "popup")
+        // sessionWindow.resizeTo(1600, 900);
         break;
       case "relay":
         navigate("/relay");
@@ -57,6 +68,8 @@ function SessionDetail() {
           <p>{ session.content }</p>
         </Box>
         <Stack spacing={2} direction="row" sx={{  display: "flex", justifyContent: "flex-end", mr: 2 }}>
+          username: <input type="text" value={userName} onChange={handleChangeUserName} />
+          roomname: <input type="text" value={roomName} onChange={handleChangeRoomName} />
           <Button variant="contained" onClick={enterSession}>참여</Button>
           <Button variant="contained">수정</Button>
           <Button variant="contained" onClick={handleDeleteSession}>삭제</Button>
