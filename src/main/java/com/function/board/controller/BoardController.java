@@ -15,13 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.function.board.domain.board.Board;
 import com.function.board.domain.board.BoardRepository;
 import com.function.board.dto.board.BoardListResponseDto;
 import com.function.board.dto.board.BoardResponseDto;
 import com.function.board.dto.board.BoardSaveRequestDto;
 import com.function.board.dto.board.BoardUpdateRequestDto;
-import com.function.board.dto.common.PagingDto;
 import com.function.board.service.BoardService;
 
 import io.swagger.annotations.ApiOperation;
@@ -50,9 +48,9 @@ public class BoardController {
 
 	@ApiOperation(value = "게시글 목록 페이징")
 	@GetMapping("/list")
-	public ResponseEntity<Page<PagingDto>> paging(Pageable pageable) {
-		Page<Board> boardList = boardRepository.findAll(pageable);
-		return ResponseEntity.ok(boardList.map(PagingDto::new));
+	public ResponseEntity<Page<BoardListResponseDto>> paging(Pageable pageable) {
+		return ResponseEntity.ok(boardRepository.findAll(pageable)
+			.map(BoardListResponseDto::new));
 	}
 
 	@ApiOperation(value = "{board_id}로 게시글 조회")
@@ -64,9 +62,9 @@ public class BoardController {
 
 	@ApiOperation(value = "제목(title)에 {keyword}가 포함된 게시글 검색")
 	@GetMapping("/search")
-	public ResponseEntity<Page<PagingDto>> searchTitle(String keyword, Pageable pageable) {
-		Page<Board> searchList = boardService.searchByTitle(keyword, pageable);
-		return ResponseEntity.ok(searchList.map(PagingDto::new));
+	public ResponseEntity<Page<BoardListResponseDto>> searchTitle(String keyword, Pageable pageable) {
+		return ResponseEntity.ok(boardService.searchByTitle(keyword, pageable)
+			.map(BoardListResponseDto::new));
 	}
 
 	@ApiOperation(value = "게시글 수정")

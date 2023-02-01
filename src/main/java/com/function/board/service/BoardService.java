@@ -41,6 +41,7 @@ public class BoardService {
 			.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 		return new BoardResponseDto(entity);
 	}
+
 	@Transactional(readOnly = true)
 	public Page<Board> searchByTitle(String keyword, Pageable pageable) {
 		return boardRepository.findByTitleContaining(keyword, pageable);

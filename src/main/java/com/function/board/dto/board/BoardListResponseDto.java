@@ -4,14 +4,14 @@ import java.time.LocalDateTime;
 
 import com.function.board.domain.board.Board;
 
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class BoardListResponseDto {
-	private final String title;
-	private final String writer;
-	private final int hit;
-	private final LocalDateTime createdAt;
+	private String title;
+	private String writer;
+	private int hit;
+	private LocalDateTime createdAt;
 
 	public BoardListResponseDto(Board entity) {
 		this.title = entity.getTitle();
