@@ -94,12 +94,11 @@ public class MemberController {
 
 	@PostMapping("/extract")
 	@ApiOperation(value = "Jwt 토큰 정보 추출", notes = "제공된 AccessToken으로부터 사용자 ID를 추출해 반환한다.")
-	public String ExtractMemberFromJwtToken(HttpServletRequest request) {
-		Enumeration<String> headerNames = request.getHeaderNames();
-		while (headerNames.hasMoreElements()) {
-			System.out.println("request.getHeaderNames()==>" + headerNames.nextElement());
-		}
-		return request.getHeader("Authorization");
+	public ResponseEntity getUserIdFromJwtToken(HttpServletRequest request) {
+		String userId = memberService.getUserIdFromAccessToken(request.getHeader("Authorization"), request.getHeader("refreshToken"));
+		if(userId!=null)
+			return ResponseEntity.ok(userId);
+		else return ResponseEntity.status(HttpStatus.FORBIDDEN).body("세션이 만료되었습니다. 다시 로그인하세요.");
 	}
 
 	@PostMapping("/tempPassword")
