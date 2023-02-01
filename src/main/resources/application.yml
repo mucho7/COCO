@@ -9,7 +9,8 @@ eureka:
     service-url:
       defaultZone: http://i8a703.p.ssafy.io:8761/eureka
 
-
+jwt:
+  token: jwt.secret=PorkCurtletFriedChickenSundubuJJigaeGrilledPorkBelly
 
 
 spring:
@@ -53,6 +54,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
+        globally_quoted_identifiers: true
     database: mysql
     hibernate:
       naming:

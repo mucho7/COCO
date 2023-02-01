@@ -1,4 +1,4 @@
-package com.service.gateway;
+package com.service.gateway.memberinfo;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -38,7 +38,6 @@ public class Member implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
 	@Column(length = 32, nullable = false)
 	private String userId;
 	@Column(length = 255, nullable = false)
@@ -57,30 +56,11 @@ public class Member implements UserDetails {
 
 	private LocalDateTime delFlag;
 
-	@Builder
 	public Member(String userId, String password, String name, String email) {
 		this.userId = userId;
 		this.password = password;
 		this.name = name;
 		this.email = email;
-	}
-
-	public void UpdateInfo(String password, String name, String email) {
-		this.password = password;
-		this.name = name;
-		this.email = email;
-	}
-
-	public void UpdateRating(Integer amount) {
-		this.rating += amount;
-		if (this.rating > 10000)
-			this.rating = 10000;
-		else if (this.rating < 0)
-			this.rating = 0;
-	}
-
-	public void DeleteMember(LocalDateTime time) {
-		this.delFlag = time;
 	}
 
 	@Override
