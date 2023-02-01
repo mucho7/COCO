@@ -4,10 +4,9 @@ import java.time.LocalDateTime;
 
 import com.function.board.domain.comment.Comment;
 
+import lombok.Data;
 
-import lombok.Getter;
-
-@Getter
+@Data
 public class CommentResponseDto {
 	private final String content;
 	private final String writer;
