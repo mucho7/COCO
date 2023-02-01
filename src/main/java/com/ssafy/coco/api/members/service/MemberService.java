@@ -168,6 +168,17 @@ public class MemberService {
 		return jwtService.logout(refreshToken);
 	}
 
+	public String getUserIdFromAccessToken(String accessToken, String refreshToken){
+		System.out.println("[getUserIdFromAccessToken@MemberService] 받은 토큰 정보:\nAccessToken: "+accessToken+", RefreshToken: "+refreshToken);
+		String userId;
+		try{
+			userId= jwtTokenProvider.getUserIdFromAccessToken(accessToken);
+		}catch (ExpiredJwtException e){
+			userId=SecurityContextHolder.getContext().getAuthentication().getName();
+		}
+		return userId;
+	}
+
 	public String getTmpPassword(String userId) {
 		String tempPassword = makeTempPassword();
 
