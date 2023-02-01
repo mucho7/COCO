@@ -110,14 +110,17 @@ function countTimer() {
     } else {
       clearTimer(timer, "타이머 종료");
 
-      var message = {
-        id : 'sendChat',
-        userName : userName,
-        roomName : roomName,
-        chat : chat
-      }
+      let userName = document.getElementById('name').value;
+      let roomName = document.getElementById('roomName').value;
 
-      sendMessage(message);
+      if(userName == 'host') { // TODO: host이면...
+          var message = {
+            id : 'sendChat',
+            roomName : roomName
+          }
+
+          sendMessage(message);
+      }
 
     }
   }

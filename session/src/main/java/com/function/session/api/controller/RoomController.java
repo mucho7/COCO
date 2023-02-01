@@ -56,15 +56,15 @@ public class RoomController {
 		return roomService.UpdateRoom(requestDto, id);
 	}
 
-	@PutMapping("/room/{id}/{userId}")
+	@PutMapping("/room/enter/{id}") // "/room/enter/{id}?userId={userId}"
 	@ApiOperation(value = "세션 방 입장", notes = "- 호스트가 입장하면, is_live가 1이 된다.\n"
 		+ "- 일반 사용자가 입장을 시도하면, (is_live == 1) && (참여자수 < max) 일때만 입장가능하다.\n"
 		+ "- 참여자수 + 1")
-	public String UpdateRoomEnter(@PathVariable String id, @PathVariable String userId) {
+	public String UpdateRoomEnter(@PathVariable String id, @RequestParam String userId) {
 		return roomService.UpdateRoomEnter(id, userId);
 	}
 
-	@PutMapping("/room/{id}/leave")
+	@PutMapping("/room/leave/{id}")
 	@ApiOperation(value = "세션 방 나가기", notes = "참여자수 - 1")
 	public String UpdateRoomLeave(@PathVariable String id) {
 		return roomService.UpdateRoomLeave(id);
