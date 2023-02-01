@@ -10,6 +10,8 @@ eureka:
       defaultZone: http://i8a703.p.ssafy.io:8761/eureka
 
 
+
+
 spring:
   application:
     name: apigateway-service
@@ -41,3 +43,23 @@ spring:
           uri: http://i8a703.p.ssafy.io:8011/
           predicates:
             - Path=/comment/**
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    url: jdbc:mysql://i8a703.p.ssafy.io:3306/project1db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+    password: cossafyco
+  jpa:
+    generate-ddl: 'true'
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    database: mysql
+    hibernate:
+      naming:
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+      ddl-auto: update
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: 'true'
