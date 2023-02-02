@@ -38,9 +38,7 @@ const updateUserSlice = createSlice({
         onEnterProfile: (state) => {
             readUser(
                 {
-                    // userId: state.id,
-                    // Authorization: cookie.userInfo.Authorization,
-                    // refreshToken: cookie.userInfo.refreshToken,
+                    //  
                 },
                 )
         },
