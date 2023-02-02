@@ -1,6 +1,5 @@
 package com.ssafy.coco.api.tokens;
 
-import java.sql.Ref;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -113,8 +112,9 @@ public class JwtTokenProvider {
 
 		if (refreshTokenDto.isPresent()) {
 			return refreshTokenDto.get().getUserId();
-		} else
+		} else {
 			return null;
+		}
 	}
 
 	public List<String> getRoles(String userId) {
@@ -132,7 +132,6 @@ public class JwtTokenProvider {
 
 	public boolean existsRefreshToken(String refreshToken) {
 		return refreshTokenRepository.existsByRefreshToken(refreshToken);
-
 	}
 
 	// 토큰 정보를 검증하는 메서드
@@ -155,10 +154,10 @@ public class JwtTokenProvider {
 	// refreshToken에 대한 유효성 검사
 	public String validateRefreshToken(RefreshToken requestToken) {
 		// Refresh Token 객체에서 refreshToken 추출
-		System.out.println(requestToken);
 		String refreshToken = requestToken.getRefreshToken().trim();
-		if (refreshToken.startsWith("bearer "))
+		if (refreshToken.startsWith("bearer ")) {
 			refreshToken = refreshToken.substring(7);
+		}
 		System.out.println(refreshToken);
 		try {
 			// Refresh Token 검증

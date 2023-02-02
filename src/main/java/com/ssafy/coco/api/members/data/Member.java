@@ -38,7 +38,6 @@ public class Member implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
 	@Column(length = 32, nullable = false)
 	private String userId;
 	@Column(length = 255, nullable = false)
@@ -71,15 +70,16 @@ public class Member implements UserDetails {
 		this.email = email;
 	}
 
-	public void UpdateRating(Integer amount) {
+	public void updateRating(Integer amount) {
 		this.rating += amount;
-		if (this.rating > 10000)
+		if (this.rating > 10000) {
 			this.rating = 10000;
-		else if (this.rating < 0)
+		} else if (this.rating < 0) {
 			this.rating = 0;
+		}
 	}
 
-	public void DeleteMember(LocalDateTime time) {
+	public void deleteMember(LocalDateTime time) {
 		this.delFlag = time;
 	}
 

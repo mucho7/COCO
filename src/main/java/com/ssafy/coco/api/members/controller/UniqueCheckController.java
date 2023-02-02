@@ -23,15 +23,15 @@ public class UniqueCheckController {
 
 	@GetMapping("/id/{id}")
 	@ApiOperation(value = "ID 중복 검사", notes = "{id}를 사용할 수 있는지 검사한다. 사용가능: true, 불가: false")
-	public ResponseEntity<Boolean> IdCheck(
+	public ResponseEntity<Boolean> idCheck(
 		@PathVariable("id") @ApiParam(value = "중복 검사할 ID", required = true) String id) {
-		boolean canUseId = memberService.IdCheck(id);
+		boolean canUseId = memberService.idCheck(id);
 		return ResponseEntity.status(200).body(canUseId);
 	}
 
 	@GetMapping("/email/{email}")
 	@ApiOperation(value = "이메일 중복 검사", notes = "{email}을 사용할 수 있는지 검사한다. 사용가능: true, 불가: false")
-	public ResponseEntity<Boolean> EmailCheck(
+	public ResponseEntity<Boolean> emailCheck(
 		@PathVariable("email") @ApiParam(value = "중복 검사할 Email", required = true) String email) {
 		boolean canUseEmail = memberService.EmailCheck(email);
 		return ResponseEntity.status(200).body(canUseEmail);
