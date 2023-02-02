@@ -11,6 +11,8 @@ eureka:
 
 jwt:
   secret: PorkCurtletFriedChickenSundubuJJigaeGrilledPorkBelly
+  access-token-valid-time: 5400000
+  refresh-token-valid-time: 43200000
 
 
 spring:
