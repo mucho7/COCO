@@ -1,10 +1,8 @@
-package com.service.gateway.memberinfo;
+package com.service.gateway.member;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.service.gateway.memberinfo.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 

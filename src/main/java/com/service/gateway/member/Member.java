@@ -1,4 +1,4 @@
-package com.service.gateway.memberinfo;
+package com.service.gateway.member;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

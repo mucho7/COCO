@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-import com.service.gateway.memberinfo.MemberRepository;
+import com.service.gateway.member.MemberRepository;
 import com.service.gateway.tokens.data.RefreshToken;
 import com.service.gateway.tokens.data.RefreshTokenRepository;
 import com.service.gateway.tokens.dto.JwtTokenDto;
