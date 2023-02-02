@@ -32,10 +32,27 @@ spring:
             - Path=/comment/**
         - id: member
           uri: http://i8a703.p.ssafy.io:8012/
+#          uri: http://localhost:8012/
+          predicates:
+            - Path=/member/changePassword, /member/delete/**, /member/logout, /member/extract
+            - Method=POST
+          filters:
+            - AuthenticationHeaderFilter
+        - id: member
+          uri: http://i8a703.p.ssafy.io:8012/
+#          uri: http://localhost:8012/
+          predicates:
+            - Path=/member/info/**
+          filters:
+            - AuthenticationHeaderFilter
+        - id: member
+          uri: http://i8a703.p.ssafy.io:8012/
+#          uri: http://localhost:8012/
           predicates:
             - Path=/member/**
         - id: uniqueCheck
           uri: http://i8a703.p.ssafy.io:8012/
+#          uri: http://localhost:8012/
           predicates:
             - Path=/check/**
         - id: sessionFunction
@@ -46,12 +63,6 @@ spring:
           uri: http://i8a703.p.ssafy.io:8014/
           predicates:
             - Path=/session/**
-      default-filters:
-        - name: JwtAuthenticationFilter
-          args:
-            baseMessage: Spring Cloud Gateway Global Filter
-            preLogger: true
-            postLogger: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
