@@ -43,28 +43,28 @@ spring:
           predicates:
             - Path=/comment/**
         - id: member
-          #          uri: http://i8a703.p.ssafy.io:8012/
-          uri: http://localhost:8012/
+          uri: http://i8a703.p.ssafy.io:8012/
+          #          uri: http://localhost:8012/
           predicates:
             - Path=/member/changePassword, /member/delete/**, /member/logout, /member/extract
             - Method=POST
           filters:
             - AuthenticationHeaderFilter
         - id: member
-          #          uri: http://i8a703.p.ssafy.io:8012/
-          uri: http://localhost:8012/
+          uri: http://i8a703.p.ssafy.io:8012/
+          #          uri: http://localhost:8012/
           predicates:
             - Path=/member/info/**
           filters:
             - AuthenticationHeaderFilter
         - id: member
-          #          uri: http://i8a703.p.ssafy.io:8012/
-          uri: http://localhost:8012/
+          uri: http://i8a703.p.ssafy.io:8012/
+          #          uri: http://localhost:8012/
           predicates:
             - Path=/member/**
         - id: uniqueCheck
-          #          uri: http://i8a703.p.ssafy.io:8012/
-          uri: http://localhost:8012/
+          uri: http://i8a703.p.ssafy.io:8012/
+          #          uri: http://localhost:8012/
           predicates:
             - Path=/check/**
         - id: sessionFunction
@@ -81,7 +81,7 @@ spring:
     url: jdbc:mysql://i8a703.p.ssafy.io:3306/project1db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
     password: cossafyco
   jpa:
-    generate-ddl: 'true'
+    generate-ddl: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect

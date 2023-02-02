@@ -7,6 +7,7 @@ import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFac
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
 
 import com.service.gateway.tokens.dto.JwtTokenDto;
 
@@ -29,6 +30,7 @@ public class AuthenticationHeaderFilter extends AbstractGatewayFilterFactory<Aut
 		return ((exchange, chain) -> {
 			ServerHttpRequest request = exchange.getRequest();
 			ServerHttpResponse response = exchange.getResponse();
+			ServerWebExchange newExchange = exchange;
 
 			// Step 1. RequestHeader에서 jwt 토큰 추출
 			JwtTokenDto tokenDto = jwtTokenProvider.resolveToken(request);
@@ -58,10 +60,19 @@ public class AuthenticationHeaderFilter extends AbstractGatewayFilterFactory<Aut
 						response.getHeaders().add("Authorization", "bearer " + newJwtToken.getAccessToken());
 						response.getHeaders().add("refreshToken", "bearer " + newJwtToken.getRefreshToken());
 						System.out.println("response header에 넣기 성공");
+
+						ServerHttpRequest newRequest = exchange.getRequest()
+							.mutate()
+							.header("Authorization", new String[] {"bearer " + newJwtToken.getAccessToken()}).
+							header("refreshToken", new String[] {"bearer " + newJwtToken.getRefreshToken()})
+							.build();
+
+						newExchange = exchange.mutate().request(newRequest).build();
+						System.out.println("request header에 넣기 성공");
 					}
 				}
 			}
-			return chain.filter(exchange);
+			return chain.filter(newExchange);
 		});
 
 	}
