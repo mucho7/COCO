@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 
 import  { Navbar } from '../components/navbar';
-import {  } from "../store"
-import { deleteUserInfo, readUserInfo } from "../api/member"
+// import { updateUser } from "../store"
+import { deleteUserInfo } from "../api/member"
 
 import { Button } from '@mui/material'
 import { AccountCircle } from '@mui/icons-material'
@@ -60,24 +60,26 @@ function ProfilePage(params) {
 
     
     useEffect(() => {
-        const readUser = async () => {
-            await readUserInfo(
-                {
-                    userId: cookie.userInfo.user_id,
-                    'Authorization': cookie.userInfo.jwt_token,
-                    'refreshToken':  cookie.userInfo.refresh_token,
-                },
-                (data) => {
-                    console.log(data)
-                    // 실제론 여기 있는 것처럼 보이지만 호출될 callback함수일 뿐임, 관련된 정보를 가져올 땐 redux를 활용한 전역변수 사용이 필요함
-                }
-                ,
-                (err) => {
-                    console.log(err)
-                }
-            )
-        }
-        readUser()
+        // updateUser.onEnterProfile()
+        // const readUser = async () => {
+        //     await readUserInfo(
+        //         {
+        //             userId: cookie.userInfo.user_id,
+        //             'Authorization': cookie.userInfo.jwt_token,
+        //             'refreshToken':  cookie.userInfo.refresh_token,
+        //         },
+        //         (data) => {
+        //             console.log(data)
+        //             // 실제론 여기 있는 것처럼 보이지만 호출될 callback함수일 뿐임, 관련된 정보를 가져올 땐 redux를 활용한 전역변수 사용이 필요함
+                
+        //         }
+        //         ,
+        //         (err) => {
+        //             console.log(err)
+        //         }
+        //     )
+        // }
+        // readUser()
     })
 
     return (

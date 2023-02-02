@@ -1,6 +1,6 @@
 import styled from "styled-components"
-import { useEffect } from "react"; 
-import { useDispatch } from "react-redux";
+// import { useEffect } from "react"; 
+// import { useDispatch } from "react-redux";
 
 import SidePaddingBox from './SidePaddingBox'
 import  { Navbar } from '../components/navbar';
@@ -10,7 +10,6 @@ import  { Navbar } from '../components/navbar';
 import { CommuArticles, CommuSidebar } from "../components/community"
 
 function CommuPage(params) {
-    const dispatch = useDispatch()
     // axios로 교체
     const someArticle = [
         {pk: 1, title: "1st Article", content: "1st Article"},
@@ -22,17 +21,6 @@ function CommuPage(params) {
         {title: "7 Article", content: "3rd Article"},
         {title: "8 Article", content: "4th Article"},
     ]
-    const rquestInfo = {
-        url: 'community',
-        method: 'GET',
-        body: null,
-    }
-
-    useEffect(() => {
-        // dispatch(onAsyncRequest(rquestInfo))
-
-    })
-
     
 
     return (
