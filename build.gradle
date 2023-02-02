@@ -62,6 +62,9 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
 
+	// jwt 인증
+	implementation 'javax.xml.bind:jaxb-api'
+
 	// eureka
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:3.1.4'
 }
