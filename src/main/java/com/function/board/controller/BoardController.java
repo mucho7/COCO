@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -56,9 +57,9 @@ public class BoardController {
 
 	@ApiOperation(value = "{board_id}로 게시글 조회")
 	@GetMapping("/{id}")
-	public ResponseEntity<BoardResponseDto> findById(@PathVariable("id") Long id) {
+	public ResponseEntity<BoardResponseDto> findById(@PathVariable("id") Long id, @PageableDefault(size=3) Pageable pageable) {
 		boardService.updateView(id);
-		return ResponseEntity.ok(boardService.findById(id));
+		return ResponseEntity.ok(boardService.findById(id, pageable));
 	}
 
 	// @ApiOperation(value = "제목(title)에 {keyword}가 포함된 게시글 검색")

@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.function.board.domain.board.Board;
 import com.function.board.domain.board.BoardRepository;
+import com.function.board.domain.comment.Comment;
+import com.function.board.domain.comment.CommentRepository;
 import com.function.board.dto.board.BoardListResponseDto;
 import com.function.board.dto.board.BoardResponseDto;
 import com.function.board.dto.board.BoardSaveRequestDto;
@@ -22,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class BoardService {
 
 	private final BoardRepository boardRepository;
+	private final CommentRepository commentRepository;
 
 	@Transactional
 	public Long save(BoardSaveRequestDto requestDto) {
@@ -36,13 +39,17 @@ public class BoardService {
 	}
 
 	@Transactional(readOnly = true)
-	public BoardResponseDto findById(Long boardId) {
+	public BoardResponseDto findById(Long boardId, Pageable pageable) {
 		Board entity = boardRepository.findById(boardId)
 			.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
-		return new BoardResponseDto(entity);
+
+		Page<Comment> comments = commentRepository.findAllByBoardId(boardId, pageable);
+			// .map(CommentResponseDto::new);
+		return new BoardResponseDto(entity, comments);
 	}
 
 	// @Transactional(readOnly = true)
+
 	// public Page<Board> searchByTitle(String keyword, Pageable pageable) {
 	// 	return boardRepository.findByTitleContaining(keyword, pageable);
 	// }

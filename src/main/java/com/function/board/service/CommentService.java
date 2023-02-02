@@ -3,8 +3,6 @@ package com.function.board.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,25 +37,25 @@ public class CommentService {
 		return comment.getId();
 	}
 
-	@Transactional(readOnly = true)
-	public List<CommentResponseDto> findAllByBoard(Long boardId) {
-		Board board = boardRepository.findById(boardId)
-			.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+	// @Transactional(readOnly = true)
+	// public List<CommentResponseDto> findAllByBoard(Long boardId) {
+	// 	Board board = boardRepository.findById(boardId)
+	// 		.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+	//
+	// 	List<Comment> comments = board.getComments();
+	// 	return comments.stream()
+	// 		.map(CommentResponseDto::new)
+	// 		.collect(Collectors.toList());
+	// }
 
-		List<Comment> comments = board.getComments();
-		return comments.stream()
-			.map(CommentResponseDto::new)
-			.collect(Collectors.toList());
-	}
-
-	@Transactional(readOnly = true)
-	public Page<CommentResponseDto> findAllByBoardPaging(Long boardId, Pageable pageable) {
-		boardRepository.findById(boardId)
-			.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
-
-		return commentRepository.findAllByBoardId(boardId, pageable)
-			.map(CommentResponseDto::new);
-	}
+	// @Transactional(readOnly = true)
+	// public Page<CommentResponseDto> findAllByBoardPaging(Long boardId, Pageable pageable) {
+	// 	boardRepository.findById(boardId)
+	// 		.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+	//
+	// 	return commentRepository.findAllByBoardId(boardId, pageable)
+	// 		.map(CommentResponseDto::new);
+	// }
 
 	public CommentResponseDto findById(Long commentId) {
 		Comment entity = commentRepository.findById(commentId)

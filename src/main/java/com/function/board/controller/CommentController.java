@@ -1,9 +1,5 @@
 package com.function.board.controller;
 
-import java.util.List;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,18 +32,18 @@ public class CommentController {
 		commentService.save(boardId, requestDto);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
+	//
+	// @ApiOperation(value = "{board_id}의 댓글 목록 조회")
+	// @GetMapping("/{board_id}")
+	// public ResponseEntity<List<CommentResponseDto>> findAll(@PathVariable("board_id") Long boardId) {
+	// 	return ResponseEntity.ok(commentService.findAllByBoard(boardId));
+	// }
 
-	@ApiOperation(value = "{board_id}의 댓글 목록 조회")
-	@GetMapping("/{board_id}")
-	public ResponseEntity<List<CommentResponseDto>> findAll(@PathVariable("board_id") Long boardId) {
-		return ResponseEntity.ok(commentService.findAllByBoard(boardId));
-	}
-
-	@ApiOperation(value = "댓글 목록 페이징")
-	@GetMapping("/{board_id}/list")
-	public ResponseEntity<Page<CommentResponseDto>> paging(@PathVariable("board_id") Long boardId, Pageable pageable) {
-		return ResponseEntity.ok(commentService.findAllByBoardPaging(boardId, pageable));
-	}
+	// @ApiOperation(value = "댓글 목록 페이징")
+	// @GetMapping("/{board_id}/list")
+	// public ResponseEntity<Page<CommentResponseDto>> paging(@PathVariable("board_id") Long boardId, Pageable pageable) {
+	// 	return ResponseEntity.ok(commentService.findAllByBoardPaging(boardId, pageable));
+	// }
 
 	@ApiOperation(value = "{comment_id}에 해당하는 댓글 단건 조회")
 	@GetMapping("/{board_id}/read/{comment_id}")
