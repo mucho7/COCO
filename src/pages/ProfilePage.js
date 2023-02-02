@@ -18,17 +18,17 @@ import { ProfileUserInfoItem, ProfileUserInfoForm, ProfileUserTrophy, ProfilePas
 
 function ProfilePage(params) {
     const navigate = useNavigate()
-    const [ userInfo, setUesrInfo ] = useState({})
+    const [ userInfo, setUesrInfo ] = useState([])
     const [ cookie, removeCookie ] = useCookies(["userInfo"])
     const [ updateFlag, setUpdateFlag ] = useState(false)
 
     // Axios로 교체될 정보
-    const temp_userInfo = [
-        {name: 'User ID', content: 'aas'},
-        {name: 'User Name', content: '채치수'},
-        {name: 'User E-Mail', content: 'SSAFY@edu.ssafy.com'},
-        {name: 'Since', content: '23.01.01'},
-    ]
+    // const temp_userInfo = [
+    //     {name: 'User ID', content: 'aas'},
+    //     {name: 'User Name', content: '채치수'},
+    //     {name: 'User E-Mail', content: 'SSAFY@edu.ssafy.com'},
+    //     {name: 'Since', content: '23.01.01'},
+    // ]
     
     
     const userUpdatingInfo = [
@@ -69,14 +69,12 @@ function ProfilePage(params) {
                 },
                 (data) => {return data.data},
                 (err) => {console.log(err)}
-            )}
-        readUser()
-        .then((data) => {
-            console.log(userInfo)
-            setUesrInfo(data)
-        })
-    })
+            ).then(data => {
+                setUesrInfo(data.entries)
 
+            })}
+            readUser()
+        })
     return (
         <SidePaddingBox>
             <Navbar />
@@ -98,7 +96,7 @@ function ProfilePage(params) {
                     <ProfileUserTrophy/>
                 </LeftBox>
                 <RightBox>
-                    {updateFlag === false ? <ProfileUserInfoItem userInfo={temp_userInfo}/> : <ProfileUserInfoForm userInfo={userUpdatingInfo} />}
+                    {updateFlag === false ? <ProfileUserInfoItem userInfo={userInfo}/> : <ProfileUserInfoForm userInfo={userUpdatingInfo} />}
                 </RightBox>
             </TestingBox>
         </SidePaddingBox>
