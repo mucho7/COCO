@@ -7,7 +7,7 @@ export default axios.create({
   // baseURL: "http://host.docker.internal:8000/member",
 
 // develope할때 사용할 
-baseURL: "http://i8a703.p.ssafy.io:8012/member",
+baseURL: "http://i8a703.p.ssafy.io:8000/member",
 
   headers: {
     "Content-Type": "application/json",

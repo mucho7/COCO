@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 
 import  { Navbar } from '../components/navbar';
+import {  } from "../store"
 import { deleteUserInfo, readUserInfo } from "../api/member"
 
 import { Button } from '@mui/material'

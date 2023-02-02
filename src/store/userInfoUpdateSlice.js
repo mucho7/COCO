@@ -15,7 +15,7 @@ async function readUser(info) {
         info,
         (data) => {
             console.log(data)
-            readUserInfo
+            readUserInfo()
         }
     )
 }
@@ -26,7 +26,7 @@ async function updateUser(info) {
         info,
         (data) => {
             console.log(data)
-            readUserInfo
+            readUserInfo()
         }
     )
 }
@@ -36,7 +36,13 @@ const updateUserSlice = createSlice({
     initialState,
     reducers: {
         onEnterProfile: (state) => {
-            readUser(state.id)
+            readUser(
+                {
+                    // userId: state.id,
+                    // Authorization: cookie.userInfo.Authorization,
+                    // refreshToken: cookie.userInfo.refreshToken,
+                },
+                )
         },
         onUpdateSubmit: (state, action) => {
             state.id = action.payload.id

@@ -5,8 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Container, Grid, Button, TextField } from '@mui/material'
 import { login } from "../../api/member"
 
-
-// Login의 notNull을 처리할 코드가 필요
 function LoginForm () {
     const navigate = useNavigate()
     const [ cookie, setCookie ] = useCookies(['userInfo'])
@@ -31,34 +29,6 @@ function LoginForm () {
                 // nothing
         }
     }
-
-    // async function axios_test() {
-    //     await fetch('http://i8a703.p.ssafy.io:8012/login', {
-    //         method: 'POST',
-    //         body: JSON.stringify(temp_user_info),
-    //         headers: {
-    //             "Content-Type": `application/json`,
-    //         }
-    //     })
-    //     .then(result => {
-    //         const headers = result.headers
-    //         setCookie(
-    //             'userInfo',
-    //             {
-    //                 user_id: temp_user_info.userId,
-    //                 jwt_token: headers.get('Authorization'),
-    //                 refresh_token: headers.get('refreshToken'),
-    //             },
-    //             {path: '/'}
-    //         )
-    //         console.log(cookie)
-    //         navigate("/")
-    //     })
-    //     .catch(error => {
-    //         console.log(error)
-    //         alert('다시 시도해주세요')
-    //     })
-    // }
 
     async function log_in() {
         await login(
