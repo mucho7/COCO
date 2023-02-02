@@ -31,8 +31,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		String accessToken = tokenDto.getAccessToken();
 		String refreshToken = tokenDto.getRefreshToken();
 
-		// System.out.println("RequestHeader에서 추출한 JWT Token : " + tokenDto);
-
 		// Step 2. 토큰의 유효성 검사
 		if (tokenDto.getAccessToken() != null) {
 			if (jwtTokenProvider.validateToken(accessToken)) {
@@ -59,8 +57,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 					// 헤더에 토큰 정보(AccessToken, refreshToken) 추가
 					response.setHeader("Authorization", "bearer " + newJwtToken.getAccessToken());
 					response.setHeader("refreshToken", "bearer " + newJwtToken.getRefreshToken());
-					request.setAttribute("Authorization", "bearer "+newJwtToken.getAccessToken());
-					request.setAttribute("refreshToken", "bearer "+newJwtToken.getRefreshToken());
 					// 컨텍스트에 넣기
 					System.out.println("[doFilterInternal@JwtAuthenticationFilter] newJwtToken:\n"+newJwtToken);
 					this.setAuthentication(newJwtToken.getAccessToken());
