@@ -18,7 +18,10 @@
 package com.function.session.kurento;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.kurento.client.IceCandidate;
 import org.slf4j.Logger;
@@ -100,6 +103,17 @@ public class CallHandler extends TextWebSocketHandler {
 			case "startRelay":
 				startReading(user);
 				break;
+			case "endReading":
+				// startCoding(jsonMessage);
+				announceUserTurn(jsonMessage.get("roomName").getAsString(), 0);
+				break;
+			case "endMyTurn":
+				System.out.println("...endMyTurn[relayCoding]:" + relayCodingOrder);
+				System.out.println("...endMyTurn[index]:" + jsonMessage.get("index").getAsInt());
+				System.out.println("...endMyTurn[relayCoding.size()]:" + relayCodingOrder.size());
+				System.out.println("...");
+				announceUserTurn(jsonMessage.get("roomName").getAsString(), jsonMessage.get("index").getAsInt());
+				break;
 			default:
 				break;
 		}
@@ -124,14 +138,65 @@ public class CallHandler extends TextWebSocketHandler {
 	}
 
 	// 1분 릴레이 코딩
+	private Map<String, List<UserSession>> relayCodingOrder = new HashMap<>();
+
 	private void startReading(UserSession user) throws Exception {
-		final List<UserSession> participantsList = roomManager.getRoom(user.getRoomName()).getParticipantsList(user);
-		participantsList.add(user);
+		String roomName = user.getRoomName();
+		final List<UserSession> participantsList = roomManager.getRoom(roomName).getParticipantsList(null);
+
+		Collections.shuffle(participantsList); // 랜덤으로 순서 재배치
+		relayCodingOrder.put(roomName, participantsList);
 
 		final JsonObject message = new JsonObject();
 		message.addProperty("id", "startReading");
-
 		noticeMessage(participantsList, message);
+	}
+
+	// private void startCoding(JsonObject params) throws Exception {
+	// 	final String roomName = params.get("roomName").getAsString();
+	// 	// final List<UserSession> participantsList = roomManager.getRoom(roomName).getParticipantsList(null);
+	//
+	// 	// Collections.shuffle(participantsList); // 랜덤으로 순서 재배치
+	// 	//
+	// 	// relayCodingOrder.put(roomName, participantsList);
+	//
+	// 	announceUserTurn(roomName, 0);
+	// }
+
+	private void announceUserTurn(String roomName, int index) throws Exception {
+		final List<UserSession> order = relayCodingOrder.get(roomName);
+		final List<UserSession> participantsList = roomManager.getRoom(roomName).getParticipantsList(null);
+		int size = order.size();
+
+		if (index == size) {
+			final JsonObject message = new JsonObject();
+			message.addProperty("id", "endRelay");
+			noticeMessage(participantsList, message);
+
+			relayCodingOrder.remove(roomName);
+		} else {
+			UserSession user = order.get(index);
+			String nextName;
+
+			if (index + 1 == size) {
+				nextName = ": 마지막 순서";
+			} else {
+				nextName = order.get(index + 1).getName();
+			}
+			// 참여자들에게 지금 차례, 다음 차례 사람 정보 알리기
+			final JsonObject message = new JsonObject();
+			message.addProperty("id", "relayCoding");
+			message.addProperty("index", index);
+			message.addProperty("now", user.getName());
+			message.addProperty("next", nextName);
+			noticeMessage(participantsList, message);
+			// // 지금 차례인 사용자에게 알리기
+			// final JsonObject yourTurnMessage = new JsonObject();
+			// yourTurnMessage.addProperty("id", "yourTurn");
+			// yourTurnMessage.addProperty("index", index);
+			// user.sendMessage(yourTurnMessage);
+		}
+
 	}
 
 	private void sendChat(JsonObject params) throws Exception {
@@ -188,8 +253,11 @@ public class CallHandler extends TextWebSocketHandler {
 		log.info("PARTICIPANT {}: trying to join room {}", name, roomName);
 
 		Room room = roomManager.getRoom(roomName);
+		log.info("...joinRoom, WebSocket: ", session, session.getId()); //
+		// System.out.println("...joinRoom, WebSocket: " + session + ", " + session.getId());
 		final UserSession user = room.join(name, session);
 		registry.register(user);
+
 	}
 
 	private void leaveRoom(UserSession user) throws IOException {

@@ -145,24 +145,23 @@ public class Room implements Closeable {
 
 	// 추가
 	public List<UserSession> getParticipantsList(UserSession user) {
-		// if(user == null){ // 모든 참가자들
-		//   final List<UserSession> participantsList = new ArrayList<>(participants.values().size());
-		//   for (final UserSession participant : this.getParticipants()) {
-		//     participantsList.add(participant);
-		//   }
-		//   return participantsList;
-		// }
-		// else { // 나를 제외한 참가자들
-		final List<UserSession> participantsList = new ArrayList<>(participants.values().size() - 1);
-
-		for (final UserSession participant : this.getParticipants()) {
-			if (!participant.equals(user)) {
+		if (user == null) { // 모든 참가자들
+			final List<UserSession> participantsList = new ArrayList<>(participants.values().size());
+			for (final UserSession participant : this.getParticipants()) {
 				participantsList.add(participant);
 			}
-		}
+			return participantsList;
+		} else { // 나를 제외한 참가자들
+			final List<UserSession> participantsList = new ArrayList<>(participants.values().size() - 1);
 
-		return participantsList;
-		// }
+			for (final UserSession participant : this.getParticipants()) {
+				if (!participant.equals(user)) {
+					participantsList.add(participant);
+				}
+			}
+
+			return participantsList;
+		}
 	}
 
 	public Collection<UserSession> getParticipants() {

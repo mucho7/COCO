@@ -24,7 +24,8 @@ let btnOtherVideosOff = document.getElementById('btnOtherVideosOff'); //
 let btnHostLeave = document.getElementById('btnHostLeave'); //
 let btnStartRelay = document.getElementById('btnStartRelay'); //
 let min, sec;
-let timer;
+let timer; // -> const로
+let relayUserName, relayMessageId, relayIndex;
 
 window.onbeforeunload = function() {
 	ws.close();
@@ -34,6 +35,8 @@ ws.onmessage = function(message) {
 	var parsedMessage = JSON.parse(message.data);
 	console.info('Received message: ' + message.data);
 
+//	console.log("...participatns: ",participants)
+    clearInterval(timer);
 	switch (parsedMessage.id) {
 	case 'existingParticipants':
 		onExistingParticipants(parsedMessage);
@@ -71,16 +74,21 @@ ws.onmessage = function(message) {
     case 'startReading':
         startReadingTimer();
         break;
+    case 'relayCoding':
+        startCodingTimer(parsedMessage.index, parsedMessage.now, parsedMessage.next);
+        break;
+    case 'endRelay':
+        clearTimer(timer, "END RELAY");
+        document.getElementById('orderInfo').innerText = '끝~!!!!!';
+        break;
 	default:
 		console.error('Unrecognized message', parsedMessage);
 	}
 }
-
-// 1분 릴레이 코딩 시작 버튼 누르면...
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+// 호스트가 호스트한테만 보이는 릴레이코딩 시작 버튼을 누르면...
 btnStartRelay.onclick = () => {
     let roomName = document.getElementById('roomName').value;
-
-    document.getElementById("display").innerText = min + "분" + sec + "초";
 
     var message = {
       id : 'startRelay',
@@ -88,49 +96,82 @@ btnStartRelay.onclick = () => {
     }
     sendMessage(message);
 }
-// 1분 릴레이 코딩 문제 읽기
+// 1분 릴레이 코딩: 5분동안 문제 읽기
 function startReadingTimer(){
-    clearInterval(timer, '리셋'); // 고치기
+    // TODO: 공유IDE 접근 못하게. ReadOnly?
 
-    min = 1;
-//    min = 5;
-    sec = 0;
+    relayUserName = 'host'; // TODO: relayUserName = '호스트이름 (= roomId로 해도 ok)'
+    relayMessageId = 'endReading';
+//    clearTimer(timer, '리셋');
+    min = 0; // 5분
+    sec = 10; // 0초
+    document.getElementById("display").innerText = min + "분" + sec + "초";
+    timer = setInterval(countTimer, 1000);
+}
+// 1분 릴레이 코딩: 시작
+function startCodingTimer(index, now, next){
+    // 지금 차례, 다음 차례인 유저 이름 화면에 출력하기
+    document.getElementById('orderInfo').innerText = '지금: ' + now+', 다음 차례: '+next;
+    // 내가 지금 차례?
+    let userName = document.getElementById('name').value;
+    if(userName == now){
+        // TODO: 공유 IDE 접근 가능하게 disabled? Readonly? 풀어주기
+    }
+
+    relayUserName = now;
+    relayMessageId = 'endMyTurn';
+    relayIndex = index;
+//    clearTimer(timer, "리셋"); // 클리어 하고
+    min = 0; // 1분
+    sec = 10; // 0초
     timer = setInterval(countTimer, 1000);
 }
 
-function countTimer() {
-  if (sec != 0) {
-    sec--;
-    document.getElementById("display").innerText =
-      min + "분" + sec + "초 남았습니다.";
-  } else {
-    if (min != 0) {
-      min--;
-      sec = 59;
-    } else {
-      clearTimer(timer, "타이머 종료");
+function endTimer() {
+    console.log("...function endTimer()...[index]:"+relayIndex)
+    clearTimer(timer, "타이머 종료");
 
-      let userName = document.getElementById('name').value;
-      let roomName = document.getElementById('roomName').value;
+    let userName = document.getElementById('name').value;
 
-      if(userName == 'host') { // TODO: host이면...
-          var message = {
-            id : 'sendChat',
-            roomName : roomName
-          }
+    if(userName == relayUserName){
+        // if(relayMessageId == 'endReading') 문제 읽는 5분 타이머 끝났고, 호스트만 메시지 보내기
+        // if(relayMessageId == 'endMyTurn') 1분 타이머 끝났고, 차례였던 사용자만 메시지 보내기
+        let roomName = document.getElementById('roomName').value;
+        let message = {
+            id : relayMessageId,
+            roomName : roomName,
+        };
 
-          sendMessage(message);
-      }
+        if(relayMessageId == 'endMyTurn'){
+            message.index = relayIndex + 1;
+        }
 
+        console.log("...endTimer()", message)
+
+        sendMessage(message);
     }
-  }
+}
+
+function countTimer() {
+    console.log("...count time...")
+    if (sec != 0) {
+        sec--;
+        document.getElementById("display").innerText = min + "분" + sec + "초 남았습니다.";
+    } else {
+        if (min != 0) {
+            min--;
+            sec = 59;
+        } else {
+//            clearTimer(timer, "타이머 종료");
+            endTimer();
+        }
+    }
 }
 
 function clearTimer(t, text) {
   clearInterval(t);
   document.getElementById("display").innerText = text;
 }
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 btnSendChat.onclick = () => {
     console.log("button click...")
