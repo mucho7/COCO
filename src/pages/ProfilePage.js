@@ -13,7 +13,6 @@ import SidePaddingBox from './SidePaddingBox'
 
 import { ProfileUserInfoItem, ProfileUserInfoForm, ProfileUserTrophy, ProfilePasswordUpdateButton } from '../components/profile'
 
-console.log(this.cookie)
 
 function ProfilePage(params) {
     const navigate = useNavigate()
