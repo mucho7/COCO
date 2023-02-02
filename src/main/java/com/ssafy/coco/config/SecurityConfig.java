@@ -46,19 +46,12 @@ public class SecurityConfig {
 			.sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
-			.authorizeRequests()
-			// .antMatchers("/swagger*/**", "/login", "/check/**", "/member/register", "/token", "/sendEmail", "/tempPassword")
-			// .permitAll()
-			.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-			.antMatchers("/member/info/**", "/member/rating", "/member/extract", "/logout")
-			.authenticated()
-			.anyRequest().permitAll()
-			.and()
 			.logout()
 			.logoutUrl("/logout")
 			.logoutSuccessUrl("/") // Front와 연동 성공시 로그아웃 이후 연결 페이지 합의 볼 것.
 			.invalidateHttpSession(true)
 			.and()
+			// Access Token이 만료된 경우 ContextHolder에서 권한을 찾아 해당 요청에 대해서만 접근을 허용해줘야 하기 때문에 Filter를 완전히 제거할 수는 없음 (addFilterBefore 제거하지 말것!)
 			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
 				UsernamePasswordAuthenticationFilter.class);
 		return http.build();
