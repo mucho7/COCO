@@ -1,21 +1,23 @@
 import styled from "styled-components"
 import { Card, CardActionArea, Typography, CardContent } from '@mui/material'
+import { Link } from "react-router-dom"
 
 function CommuArticles(props) {
 
     return (
         <CommuArticle>
             {props.articles.map(article => {
-                console.log('yes')
                 return (
                     <Card sx={{ width: '100%', height: 'auto', margin: '4px'}} key={article.title}>
                         <CardActionArea>
-                            <CardContent>
-                            <Typography component="b">
+                        <Link to={`${article.pk}`} style={{textDecoration: 'none', color: 'black'}}>
+                        <CardContent>
+                            <Typography variant="b">
                                 {article.title}
                             </Typography>
-                                <div>{article.content}</div>
-                            </CardContent>
+                            <Typography>{article.content}</Typography>
+                        </CardContent>
+                        </Link>
                         </CardActionArea>
                     </Card>
 

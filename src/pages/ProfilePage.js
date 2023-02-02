@@ -1,44 +1,84 @@
 import styled  from 'styled-components'
-import { useState } from 'react'
+import { useState, useEffect,  } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useCookies } from 'react-cookie'
+
+import  { Navbar } from '../components/navbar';
+import { deleteUserInfo, readUserInfo } from "../api/member"
+
 import { Button } from '@mui/material'
 import { AccountCircle } from '@mui/icons-material'
-import { ProfileUserInfoItem, ProfileUserInfoForm, ProfileUserTrophy, ProfilePasswordUpdateButton } from '../components/profile'
+
 import SidePaddingBox from './SidePaddingBox'
-import  { Navbar } from '../components/navbar';
+
+import { ProfileUserInfoItem, ProfileUserInfoForm, ProfileUserTrophy, ProfilePasswordUpdateButton } from '../components/profile'
+
+console.log(this.cookie)
 
 function ProfilePage(params) {
-    const [updateFlag, setUpdateFlag] = useState(false)
+    const navigate = useNavigate()
+    const [ cookie, removeCookie ] = useCookies(['userInfo'])
+    const [ updateFlag, setUpdateFlag ] = useState(false)
 
     // Axios로 교체될 정보
-    const userInfo = [
-        {name: 'User ID', content: 'SSAFY_Gorilla'},
+    const temp_userInfo = [
+        {name: 'User ID', content: 'aas'},
         {name: 'User Name', content: '채치수'},
         {name: 'User E-Mail', content: 'SSAFY@edu.ssafy.com'},
         {name: 'Since', content: '23.01.01'},
     ]
 
-    async function deleteUser() {
-        console.log('들어간다')
-        
-        // user_id의 입출력에 관한 코드 정리가 필요함
-        const response = await fetch(`/member/delete/${params.user_id}`, {
-            method: 'PUT',
-            body: JSON.stringify(),
-            headers: {
-                "Content-Type": `application/json`,
+    const userUpdatingInfo = [
+        {name: 'User ID', content: 'SSAFY_Gorilla', updatable: false},
+        {name: 'User Name', content: '채치수', updatable: true},
+        {name: 'User E-Mail', content: 'SSAFY@edu.ssafy.com', updatable: true},
+        {name: 'Since', content: '23.01.01', updatable: false},
+    ]
+
+    async function deleteUser() {       
+        console.log(cookie) 
+        await deleteUserInfo(
+            {
+                userId: cookie.userInfo.user_id,
+                Authorization: cookie.userInfo.Authorization,
+                refreshToken: cookie.userInfo.refreshToken,
+            },
+            (data) => {
+                console.log(data)
+                removeCookie()
+                navigate('/')
             }
-        })
-        const data = await response.json()
-        console.log('들어옴', data)
+        )
     } 
 
+    
     const flagClickHandler = () => {
-        updateFlag ? setUpdateFlag(false) : setUpdateFlag(true)
+        if (updateFlag) {
+            setUpdateFlag(false)
+        }  else setUpdateFlag(true)
     }
 
-    const deleteUserHandler = () => {
-        deleteUser()
-    }
+    
+    useEffect(() => {
+        const readUser = async () => {
+            await readUserInfo(
+                {
+                    userId: cookie.userInfo.user_id,
+                    'Authorization': cookie.userInfo.jwt_token,
+                    'refreshToken':  cookie.userInfo.refresh_token,
+                },
+                (data) => {
+                    console.log(data)
+                    // 실제론 여기 있는 것처럼 보이지만 호출될 callback함수일 뿐임, 관련된 정보를 가져올 땐 redux를 활용한 전역변수 사용이 필요함
+                }
+                ,
+                (err) => {
+                    console.log(err)
+                }
+            )
+        }
+        readUser()
+    })
 
     return (
         <SidePaddingBox>
@@ -51,7 +91,7 @@ function ProfilePage(params) {
                 {updateFlag === false 
                 ? <Button onClick={flagClickHandler} variant="contained" className="submit" fullWidth style={{ width: "7rem", height:"2.8rem", marginRight: "15px"}}> <b>프로필 편집</b></Button>
                 :<>
-                    <Button onClick={deleteUserHandler} variant="contained" className="submit" fullWidth style={{ width: "7rem", height:"2.8rem", marginRight: "15px", backgroundColor: "red"}}><b>계정 삭제</b></Button>
+                    <Button onClick={deleteUser} variant="contained" className="submit" fullWidth style={{ width: "7rem", height:"2.8rem", marginRight: "15px", backgroundColor: "red"}}><b>계정 삭제</b></Button>
                     <ProfilePasswordUpdateButton/>
                     <Button onClick={flagClickHandler} variant="contained" className="submit" fullWidth style={{ width: "7rem", height:"2.8rem", marginRight: "15px"}}><b>편집 완료</b></Button>
                 </>}
@@ -61,7 +101,7 @@ function ProfilePage(params) {
                     <ProfileUserTrophy/>
                 </LeftBox>
                 <RightBox>
-                    {updateFlag === false ? <ProfileUserInfoItem userInfo={userInfo}/> : <ProfileUserInfoForm userInfo={userInfo} />}
+                    {updateFlag === false ? <ProfileUserInfoItem userInfo={temp_userInfo}/> : <ProfileUserInfoForm userInfo={userUpdatingInfo} />}
                 </RightBox>
             </TestingBox>
         </SidePaddingBox>
@@ -73,7 +113,6 @@ const BackgroundBox = styled.div`
     width: 100vw;
     margin-left: calc(-50vw + 50%);
     overflow: hidden;
-
 `
 
 const BackgroundImg = styled.img`

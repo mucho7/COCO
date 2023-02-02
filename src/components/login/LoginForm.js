@@ -1,17 +1,25 @@
-import { useEffect, useState, useRef }  from 'react'
-import { Box, Container, Grid, Button, TextField } from '@mui/material'
+import { useState }  from 'react'
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
 
+import { Box, Container, Grid, Button, TextField } from '@mui/material'
+import { login } from "../../api/member"
+
+
+// Login의 notNull을 처리할 코드가 필요
 function LoginForm () {
-    const [inputID, setInputID ] = useState()
-    const [inputPassword, setInputPassword] = useState()
+    const navigate = useNavigate()
+    const [ cookie, setCookie ] = useCookies(['userInfo'])
     
-    const inputRef = useRef()
-    useEffect(() => {
-        inputRef.current.focus()
-    })
+    const [ inputID, setInputID ] = useState()
+    const [ inputPassword, setInputPassword ] = useState()
+
+    const temp_user_info = {
+        userId: inputID, 
+        password: inputPassword,
+    }
 
     const onTypingHandler = (e) => {
-        // 4개의 케이스에 따라 각자의 스테이트에 저장
         switch (e.target.id) {
             case 'outlined-id':
                 setInputID(e.target.value)
@@ -24,40 +32,73 @@ function LoginForm () {
         }
     }
 
-    const temp_user_info = {
-        user_id: inputID, 
-        password: inputPassword,
-    }
+    // async function axios_test() {
+    //     await fetch('http://i8a703.p.ssafy.io:8012/login', {
+    //         method: 'POST',
+    //         body: JSON.stringify(temp_user_info),
+    //         headers: {
+    //             "Content-Type": `application/json`,
+    //         }
+    //     })
+    //     .then(result => {
+    //         const headers = result.headers
+    //         setCookie(
+    //             'userInfo',
+    //             {
+    //                 user_id: temp_user_info.userId,
+    //                 jwt_token: headers.get('Authorization'),
+    //                 refresh_token: headers.get('refreshToken'),
+    //             },
+    //             {path: '/'}
+    //         )
+    //         console.log(cookie)
+    //         navigate("/")
+    //     })
+    //     .catch(error => {
+    //         console.log(error)
+    //         alert('다시 시도해주세요')
+    //     })
+    // }
 
-    async function axios_test() {
+    async function log_in() {
+        await login(
+        temp_user_info,
+        (data) => {
+            console.log(data)
+            const headers = data.headers
+            setCookie(
+                'userInfo',
+                {
+                    user_id: temp_user_info.userId,
+                    jwt_token: headers.get('Authorization'),
+                    refresh_token: headers.get('refreshToken'),
+                },
+                {path: '/'}
+            )
+            console.log(cookie)
+            navigate("/")
+        },
+        (error) => {
+            console.log(error);
+            alert(error.response.data)
+        }
+    )}
 
-        const response = await fetch('https://70.12.247.183:8080/login', {
-            method: 'POST',
-            body: temp_user_info,
-            headers: {
-                "Content-Type": `application/json`,
-            }
-        })
-        const data = await response.json()
-        // 영구 저장 및 리덕스를 활용한 전역변수 저장이 필요함
-        console.log('들어옴', data)
-    }   
-
-    const onClickHandler = () => {
-        axios_test()
+    const onClickHandler = (e) => {
+        e.preventDefault()
+        log_in()
     }
 
     return (
         <Container fixed>
-            <h2>로그인</h2><hr/>
             <Box component="form">
                 <Grid container spacing={2} style={{padding: '2rem', justifyContent: 'center'}}>
                     {/* map을 활용한 반복문으로 고쳤으면 함 */}
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} ref={inputRef} id="outlined" label="ID" fullWidth />
+                        <TextField onChange={onTypingHandler} id="outlined-id" autoFocus label="ID" fullWidth />
                     </Grid>
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} id="outlined-password" label="Password" fullWidth />
+                        <TextField onChange={onTypingHandler} id="outlined-password" label="Password" type="password" fullWidth />
                     </Grid>
                     <Grid item xs={6}>
                         <Button onClick={onClickHandler} variant="contained" className="submit" style={{height: '3rem'}} fullWidth> <b>로그인</b></Button>
@@ -68,4 +109,4 @@ function LoginForm () {
     )   
 }
 
-export default LoginForm
+export default LoginForm;

@@ -1,7 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useState, useCallback } from 'react'
 import { Button, Modal, Box, Typography, TextField, Grid } from '@mui/material'
+import { useCookies } from 'react-cookie'
+import { useNavigate } from 'react-router-dom'
+
+import { changeUserPassword } from "../../api/member"
 
 function ProfilePasswordUpdateButton(params) {
+    const [ cookie ] = useCookies(['userInfo'])
+    const navigate = useNavigate()
+
     const [inputPassword, setInputPassword] = useState()
     const [inputUpdatedPassword, setInputUpdatedPassword] = useState()
     const [inputUpdatedCheckPassword, setInputUpdatedCheckPassword] = useState()
@@ -30,7 +37,7 @@ function ProfilePasswordUpdateButton(params) {
         }
     }
 
-    function passwordValidation() {
+    const passwordValidation = useCallback(() => {
         const passwordForm = /^[a-z0-9]{4,12}$/
         const passwordErrorMessage = {
             null: "필수 입력입니다.",
@@ -38,40 +45,38 @@ function ProfilePasswordUpdateButton(params) {
             same: "비밀번호가 일치하지 않습니다.",
         }
         if (inputUpdatedPassword === undefined || inputUpdatedPassword === '') {
-            return {isVaild: true, message: passwordErrorMessage.null}
+            setIsOkToSubmit(false)
+            setIsPasswordValid({isVaild: true, message: passwordErrorMessage.null})
         } else if (inputUpdatedPassword !== inputUpdatedCheckPassword) {
-            return {isVaild: true, message: passwordErrorMessage.same}
+            setIsOkToSubmit(false)
+            setIsPasswordValid({isVaild: true, message: passwordErrorMessage.same})
         } else if (!passwordForm.test(inputUpdatedPassword)) {
-            return {isVaild: true, message: passwordErrorMessage.form}
+            setIsOkToSubmit(false)
+            setIsPasswordValid({isVaild: true, message: passwordErrorMessage.form})
         }
         else {
-            return {isValid: false}
+            setIsOkToSubmit(true)
+            setIsPasswordValid({isValid: false})
         }
-    }
+    }, [inputUpdatedPassword, inputUpdatedCheckPassword])
 
-    useEffect(() => {
-        setIsOkToSubmit(passwordValidation())
-    }, [inputPassword, inputUpdatedPassword, inputUpdatedCheckPassword])
 
     async function updatePassword() {
-        console.log('들어간다')
-        
-        // user_id의 입출력에 관한 코드 정리가 필요함 > store를 활용해야함
-        const response = await fetch(`/member/info/${params.user.user_id}`, {
-            method: 'PUT',
-            body: JSON.stringify({
-                password: {inputPassword}
-            }),
-            headers: {
-                "Content-Type": `application/json`,
+        await changeUserPassword(
+            {
+                newPassword: inputPassword,
+                'Authorization': cookie.userInfo.jwt_token,
+                'refreshToken':  cookie.userInfo.refresh_token,
+            },
+            (data) => {
+                navigate('/useri/user_id')
             }
-        })
-        const data = await response.json()
-        console.log('들어옴', data)
+        )
     } 
 
     const passwordChangeHandler = () => {
-        if (isOkToSubmit) {updatePassword()}
+        passwordValidation()
+        if (isOkToSubmit) {updatePassword()} else { alert('다시!!')}
     }
 
     return (
@@ -92,7 +97,7 @@ function ProfilePasswordUpdateButton(params) {
                     </Typography>
                     <Grid container spacing={2} style={{padding: '2rem', justifyContent: 'center'}}>
                         <Grid item xs={10}>
-                            <TextField onChange={onTypingHandler} id="password" label="Current Password" fullWidth/>
+                            <TextField onChange={onTypingHandler} id="password" label="Current Password" type="password" fullWidth/>
                         </Grid>
                         <Grid item xs={10}>
                             <TextField onChange={onTypingHandler} error={isPasswordValid.isVaild} helperText={isPasswordValid.isVaild ? isPasswordValid.message : ""}id="updated-password" type="password" label="Password" fullWidth/>

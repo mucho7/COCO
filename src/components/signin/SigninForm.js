@@ -1,9 +1,15 @@
 // custom hook에 대한 이해가 필요함
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import { signup } from '../../api/member'
+
 import { Grid, Box, Container, Button, TextField } from '@mui/material'
 
 function SigninForm() {
+    const navigate = useNavigate()
+
     const [inputID, setInputID ] = useState()
     const [inputPassword, setInputPassword] = useState()
     const [inputCheckPassword, setInputChcekPassword] = useState()
@@ -17,7 +23,7 @@ function SigninForm() {
     // const [passwordValidation, setPasswordValidation] = useState(false)
 
     // validation
-    const emailValidation = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}')
+    const emailValidation = new RegExp('[a-z0-9_.]+@[a-z]+.[a-z]{2,3}')
     const idValidation = useCallback(() => {
         const idForm = /^[a-z0-9]{4,16}$/
         const idErrorMessage = {
@@ -31,14 +37,11 @@ function SigninForm() {
             setIsOkToSubmit(false)
             setIsIdValid({isVaild: true, message: idErrorMessage.form})
         } else {
+            setIsOkToSubmit(true)
+
             setIsIdValid({isValid: false})
         }
     }, [inputID])
-
-    // 실시간 ID validation
-    useEffect(() => {
-        setIsOkToSubmit(idValidation()) 
-    }, [inputID, idValidation])
 
     const passwordValidation = useCallback(() => {
         const passwordForm = /^[a-z0-9]{4,12}$/
@@ -58,13 +61,10 @@ function SigninForm() {
             setIsPasswordValid({isVaild: true, message: passwordErrorMessage.form})
         }
         else {
+            setIsOkToSubmit(true)
             setIsPasswordValid({isValid: false})
         }
     }, [inputPassword, inputCheckPassword])
-
-    useEffect(() => {
-        setIsOkToSubmit(passwordValidation())
-    }, [inputPassword, inputCheckPassword, passwordValidation])
 
     // case를 이용한 typing
     const onTypingHandler = (e) => {
@@ -94,25 +94,25 @@ function SigninForm() {
         name: 'test',
         email: inputEmail,
     }
+
     async function axios_test() {
-        console.log('들어간다')
-        
-        // URL 주소를 절대주소로 입력해주세요
-        const response = await fetch('/member/register', {
-            method: 'POST',
-            body: JSON.stringify(temp_user_info),
-            headers: {
-                "Content-Type": `application/json`,
-            }
-        })
-        const data = await response.json()
-        console.log('들어옴', data)
-    } 
+        await signup(
+        temp_user_info,
+        (data) => {
+            console.log(data)
+            navigate("/")
+        },
+        (error) => {
+            console.log(error);
+        }
+    )} 
 
     // 제출
     const onClickHandler = () => {
         setIsEmailValid(!(emailValidation.test(inputEmail)))
-        if (isOkToSubmit){axios_test()} else { alert('다시!!')}
+        passwordValidation()
+        idValidation()
+        if (isOkToSubmit){axios_test()} else { alert('잘못된 접근입니다.')}
     }
 
 
@@ -120,7 +120,6 @@ function SigninForm() {
 
     return (
         <Container fixed>
-            <h2>회원 가입</h2><hr/>
             <Box component="form">
                 <Grid container spacing={2} style={{padding: '2rem', justifyContent: 'center'}}>
                     <Grid item xs={7}>

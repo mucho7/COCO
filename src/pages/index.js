@@ -8,6 +8,8 @@ import CommuPage from "./CommuPage";
 import SigninPage from "./SigninPage";
 import LoginPage from "./LoginPage";
 import ProfilePage from "./ProfilePage";
+import LogoutPage from "./LogoutPage";
+import ArticleDetail from "./ArticleDetail";
 
 import { createBrowserRouter } from "react-router-dom";
 
@@ -22,12 +24,20 @@ const router = createBrowserRouter([
     element: <CommuPage/>,
   },
   {
+    path: "/community/:articlePk",
+    element: <ArticleDetail/>,
+  },
+  {
     path: "/useri",
     element: <SigninPage/>,
   },
   {
     path: "/useri/login",
     element: <LoginPage/>,
+  },
+  {
+    path: "/useri/logout",
+    element: <LogoutPage/>,
   },
   {
     path: "/useri/user_id",

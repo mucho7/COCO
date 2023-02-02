@@ -1,9 +1,26 @@
 import styled from "styled-components"
-
+import { useDispatch } from "react-redux";
 import { Paper, InputBase, IconButton, Button } from '@mui/material';
 import { Search } from '@mui/icons-material';
 
 function CommuSidebar(params) {
+    const dispatch = useDispatch()
+    const temp_article_info = {
+        url: 'createArticle',
+        method: 'POST',
+        body: {
+            code: 'code', 
+            content: 'content',
+            title: 'title',
+            writer: 'writer',
+        }
+    }
+
+    const onClickHandler = (e) => {
+        e.preventDefault()
+        // dispatch(onAsyncRequest(temp_article_info))
+    }
+
     return (
         <Sidebar>
             <Paper
@@ -14,7 +31,7 @@ function CommuSidebar(params) {
                     sx={{ ml: 1, flex: 1 }}
                     placeholder=""
                 />
-                <IconButton type="button" sx={{ p: '10px', color: '#FCA311' }} aria-label="search">
+                <IconButton onClick={onClickHandler} type="button" sx={{ p: '10px', color: '#FCA311' }} aria-label="search">
                     <Search />
                 </IconButton>
             </Paper>

@@ -6,7 +6,6 @@ function CommuContainer() {
 
     return (
         <CommuSection>
-
         </CommuSection>
     )
 }

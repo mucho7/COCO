@@ -10,7 +10,7 @@ function AuthorizeButton(props) {
   return (
     <CustomButton 
       onClick={() => {dispatch(onClickAuthorizeButton());}} 
-      on={isAuthorizeButtonOn}
+      isButtonOn={isAuthorizeButtonOn}
     >
       권한
     </CustomButton>
