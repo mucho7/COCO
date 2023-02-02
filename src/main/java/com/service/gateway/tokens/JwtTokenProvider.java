@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-import com.service.gateway.member.MemberRepository;
+import com.service.gateway.member.data.MemberRepository;
 import com.service.gateway.tokens.data.RefreshToken;
 import com.service.gateway.tokens.data.RefreshTokenRepository;
 import com.service.gateway.tokens.dto.JwtTokenDto;
@@ -113,10 +113,7 @@ public class JwtTokenProvider {
 	public String getUserIdFromRefreshToken(String refreshToken) {
 		Optional<RefreshToken> refreshTokenDto = refreshTokenRepository.findByRefreshToken(refreshToken);
 
-		if (refreshTokenDto.isPresent()) {
-			return refreshTokenDto.get().getUserId();
-		} else
-			return null;
+		return refreshTokenDto.map(RefreshToken::getUserId).orElse(null);
 	}
 
 	public List<String> getRoles(String userId) {
@@ -125,12 +122,12 @@ public class JwtTokenProvider {
 
 	public JwtTokenDto resolveToken(ServerHttpRequest request) {
 		JwtTokenDto tokenDto = new JwtTokenDto();
-		HttpHeaders requestHeader=request.getHeaders();
-		if (requestHeader!=null) {
+		HttpHeaders requestHeader = request.getHeaders();
+		if (requestHeader != null) {
 			tokenDto.setAccessToken(requestHeader.get("Authorization").get(0).substring(7));
 			tokenDto.setRefreshToken(requestHeader.get("refreshToken").get(0).substring(7));
 		}
-		System.out.println("[resolveToken@JwtTokenProvider]"+tokenDto);
+		System.out.println("[resolveToken@JwtTokenProvider]" + tokenDto);
 		return tokenDto;
 	}
 
@@ -159,16 +156,14 @@ public class JwtTokenProvider {
 	// refreshToken에 대한 유효성 검사
 	public String validateRefreshToken(RefreshToken requestToken) {
 		// Refresh Token 객체에서 refreshToken 추출
-		System.out.println(requestToken);
 		String refreshToken = requestToken.getRefreshToken().trim();
-		if (refreshToken.startsWith("bearer "))
+		if (refreshToken.startsWith("bearer ")) {
 			refreshToken = refreshToken.substring(7);
+		}
 		System.out.println(refreshToken);
 		try {
 			// Refresh Token 검증
 			Jws<Claims> claims = Jwts.parser().setSigningKey(uniqueKey).parseClaimsJws(refreshToken);
-			System.out.println("claim의 body: " + claims);
-			System.out.println("claim의 body get: " + claims.getBody().get("Id"));
 
 			if (!claims.getBody().getExpiration().before(new Date())) {
 				String userId = requestToken.getUserId();

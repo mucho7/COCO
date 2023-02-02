@@ -21,6 +21,18 @@ spring:
 
   cloud:
     gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: 'http://i8a703.p.ssafy.io:443'
+            allow-credentials: true
+            allowedHeaders: '*'
+            allowedMethods:
+              - PUT
+              - GET
+              - POST
+              - DELETE
+              - OPTIONS
       routes:
         - id: board
           uri: http://i8a703.p.ssafy.io:8011/
@@ -31,28 +43,28 @@ spring:
           predicates:
             - Path=/comment/**
         - id: member
-          uri: http://i8a703.p.ssafy.io:8012/
-#          uri: http://localhost:8012/
+          #          uri: http://i8a703.p.ssafy.io:8012/
+          uri: http://localhost:8012/
           predicates:
             - Path=/member/changePassword, /member/delete/**, /member/logout, /member/extract
             - Method=POST
           filters:
             - AuthenticationHeaderFilter
         - id: member
-          uri: http://i8a703.p.ssafy.io:8012/
-#          uri: http://localhost:8012/
+          #          uri: http://i8a703.p.ssafy.io:8012/
+          uri: http://localhost:8012/
           predicates:
             - Path=/member/info/**
           filters:
             - AuthenticationHeaderFilter
         - id: member
-          uri: http://i8a703.p.ssafy.io:8012/
-#          uri: http://localhost:8012/
+          #          uri: http://i8a703.p.ssafy.io:8012/
+          uri: http://localhost:8012/
           predicates:
             - Path=/member/**
         - id: uniqueCheck
-          uri: http://i8a703.p.ssafy.io:8012/
-#          uri: http://localhost:8012/
+          #          uri: http://i8a703.p.ssafy.io:8012/
+          uri: http://localhost:8012/
           predicates:
             - Path=/check/**
         - id: sessionFunction

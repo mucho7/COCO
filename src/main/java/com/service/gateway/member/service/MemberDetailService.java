@@ -1,15 +1,17 @@
-package com.service.gateway.member;
+package com.service.gateway.member.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.service.gateway.member.data.MemberRepository;
+
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
-public class CustomUserDetailService implements UserDetailsService {
+public class MemberDetailService implements UserDetailsService {
 
 	private final MemberRepository memberRepository;
 
