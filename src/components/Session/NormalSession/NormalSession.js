@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { receiveChat } from "../../../store/sessionSlice";
+import { receiveChat, websocketInstances, setWebsocketId, setParticipantsId, participantsInstances } from "../../../store/sessionSlice";
 
 import IdeArea from "../IdeArea";
 import SideArea from "../SideArea";
@@ -27,37 +27,59 @@ function NormalSession(props) {
   let sendingMessage = useSelector((state) => state.session.sendMessage);
   let userName = useSelector((state) => state.session.userName);
   let roomName = useSelector((state) => state.session.roomName);
+  let participants = {};
 
   console.log("xx", userName, roomName);
   // console.log(sendingMessage)
   
+  // 웹소켓 서버로 메세지 보내기
   function sendMessage(message) {
     let jsonMessage = JSON.stringify(message);
     console.log('Sending message: ' + jsonMessage);
     ws.current.send(jsonMessage);
   }
 
+  // 웹소켓 서버에 userName가 roomName에 참여했음을 등록
+  function register() {
+    let message = {
+      id : 'joinRoom',
+      name : userName,
+      room : roomName,
+    }
+    sendMessage(message);
+  }
+
+  // 웹소켓 서버로부터 noticeChat 메세지를 받는 경우(누군가가 입력한 채팅을 채팅창에 띄우기 위해 메세지 수신)
+  function noticeChat(user, chat) {
+    dispatch(receiveChat({user, chat}));
+  }
+
+  // useEffect(() => {
+  //   if (ws.current) {
+  //     console.log(participants)
+  //     dispatch(getParticipants(participants));
+  //   }
+  // }, [dispatch, participants])
+
   useEffect(() => {
     window.addEventListener("resize", () => {
       window.resizeTo(1600, 900)
     });
 
+    // 세션 컴포넌트 마운트시 웹소켓 생성하고 register 함수를 통해 서버에 등록
     if (!ws.current) {
       ws.current = new WebSocket("wss://localhost:8443/groupcall")
       console.log(ws.current);
       ws.current.onopen = () => {
         console.log(ws.current);
         register();
-        const msg = {
-          id: "sendChat",
-          userName: userName,
-          roomName: roomName,
-          chat: "test message"
-        }
-        sendMessage(msg);
       }
-      let participants = {};
-      let name;
+      
+      // let name;
+      websocketInstances.set(1, ws.current);
+      dispatch(setWebsocketId(1));
+      console.log(participants);
+      // dispatch(getParticipants(participants));
   
       ws.current.onmessage = function(message) {
         let parsedMessage = JSON.parse(message.data);
@@ -66,6 +88,9 @@ function NormalSession(props) {
         switch (parsedMessage.id) {
           case 'existingParticipants':
             onExistingParticipants(parsedMessage);
+            console.log("rrrrrrrrrrrr",participants)
+            participantsInstances.set(1, participants);
+            dispatch(setParticipantsId(1));
             break;
           case 'newParticipantArrived':
             onNewParticipant(parsedMessage);
@@ -92,14 +117,7 @@ function NormalSession(props) {
         }
       }
 
-      function register() {
-        let message = {
-          id : 'joinRoom',
-          name : userName,
-          room : roomName,
-        }
-        sendMessage(message);
-      }
+
 
       function onNewParticipant(request) {
         receiveVideo(request.name);
@@ -123,35 +141,36 @@ function NormalSession(props) {
       }
 
       function onExistingParticipants(msg) {
-        // var constraints = {
-        //   audio : true,
-        //   video : {
-        //     mandatory : {
-        //       maxWidth : 320,
-        //       maxFrameRate : 15,
-        //       minFrameRate : 15
-        //     }
-        //   }
-        // };
+        var constraints = {
+          audio : true,
+          video : {
+            mandatory : {
+              maxWidth : 320,
+              maxFrameRate : 15,
+              minFrameRate : 15
+            }
+          }
+        };
         console.log(userName + " registered in room " + roomName);
-        // var participant = new Participant(name);
-        // participants[name] = participant;
-        // var video = participant.getVideoElement();
+        var participant = new Participant(userName);
+        participants[userName] = participant;
+        console.log("participants: ", participants)
+        var video = participant.getVideoElement();
       
-        // var options = {
-        //       localVideo: video,
-        //       mediaConstraints: constraints,
-        //       onicecandidate: participant.onIceCandidate.bind(participant)
-        //     }
-        // participant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options,
-        //   function (error) {
-        //     if(error) {
-        //       return console.error(error);
-        //     }
-        //     this.generateOffer (participant.offerToReceiveVideo.bind(participant));
-        // });
+        var options = {
+              localVideo: video,
+              mediaConstraints: constraints,
+              onicecandidate: participant.onIceCandidate.bind(participant)
+            }
+        participant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options,
+          function (error) {
+            if(error) {
+              return console.error(error);
+            }
+            this.generateOffer (participant.offerToReceiveVideo.bind(participant));
+        });
       
-        // msg.data.forEach(receiveVideo);
+        msg.data.forEach(receiveVideo);
       }
 
       function leaveRoom() {
@@ -195,11 +214,10 @@ function NormalSession(props) {
         delete participants[request.name];
       }
 
-      function noticeChat(user, chat) {
-        dispatch(receiveChat({user, chat}));
-      }
+      
   
       
+      // participant 객체 정의하는 부분
 
       const PARTICIPANT_MAIN_CLASS = 'participant main';
       const PARTICIPANT_CLASS = 'participant';
@@ -214,6 +232,31 @@ function NormalSession(props) {
        */
       function Participant(name) {
         this.name = name;
+        // 호스트 여부
+        this.isHost = (name==="admin") ? true : false;
+        // 권한 목록
+        this.authorization = { 
+          isCompilePossible: this.isHost, 
+          isMicPossible: true,
+          isDrawPossible: true
+        }
+        this.onAuthorizationControl = function(authorizationType) {
+          switch (authorizationType) {
+            case "compile":
+              this.authorization.isCompilePossible = !this.authorization.isCompilePossible;
+              break;
+            case "mic":
+              this.authorization.isMicPossible = !this.authorization.isMicPossible;
+              break;
+            case "draw":
+              this.authorization.isDrawPossible = !this.authorization.isDrawPossible;
+              break;
+            default:
+              break;
+          }
+          // console.log(participants);
+        }
+
         var container = document.createElement('div');
         container.className = isPresentMainParticipant() ? PARTICIPANT_CLASS : PARTICIPANT_MAIN_CLASS;
         container.id = name;
@@ -233,13 +276,13 @@ function NormalSession(props) {
         video.controls = false;
 
 
-        // this.getElement = function() {
-        //   return container;
-        // }
+        this.getElement = function() {
+          return container;
+        }
 
-        // this.getVideoElement = function() {
-        //   return video;
-        // }
+        this.getVideoElement = function() {
+          return video;
+        }
 
         function switchContainerClass() {
           if (container.className === PARTICIPANT_CLASS) {
@@ -293,7 +336,7 @@ function NormalSession(props) {
       //   ws.current.close();
       // }
     }
-  }, [userName, roomName])
+  }, [userName, roomName, dispatch, register, noticeChat])
 
   useEffect(() => {
     console.log(sendingMessage);

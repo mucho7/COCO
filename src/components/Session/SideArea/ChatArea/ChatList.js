@@ -17,31 +17,12 @@ const ChatListDiv = styled.div`
 `
 
 function ChatList(props) {
-  // const scrollRef = useRef();
-  // const chatList = props.chatList;
-  // const dispatch = useDispatch();
-
-  // const newMessage = dispatch(receiveChat());
-  // useEffect(() => {
-  //   if (typeof newMessage === String) {
-  //     noticeChat(newMessage);
-  //   }
-  // }, [newMessage])
-
-  // function noticeChat(chat) {
-  //   let ul = document.querySelector("#chatList");
-  //   let li = document.createElement("li");
-  //   let text = document.createTextNode(`${chat}`);
-  //   li.appendChild(text);
-  //   ul.appendChild(li);
-  //   console.log(chat)
-  // }
-
+  // 서버로부터 받은 채팅 메시지 객체
   const newMessage = useSelector((state) => state.session.newMessage);
-  // console.log(newMessage, "aaa");
   
+  // 새로운 메시지가 도착하면 채팅창 화면에 보여준다
   useEffect(() => {
-    if (newMessage) {
+    if (newMessage.chat) {
       const ul = document.querySelector("#chatList");
       const li = document.createElement("li");
       li.innerText = `${newMessage.user} : ${newMessage.chat}`;
