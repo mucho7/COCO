@@ -1,11 +1,12 @@
 import styled  from 'styled-components'
 import { useState, useEffect,  } from 'react'
 import { useNavigate } from 'react-router-dom'
+// import { useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie'
 
 import  { Navbar } from '../components/navbar';
-// import { updateUser } from "../store"
-import { deleteUserInfo } from "../api/member"
+// import { onEnterProfile,  } from "../store/userInfoUpdateSlice"
+import { deleteUserInfo, readUserInfo } from "../api/member"
 
 import { Button } from '@mui/material'
 import { AccountCircle } from '@mui/icons-material'
@@ -17,7 +18,8 @@ import { ProfileUserInfoItem, ProfileUserInfoForm, ProfileUserTrophy, ProfilePas
 
 function ProfilePage(params) {
     const navigate = useNavigate()
-    const [ cookie, removeCookie ] = useCookies(['userInfo'])
+    const [ userInfo, setUesrInfo ] = useState({})
+    const [ cookie, removeCookie ] = useCookies(["userInfo"])
     const [ updateFlag, setUpdateFlag ] = useState(false)
 
     // Axios로 교체될 정보
@@ -27,16 +29,16 @@ function ProfilePage(params) {
         {name: 'User E-Mail', content: 'SSAFY@edu.ssafy.com'},
         {name: 'Since', content: '23.01.01'},
     ]
-
+    
+    
     const userUpdatingInfo = [
         {name: 'User ID', content: 'SSAFY_Gorilla', updatable: false},
         {name: 'User Name', content: '채치수', updatable: true},
         {name: 'User E-Mail', content: 'SSAFY@edu.ssafy.com', updatable: true},
         {name: 'Since', content: '23.01.01', updatable: false},
     ]
-
+    
     async function deleteUser() {       
-        console.log(cookie) 
         await deleteUserInfo(
             {
                 userId: cookie.userInfo.user_id,
@@ -50,36 +52,29 @@ function ProfilePage(params) {
             }
         )
     } 
-
-    
+        
     const flagClickHandler = () => {
         if (updateFlag) {
             setUpdateFlag(false)
         }  else setUpdateFlag(true)
     }
-
-    
+        
     useEffect(() => {
-        // updateUser.onEnterProfile()
-        // const readUser = async () => {
-        //     await readUserInfo(
-        //         {
-        //             userId: cookie.userInfo.user_id,
-        //             'Authorization': cookie.userInfo.jwt_token,
-        //             'refreshToken':  cookie.userInfo.refresh_token,
-        //         },
-        //         (data) => {
-        //             console.log(data)
-        //             // 실제론 여기 있는 것처럼 보이지만 호출될 callback함수일 뿐임, 관련된 정보를 가져올 땐 redux를 활용한 전역변수 사용이 필요함
-                
-        //         }
-        //         ,
-        //         (err) => {
-        //             console.log(err)
-        //         }
-        //     )
-        // }
-        // readUser()
+        const readUser = async () => {
+            await readUserInfo(
+                {
+                    userId: cookie.userInfo.user_id,
+                    'Authorization': cookie.userInfo.jwt_token,
+                    'refreshToken':  cookie.userInfo.refresh_token,
+                },
+                (data) => {return data.data},
+                (err) => {console.log(err)}
+            )}
+        readUser()
+        .then((data) => {
+            console.log(userInfo)
+            setUesrInfo(data)
+        })
     })
 
     return (

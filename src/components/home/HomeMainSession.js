@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useCookies } from 'react-cookie'
 
 function HomeMainSession() {
-    const [ cookie, setCookie ] = useCookies(['userInfo'])
+    const [ cookie, setCookie ] = useCookies(["userInfo"])
 
     useEffect(() => {
         console.log(cookie)

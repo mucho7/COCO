@@ -19,7 +19,8 @@ async function logout(token, success, fail) {
 async function readUserInfo(user, success, fail) {
   api.defaults.headers["Authorization"] = user["Authorization"]
   api.defaults.headers["refreshToken"] = user["refreshToken"]
-  await api.get(`/info/${user.userId}`, JSON.stringify(user)).then(success).catch(fail);
+  const res = await api.get(`/info/${user.userId}`, JSON.stringify(user)).then(success).catch(fail);
+  return res
 }
 
 async function updateUserInfo(user, success, fail) {
