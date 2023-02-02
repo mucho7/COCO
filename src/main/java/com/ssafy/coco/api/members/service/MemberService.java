@@ -54,7 +54,7 @@ public class MemberService {
 
 	@Transactional
 	public String UpdateInfo(String userId, MemberUpdateRequestDto requestDto, String accessToken) {
-		String tokenOwner = SecurityContextHolder.getContext().getAuthentication().getName();
+		String tokenOwner = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
 		System.out.println("[UpdateInfo@MemberService] userId: " + userId + ", requestDto: " + requestDto);
 		if (tokenOwner.equals(userId)) {
 			Member member = memberRepository.findByUserId(userId)
@@ -88,7 +88,7 @@ public class MemberService {
 
 	@Transactional
 	public String deleteMember(String id, String accessToken) {
-		String tokenOwnerId = SecurityContextHolder.getContext().getAuthentication().getName();
+		String tokenOwnerId = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
 
 		if (tokenOwnerId.equals(id)) {
 
@@ -228,7 +228,7 @@ public class MemberService {
 	}
 
 	public String changePassword(String accessToken, String newPassword) {
-		String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+		String userId = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
 		System.out.println("[changePassword@MemberService] UserID from Authentication: " + userId);
 		return updatePassword(userId, newPassword);
 	}

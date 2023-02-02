@@ -59,7 +59,10 @@ public class MemberController {
 		@RequestBody @ApiParam(value = "수정할 내용이 담긴 데이터 객체", required = true) MemberUpdateRequestDto requestDto,
 		HttpServletRequest request) {
 		System.out.println("[UpdateMember@MemberController] id: " + id + ", requestDto: " + requestDto);
-		String updatedUserId = memberService.UpdateInfo(id, requestDto, request.getHeader("Authorization"));
+		String accessToken =
+			request.getHeader("Authorization").startsWith("bearer ") ? request.getHeader("Authorization").substring(7) :
+				request.getHeader("Authorization");
+		String updatedUserId = memberService.UpdateInfo(id, requestDto, accessToken);
 		if (updatedUserId == null) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(id + " 사용자의 수정 권한이 없는 사용자입니다.");
 		}
@@ -82,7 +85,10 @@ public class MemberController {
 	@ApiOperation(value = "회원 탈퇴", notes = "{id}의 사용자 정보에 탈퇴일(del_flag)을 기록한다.")
 	public String deleteMember(@PathVariable @ApiParam(value = "탈퇴할 회원 ID", required = true) String id,
 		HttpServletRequest request) {
-		return memberService.deleteMember(id, request.getHeader("Authorization"));
+		String accessToken =
+			request.getHeader("Authorization").startsWith("bearer ") ? request.getHeader("Authorization").substring(7) :
+				request.getHeader("Authorization");
+		return memberService.deleteMember(id, accessToken);
 	}
 
 	@PutMapping("/rating")
@@ -95,7 +101,7 @@ public class MemberController {
 	@PostMapping("/extract")
 	@ApiOperation(value = "Jwt 토큰 정보 추출", notes = "제공된 AccessToken으로부터 사용자 ID를 추출해 반환한다.")
 	public ResponseEntity getUserIdFromJwtToken(HttpServletRequest request) {
-		String userId = memberService.getUserIdFromAccessToken(request.getHeader("Authorization"),
+		String userId = memberService.getUserIdFromAccessToken(request.getHeader("Authorization").substring(7),
 			request.getHeader("refreshToken"));
 		if (userId != null) {
 			return ResponseEntity.ok(userId);
