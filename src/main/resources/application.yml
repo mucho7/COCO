@@ -54,7 +54,7 @@ logging:
     org:
       springframework:
         web: DEBUG
-        boot: DEBUG
+        boot: ERROR
         security: DEBUG
       apache:
         tiles: INFO
