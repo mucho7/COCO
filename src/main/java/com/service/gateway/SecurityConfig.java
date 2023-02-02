@@ -1,6 +1,7 @@
 package com.service.gateway;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -17,6 +18,7 @@ import com.service.gateway.tokens.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
+@Configuration
 @EnableWebFluxSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -63,8 +65,5 @@ public class SecurityConfig {
 	// 	return http.build();
 	// }
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-	}
+
 }
