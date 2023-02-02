@@ -1,6 +1,5 @@
 package com.service.gateway.tokens;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -10,31 +9,21 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.web.reactive.function.server.ServerRequest;
 
 import com.service.gateway.tokens.dto.JwtTokenDto;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.gateway.filter.GatewayFilter;
-import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
 
 @Component
-public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAuthenticationFilter.Config> {
+public class AuthenticationHeaderFilter extends AbstractGatewayFilterFactory<AuthenticationHeaderFilter.Config> {
 
 	private final JwtTokenProvider jwtTokenProvider;
 
-	public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider){
+	public AuthenticationHeaderFilter(JwtTokenProvider jwtTokenProvider){
 		super(Config.class);
 		this.jwtTokenProvider=jwtTokenProvider;
 	}
-
 
 	@Override
 	public GatewayFilter apply(Config config) {
@@ -49,7 +38,7 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
 			String refreshToken = tokenDto.getRefreshToken();
 
 			// Step 2. 토큰의 유효성 검사
-			if (tokenDto.getAccessToken() != null) {
+			if (accessToken != null) {
 				if (jwtTokenProvider.validateToken(accessToken)) {
 					setAuthentication(accessToken);
 				}
@@ -74,17 +63,13 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
 						// 헤더에 토큰 정보(AccessToken, refreshToken) 추가
 						response.getHeaders().add("Authorization", "bearer " + newJwtToken.getAccessToken());
 						response.getHeaders().add("refreshToken", "bearer " + newJwtToken.getRefreshToken());
-						// request.setAttribute("Authorization", "bearer "+newJwtToken.getAccessToken());
-						// request.setAttribute("refreshToken", "bearer "+newJwtToken.getRefreshToken());
 						// 컨텍스트에 넣기
 						System.out.println("[doFilterInternal@JwtAuthenticationFilter] newJwtToken:\n"+newJwtToken);
 						this.setAuthentication(newJwtToken.getAccessToken());
 					}
 				}
 			}
-			return chain.filter(exchange).then(Mono.fromRunnable(() -> {
-
-			}));
+			return chain.filter(exchange);
 		});
 
 
