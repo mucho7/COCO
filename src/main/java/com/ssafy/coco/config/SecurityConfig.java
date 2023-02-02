@@ -1,19 +1,11 @@
 package com.ssafy.coco.config;
 
-import org.apache.catalina.filters.CorsFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import com.ssafy.coco.api.tokens.JwtAuthenticationFilter;
-import com.ssafy.coco.api.tokens.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-	private final JwtTokenProvider jwtTokenProvider;
 
 	/**
 	 * ===== Spring Security 설정 관련 레퍼런스 링크 =====
@@ -49,16 +40,10 @@ public class SecurityConfig {
 			.logout()
 			.logoutUrl("/logout")
 			.logoutSuccessUrl("/") // Front와 연동 성공시 로그아웃 이후 연결 페이지 합의 볼 것.
-			.invalidateHttpSession(true)
-			.and()
-			// Access Token이 만료된 경우 ContextHolder에서 권한을 찾아 해당 요청에 대해서만 접근을 허용해줘야 하기 때문에 Filter를 완전히 제거할 수는 없음 (addFilterBefore 제거하지 말것!)
-			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
-				UsernamePasswordAuthenticationFilter.class);
+			.invalidateHttpSession(true);
+		// .and()
+		// Access Token이 만료된 경우 ContextHolder에서 권한을 찾아 해당 요청에 대해서만 접근을 허용해줘야 하기 때문에 Filter를 완전히 제거할 수는 없음 (addFilterBefore 제거하지 말것!)
+		// .addFilterBefore(UsernamePasswordAuthenticationFilter.class);
 		return http.build();
-	}
-
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
 }
