@@ -22,6 +22,18 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: board
+          uri: http://i8a703.p.ssafy.io:8011/
+          predicates:
+            - Path=/board/**
+        - id: comment
+          uri: http://i8a703.p.ssafy.io:8011/
+          predicates:
+            - Path=/comment/**
+        - id: member
+          uri: http://i8a703.p.ssafy.io:8012/
+          predicates:
+            - Path=/member/**
         - id: uniqueCheck
           uri: http://i8a703.p.ssafy.io:8012/
           predicates:
@@ -30,22 +42,10 @@ spring:
           uri: http://i8a703.p.ssafy.io:8013/
           predicates:
             - Path=/sessionFunction/**
-        - id: board
-          uri: http://i8a703.p.ssafy.io:8011/
-          predicates:
-            - Path=/board/**
-        - id: member
-          uri: http://i8a703.p.ssafy.io:8012/
-          predicates:
-            - Path=/member/**
         - id: session
           uri: http://i8a703.p.ssafy.io:8014/
           predicates:
             - Path=/session/**
-        - id: comment
-          uri: http://i8a703.p.ssafy.io:8011/
-          predicates:
-            - Path=/comment/**
       default-filters:
         - name: JwtAuthenticationFilter
           args:
