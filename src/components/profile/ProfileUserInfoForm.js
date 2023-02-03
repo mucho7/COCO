@@ -43,23 +43,23 @@ function ProfileUserInfoForm(props) {
     return (
         <Col>
             {props.userInfo.map((item) => {
-                if (item.updatable) {
+                if (item[0] === "name" || item[0] === "email") {
                     return (
-                        <UserInfoBox key={item.name}>
+                        <UserInfoBox key={item[0]}>
                             <UserInfoNameBox>
-                                {item.name}
+                                {item[0]}
                             </UserInfoNameBox>
-                            <UserInfoContentForm id={item.name} onChange={onTypingHandler} placeholder={item.content}/>
+                            <UserInfoContentForm id={item[0]} onChange={onTypingHandler} placeholder={item[1]}/>
                         </UserInfoBox>
                     )
                 } else {
                     return (
-                    <UserInfoBox key={item.name}>
+                    <UserInfoBox key={item[0]}>
                         <UserInfoNameBox>
-                            {item.name}
+                            {item[0]}
                         </UserInfoNameBox>
                         <UserInfoContentBox>
-                            {item.content}
+                            {item[1]}
                         </UserInfoContentBox>
                     </UserInfoBox>
                     )

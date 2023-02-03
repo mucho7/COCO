@@ -1,8 +1,15 @@
 import './HomeMainSession.css'
+import { useEffect } from 'react'
 import { useCookies } from 'react-cookie'
 
 function HomeMainSession() {
-    const [ cookie ] = useCookies(['userInfo'])
+    const [ cookie, setCookie ] = useCookies(["userInfo"])
+
+    useEffect(() => {
+        console.log(cookie)
+        if (cookie.userInfo === undefined) setCookie("userInfo", "undefined")
+    })
+
     return (
         <div className='main-session'>
             <h2 className='main-word'>  오늘의 추천 문제로 성장하세요!</h2>

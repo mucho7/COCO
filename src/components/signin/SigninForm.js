@@ -11,6 +11,7 @@ function SigninForm() {
     const navigate = useNavigate()
 
     const [inputID, setInputID ] = useState()
+    const [inputName, setInputName ] = useState()
     const [inputPassword, setInputPassword] = useState()
     const [inputCheckPassword, setInputChcekPassword] = useState()
     const [inputEmail, setInputEmail] = useState()
@@ -82,6 +83,9 @@ function SigninForm() {
             case 'outlined-email':
                 setInputEmail(e.target.value)
                 break
+            case 'outlined-name':
+                setInputName(e.target.value)
+                break
             default:
                 // nothing
         }
@@ -91,7 +95,7 @@ function SigninForm() {
     const temp_user_info = {
         userId: inputID, 
         password: inputPassword,
-        name: 'test',
+        name: inputName,
         email: inputEmail,
     }
 
@@ -130,6 +134,9 @@ function SigninForm() {
                     </Grid>
                     <Grid item xs={7}>
                         <TextField onChange={onTypingHandler} error={isPasswordValid.isVaild} helperText={isPasswordValid.isVaild ? isPasswordValid.message : ""} id="outlined-password-check" type="password" label="Password Check" fullWidth/>
+                    </Grid>
+                    <Grid item xs={7}>
+                        <TextField onChange={onTypingHandler} id="outlined-name" label="Name" fullWidth/>
                     </Grid>
                     <Grid item xs={7}>
                         <TextField onChange={onTypingHandler} error={isEmailValid} helperText={isEmailValid ? "유효한 이메일을 입력해주십시오." : ""} id="outlined-email" label="E-Mail" fullWidth/>

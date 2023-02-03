@@ -1,5 +1,5 @@
 import NavbarItem from "./NavbarItem"
-import NavbarSearch from './NavbarSearch'
+// import NavbarSearch from './NavbarSearch'
 import { useState } from "react"
 import { useCookies } from 'react-cookie'
 
@@ -19,7 +19,7 @@ function Navbar() {
             {name: "Sign Up", highlight: true, url: "/useri",},
         ],
         loged: [
-            {name: "profile", highlight: false, url: "/useri/user_id",},
+            {name: "profile", highlight: false, url: `/useri/${cookie.userInfo.user_id}`,},
             {name: "Log Out", highlight: true, url: "/useri/logout",},
         ]
 
@@ -38,7 +38,7 @@ function Navbar() {
                 <NavbarItem navList={navlist.left}/>
             </Grid>
             <Grid item xs={5}>
-                <NavbarSearch/>
+                {/* <NavbarSearch/> */}
             </Grid>
             <Grid item xs={3}>
                 {cookie.userInfo !== 'undefined' ? <NavbarItem navList={navlist.loged}/> : <NavbarItem navList={navlist.right}/>}
