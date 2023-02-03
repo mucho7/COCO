@@ -21,22 +21,6 @@ function ProfilePage(params) {
     const [ userInfo, setUesrInfo ] = useState([])
     const [ cookie, removeCookie ] = useCookies(["userInfo"])
     const [ updateFlag, setUpdateFlag ] = useState(false)
-
-    // Axios로 교체될 정보
-    // const temp_userInfo = [
-    //     {name: 'User ID', content: 'aas'},
-    //     {name: 'User Name', content: '채치수'},
-    //     {name: 'User E-Mail', content: 'SSAFY@edu.ssafy.com'},
-    //     {name: 'Since', content: '23.01.01'},
-    // ]
-    
-    
-    const userUpdatingInfo = [
-        {name: 'User ID', content: 'SSAFY_Gorilla', updatable: false},
-        {name: 'User Name', content: '채치수', updatable: true},
-        {name: 'User E-Mail', content: 'SSAFY@edu.ssafy.com', updatable: true},
-        {name: 'Since', content: '23.01.01', updatable: false},
-    ]
     
     async function deleteUser() {       
         await deleteUserInfo(
@@ -60,6 +44,18 @@ function ProfilePage(params) {
     }
         
     useEffect(() => {
+        const objectToArray = (obj) => {
+            const keys = Object.keys(obj);
+            return keys.map((key) => [key, obj[key]]);
+        };
+        
+        const filterObject = (obj, keys) => {
+            const filteredArray = objectToArray(obj).filter((item) => 
+                keys.includes(item[0])
+            );
+            return (filteredArray);
+        };
+
         const readUser = async () => {
             await readUserInfo(
                 {
@@ -69,12 +65,14 @@ function ProfilePage(params) {
                 },
                 (data) => {return data.data},
                 (err) => {console.log(err)}
-            ).then(data => {
-                setUesrInfo(data.entries)
+        ).then(data => {
+            setUesrInfo(filterObject(data, ['id', 'name', 'email', 'regTime']))
+        })}
+        readUser()
+    }, [cookie])
 
-            })}
-            readUser()
-        })
+    console.log(userInfo)
+
     return (
         <SidePaddingBox>
             <Navbar />
@@ -96,7 +94,7 @@ function ProfilePage(params) {
                     <ProfileUserTrophy/>
                 </LeftBox>
                 <RightBox>
-                    {updateFlag === false ? <ProfileUserInfoItem userInfo={userInfo}/> : <ProfileUserInfoForm userInfo={userUpdatingInfo} />}
+                    {updateFlag === false ? <ProfileUserInfoItem userInfo={(userInfo)}/> : <ProfileUserInfoForm userInfo={userInfo} />}
                 </RightBox>
             </TestingBox>
         </SidePaddingBox>

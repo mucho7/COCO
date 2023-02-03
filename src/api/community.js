@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // axios 객체 생성
-export default axios.create({
+const api = axios.create({
 // env로 대체할 것
 // docker측에 push할땐 변경할 것
   // baseURL: "http://localhost:8000/member",
@@ -13,3 +13,14 @@ baseURL: "http://i8a703.p.ssafy.io:8011/board",
     "Content-Type": "application/json",
   },
 });
+
+
+
+async function boardRead(success, fail) {
+  const res = await api.get(`/`).then(success).catch(fail);
+  console.log(res)
+  return res
+}
+
+
+export { boardRead, }

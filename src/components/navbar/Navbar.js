@@ -19,7 +19,7 @@ function Navbar() {
             {name: "Sign Up", highlight: true, url: "/useri",},
         ],
         loged: [
-            {name: "profile", highlight: false, url: "/useri/user_id",},
+            {name: "profile", highlight: false, url: `/useri/${cookie.userInfo.user_id}`,},
             {name: "Log Out", highlight: true, url: "/useri/logout",},
         ]
 

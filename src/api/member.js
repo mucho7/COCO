@@ -41,6 +41,8 @@ async function deleteUserInfo(user, success, fail) {
   await api.post(`/delete/${user.userId}`, JSON.stringify(user.userId)).then(success).catch(fail);
 }
   
+async function visaTempPassword(user, success, fail) {
+  await api.post(`/tempPassword`, JSON.stringify(user)).then(success).catch(fail);
+}
 
-
-export { signup, login, logout, readUserInfo, updateUserInfo, changeUserPassword, deleteUserInfo } ; 
+export { signup, login, logout, readUserInfo, updateUserInfo, changeUserPassword, deleteUserInfo, visaTempPassword } ; 

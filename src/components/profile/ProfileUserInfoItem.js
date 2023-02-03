@@ -2,23 +2,21 @@ import styled from "styled-components"
 
 function ProfileUserInfoItem(props) {
 
-    console.log(props.userInfo)
 
     return (
         <Col>
-        <div>{props.userInfo}</div>
-            {/* {num_list.map((item) => {
+            {props.userInfo.map((item) => {
                 return (
-                    <UserInfoBox key={item}>
+                    <UserInfoBox key={item[0]}>
                         <UserInfoNameBox>
-                            {key_list[item]}
+                            {item[0]}
                         </UserInfoNameBox>
                         <UserInfoContentBox>
-                            {value_list[item]}
+                            {item[1]}
                         </UserInfoContentBox>
                     </UserInfoBox>
                 )
-            })} */}
+            })}
         </Col>
     )
 }

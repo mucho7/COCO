@@ -40,7 +40,7 @@ const router = createBrowserRouter([
     element: <LogoutPage/>,
   },
   {
-    path: "/useri/user_id",
+    path: "/useri/:user_id",
     element: <ProfilePage/>,
   },
   // Session 관련

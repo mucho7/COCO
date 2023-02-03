@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Container, Grid, Button, TextField } from '@mui/material'
 import { login } from "../../api/member"
 
+import LoginTempPassword from './LoginTempPassword';
+
 function LoginForm () {
     const navigate = useNavigate()
     const [ cookie, setCookie ] = useCookies(['userInfo'])
@@ -69,6 +71,9 @@ function LoginForm () {
                     </Grid>
                     <Grid item xs={7}>
                         <TextField onChange={onTypingHandler} id="outlined-password" label="Password" type="password" fullWidth />
+                    </Grid>
+                    <Grid item xs={7} style={{textAlign: "center"}}>
+                        <LoginTempPassword/>
                     </Grid>
                     <Grid item xs={6}>
                         <Button onClick={onClickHandler} variant="contained" className="submit" style={{height: '3rem'}} fullWidth> <b>로그인</b></Button>
