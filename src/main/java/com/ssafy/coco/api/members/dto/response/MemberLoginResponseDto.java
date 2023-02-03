@@ -18,11 +18,4 @@ public class MemberLoginResponseDto {
 	@ApiModelProperty(name = "JWT 로그인 토큰")
 	String accessToken = null;
 
-	public static MemberLoginResponseDto of(Integer statusCode, String accessToken) {
-		MemberLoginResponseDto responseDto = new MemberLoginResponseDto();
-		responseDto.setAccessToken(accessToken);
-		responseDto.setStatusCode(statusCode);
-		return responseDto;
-	}
-
 }
