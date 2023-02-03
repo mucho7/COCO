@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CommentService {
+
 	private final CommentRepository commentRepository;
 	private final BoardRepository boardRepository;
 
@@ -36,15 +37,30 @@ public class CommentService {
 		return comment.getId();
 	}
 
-	@Transactional(readOnly = true)
-	public List<CommentResponseDto> findAllByBoard(Long boardId) {
-		Board board = boardRepository.findById(boardId)
-			.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+	// @Transactional(readOnly = true)
+	// public List<CommentResponseDto> findAllByBoard(Long boardId) {
+	// 	Board board = boardRepository.findById(boardId)
+	// 		.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+	//
+	// 	List<Comment> comments = board.getComments();
+	// 	return comments.stream()
+	// 		.map(CommentResponseDto::new)
+	// 		.collect(Collectors.toList());
+	// }
 
-		List<Comment> comments = board.getComments();
-		return comments.stream()
-			.map(CommentResponseDto::new)
-			.collect(Collectors.toList());
+	// @Transactional(readOnly = true)
+	// public Page<CommentResponseDto> findAllByBoardPaging(Long boardId, Pageable pageable) {
+	// 	boardRepository.findById(boardId)
+	// 		.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+	//
+	// 	return commentRepository.findAllByBoardId(boardId, pageable)
+	// 		.map(CommentResponseDto::new);
+	// }
+
+	public CommentResponseDto findById(Long commentId) {
+		Comment entity = commentRepository.findById(commentId)
+			.orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다."));
+		return new CommentResponseDto(entity);
 	}
 
 	@Transactional

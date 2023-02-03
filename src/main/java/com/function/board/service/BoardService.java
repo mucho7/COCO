@@ -3,11 +3,15 @@ package com.function.board.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.function.board.domain.board.Board;
 import com.function.board.domain.board.BoardRepository;
+import com.function.board.domain.comment.Comment;
+import com.function.board.domain.comment.CommentRepository;
 import com.function.board.dto.board.BoardListResponseDto;
 import com.function.board.dto.board.BoardResponseDto;
 import com.function.board.dto.board.BoardSaveRequestDto;
@@ -20,11 +24,35 @@ import lombok.RequiredArgsConstructor;
 public class BoardService {
 
 	private final BoardRepository boardRepository;
+	private final CommentRepository commentRepository;
 
 	@Transactional
 	public Long save(BoardSaveRequestDto requestDto) {
 		return boardRepository.save(requestDto.toEntity()).getId();
 	}
+
+	@Transactional(readOnly = true)
+	public List<BoardListResponseDto> findAll() {
+		return boardRepository.findAll().stream()
+			.map(BoardListResponseDto::new)
+			.collect(Collectors.toList());
+	}
+
+	@Transactional(readOnly = true)
+	public BoardResponseDto findById(Long boardId, Pageable pageable) {
+		Board entity = boardRepository.findById(boardId)
+			.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+
+		Page<Comment> comments = commentRepository.findAllByBoardId(boardId, pageable);
+			// .map(CommentResponseDto::new);
+		return new BoardResponseDto(entity, comments);
+	}
+
+	// @Transactional(readOnly = true)
+
+	// public Page<Board> searchByTitle(String keyword, Pageable pageable) {
+	// 	return boardRepository.findByTitleContaining(keyword, pageable);
+	// }
 
 	@Transactional
 	public Long update(Long boardId, BoardUpdateRequestDto requestDto) {
@@ -33,19 +61,6 @@ public class BoardService {
 
 		board.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getCode());
 		return boardId;
-	}
-
-	public BoardResponseDto findById(Long boardId) {
-		Board entity = boardRepository.findById(boardId)
-			.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
-		return new BoardResponseDto(entity);
-	}
-
-	@Transactional(readOnly = true)
-	public List<BoardListResponseDto> findAll() {
-		return boardRepository.findAll().stream()
-			.map(BoardListResponseDto::new)
-			.collect(Collectors.toList());
 	}
 
 	@Transactional
