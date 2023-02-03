@@ -12,7 +12,6 @@ eureka:
 jwt:
   secret: PorkCurtletFriedChickenSundubuJJigaeGrilledPorkBelly
 
-
 spring:
   application:
     name: apigateway-service
@@ -22,7 +21,7 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: [ 'http://i8a703.p.ssafy.io:443','http://FrontServer:443' ]
+            allowedOrigins: [ 'http://i8a703.p.ssafy.io:443','http://FrontServer:443', 'http://localhost:3000', 'http://localhost:443' ]
             allow-credentials: true
             allowedHeaders: '*'
             allowedMethods:
