@@ -45,7 +45,7 @@ spring:
       local-1cors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: 'http://localhost:3000'
+            allowedOrigins: 'http://70.12.247.210:3000'
             allow-credentials: true
             allowedHeaders: '*'
             allowedMethods:
