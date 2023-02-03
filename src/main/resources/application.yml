@@ -12,7 +12,6 @@ eureka:
 jwt:
   secret: PorkCurtletFriedChickenSundubuJJigaeGrilledPorkBelly
 
-
 spring:
   application:
     name: apigateway-service
