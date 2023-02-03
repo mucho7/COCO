@@ -1,12 +1,11 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+
 
 import { Button, Modal, Box, Typography, TextField, Grid } from '@mui/material'
 import { visaTempPassword } from "../../api/member"
 
 
 function LoginTempPassword(params) {   
-    const navigate = useNavigate()
 
     const [inputId, setInputId] = useState()
     const [inputEmail, setInputEmail] = useState()
@@ -35,9 +34,9 @@ function LoginTempPassword(params) {
                 "email": inputEmail,
                 "userId": inputId
             },
-            (data) => {
-                navigate('/useri/login')
-            }
+            // 차후에 custom alert로 변경하여 화면의 중앙에 display 됐으면 함
+            (data) => alert(data.data),
+            (err) => console.log(err)
         )
     } 
 
@@ -59,9 +58,6 @@ function LoginTempPassword(params) {
                 <Box sx={style}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         비밀번호 찾기
-                    </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        입력하신 Email로 임시 비밀번호가 발급됩니다.
                     </Typography>
                     <Grid container spacing={2} style={{padding: '2rem', justifyContent: 'center'}}>
                         <Grid item xs={10}>

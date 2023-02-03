@@ -9,7 +9,7 @@ import LoginTempPassword from './LoginTempPassword';
 
 function LoginForm () {
     const navigate = useNavigate()
-    const [ cookie, setCookie ] = useCookies(['userInfo'])
+    const [ cookie, setCookie ] = useCookies(["userInfo"])
     
     const [ inputID, setInputID ] = useState()
     const [ inputPassword, setInputPassword ] = useState()
