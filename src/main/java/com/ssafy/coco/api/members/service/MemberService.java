@@ -47,13 +47,13 @@ public class MemberService {
 	private final SHA256Converter sha256Converter;
 
 	@Transactional
-	public Long RegisterMember(MemberRegisterRequestDto requestDto) {
+	public Long registerMember(MemberRegisterRequestDto requestDto) {
 		requestDto.setPassword(passwordEncoder.encode(requestDto.getPassword()));
 		return memberRepository.save(requestDto.toEntity()).getId();
 	}
 
 	@Transactional
-	public String UpdateInfo(String userId, MemberUpdateRequestDto requestDto, String accessToken) {
+	public String updateInfo(String userId, MemberUpdateRequestDto requestDto, String accessToken) {
 		String tokenOwner = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
 		System.out.println("[UpdateInfo@MemberService] userId: " + userId + ", requestDto: " + requestDto);
 		if (tokenOwner.equals(userId)) {
@@ -124,7 +124,7 @@ public class MemberService {
 	}
 
 	@Transactional
-	public boolean EmailCheck(String email) {
+	public boolean emailCheck(String email) {
 		Long count = memberRepository.countByEmail(email);
 		return count == 0;
 	}

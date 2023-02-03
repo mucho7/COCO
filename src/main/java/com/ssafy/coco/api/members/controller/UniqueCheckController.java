@@ -33,7 +33,7 @@ public class UniqueCheckController {
 	@ApiOperation(value = "이메일 중복 검사", notes = "{email}을 사용할 수 있는지 검사한다. 사용가능: true, 불가: false")
 	public ResponseEntity<Boolean> emailCheck(
 		@PathVariable("email") @ApiParam(value = "중복 검사할 Email", required = true) String email) {
-		boolean canUseEmail = memberService.EmailCheck(email);
+		boolean canUseEmail = memberService.emailCheck(email);
 		return ResponseEntity.status(200).body(canUseEmail);
 	}
 }

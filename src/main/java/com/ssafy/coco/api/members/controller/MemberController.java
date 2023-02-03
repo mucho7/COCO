@@ -49,7 +49,7 @@ public class MemberController {
 	@ApiOperation(value = "회원 가입", notes = "넘겨받은 회원정보를 바탕으로 회원을 DB에 등록한다.")
 	public Long registerMember(
 		@RequestBody @ApiParam(value = "회원가입 정보", required = true) MemberRegisterRequestDto requestDto) {
-		return memberService.RegisterMember(requestDto);
+		return memberService.registerMember(requestDto);
 	}
 
 	@PutMapping("/info/{id}")
@@ -62,7 +62,7 @@ public class MemberController {
 		String accessToken =
 			request.getHeader("Authorization").startsWith("bearer ") ? request.getHeader("Authorization").substring(7) :
 				request.getHeader("Authorization");
-		String updatedUserId = memberService.UpdateInfo(id, requestDto, accessToken);
+		String updatedUserId = memberService.updateInfo(id, requestDto, accessToken);
 		if (updatedUserId == null) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(id + " 사용자의 수정 권한이 없는 사용자입니다.");
 		}
