@@ -36,7 +36,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     password: cossafyco
     username: root
-    url: jdbc:mysql://i8a703.p.ssafy.io:3306/project1db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+    url: jdbc:mysql://mysql:3306/project1db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
   data:
     web:
       pageable:
@@ -67,7 +67,7 @@ eureka:
       eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://i8a703.p.ssafy.io:8761/eureka
+      defaultZone: http://EurekaDiscoveryService:8761/eureka
 server:
   servlet:
     encoding:
