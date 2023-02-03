@@ -54,7 +54,7 @@ function Ide(props) {
         dispatch(onChangeCode(value))
       }}
       sx={{m: 0}}
-      onMount={handleEditorDidMount}
+      // onMount={handleEditorDidMount}
     />
   );
 }

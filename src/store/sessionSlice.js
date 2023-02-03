@@ -40,7 +40,10 @@ const initialState = {
   userName: "",
   roomName: "",
   websocketId: null,
-  participantsId: null
+  participantsId: null,
+  isCompilePossible: true,
+  isDrawPossible: true,
+  isMicPossible: true
 };
 
 
@@ -62,15 +65,21 @@ const sessionSlice = createSlice({
       state.roomName = action.payload.roomName;
       // console.log(state.userName)
     },
-    // setWs(state, action) {
-    //   state.ws = action.payload;
-    // },
     setWebsocketId(state, action) {
       state.websocketId = action.payload;
     },
     setParticipantsId(state, action) {
       state.participantsId = action.payload;
-    }
+    },
+    setIsCompilePossible(state, action) {
+      state.isCompilePossible = !state.isCompilePossible;
+    },
+    setIsDrawPossible(state, action) {
+      state.isDrawPossible = !state.isDrawPossible;
+    },
+    setIsMicPossible(state, action) {
+      state.isMicPossible = !state.isMicPossible;
+    },
   },
   // extraReducers: (builder) => {
   //   builder.addCase(websocketConnected.fulfilled, (state, action) => {

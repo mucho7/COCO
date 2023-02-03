@@ -100,6 +100,7 @@ function NormalSession(props) {
             break;
           case 'receiveVideoAnswer':
             receiveVideoResponse(parsedMessage);
+            console.log("after receiveVideoResponse: ", participants)
             break;
           case 'iceCandidate':
             participants[parsedMessage.name].rtcPeer.addIceCandidate(parsedMessage.candidate, function (error) {
@@ -111,6 +112,9 @@ function NormalSession(props) {
               break;
           case "noticeChat":
             noticeChat(parsedMessage.userName, parsedMessage.chat);
+            break;
+          case "toggleAuthorization":
+            toggleAuthorization(parsedMessage.userName, parsedMessage.authorizationType);
             break;
           default:
             console.error('Unrecognized message', parsedMessage);
@@ -124,7 +128,7 @@ function NormalSession(props) {
       }
 
       function receiveVideoResponse(result) {
-        participants[result.name].rtcPeer.processAnswer (result.sdpAnswer, function (error) {
+        participants[result.name].rtcPeer.processAnswer(result.sdpAnswer, function (error) {
           if (error) return console.error (error);
         });
       }
@@ -141,26 +145,29 @@ function NormalSession(props) {
       }
 
       function onExistingParticipants(msg) {
-        var constraints = {
+        let constraints = {
           audio : true,
-          video : {
+          video: {
             mandatory : {
               maxWidth : 320,
               maxFrameRate : 15,
               minFrameRate : 15
-            }
+           }
           }
+          // 크롬 브라우저의 버그(?) 때문에 video를 false로 설정할 수 없는 것 같음
+          // video: false
         };
         console.log(userName + " registered in room " + roomName);
         var participant = new Participant(userName);
         participants[userName] = participant;
         console.log("participants: ", participants)
-        var video = participant.getVideoElement();
+        // var video = participant.getVideoElement();
       
         var options = {
-              localVideo: video,
+              // localVideo: video,
+              // localVideo: null,
               mediaConstraints: constraints,
-              onicecandidate: participant.onIceCandidate.bind(participant)
+              onicecandidate: participant.onIceCandidate.bind(participant),
             }
         participant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options,
           function (error) {
@@ -189,8 +196,14 @@ function NormalSession(props) {
       }
 
       function receiveVideo(sender) {
-        var participant = new Participant(sender);
-        participants[sender] = participant;
+        console.log("receiveVideo executed?")
+        let participant;
+        if (!participants[sender]) {
+          participant = new Participant(sender);
+          participants[sender] = participant;
+        } else {
+          participant = participants[sender];
+        }
         var video = participant.getVideoElement();
       
         var options = {
@@ -204,19 +217,28 @@ function NormalSession(props) {
                 return console.error(error);
               }
               this.generateOffer (participant.offerToReceiveVideo.bind(participant));
-        });;
+        });
       }
 
       function onParticipantLeft(request) {
         console.log('Participant ' + request.name + ' left');
         var participant = participants[request.name];
-        participant.dispose();
+        // participant.dispose();
         delete participants[request.name];
       }
 
-      
+      function toggleAuthorization(targetUserName, authorizationType) {
+        let participant = participants[targetUserName]
+        if (userName === targetUserName) {
+          console.log("Got ToggleAuth Message")
+          participant.rtcPeer.audioEnabled = !participant.rtcPeer.audioEnabled;
+          console.log(participant.rtcPeer.audioEnabled)
+        }
+        participant.onToggleAuthorization(authorizationType);
+      }
+
   
-      
+      ////////////////////////////////////////////////////////
       // participant 객체 정의하는 부분
 
       const PARTICIPANT_MAIN_CLASS = 'participant main';
@@ -232,6 +254,7 @@ function NormalSession(props) {
        */
       function Participant(name) {
         this.name = name;
+        this.rtcPeer = null;
         // 호스트 여부
         this.isHost = (name==="admin") ? true : false;
         // 권한 목록
@@ -240,13 +263,17 @@ function NormalSession(props) {
           isMicPossible: true,
           isDrawPossible: true
         }
-        this.onAuthorizationControl = function(authorizationType) {
+        this.onToggleAuthorization = function(authorizationType) {
           switch (authorizationType) {
             case "compile":
               this.authorization.isCompilePossible = !this.authorization.isCompilePossible;
               break;
             case "mic":
               this.authorization.isMicPossible = !this.authorization.isMicPossible;
+              // console.log(this.rtcPeer);
+              // console.log(this.rtcPeer.peerConnection)
+              console.log("toggle button")
+              // this.rtcPeer.generateOffer (this.offerToReceiveVideo.bind(this))
               break;
             case "draw":
               this.authorization.isDrawPossible = !this.authorization.isDrawPossible;
@@ -254,7 +281,6 @@ function NormalSession(props) {
             default:
               break;
           }
-          // console.log(participants);
         }
 
         var container = document.createElement('div');
@@ -262,7 +288,6 @@ function NormalSession(props) {
         container.id = name;
         var span = document.createElement('span');
         var video = document.createElement('video');
-        var rtcPeer;
 
         container.appendChild(video);
         container.appendChild(span);

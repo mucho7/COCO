@@ -14,8 +14,8 @@ const UserListDiv = styled.div`
 
 function UserList() {
   // const ws = useSelector((state) => state.session.ws);
-  const websocketId = useSelector((state) => state.session.websocketId)
-  const ws = websocketInstances.get(websocketId)
+  // const websocketId = useSelector((state) => state.session.websocketId)
+  // const ws = websocketInstances.get(websocketId)
   // console.log("websocketId: ", websocketId)
   // console.log("get ws??", ws)
   const participantsId = useSelector((state) => state.session.participantsId);
@@ -24,18 +24,24 @@ function UserList() {
   // console.log("participantsId: ", participantsId);
   // console.log("receive participants in UserList: ", participants)
 
-  useEffect(() => {
-    setParticipants(participantsInstances.get(participantsId));
-  },)
+  // useEffect(() => {
+    
+  // },)
 
-  
+  function handleParticipants(participant) {
+    // let copiedParticipants = {...participants};
+    // let participantName = participant.name;
+    // copiedParticipants[participantName] = participant;
+    // setParticipants(copiedParticipants);
+    // console.log("CHANGED")
+  }
 
   return (
     <UserListDiv>
       <p>유저 권한 목록</p>
       {Object.values(participants).map((participant, index) => {
         return (
-          <UserListItem participant={participant} key={index} />
+          <UserListItem participant={participant} key={index} handleParticipants={handleParticipants} />
         )
       })}
     </UserListDiv>

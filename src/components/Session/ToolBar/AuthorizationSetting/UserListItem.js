@@ -1,14 +1,29 @@
 import { useState } from "react";
+import { setParticipantsId, websocketInstances } from "../../../../store/sessionSlice";
 import { CustomButton } from "../ToolBar";
+import { useSelector } from "react-redux";
 
 
 function UserListItem(props) {
   const [participant, setParticipant] = useState(props.participant);
+  const websocketId = useSelector((state) => state.session.websocketId);
+  const ws = websocketInstances.get(websocketId);
 
   function handleAuthorization(user, authorizationType) {
-    user.onAuthorizationControl(authorizationType);
-    setParticipant({...user});
+    // user.onAuthorizationControl(authorizationType);
+    // setParticipant({...user});
+    // props.handleParticipants(participant);
+    const message = {
+      id: "toggleAuthorization",
+      userName: user.name,
+      authorizationType: authorizationType
+    }
+
+    ws.send(JSON.stringify(message));
   }
+
+  // console.log(participant.rtcPeer.peerConnection)
+  // console.log(participant.rtcPeer)
 
   return (
     <div>
