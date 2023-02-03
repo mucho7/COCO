@@ -32,6 +32,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.function.session.api.service.RoomService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -55,11 +56,14 @@ public class CallHandler extends TextWebSocketHandler {
 	@Autowired
 	private UserRegistry registry;
 
+	@Autowired
+	private RoomService roomService; //
+
 	@Override
 	public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		final JsonObject jsonMessage = gson.fromJson(message.getPayload(), JsonObject.class);
 
-		final UserSession user = registry.getBySession(session); //
+		final UserSession user = registry.getBySession(session);
 
 		if (user != null) {
 			log.debug("Incoming message from user '{}': {}", user.getName(), jsonMessage);
@@ -94,17 +98,21 @@ public class CallHandler extends TextWebSocketHandler {
 				log.info("...receive Chat from client...");
 				sendChat(jsonMessage);
 				break;
-			case "controlOtherVideos":
+			case "controlOtherVideos": // 없애기
 				controlOtherVideos(jsonMessage);
 				break;
+			case "toggleAuthorization": //
+				controlAuthorization(jsonMessage);
+				break;
 			case "hostLeft":
-				hostLeft(jsonMessage, user);
+				hostLeft(jsonMessage.get("roomName").getAsString(), user);
 				break;
 			case "startRelay":
 				startReading(user);
 				break;
 			case "endReading":
 				// startCoding(jsonMessage);
+				System.out.println("...endReading:");
 				announceUserTurn(jsonMessage.get("roomName").getAsString(), 0);
 				break;
 			case "endMyTurn":
@@ -122,8 +130,24 @@ public class CallHandler extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		UserSession user = registry.removeBySession(session);
-		roomManager.getRoom(user.getRoomName()).leave(user);
-		// TODO: if session == host이면 hostLeft();
+		final String roomName = user.getRoomName();
+		final String userName = user.getName();
+
+		roomManager.getRoom(roomName).leave(user);
+
+		if (roomName == userName) { // 호스트가 ConnectionClosed됐다. 나머지 참
+			hostLeft(roomName, null);
+			roomService.DeleteRoom(roomName); // 해당 방 DB에서 지우기
+		}
+
+		final Room room = roomManager.getRoom(user.getRoomName());
+		room.leave(user);
+		if (room.getParticipants().isEmpty()) {
+			roomManager.removeRoom(room);
+		}
+
+		// UserSession user = registry.removeBySession(session);
+		// roomManager.getRoom(user.getRoomName()).leave(user);
 	}
 
 	private void noticeLeaving(UserSession user) throws Exception {
@@ -215,16 +239,16 @@ public class CallHandler extends TextWebSocketHandler {
 		noticeMessage(participantsList, chat);
 	}
 
-	private void hostLeft(JsonObject params, UserSession user) throws Exception {
-		final String roomName = params.get("roomName").getAsString();
-
+	private void hostLeft(String roomName, UserSession host) throws Exception {
 		final List<UserSession> participantsList = roomManager.getRoom(roomName)
-			.getParticipantsList(user); // 해당 룸에 있는 다른 모든 참여자들에게
+			.getParticipantsList(host); // 해당 룸에 있는 다른 모든 참여자들에게
 
 		final JsonObject message = new JsonObject();
 		message.addProperty("id", "leaveByHost");
 
 		noticeMessage(participantsList, message);
+
+		roomService.DeleteRoom(roomName); // 해당 방 DB에서 지우기
 	}
 
 	private void controlOtherVideos(JsonObject params) throws Exception {
@@ -236,6 +260,19 @@ public class CallHandler extends TextWebSocketHandler {
 
 		final JsonObject message = new JsonObject();
 		message.addProperty("id", "turnVideoOff");
+
+		noticeMessage(participantsList, message);
+	}
+
+	private void controlAuthorization(JsonObject params) throws Exception {
+		final String userName = params.get("userName").getAsString();
+		final List<UserSession> participantsList = roomManager.getRoom(registry.getByName(userName).getRoomName())
+			.getParticipantsList(null);
+
+		final JsonObject message = new JsonObject();
+		message.addProperty("id", "toggleAuthorization");
+		message.addProperty("userName", userName);
+		message.addProperty("authorizationType", params.get("authorizationType").getAsString());
 
 		noticeMessage(participantsList, message);
 	}
@@ -266,5 +303,6 @@ public class CallHandler extends TextWebSocketHandler {
 		if (room.getParticipants().isEmpty()) {
 			roomManager.removeRoom(room);
 		}
+		// TODO: host이면 DB에서도 삭제
 	}
 }
