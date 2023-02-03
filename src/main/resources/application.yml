@@ -21,7 +21,7 @@ spring:
       ec2-1cors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: 'http://i8a703.p.ssafy.io:443'
+            allowedOrigins: "*"
             allow-credentials: true
             allowedHeaders: '*'
             allowedMethods:
@@ -30,42 +30,7 @@ spring:
               - POST
               - DELETE
               - OPTIONS
-      ec2-2cors:
-        cors-configurations:
-          '[/**]':
-            allowedOrigins: 'http://FrontServer:443'
-            allow-credentials: true
-            allowedHeaders: '*'
-            allowedMethods:
-              - PUT
-              - GET
-              - POST
-              - DELETE
-              - OPTIONS
-      local-1cors:
-        cors-configurations:
-          '[/**]':
-            allowedOrigins: 'http://70.12.247.210:3000'
-            allow-credentials: true
-            allowedHeaders: '*'
-            allowedMethods:
-              - PUT
-              - GET
-              - POST
-              - DELETE
-              - OPTIONS
-      local2-cors:
-        cors-configurations:
-          '[/**]':
-            allowedOrigins: 'http://localhost:443'
-            allow-credentials: true
-            allowedHeaders: '*'
-            allowedMethods:
-              - PUT
-              - GET
-              - POST
-              - DELETE
-              - OPTIONS
+
       routes:
         - id: board
           uri: http://BoardService:8011/
