@@ -18,10 +18,46 @@ spring:
 
   cloud:
     gateway:
-      globalcors:
+      ec2-1cors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: [ 'http://i8a703.p.ssafy.io:443','http://FrontServer:443', 'http://localhost:3000', 'http://localhost:443' ]
+            allowedOrigins: 'http://i8a703.p.ssafy.io:443'
+            allow-credentials: true
+            allowedHeaders: '*'
+            allowedMethods:
+              - PUT
+              - GET
+              - POST
+              - DELETE
+              - OPTIONS
+      ec2-2cors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: 'http://FrontServer:443'
+            allow-credentials: true
+            allowedHeaders: '*'
+            allowedMethods:
+              - PUT
+              - GET
+              - POST
+              - DELETE
+              - OPTIONS
+      local-1cors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: 'http://localhost:3000'
+            allow-credentials: true
+            allowedHeaders: '*'
+            allowedMethods:
+              - PUT
+              - GET
+              - POST
+              - DELETE
+              - OPTIONS
+      local2-cors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: 'http://localhost:443'
             allow-credentials: true
             allowedHeaders: '*'
             allowedMethods:
