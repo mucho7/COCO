@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -49,11 +50,9 @@ public class JwtTokenProvider {
 	@Value("${jwt.secret}")
 	private String uniqueKey;
 
-	@Value("${jwt.access-token-valid-time}")
-	private int accessTokenValidTime; // AccessToken 유효시간 : 90분
+	private int accessTokenValidTime = 1000 * 60 * 90; // AccessToken 유효시간 : 90분
 
-	@Value("${jwt.refresh-token-valid-time}")
-	private int refreshTokenValidTime; // RefreshToken 유효시간 : 12시간
+	private int refreshTokenValidTime = 1000 * 60 * 60 * 12; // RefreshToken 유효시간 : 12시간
 
 	private final UserDetailsService userDetailsService;
 	private final MemberRepository memberRepository;
@@ -86,6 +85,9 @@ public class JwtTokenProvider {
 			.signWith(SignatureAlgorithm.HS256, uniqueKey)
 			.compact();
 
+		// DB에 새로 발급받은 refreshToken 반영하는 부분
+		updateRefreshTokenInRepository(userId, refreshToken);
+
 		return JwtTokenDto.builder()
 			.grantType("Bearer")
 			.accessToken(accessToken)
@@ -93,6 +95,20 @@ public class JwtTokenProvider {
 			.userId(userId)
 			.build();
 
+	}
+
+	@Transactional
+	void updateRefreshTokenInRepository(String userId, String newRefreshToken) {
+		RefreshToken refreshTokenData = RefreshToken.builder()
+			.userId(userId)
+			.refreshToken(newRefreshToken)
+			.build();
+		if (refreshTokenRepository.existsByUserId(userId)) {
+			log.info(userId + "의 기존 Refresh Token을 삭제합니다.");
+			refreshTokenRepository.deleteByUserId(userId);
+		}
+		log.info(userId + "의 Refresh Token을 생성합니다.");
+		refreshTokenRepository.save(refreshTokenData);
 	}
 
 	// Jwt 토큰을 복호화하여 인증 정보 조회

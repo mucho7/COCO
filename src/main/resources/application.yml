@@ -7,12 +7,10 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://i8a703.p.ssafy.io:8761/eureka
+      defaultZone: http://EurekaDiscoveryService:8761/eureka
 
 jwt:
   secret: PorkCurtletFriedChickenSundubuJJigaeGrilledPorkBelly
-  access-token-valid-time: 5400000
-  refresh-token-valid-time: 43200000
 
 
 spring:
@@ -24,7 +22,7 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: 'http://i8a703.p.ssafy.io:443'
+            allowedOrigins: [ 'http://i8a703.p.ssafy.io:443','http://FrontServer:443' ]
             allow-credentials: true
             allowedHeaders: '*'
             allowedMethods:
@@ -35,15 +33,15 @@ spring:
               - OPTIONS
       routes:
         - id: board
-          uri: http://i8a703.p.ssafy.io:8011/
+          uri: http://BoardService:8011/
           predicates:
             - Path=/board/**
         - id: comment
-          uri: http://i8a703.p.ssafy.io:8011/
+          uri: http://BoardService:8011/
           predicates:
             - Path=/comment/**
         - id: member
-          uri: http://i8a703.p.ssafy.io:8012/
+          uri: http://MemberService:8012/
           #          uri: http://localhost:8012/
           predicates:
             - Path=/member/changePassword, /member/delete/**, /member/logout, /member/extract
@@ -51,34 +49,34 @@ spring:
           filters:
             - AuthenticationHeaderFilter
         - id: member
-          uri: http://i8a703.p.ssafy.io:8012/
+          uri: http://MemberService:8012/
           #          uri: http://localhost:8012/
           predicates:
             - Path=/member/info/**
           filters:
             - AuthenticationHeaderFilter
         - id: member
-          uri: http://i8a703.p.ssafy.io:8012/
+          uri: http://MemberService:8012/
           #          uri: http://localhost:8012/
           predicates:
             - Path=/member/**
         - id: uniqueCheck
-          uri: http://i8a703.p.ssafy.io:8012/
           #          uri: http://localhost:8012/
+          uri: http://MemberService:8012/
           predicates:
             - Path=/check/**
         - id: sessionFunction
-          uri: http://i8a703.p.ssafy.io:8013/
+          uri: http://SessionFunctionService:8013/
           predicates:
             - Path=/sessionFunction/**
         - id: session
-          uri: http://i8a703.p.ssafy.io:8014/
+          uri: http://SessionService:8014/
           predicates:
             - Path=/session/**
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    url: jdbc:mysql://i8a703.p.ssafy.io:3306/project1db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+    url: jdbc:mysql://mysql:3306/project1db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
     password: cossafyco
   jpa:
     generate-ddl: true

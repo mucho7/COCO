@@ -25,7 +25,7 @@ public class JwtTokenService {
 	private final RefreshTokenRepository refreshTokenRepository;
 
 	@Transactional
-	public void login(JwtTokenDto tokenDto) {
+	public void update(JwtTokenDto tokenDto) {
 		RefreshToken refreshToken = RefreshToken.builder()
 			.userId(tokenDto.getUserId())
 			.refreshToken(tokenDto.getRefreshToken())

@@ -63,8 +63,8 @@ public class AuthenticationHeaderFilter extends AbstractGatewayFilterFactory<Aut
 
 						ServerHttpRequest newRequest = exchange.getRequest()
 							.mutate()
-							.header("Authorization", new String[] {"bearer " + newJwtToken.getAccessToken()}).
-							header("refreshToken", new String[] {"bearer " + newJwtToken.getRefreshToken()})
+							.header("Authorization", new String[] {"bearer " + newJwtToken.getAccessToken()})
+							.header("refreshToken", new String[] {"bearer " + newJwtToken.getRefreshToken()})
 							.build();
 
 						newExchange = exchange.mutate().request(newRequest).build();

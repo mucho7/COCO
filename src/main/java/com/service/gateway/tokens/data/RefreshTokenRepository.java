@@ -2,6 +2,8 @@ package com.service.gateway.tokens.data;
 
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
@@ -11,7 +13,9 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
 
 	boolean existsByRefreshToken(String refreshToken);
 
+	@Transactional
 	void deleteByUserId(String userId);
 
+	@Transactional
 	void deleteByRefreshToken(String refreshToken);
 }
