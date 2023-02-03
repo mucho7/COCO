@@ -12,16 +12,17 @@ eureka:
 jwt:
   secret: PorkCurtletFriedChickenSundubuJJigaeGrilledPorkBelly
 
+
 spring:
   application:
     name: apigateway-service
 
   cloud:
     gateway:
-      ec2-1cors:
+      globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: "*"
+            allowedOrigins: 'http://i8a703.p.ssafy.io:443'
             allow-credentials: true
             allowedHeaders: '*'
             allowedMethods:
@@ -30,7 +31,6 @@ spring:
               - POST
               - DELETE
               - OPTIONS
-
       routes:
         - id: board
           uri: http://BoardService:8011/
@@ -56,8 +56,8 @@ spring:
           filters:
             - AuthenticationHeaderFilter
         - id: member
-          uri: http://MemberService:8012/
           #          uri: http://localhost:8012/
+          uri: http://MemberService:8012/
           predicates:
             - Path=/member/**
         - id: uniqueCheck
