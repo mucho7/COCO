@@ -9,7 +9,7 @@ spring:
 #    url: jdbc:mysql://i8a703.p.ssafy.io:3306/project1db?serverTimezone=UTC&characterEncoding=UTF-8
     username: root
 #    password: 1234
-    url: jdbc:mysql://localhost:3306/project1db?serverTimezone=UTC&characterEncoding=UTF-8
+    url: jdbc:mysql://mysql:3306/project1db?serverTimezone=UTC&characterEncoding=UTF-8
     password: cossafyco
 
   mvc:
