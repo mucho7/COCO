@@ -3,7 +3,6 @@ package com.ssafy.coco.api.members.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,26 +47,28 @@ public class MemberService {
 	private final SHA256Converter sha256Converter;
 
 	@Transactional
-	public Long RegisterMember(MemberRegisterRequestDto requestDto) {
+	public Long registerMember(MemberRegisterRequestDto requestDto) {
 		requestDto.setPassword(passwordEncoder.encode(requestDto.getPassword()));
 		return memberRepository.save(requestDto.toEntity()).getId();
 	}
 
 	@Transactional
-	public String UpdateInfo(String userId, MemberUpdateRequestDto requestDto, String accessToken) {
-		String tokenOwner = SecurityContextHolder.getContext().getAuthentication().getName();
+	public String updateInfo(String userId, MemberUpdateRequestDto requestDto, String accessToken) {
+		String tokenOwner = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
 		System.out.println("[UpdateInfo@MemberService] userId: " + userId + ", requestDto: " + requestDto);
 		if (tokenOwner.equals(userId)) {
 			Member member = memberRepository.findByUserId(userId)
 				.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. 사용자 ID: " + userId));
 			// System.out.println(member.getDelFlag() + ", 탈퇴했는가? : " + member.getDelFlag() != null);
-			if (member.getDelFlag() != null)
+			if (member.getDelFlag() != null) {
 				throw new IllegalArgumentException("해당 사용자는 탈퇴한 사용자입니다. 사용자 ID: " + userId);
-			else {
-				if (requestDto.getName() != null)
+			} else {
+				if (requestDto.getName() != null) {
 					member.setName(requestDto.getName());
-				if (requestDto.getEmail() != null)
+				}
+				if (requestDto.getEmail() != null) {
 					member.setEmail(requestDto.getEmail());
+				}
 			}
 			return userId;
 		}
@@ -81,13 +82,13 @@ public class MemberService {
 		return new MemberResponseDto(entity);
 	}
 
-	public boolean ExistUserByIdAndEmail(String userId, String email) {
+	public boolean existUserByIdAndEmail(String userId, String email) {
 		return memberRepository.existsByUserIdAndEmail(userId, email);
 	}
 
 	@Transactional
-	public String DeleteMember(String id, String accessToken) {
-		String tokenOwnerId = SecurityContextHolder.getContext().getAuthentication().getName();
+	public String deleteMember(String id, String accessToken) {
+		String tokenOwnerId = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
 
 		if (tokenOwnerId.equals(id)) {
 
@@ -95,32 +96,35 @@ public class MemberService {
 				.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. 사용자 ID: " + id));
 			if (member.getDelFlag() != null) // error code: 500
 				throw new IllegalArgumentException("해당 사용자는 이미 탈퇴한 사용자입니다. 사용자 ID: " + id);
-			else
-				member.DeleteMember(LocalDateTime.now());
+			else {
+				member.deleteMember(LocalDateTime.now());
+			}
 			return id;
-		} else
+		} else {
 			return null;
+		}
 	}
 
 	@Transactional
-	public String RatingUpdate(MemberRatingUpdateRequestDto requestDto) {
+	public String ratingUpdate(MemberRatingUpdateRequestDto requestDto) {
 		Member member = memberRepository.findByUserId(requestDto.getUserId())
 			.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. 사용자 ID: " + requestDto.getUserId()));
-		if (member.getDelFlag() != null) // error code: 500
+		if (member.getDelFlag() != null) {// error code: 500
 			throw new IllegalArgumentException("해당 사용자는 탈퇴한 사용자입니다. 사용자 ID: " + requestDto.getUserId());
-		else
-			member.UpdateRating(requestDto.getAmount());
+		} else {
+			member.updateRating(requestDto.getAmount());
+		}
 		return requestDto.getUserId();
 	}
 
 	@Transactional
-	public boolean IdCheck(String userId) {
+	public boolean idCheck(String userId) {
 		Long count = memberRepository.countByUserId(userId);
 		return count == 0;
 	}
 
 	@Transactional
-	public boolean EmailCheck(String email) {
+	public boolean emailCheck(String email) {
 		Long count = memberRepository.countByEmail(email);
 		return count == 0;
 	}
@@ -158,8 +162,9 @@ public class MemberService {
 			jwtService.login(jwtToken);
 
 			return jwtToken;
-		} else
+		} else {
 			return null;
+		}
 	}
 
 	@Transactional
@@ -168,13 +173,15 @@ public class MemberService {
 		return jwtService.logout(refreshToken);
 	}
 
-	public String getUserIdFromAccessToken(String accessToken, String refreshToken){
-		System.out.println("[getUserIdFromAccessToken@MemberService] 받은 토큰 정보:\nAccessToken: "+accessToken+", RefreshToken: "+refreshToken);
+	public String getUserIdFromAccessToken(String accessToken, String refreshToken) {
+		System.out.println(
+			"[getUserIdFromAccessToken@MemberService] 받은 토큰 정보:\nAccessToken: " + accessToken + ", RefreshToken: "
+				+ refreshToken);
 		String userId;
-		try{
-			userId= jwtTokenProvider.getUserIdFromAccessToken(accessToken);
-		}catch (ExpiredJwtException e){
-			userId=SecurityContextHolder.getContext().getAuthentication().getName();
+		try {
+			userId = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
+		} catch (ExpiredJwtException e) {
+			userId = SecurityContextHolder.getContext().getAuthentication().getName();
 		}
 		return userId;
 	}
@@ -196,13 +203,14 @@ public class MemberService {
 	public String updatePassword(String userId, String tempPassword) {
 		Member member = memberRepository.findByUserId(userId)
 			.orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 사용자가 없습니다."));
-		if(member.getDelFlag()==null) {
+		if (member.getDelFlag() == null) {
 			String encodedPassword = passwordEncoder.encode(tempPassword);
 			member.setPassword(encodedPassword);
 			memberRepository.save(member);
 			return member.getUserId();
+		} else {
+			return "[error] 해당 사용자는 탈퇴한 사용자입니다.";
 		}
-		else return "[error] 해당 사용자는 탈퇴한 사용자입니다.";
 	}
 
 	public String makeTempPassword() {
@@ -220,8 +228,8 @@ public class MemberService {
 	}
 
 	public String changePassword(String accessToken, String newPassword) {
-		String userId= SecurityContextHolder.getContext().getAuthentication().getName();
-		System.out.println("[changePassword@MemberService] UserID from Authentication: "+userId);
-		return updatePassword(userId,newPassword);
+		String userId = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
+		System.out.println("[changePassword@MemberService] UserID from Authentication: " + userId);
+		return updatePassword(userId, newPassword);
 	}
 }

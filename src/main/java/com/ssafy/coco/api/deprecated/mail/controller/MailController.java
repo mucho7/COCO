@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.coco.api.deprecated.mail.dto.MailDto;
 import com.ssafy.coco.api.deprecated.mail.service.MailService;
-import com.ssafy.coco.api.members.data.Member;
 import com.ssafy.coco.api.members.dto.request.SendPasswordRequestDto;
 import com.ssafy.coco.api.members.service.MemberService;
 
@@ -23,6 +22,7 @@ public class MailController {
 
 	private final MemberService memberService;
 	private final MailService mailService;
+
 	/**
 	 * 만들어두긴 했으나, 내부 네트워크 환경에서 smtp 서버에 연결 불가로 인해 적극적인 개발이 불가능한 상황.
 	 * 따라서 개발 방향을 변경하여 팝업이나 인페이지 방식으로 임시 비밀번호를 사용자에게 제공.
@@ -35,7 +35,7 @@ public class MailController {
 		String userId = requestDto.getUserId();
 		String email = requestDto.getEmail();
 
-		boolean isAvaliable = memberService.ExistUserByIdAndEmail(userId, email);
+		boolean isAvaliable = memberService.existUserByIdAndEmail(userId, email);
 
 		if (isAvaliable) {
 			MailDto mailDto = mailService.createMailAndMakeTempPassword(userId, email);

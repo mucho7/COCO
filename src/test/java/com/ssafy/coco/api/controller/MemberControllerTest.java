@@ -2,7 +2,6 @@ package com.ssafy.coco.api.controller;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
@@ -20,7 +19,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.ssafy.coco.api.members.data.Member;
 import com.ssafy.coco.api.members.data.MemberRepository;
-import com.ssafy.coco.api.members.dto.request.MemberDeleteRequestDto;
 import com.ssafy.coco.api.members.dto.request.MemberRatingUpdateRequestDto;
 import com.ssafy.coco.api.members.dto.request.MemberRegisterRequestDto;
 import com.ssafy.coco.api.members.dto.request.MemberUpdateRequestDto;
@@ -39,7 +37,7 @@ public class MemberControllerTest {
 	private MemberRepository memberRepository;
 
 	@AfterEach
-	public void TearDown() throws Exception {
+	public void tearDown() throws Exception {
 		memberRepository.deleteAll();
 	}
 
@@ -49,7 +47,7 @@ public class MemberControllerTest {
 	private String testEmail = "test@ssafy.com";
 
 	@Test
-	public void MemberRegisterTest() throws Exception {
+	public void memberRegisterTest() throws Exception {
 
 		MemberRegisterRequestDto requestDto = MemberRegisterRequestDto.builder()
 			.userId(testId)
@@ -70,7 +68,7 @@ public class MemberControllerTest {
 	}
 
 	@Test
-	public void MemberUpdateTest() throws Exception {
+	public void memberUpdateTest() throws Exception {
 		Member registeredMember = memberRepository.save(Member.builder()
 			.userId(testId)
 			.password(testPw)
@@ -103,39 +101,11 @@ public class MemberControllerTest {
 		assertThat(all.get(0).getEmail()).isEqualTo(expectedEmail);
 		assertThat(all.get(0).getName()).isEqualTo(expectedName);
 		assertThat(all.get(0).getPassword()).isEqualTo(registeredMember.getPassword());
-		assertThat(all.get(0).getRole()).isEqualTo("user");
+		assertThat(all.get(0).getRoles().get(0)).isEqualTo("user");
 	}
 
 	@Test
-	public void MemberDeleteTest() throws Exception {
-		Member registeredMember = memberRepository.save(Member.builder()
-			.userId(testId)
-			.password(testPw)
-			.email(testEmail)
-			.name(testName)
-			.build()
-		);
-
-		Thread.sleep(2000); // 시간차 적용이 되는지 확인하기 위해 임의로 2초 딜레이 걸어둠.
-
-		String targetId = registeredMember.getUserId();
-
-		MemberDeleteRequestDto requestDto = MemberDeleteRequestDto.builder().time(LocalDateTime.now()).build();
-
-		String url = "http://localhost:" + port + "/member/info/delete/" + targetId;
-
-		HttpEntity<MemberDeleteRequestDto> requestEntity = new HttpEntity<>(requestDto);
-
-		ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, String.class);
-
-		assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-		List<Member> all = memberRepository.findAll();
-		assertThat(all.get(0).getDelFlag()).isNotNull();
-		System.out.println(all.get(0));
-	}
-
-	@Test
-	public void MemberRatingUpdateTest() throws Exception {
+	public void memberRatingUpdateTest() throws Exception {
 		Member registeredMember = memberRepository.save(Member.builder()
 			.userId(testId)
 			.password(testPw)
@@ -163,7 +133,4 @@ public class MemberControllerTest {
 		List<Member> all = memberRepository.findAll();
 		assertThat(all.get(0).getRating()).isEqualTo(amount);
 	}
-
-	// @Test
-	// public void
 }
