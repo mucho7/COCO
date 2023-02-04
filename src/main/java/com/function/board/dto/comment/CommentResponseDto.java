@@ -8,11 +8,13 @@ import lombok.Data;
 
 @Data
 public class CommentResponseDto {
+	private final Long id;
 	private final String content;
 	private final String writer;
 	private final LocalDateTime createdAt;
 
 	public CommentResponseDto(Comment entity) {
+		this.id = entity.getId();
 		this.content = entity.getContent();
 		this.writer = entity.getWriter();
 		this.createdAt = entity.getCreatedAt();
