@@ -9,13 +9,15 @@ import lombok.Data;
 
 @Data
 public class BoardListResponseDto {
+	private Long id;
 	private String title;
 	private String writer;
 	private int hit;
 	private LocalDateTime createdAt;
 
 	@QueryProjection
-	public BoardListResponseDto(String title, String writer, int hit, LocalDateTime createdAt) {
+	public BoardListResponseDto(Long id, String title, String writer, int hit, LocalDateTime createdAt) {
+		this.id = id;
 		this.title = title;
 		this.writer = writer;
 		this.hit = hit;
@@ -23,6 +25,7 @@ public class BoardListResponseDto {
 	}
 
 	public BoardListResponseDto(Board entity) {
+		this.id = entity.getId();
 		this.title = entity.getTitle();
 		this.writer = entity.getWriter();
 		this.hit = entity.getHit();
