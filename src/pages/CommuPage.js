@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { useState, useEffect } from "react"; 
+import { useState, useMemo } from "react"; 
 // import { useDispatch } from "react-redux";
 
 import SidePaddingBox from './SidePaddingBox'
@@ -11,22 +11,20 @@ import { boardRead } from "../api/community";
 
 import { CommuArticles, CommuSidebar } from "../components/community"
 
-function CommuPage(params) {
-    const [ someArticle, ] = useState(
-        Object.entries({
-            "title": "title",
-            "writer": "ssafy223",
-            "hit": 1,
-            "createdAt": "2023-02-02T04:58:03"
-        }))
+function CommuPage() {
+    const [ someArticle, setSomeArticle ] = useState([{id: 1}, {id: 2}])
     
     
-    useEffect(() => {
-        const enterBoard = async function(params) {
-            await boardRead()
+    useMemo(() => {
+        const enterBoard = async () => {
+            await boardRead(
+                (data) => {return data.data},
+                (err) => console.log(err)
+            )
+            .then((data) => setSomeArticle(data))
         }
         enterBoard()
-    })
+    }, [])
 
     // useEffect(() => {
     //     const enterBoard = async function () {

@@ -1,24 +1,24 @@
 import styled from "styled-components"
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import { Paper, InputBase, IconButton, Button } from '@mui/material';
 import { Search } from '@mui/icons-material';
+import { Link } from "react-router-dom";
 
 function CommuSidebar(params) {
-    const dispatch = useDispatch()
-    const temp_article_info = {
-        url: 'createArticle',
-        method: 'POST',
-        body: {
-            code: 'code', 
-            content: 'content',
-            title: 'title',
-            writer: 'writer',
-        }
-    }
+    // const temp_article_info = {
+    //     url: 'createArticle',
+    //     method: 'POST',
+    //     body: {
+    //         code: 'code', 
+    //         content: 'content',
+    //         title: 'title',
+    //         writer: 'writer',
+    //     }
+    // }
 
     const onClickHandler = (e) => {
         e.preventDefault()
-        // dispatch(onAsyncRequest(temp_article_info))
+        console.log("clicked")
     }
 
     return (
@@ -35,7 +35,9 @@ function CommuSidebar(params) {
                     <Search />
                 </IconButton>
             </Paper>
-            <Button variant="contained" className="submit" fullWidth style={{height:"2.5rem", backgroundColor: "#FCA311"}}> <b>글 쓰기</b></Button>
+            <Link to={"/community/write"} style={{textDecoration: "none"}}>
+                <Button variant="contained" className="submit" fullWidth style={{height:"2.5rem", backgroundColor: "#FCA311"}}> <b>글 쓰기</b></Button>
+            </Link>
         </Sidebar>
     )
 }

@@ -1,14 +1,21 @@
 import NavbarItem from "./NavbarItem"
 // import NavbarSearch from './NavbarSearch'
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { useCookies } from 'react-cookie'
 
 import { Grid } from '@mui/material'
 
 function Navbar() {
-    const [ cookie ] = useCookies(['userInfo'])
+    const [ cookie, setCookie ] = useCookies(["userInfo"])
+    const [ userId, setUserId ] = useState("null")
 
-    // 차후에 정확히 설정해야할 route들
+    if (cookie.userInfo === undefined) setCookie("undefined")
+
+    useMemo(() => {
+        if (cookie.userInfo === undefined) setCookie("undefined")
+        else (setUserId(cookie.userInfo.user_id))
+    }, [setUserId, setCookie, cookie])
+
     const navlist = {
         left: [
             {name: "Session", highlight: false, url: "/room",},
@@ -19,15 +26,13 @@ function Navbar() {
             {name: "Sign Up", highlight: true, url: "/useri",},
         ],
         loged: [
-            {name: "profile", highlight: false, url: `/useri/${cookie.userInfo.user_id}`,},
+            {name: "profile", highlight: false, url: `/useri/${userId}`,},
             {name: "Log Out", highlight: true, url: "/useri/logout",},
         ]
 
     }
+    // 차후에 정확히 설정해야할 route들
 
-    useState(() => {
-        console.log('cookie의 변형을 감지하고 rerender')
-    }, [cookie])
 
     return (
         <Grid container spacing={1} style={Nav}>
@@ -41,7 +46,7 @@ function Navbar() {
                 {/* <NavbarSearch/> */}
             </Grid>
             <Grid item xs={3}>
-                {cookie.userInfo !== 'undefined' ? <NavbarItem navList={navlist.loged}/> : <NavbarItem navList={navlist.right}/>}
+                {cookie.userInfo === "undefined" ? <NavbarItem navList={navlist.loged}/> : <NavbarItem navList={navlist.right}/>}
             </Grid>
         </Grid>
     )

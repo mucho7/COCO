@@ -10,6 +10,7 @@ import LoginPage from "./LoginPage";
 import ProfilePage from "./ProfilePage";
 import LogoutPage from "./LogoutPage";
 import ArticleDetail from "./ArticleDetail";
+import ArticleCreate from "./ArticleCreate"
 
 import { createBrowserRouter } from "react-router-dom";
 
@@ -18,14 +19,6 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <HomePage/>,
-  },
-  {
-    path: "/community",
-    element: <CommuPage/>,
-  },
-  {
-    path: "/community/:articlePk",
-    element: <ArticleDetail/>,
   },
   {
     path: "/useri",
@@ -42,6 +35,18 @@ const router = createBrowserRouter([
   {
     path: "/useri/:user_id",
     element: <ProfilePage/>,
+  },
+  {
+    path: "/community",
+    element: <CommuPage/>,
+  },
+  {
+    path: "/community/write",
+    element: <ArticleCreate/>,
+  },
+  {
+    path: "/community/:articlePk",
+    element: <ArticleDetail/>,
   },
   // Session 관련
   {
