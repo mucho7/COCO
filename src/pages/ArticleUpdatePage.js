@@ -1,15 +1,15 @@
 import SidePaddingBox from './SidePaddingBox'
 import  { Navbar } from '../components/navbar';
-import { CommuArticleDetail } from '../components/community'
+import { CommuArticleUpdate } from '../components/community'
 
-function ArticleDetail(params) {
+function ArticleCreatePage(params) {
 
     return (
         <SidePaddingBox>
             <Navbar />
-            <CommuArticleDetail></CommuArticleDetail>
+            <CommuArticleUpdate/>
         </SidePaddingBox>
     )
 }
 
-export default ArticleDetail
+export default ArticleCreatePage

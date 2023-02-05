@@ -12,7 +12,7 @@ function CommuArticles(props) {
                 return (
                     <Card sx={{ width: '100%', height: 'auto', margin: '4px'}} key={article.id}>
                         <CardActionArea>
-                            <Link to={{pathname:`${article.id}`, state: `${article}`}} style={{textDecoration: 'none', color: 'black'}}>
+                            <Link to={`${article.id}`} state={article} style={{textDecoration: 'none', color: 'black'}}>
                                 <CardContent>
                                     <Grid container>
                                         <Grid item xs={4} textAlign="center">

@@ -1,15 +1,17 @@
 import { useState, useMemo } from "react"
-import { useLocation } from "react-router-dom"
+import { useLocation, Link, useNavigate } from "react-router-dom"
 
 import {CommentForm, Comments } from "./index"
-import { boardDetail } from "../../api/community"
+import { boardDetail, articleDelete } from "../../api/community"
 
 import styled from "styled-components"
 import { Button, Typography } from "@mui/material"
 
 function CommuArticleDetail() {
-    const state = useLocation()
-    const pk = state.pathname.slice(11)
+    const navigate = useNavigate()
+    const location = useLocation()
+    
+    const pk = location.state.id
     const [article, setArticle ] = useState({
         id: "",
         content: "",
@@ -31,13 +33,26 @@ function CommuArticleDetail() {
     getArticlelDetail()
     }, [pk])
 
+    function onClickDeleteHandler(params) {
+        articleDelete(
+            pk,
+            (data) => {
+                console.log(data)
+                navigate("/community")
+            },
+            (err) => console.log(err)
+            )
+    }
+
     return (
         <>
         <TitleSection>
             <h2>{article.title}</h2>
             <div>
-                <Button>수정</Button>
-                <Button>삭제</Button>
+                <Link to={`/community/update/${pk}`} state={{article: article}} style={{textDecoration: "none"}} article={article}>
+                    <Button variant="contained">수정</Button>
+                </Link>
+                <Button onClick={onClickDeleteHandler} variant="contained">삭제</Button>
             </div>
         </TitleSection>
         <hr/>
@@ -63,6 +78,7 @@ function CommuArticleDetail() {
 const TitleSection = styled.section`
     width: 100%;
 
+    margin-top: 15px;
     display: flex;
     justify-content: space-between;
 `
