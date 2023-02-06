@@ -15,6 +15,7 @@ import com.function.board.domain.comment.CommentRepository;
 import com.function.board.dto.board.BoardListResponseDto;
 import com.function.board.dto.board.BoardResponseDto;
 import com.function.board.dto.board.BoardSaveRequestDto;
+import com.function.board.dto.board.BoardSearchCondition;
 import com.function.board.dto.board.BoardUpdateRequestDto;
 
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,17 @@ public class BoardService {
 	}
 
 	@Transactional(readOnly = true)
+	public Page<BoardListResponseDto> paging(Pageable pageable) {
+		return boardRepository.findAll(pageable)
+			.map(BoardListResponseDto::new);
+	}
+
+	@Transactional(readOnly = true)
+	public Page<BoardListResponseDto> searchPage(BoardSearchCondition condition, Pageable pageable) {
+		return boardRepository.searchPage(condition, pageable);
+	}
+
+	@Transactional(readOnly = true)
 	public List<BoardListResponseDto> findAll() {
 		return boardRepository.findAll().stream()
 			.map(BoardListResponseDto::new)
@@ -44,15 +56,8 @@ public class BoardService {
 			.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
 		Page<Comment> comments = commentRepository.findAllByBoardId(boardId, pageable);
-			// .map(CommentResponseDto::new);
 		return new BoardResponseDto(entity, comments);
 	}
-
-	// @Transactional(readOnly = true)
-
-	// public Page<Board> searchByTitle(String keyword, Pageable pageable) {
-	// 	return boardRepository.findByTitleContaining(keyword, pageable);
-	// }
 
 	@Transactional
 	public Long update(Long boardId, BoardUpdateRequestDto requestDto) {
