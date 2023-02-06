@@ -1,8 +1,10 @@
 package com.function.session.api.controller;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,46 +31,67 @@ public class RoomController {
 
 	@GetMapping
 	@ApiOperation(value = "세션 방 목록 조회")
-	public List<Room> GetRoomList(@RequestParam String mode, @RequestParam(required = false) String hostId,
+	public ResponseEntity<List<Room>> GetRoomList(@RequestParam String mode,
+		@RequestParam(required = false) String hostId,
 		@RequestParam(required = false) String title) {
-		return roomService.GetRoomList(mode, hostId, title);
+		return ResponseEntity.ok(roomService.GetRoomList(mode, hostId, title));
 	}
 
 	@GetMapping("/{id}")
 	@ApiOperation(value = "세션 방 상세 보기")
-	public RoomDetailResponseDto findById(@PathVariable String id) {
-		return roomService.findByRoomId(id);
+	public ResponseEntity<RoomDetailResponseDto> GetRoom(@PathVariable String id) {
+		return ResponseEntity.ok(roomService.GetRoom(id));
 	}
 
 	@PostMapping
 	@ApiOperation(value = "세션 방 생성")
-	public String RegisterRoom(@RequestBody RoomRegisterRequestDto requestDto) {
-		return roomService.RegisterRoom(requestDto);
+	public ResponseEntity<?> RegisterRoom(@RequestBody RoomRegisterRequestDto requestDto) {
+		return ResponseEntity.created(URI.create("/room/" + roomService.RegisterRoom(requestDto))).build();
 	}
 
 	@PutMapping("/{id}")
 	@ApiOperation(value = "세션 방 수정")
-	public String UpdateRoom(@PathVariable String id, @RequestBody RoomUpdateRequestDto requestDto) {
-		return roomService.UpdateRoom(requestDto, id);
+	public ResponseEntity<String> UpdateRoom(@PathVariable String id, @RequestBody RoomUpdateRequestDto requestDto) {
+		Room room = roomService.UpdateRoom(requestDto, id);
+		if (room != null) {
+			return ResponseEntity.ok(id);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
 
 	@PutMapping("/enter/{id}") // "/room/enter/{id}?userId={userId}"
 	@ApiOperation(value = "세션 방 입장", notes = "- 호스트가 입장하면, is_live가 1이 된다.\n"
 		+ "- 일반 사용자가 입장을 시도하면, (is_live == 1) && (참여자수 < max) 일때만 입장가능하다.\n"
 		+ "- 참여자수 + 1")
-	public String UpdateRoomEnter(@PathVariable String id, @RequestParam String userId) {
-		return roomService.UpdateRoomEnter(id, userId);
+	public ResponseEntity<String> UpdateRoomEnter(@PathVariable String id, @RequestParam String userId) {
+		Room room = roomService.UpdateRoomEnter(id, userId);
+		if (room != null) {
+			return ResponseEntity.ok(id);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
 
 	@PutMapping("/leave/{id}")
 	@ApiOperation(value = "세션 방 나가기", notes = "참여자수 - 1")
-	public String UpdateRoomLeave(@PathVariable String id) {
-		return roomService.UpdateRoomLeave(id);
+	public ResponseEntity<String> UpdateRoomLeave(@PathVariable String id) {
+		Room room = roomService.UpdateRoomLeave(id);
+		if (room != null) {
+			return ResponseEntity.ok(id);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
 
 	@DeleteMapping("/{id}")
 	@ApiOperation(value = "세션 방 삭제")
-	public String DeleteRoom(@PathVariable String id) {
-		return roomService.DeleteRoom(id);
+	public ResponseEntity<?> DeleteRoom(@PathVariable String id) {
+		Room room = roomService.DeleteRoom(id);
+		if (room != null) {
+			return ResponseEntity.noContent().build();
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
 }
