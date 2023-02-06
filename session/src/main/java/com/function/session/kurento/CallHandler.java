@@ -98,7 +98,7 @@ public class CallHandler extends TextWebSocketHandler {
 				log.info("...receive Chat from client...");
 				sendChat(jsonMessage);
 				break;
-			case "controlOtherVideos": // 없애기
+			case "controlOtherVideos": // TODO: 지우기
 				controlOtherVideos(jsonMessage);
 				break;
 			case "toggleAuthorization": //
@@ -116,11 +116,14 @@ public class CallHandler extends TextWebSocketHandler {
 				announceUserTurn(jsonMessage.get("roomName").getAsString(), 0);
 				break;
 			case "endMyTurn":
-				System.out.println("...endMyTurn[relayCoding]:" + relayCodingOrder);
-				System.out.println("...endMyTurn[index]:" + jsonMessage.get("index").getAsInt());
-				System.out.println("...endMyTurn[relayCoding.size()]:" + relayCodingOrder.size());
-				System.out.println("...");
+				// System.out.println("...endMyTurn[relayCoding]:" + relayCodingOrder);
+				// System.out.println("...endMyTurn[index]:" + jsonMessage.get("index").getAsInt());
+				// System.out.println("...endMyTurn[relayCoding.size()]:" + relayCodingOrder.size());
+				// System.out.println("...");
 				announceUserTurn(jsonMessage.get("roomName").getAsString(), jsonMessage.get("index").getAsInt());
+				break;
+			case "sendImageData":
+				sendImageData(jsonMessage); // 그림판
 				break;
 			default:
 				break;
@@ -129,25 +132,29 @@ public class CallHandler extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		UserSession user = registry.removeBySession(session);
-		final String roomName = user.getRoomName();
-		final String userName = user.getName();
-
-		roomManager.getRoom(roomName).leave(user);
-
-		if (roomName == userName) { // 호스트가 ConnectionClosed됐다. 나머지 참
-			hostLeft(roomName, null);
-			roomService.DeleteRoom(roomName); // 해당 방 DB에서 지우기
-		}
-
-		final Room room = roomManager.getRoom(user.getRoomName());
-		room.leave(user);
-		if (room.getParticipants().isEmpty()) {
-			roomManager.removeRoom(room);
-		}
-
 		// UserSession user = registry.removeBySession(session);
-		// roomManager.getRoom(user.getRoomName()).leave(user);
+		// final String roomName = user.getRoomName();
+		// final String userName = user.getName();
+		//
+		// roomManager.getRoom(roomName).leave(user);
+		//
+		// if (roomName == userName) { // 호스트가 ConnectionClosed됐다. 나머지 참
+		// 	hostLeft(roomName, null);
+		// 	roomService.DeleteRoom(roomName); // 해당 방 DB에서 지우기
+		// }
+
+		// LEAVE ROOM에서는 registry.removeBySession(session)을 안한다. 대신 if(room.getParic 비워있으면 방을 지운다.
+		// AFTERCONNECTION: registry.re을 한다.                       대신                            방 지우는게 없다.
+		// final Room room = roomManager.getRoom(user.getRoomName());
+		// room.leave(user);
+		// if (room.getParticipants().isEmpty()) {
+		// 	roomManager.removeRoom(room);
+		// }
+
+		UserSession user = registry.removeBySession(session);
+		// String roomName = user.getRoomName(); //
+		roomManager.getRoom(user.getRoomName()).leave(user);
+		// System.out.println("...After Connection Closed room: " + roomManager.getRoom(roomName)); //
 	}
 
 	private void noticeLeaving(UserSession user) throws Exception {
@@ -192,6 +199,15 @@ public class CallHandler extends TextWebSocketHandler {
 		final List<UserSession> participantsList = roomManager.getRoom(roomName).getParticipantsList(null);
 		int size = order.size();
 
+		String nowName = null;
+		for (int i = index; i < size; i++) {
+			nowName = order.get(i).getName();
+			if (registry.getByName(nowName) != null) {
+				break;
+			}
+			index = i + 1;
+		}
+
 		if (index == size) {
 			final JsonObject message = new JsonObject();
 			message.addProperty("id", "endRelay");
@@ -199,11 +215,12 @@ public class CallHandler extends TextWebSocketHandler {
 
 			relayCodingOrder.remove(roomName);
 		} else {
-			UserSession user = order.get(index);
+			// UserSession user = order.get(index);
+			// String nowName = user.getName();
 			String nextName;
 
 			if (index + 1 == size) {
-				nextName = ": 마지막 순서";
+				nextName = "마지막 순서";
 			} else {
 				nextName = order.get(index + 1).getName();
 			}
@@ -211,7 +228,7 @@ public class CallHandler extends TextWebSocketHandler {
 			final JsonObject message = new JsonObject();
 			message.addProperty("id", "relayCoding");
 			message.addProperty("index", index);
-			message.addProperty("now", user.getName());
+			message.addProperty("now", nowName);
 			message.addProperty("next", nextName);
 			noticeMessage(participantsList, message);
 			// // 지금 차례인 사용자에게 알리기
@@ -228,8 +245,9 @@ public class CallHandler extends TextWebSocketHandler {
 		final String roomName = params.get("roomName").getAsString();
 		final String userName = params.get("userName").getAsString();
 
-		final UserSession userSession = registry.getByName(userName);
-		final List<UserSession> participantsList = roomManager.getRoom(roomName).getParticipantsList(userSession);
+		// final UserSession userSession = registry.getByName(userName);
+		// final List<UserSession> participantsList = roomManager.getRoom(roomName).getParticipantsList(userSession);
+		final List<UserSession> participantsList = roomManager.getRoom(roomName).getParticipantsList(null);
 
 		final JsonObject chat = new JsonObject();
 		chat.addProperty("id", "noticeChat");
@@ -237,6 +255,14 @@ public class CallHandler extends TextWebSocketHandler {
 		chat.addProperty("chat", params.get("chat").getAsString());
 
 		noticeMessage(participantsList, chat);
+	}
+
+	private void sendImageData(JsonObject params) throws Exception {
+		String userName = params.get("userName").getAsString();
+		UserSession user = registry.getByName(userName);
+		List<UserSession> participantsList = roomManager.getRoom(user.getRoomName()).getParticipantsList(user);
+
+		noticeMessage(participantsList, params);
 	}
 
 	private void hostLeft(String roomName, UserSession host) throws Exception {
@@ -269,12 +295,7 @@ public class CallHandler extends TextWebSocketHandler {
 		final List<UserSession> participantsList = roomManager.getRoom(registry.getByName(userName).getRoomName())
 			.getParticipantsList(null);
 
-		final JsonObject message = new JsonObject();
-		message.addProperty("id", "toggleAuthorization");
-		message.addProperty("userName", userName);
-		message.addProperty("authorizationType", params.get("authorizationType").getAsString());
-
-		noticeMessage(participantsList, message);
+		noticeMessage(participantsList, params);
 	}
 
 	private void noticeMessage(List<UserSession> users, JsonObject message) throws IOException {
@@ -298,11 +319,18 @@ public class CallHandler extends TextWebSocketHandler {
 	}
 
 	private void leaveRoom(UserSession user) throws IOException {
+		// registry.removeBySession(session);//
+		// System.out.println("...1After LeaveRoom removeBySession: ");
+		// String roomName = user.getRoomName(); //
 		final Room room = roomManager.getRoom(user.getRoomName());
 		room.leave(user);
 		if (room.getParticipants().isEmpty()) {
+			// System.out.println("...room participants empty...");
 			roomManager.removeRoom(room);
 		}
 		// TODO: host이면 DB에서도 삭제
+		// System.out.println("...2After LeaveRoom removeBySession: " + registry.getBySession(session));
+
+		// System.out.println("...After LeaveRoom room: " + roomManager.getRoom(roomName)); //
 	}
 }

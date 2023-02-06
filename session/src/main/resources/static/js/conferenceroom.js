@@ -103,7 +103,7 @@ function startReadingTimer(){
     relayMessageId = 'endReading';
 
     min = 0; // 5분
-    sec = 10; // 0초
+    sec = 5; // 0초
     document.getElementById("timerDisplay").innerText = min + "분" + sec + "초";
 
     clearInterval(timer);
@@ -121,7 +121,8 @@ function startCodingTimer(index, now, next){
     relayIndex = index;
 
     min = 0; // 1분
-    sec = 10; // 0초
+    sec = 5; // 0초
+    document.getElementById("timerDisplay").innerText = min + "분" + sec + "초";
 
     clearInterval(timer);
     timer = setInterval(countTimer, 1000);
