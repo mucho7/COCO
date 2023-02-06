@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useCookies } from "react-cookie"
+import { useNavigate } from "react-router-dom"
 
 import { articleCreate } from "../../api/community"
 
@@ -7,6 +8,7 @@ import styled from "styled-components"
 import { Button, TextField } from "@mui/material"
 
 function ArticleCreate(params) {
+    const navigate = useNavigate()
     const [ cookie ] = useCookies(["userInfo"])
     const [inputTitle, setInputTitle ] = useState()
     const [inputContent, setInputContent ] = useState()
@@ -28,22 +30,29 @@ function ArticleCreate(params) {
                 // nothing
         }
     }
-    
+
     const newArticle ={
-        title: inputTitle,
-        content: inputContent,
-        code: inputCode,
-        writer: window.localStorage.getItem("userId"),
-        tokenL: {
+        "title": inputTitle,
+        "content": inputContent,
+        "code": inputCode,
+        "writer": window.localStorage.getItem("userId"),
+        token: {
             jwt_token: cookie.userInfo,
             refresh_token: cookie.userInfo
         }
     }
     
-    function onClickHandler() {
-        articleCreate(
+    async function onClickHandler() {
+        console.log(newArticle)
+
+        await articleCreate(
             newArticle,
-            (data) => console.log(data),
+            // 성공 시에 해당 글로 navigate 해야함, response에 따라 좀 달라질듯
+            (data) => {
+                console.log(data)
+                alert("작성완료")
+                navigate("/community")
+            },
             (err) => console.log(err)
         )
     }
@@ -51,16 +60,16 @@ function ArticleCreate(params) {
     return (
         <>
             <TitleSection>
-                <TextField onChange={onTypingHandler} id="title" autoFocus placeholder="제목" fullWidth />
+                <TextField onChange={onTypingHandler} id="title" autoFocus label="제목" fullWidth />
             </TitleSection>
             <hr/>
             <ArticleSection>
-                <ContentSection style={{paddingTop: 20}}>
-                    <TextField onChange={onTypingHandler} id="content" minRows={18} fullWidth multiline style={{maxHeight: 450, overflowY: "auto"}} />
+                <ContentSection >
+                    <TextField onChange={onTypingHandler} id="content" placeholder="Content" minRows={18} fullWidth multiline style={{maxHeight: 450, overflowY: "auto"}} />
                 </ContentSection>
                 <Vr/>
-                <CodeSection style={{paddingTop: 20}}>
-                    <TextField onChange={onTypingHandler} id="code" minRows={18} fullWidth multiline style={{maxHeight: 450, overflowY: "auto"}} />
+                <CodeSection >
+                    <TextField onChange={onTypingHandler} id="code" placeholder="Code" minRows={18} fullWidth multiline style={{maxHeight: 450, overflowY: "auto"}} />
                 </CodeSection>
             </ArticleSection>
             <hr/>
@@ -73,7 +82,7 @@ function ArticleCreate(params) {
 const TitleSection = styled.section`
     width: 100%;
 
-    margin-top: 15px;
+    padding-top: 15px;
     display: flex;
     justify-content: space-between;
 `
@@ -89,10 +98,15 @@ const ContentSection = styled.section`
     width: 45%;
     height: 500px;
 
+    padding-top: 15px;
+
+
 `
 const CodeSection = styled.section`
     width: 45%;
     height: 500px;
+    
+    padding-top: 15px;
 
 `
 const Vr = styled.div`

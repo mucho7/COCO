@@ -51,8 +51,8 @@ function ArticleUpdate(props) {
 
     }, [location])
 
-    function onClickHandler() {
-        articleUpdate(
+    async function onClickHandler() {
+        await articleUpdate(
             updateArticle,
             (data) => console.log(data),
             (err) => console.log(err)

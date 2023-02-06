@@ -9,10 +9,8 @@ function Navbar() {
     const [ cookie, setCookie ] = useCookies(["userInfo"])
     const [ userId, setUserId ] = useState("null")
 
-    if (cookie.userInfo === undefined) setCookie("undefined")
-
     useMemo(() => {
-        if (cookie.userInfo === undefined) setCookie("undefined")
+        if (cookie.userInfo === undefined) setCookie("userInfo", "undefined")
         else (setUserId(cookie.userInfo.user_id))
     }, [setUserId, setCookie, cookie])
 
@@ -46,7 +44,7 @@ function Navbar() {
                 {/* <NavbarSearch/> */}
             </Grid>
             <Grid item xs={3}>
-                {cookie.userInfo === "undefined" ? <NavbarItem navList={navlist.loged}/> : <NavbarItem navList={navlist.right}/>}
+                {cookie.userInfo !== "undefined" ? <NavbarItem navList={navlist.loged}/> : <NavbarItem navList={navlist.right}/>}
             </Grid>
         </Grid>
     )

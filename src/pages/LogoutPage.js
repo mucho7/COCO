@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { useCookies } from 'react-cookie'
 import { logout } from "../api/member"
 
-function LogoutPage(params) {
+function LogoutPage() {
     const navigate = useNavigate()
     const [ cookie, removeCookie ] = useCookies(["userInfo"])
 

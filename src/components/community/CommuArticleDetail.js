@@ -33,8 +33,8 @@ function CommuArticleDetail() {
     getArticlelDetail()
     }, [pk])
 
-    function onClickDeleteHandler(params) {
-        articleDelete(
+    async function onClickDeleteHandler(params) {
+        await articleDelete(
             pk,
             (data) => {
                 console.log(data)
