@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import com.function.board.dto.board.BoardListResponseDto;
 import com.function.board.dto.board.BoardSearchCondition;
 import com.function.board.dto.board.QBoardListResponseDto;
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -24,7 +23,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
 	private final JPAQueryFactory queryFactory;
 	@Override
 	public Page<BoardListResponseDto> searchPage(BoardSearchCondition condition, Pageable pageable) {
-		QueryResults<BoardListResponseDto> results = queryFactory
+		List<BoardListResponseDto> content = queryFactory
 			.select(new QBoardListResponseDto(
 				board.id,
 				board.title,
@@ -37,11 +36,10 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
 				writerContaining(condition.getWriter()))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
-			.fetchResults();
+			.fetch();
 
-		List<BoardListResponseDto> contents = results.getResults();
-		long total = results.getTotal();
-		return new PageImpl<>(contents, pageable, total);
+
+		return new PageImpl<>(content, pageable, content.size());
 	}
 
 	private BooleanExpression titleContaining(String title) {
