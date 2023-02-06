@@ -13,5 +13,4 @@ public interface BoardRepository extends JpaRepository<Board, Long>, BoardReposi
 	int updateView(@Param("id") Long id);
 
 	Page<Board> findAll(Pageable pageable);
-	Page<Board> findByTitleContaining(String keyword, Pageable pageable);
 }

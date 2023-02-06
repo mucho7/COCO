@@ -1,12 +1,10 @@
 package com.function.board.dto.board;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 
-import com.function.board.domain.board.Board;
 import com.function.board.domain.comment.Comment;
 import com.function.board.dto.comment.CommentResponseDto;
 

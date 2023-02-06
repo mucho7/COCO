@@ -1,8 +1,5 @@
 package com.function.board.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,26 +33,6 @@ public class CommentService {
 		commentRepository.save(comment);
 		return comment.getId();
 	}
-
-	// @Transactional(readOnly = true)
-	// public List<CommentResponseDto> findAllByBoard(Long boardId) {
-	// 	Board board = boardRepository.findById(boardId)
-	// 		.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
-	//
-	// 	List<Comment> comments = board.getComments();
-	// 	return comments.stream()
-	// 		.map(CommentResponseDto::new)
-	// 		.collect(Collectors.toList());
-	// }
-
-	// @Transactional(readOnly = true)
-	// public Page<CommentResponseDto> findAllByBoardPaging(Long boardId, Pageable pageable) {
-	// 	boardRepository.findById(boardId)
-	// 		.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
-	//
-	// 	return commentRepository.findAllByBoardId(boardId, pageable)
-	// 		.map(CommentResponseDto::new);
-	// }
 
 	public CommentResponseDto findById(Long commentId) {
 		Comment entity = commentRepository.findById(commentId)

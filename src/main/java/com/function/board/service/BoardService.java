@@ -16,7 +16,6 @@ import com.function.board.domain.comment.Comment;
 import com.function.board.domain.comment.CommentRepository;
 import com.function.board.dto.board.BoardDetailTransferDto;
 import com.function.board.dto.board.BoardListResponseDto;
-import com.function.board.dto.board.BoardResponseDto;
 import com.function.board.dto.board.BoardSaveRequestDto;
 import com.function.board.dto.board.BoardSearchCondition;
 import com.function.board.dto.board.BoardUpdateRequestDto;
@@ -58,8 +57,6 @@ public class BoardService {
 	public BoardDetailTransferDto findById(Long boardId, Pageable pageable) {
 		Board entity = boardRepository.findById(boardId)
 			.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
-
-
 
 		String[] content = entity.getContent().split("\n");
 		String[] code = entity.getCode().split("\n");
