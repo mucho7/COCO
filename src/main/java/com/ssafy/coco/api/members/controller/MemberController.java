@@ -19,7 +19,7 @@ import com.ssafy.coco.api.members.dto.request.MemberRatingUpdateRequestDto;
 import com.ssafy.coco.api.members.dto.request.MemberRegisterRequestDto;
 import com.ssafy.coco.api.members.dto.request.MemberUpdateRequestDto;
 import com.ssafy.coco.api.members.dto.request.PasswordChangeRequestDto;
-import com.ssafy.coco.api.members.dto.request.SendPasswordRequestDto;
+import com.ssafy.coco.api.members.dto.request.PasswordSendRequestDto;
 import com.ssafy.coco.api.members.dto.response.MemberResponseDto;
 import com.ssafy.coco.api.members.service.MemberService;
 import com.ssafy.coco.api.tokens.dto.JwtTokenDto;
@@ -113,7 +113,7 @@ public class MemberController {
 	@PostMapping("/tempPassword")
 	@ApiOperation(value = "임시 비밀번호 발급 API", notes = "비밀번호를 재설정하려는 ID와 이메일을 받아 회원 본인인지 확인하고, 맞다면 8자 구성의 임시 비밀번호를 반환한다.")
 	public String getTempPassword(
-		@RequestBody @ApiParam(value = "임시 비밀번호 발급 요청 정보", required = true) SendPasswordRequestDto requestDto) {
+		@RequestBody @ApiParam(value = "임시 비밀번호 발급 요청 정보", required = true) PasswordSendRequestDto requestDto) {
 		String userId = requestDto.getUserId();
 		String userEmail = requestDto.getEmail();
 

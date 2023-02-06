@@ -83,5 +83,13 @@ public class JwtTokenService {
 		}
 		return map;
 	}
-}
 
+	public boolean validateRequest(String userId, String accessToken) {
+		if (accessToken.startsWith("bearer ")) {
+			accessToken = accessToken.substring(7);
+		}
+		String extractedId = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
+		System.out.println("[validateRequest@JwtTokenService]Id: " + userId + ", extractedId: " + extractedId);
+		return extractedId.equals(userId);
+	}
+}

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.coco.api.deprecated.mail.dto.MailDto;
 import com.ssafy.coco.api.deprecated.mail.service.MailService;
-import com.ssafy.coco.api.members.dto.request.SendPasswordRequestDto;
+import com.ssafy.coco.api.members.dto.request.PasswordSendRequestDto;
 import com.ssafy.coco.api.members.service.MemberService;
 
 import io.swagger.annotations.Api;
@@ -30,7 +30,7 @@ public class MailController {
 	 */
 	@PostMapping("/sendMail")
 	public String sendPassword(
-		@RequestBody @ApiParam(value = "임시 비밀번호 발급 요청 정보", required = true) SendPasswordRequestDto requestDto) {
+		@RequestBody @ApiParam(value = "임시 비밀번호 발급 요청 정보", required = true) PasswordSendRequestDto requestDto) {
 
 		String userId = requestDto.getUserId();
 		String email = requestDto.getEmail();
