@@ -64,17 +64,9 @@ public class Member implements UserDetails {
 		this.email = email;
 	}
 
-	public void UpdateInfo(String password, String name, String email) {
-		this.password = password;
-		this.name = name;
-		this.email = email;
-	}
-
 	public void updateRating(Integer amount) {
 		this.rating += amount;
-		if (this.rating > 10000) {
-			this.rating = 10000;
-		} else if (this.rating < 0) {
+		if (this.rating < 0) {
 			this.rating = 0;
 		}
 	}

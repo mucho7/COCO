@@ -169,7 +169,6 @@ public class JwtTokenProvider {
 				String userId = requestToken.getUserId();
 				System.out.println("토큰 상의 UserID: " + userId + ", claims상의 UserId: " + claims.getBody().getId());
 				return recreateAccessToken(userId, (memberRepository.findByUserId(userId)).get().getRoles());
-				// TODO : 사용자 권한 하드코딩한거 고치는 방법 찾아보기
 			}
 		} catch (Exception e) {
 			//  Refresh Token이 만료된 경우 로그인 필요
