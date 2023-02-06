@@ -1,1 +1,9 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: cossafyco
+    username: root
+    url: jdbc:mysql://mysql:3306/project1db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
 
+jwt:
+  secret: PorkCurtletFriedChickenSundubuJJigaeGrilledPorkBelly
