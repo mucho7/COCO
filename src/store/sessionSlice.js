@@ -43,7 +43,8 @@ const initialState = {
   participantsId: null,
   isCompilePossible: true,
   isDrawPossible: true,
-  isMicPossible: true
+  isMicPossible: true,
+  imageData: null
 };
 
 
@@ -80,6 +81,9 @@ const sessionSlice = createSlice({
     setIsMicPossible(state, action) {
       state.isMicPossible = !state.isMicPossible;
     },
+    receiveImageData(state, action) {
+      state.imageData = action.payload;
+    }
   },
   // extraReducers: (builder) => {
   //   builder.addCase(websocketConnected.fulfilled, (state, action) => {
@@ -88,6 +92,6 @@ const sessionSlice = createSlice({
   // },
 });
 
-export const { sendChat, receiveChat, setSocketInfo, setWebsocketId, setParticipantsId } = sessionSlice.actions;
+export const { sendChat, receiveChat, setSocketInfo, setWebsocketId, setParticipantsId, receiveImageData } = sessionSlice.actions;
 
 export default sessionSlice;

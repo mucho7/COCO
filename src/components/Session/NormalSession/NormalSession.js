@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { receiveChat, websocketInstances, setWebsocketId, setParticipantsId, participantsInstances } from "../../../store/sessionSlice";
+import { receiveChat, websocketInstances, setWebsocketId, setParticipantsId, participantsInstances, receiveImageData } from "../../../store/sessionSlice";
 
 import IdeArea from "../IdeArea";
 import SideArea from "../SideArea";
@@ -27,44 +27,47 @@ function NormalSession(props) {
   let sendingMessage = useSelector((state) => state.session.sendMessage);
   let userName = useSelector((state) => state.session.userName);
   let roomName = useSelector((state) => state.session.roomName);
-  let participants = {};
-
-  console.log("xx", userName, roomName);
+  const isDrawButtonOn = useSelector((state) => state.toolBarAction.isDrawButtonOn);
+  
+  // console.log("xx", userName, roomName);
   // console.log(sendingMessage)
   
-  // 웹소켓 서버로 메세지 보내기
-  function sendMessage(message) {
-    let jsonMessage = JSON.stringify(message);
-    console.log('Sending message: ' + jsonMessage);
-    ws.current.send(jsonMessage);
-  }
-
-  // 웹소켓 서버에 userName가 roomName에 참여했음을 등록
-  function register() {
-    let message = {
-      id : 'joinRoom',
-      name : userName,
-      room : roomName,
-    }
-    sendMessage(message);
-  }
-
-  // 웹소켓 서버로부터 noticeChat 메세지를 받는 경우(누군가가 입력한 채팅을 채팅창에 띄우기 위해 메세지 수신)
-  function noticeChat(user, chat) {
-    dispatch(receiveChat({user, chat}));
-  }
-
+  
   // useEffect(() => {
-  //   if (ws.current) {
-  //     console.log(participants)
-  //     dispatch(getParticipants(participants));
-  //   }
-  // }, [dispatch, participants])
-
+    //   if (ws.current) {
+      //     console.log(participants)
+      //     dispatch(getParticipants(participants));
+      //   }
+      // }, [dispatch, participants])
+      
   useEffect(() => {
-    window.addEventListener("resize", () => {
-      window.resizeTo(1600, 900)
-    });
+    // window.addEventListener("resize", () => {
+    //   window.resizeTo(1600, 900)
+    // });
+
+    let participants = {};
+
+    // 웹소켓 서버로 메세지 보내기
+    function sendMessage(message) {
+      let jsonMessage = JSON.stringify(message);
+      console.log('Sending message: ' + jsonMessage);
+      ws.current.send(jsonMessage);
+    }
+  
+    // 웹소켓 서버에 userName가 roomName에 참여했음을 등록
+    function register() {
+      let message = {
+        id : 'joinRoom',
+        name : userName,
+        room : roomName,
+      }
+      sendMessage(message);
+    }
+  
+    // 웹소켓 서버로부터 noticeChat 메세지를 받는 경우(누군가가 입력한 채팅을 채팅창에 띄우기 위해 메세지 수신)
+    function noticeChat(user, chat) {
+      dispatch(receiveChat({user, chat}));
+    }
 
     // 세션 컴포넌트 마운트시 웹소켓 생성하고 register 함수를 통해 서버에 등록
     if (!ws.current) {
@@ -81,6 +84,7 @@ function NormalSession(props) {
       console.log(participants);
       // dispatch(getParticipants(participants));
   
+      // 서버로부터 메시지 수신
       ws.current.onmessage = function(message) {
         let parsedMessage = JSON.parse(message.data);
         console.info("received message: " + message.data);
@@ -88,7 +92,7 @@ function NormalSession(props) {
         switch (parsedMessage.id) {
           case 'existingParticipants':
             onExistingParticipants(parsedMessage);
-            console.log("rrrrrrrrrrrr",participants)
+            // console.log("rrrrrrrrrrrr",participants)
             participantsInstances.set(1, participants);
             dispatch(setParticipantsId(1));
             break;
@@ -116,13 +120,28 @@ function NormalSession(props) {
           case "toggleAuthorization":
             toggleAuthorization(parsedMessage.userName, parsedMessage.authorizationType);
             break;
+          case "sendImageData":
+            dispatch(receiveImageData(parsedMessage));
+            console.log("Receive ImageData")
+            console.log(parsedMessage)
+            break;
           default:
             console.error('Unrecognized message', parsedMessage);
         }
       }
 
+      if (ws.current && sendingMessage) {
+        // console.log(sendingMessage)
+        const msg = {
+          id: "sendChat",
+          userName: userName,
+          roomName: roomName,
+          chat: sendingMessage
+        }
+        sendMessage(msg);
+      }
 
-
+      // 새 참여자 입장
       function onNewParticipant(request) {
         receiveVideo(request.name);
       }
@@ -144,6 +163,7 @@ function NormalSession(props) {
         }
       }
 
+      // 참여자들과 시그널링 & 미디어 정보 수신
       function onExistingParticipants(msg) {
         let constraints = {
           audio : true,
@@ -227,6 +247,7 @@ function NormalSession(props) {
         delete participants[request.name];
       }
 
+      // 권한 변경 이벤트에 반응
       function toggleAuthorization(targetUserName, authorizationType) {
         let participant = participants[targetUserName]
         if (userName === targetUserName) {
@@ -263,6 +284,7 @@ function NormalSession(props) {
           isMicPossible: true,
           isDrawPossible: true
         }
+        this.isDrawButtonOn = isDrawButtonOn;
         this.onToggleAuthorization = function(authorizationType) {
           switch (authorizationType) {
             case "compile":
@@ -281,6 +303,8 @@ function NormalSession(props) {
             default:
               break;
           }
+          participants[this.name] = this;
+          participantsInstances.set(1, participants);
         }
 
         var container = document.createElement('div');
@@ -361,21 +385,21 @@ function NormalSession(props) {
       //   ws.current.close();
       // }
     }
-  }, [userName, roomName, dispatch, register, noticeChat])
+  }, [dispatch, isDrawButtonOn, roomName, sendingMessage, userName])
 
-  useEffect(() => {
-    console.log(sendingMessage);
-    if (ws.current && sendingMessage) {
-      // console.log(sendingMessage)
-      const msg = {
-        id: "sendChat",
-        userName: userName,
-        roomName: roomName,
-        chat: sendingMessage
-      }
-      sendMessage(msg);
-    }
-  }, [sendingMessage])
+  // useEffect(() => {
+  //   console.log(sendingMessage);
+  //   if (ws.current && sendingMessage) {
+  //     // console.log(sendingMessage)
+  //     const msg = {
+  //       id: "sendChat",
+  //       userName: userName,
+  //       roomName: roomName,
+  //       chat: sendingMessage
+  //     }
+  //     sendMessage(msg);
+  //   }
+  // }, [sendingMessage])
   
   
   return (

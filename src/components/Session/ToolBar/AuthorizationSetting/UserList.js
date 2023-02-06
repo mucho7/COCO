@@ -34,6 +34,7 @@ function UserList() {
     // copiedParticipants[participantName] = participant;
     // setParticipants(copiedParticipants);
     // console.log("CHANGED")
+    setParticipants(participantsInstances.get(participantsId));
   }
 
   return (

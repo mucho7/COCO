@@ -7,6 +7,9 @@ const initialState = {
   isAuthorizeButtonOn: false,
   isChatButtonOn: false,
   isQuitButtonClicked: false,
+  isCompilePossible: true,
+  isDrawPossible: true,
+  isMicPossible: true
 };
 
 const toolBarActionSlice = createSlice({
@@ -31,6 +34,30 @@ const toolBarActionSlice = createSlice({
     onClickQuitButton(state) {
       state.isQuitButtonOn = !state.isQuitButtonOn;
     },
+    onToggleAuthorization(state, action) {
+      switch (action.payload) {
+        case "compile":
+          state.isCompilePossible = !state.isCompilePossible;
+          if (state.isCompileButtonOn) {
+            state.isCompileButtonOn = !state.isCompileButtonOn;
+          }
+          break;
+          case "draw":
+            state.isDrawPossible = !state.isDrawPossible;
+            if (state.isDrawButtonOn) {
+              state.isDrawButtonOn = !state.isDrawButtonOn;
+            }
+            break;
+            case "mic":
+              state.isMicPossible = !state.isMicPossible;
+              if (state.isMicButtonOn) {
+                state.isMicButtonOn = !state.isMicButtonOn;
+              }
+          break;
+        default:
+          break;
+      }
+    }
   }
 });
 
@@ -41,5 +68,6 @@ export const {
   onClickMicButton,
   onClickAuthorizeButton,
   onClickChatButton,
-  onClickQuitButton
+  onClickQuitButton,
+  onToggleAuthorization
 } = toolBarActionSlice.actions;

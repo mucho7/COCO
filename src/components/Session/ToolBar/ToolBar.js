@@ -26,7 +26,6 @@ const CustomButton = styled.button`
   border-radius: 50%;
   height: 50px;
   width: 50px;
-  // disabled: ${props => props.isAuthorized ? true : false};
 `;
 
 function ToolBar(props) {

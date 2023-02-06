@@ -42,9 +42,9 @@ function Ide(props) {
   return (
     <Editor 
       id="editor"
-      options={{fontSize: 20}}
-      height="100%"
-      width="100%"
+      options={{fontSize: 16, minimap: { enabled: false }, scrollbar: { vertical: "auto", horizontal: "auto" }}}
+      // height="100%"
+      // width="100%"
       language={userLanguage}
       theme={userTheme}
       defaultValue="# 코드를 입력하세요."
@@ -54,7 +54,7 @@ function Ide(props) {
         dispatch(onChangeCode(value))
       }}
       sx={{m: 0}}
-      // onMount={handleEditorDidMount}
+      onMount={handleEditorDidMount}
     />
   );
 }
