@@ -82,6 +82,29 @@ ws.onmessage = function(message) {
 		console.error('Unrecognized message', parsedMessage);
 	}
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+btnHostLeave.onclick = () => {
+    console.log("buttonHoseLeave click...")
+    let roomName = document.getElementById('roomName').value;
+    var message = {
+        id : 'hostLeft',
+        roomName : roomName,
+    }
+    sendMessage(message);
+}
+
+function notifyLeaving(user) {
+    let li = document.createElement('li')
+    let text = document.createTextNode(`${user}님이 나갔습니다.`)
+    li.appendChild(text)
+    ulChat.appendChild(li)
+}
+
+function countUsers() {
+    let count = Object.keys(participants).length;// + number;
+    document.getElementById('numberOfUsers').innerText = '인원수: ' + count;
+//    return Object.keys(participants).length;
+}
 // <1분 릴레이 코딩> ////////////////////////////////////////////////////////////////////////////////////////////////////
 // 호스트가 호스트한테만 보이는 릴레이코딩 시작 버튼을 누르면...
 btnStartRelay.onclick = () => {
@@ -173,7 +196,7 @@ function endTimer() {
 //        sendMessage(message);
     }
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // <채팅 보내기> ////////////////////////////////////////////////////////////////////////////////////////////////////
 btnSendChat.onclick = () => {
     console.log("button click...")
@@ -191,30 +214,15 @@ btnSendChat.onclick = () => {
 
     noticeChat("[me]", chat);
 }
-
-btnHostLeave.onclick = () => {
-    console.log("buttonHoseLeave click...")
-    let roomName = document.getElementById('roomName').value;
-    var message = {
-        id : 'hostLeft',
-        roomName : roomName,
-    }
-    sendMessage(message);
-}
-
-function notifyLeaving(user) {
-    let li = document.createElement('li')
-    let text = document.createTextNode(`${user}님이 나갔습니다.`)
-    li.appendChild(text)
-    ulChat.appendChild(li)
-}
-
 function noticeChat(user, chat) {
     let li = document.createElement('li')
     let text = document.createTextNode(`${user}: ${chat}`)
     li.appendChild(text)
     ulChat.appendChild(li)
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 btnVideoOnOff.onclick = onOffVideo;
 
@@ -260,11 +268,8 @@ function turnVideoOffFromHost() {
 //    }
 //}
 
-function countUsers() {
-    let count = Object.keys(participants).length;// + number;
-    document.getElementById('numberOfUsers').innerText = '인원수: ' + count;
-//    return Object.keys(participants).length;
-}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function register() {
 	name = document.getElementById('name').value;

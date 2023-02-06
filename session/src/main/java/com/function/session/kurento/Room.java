@@ -143,8 +143,7 @@ public class Room implements Closeable {
 		user.sendMessage(existingParticipantsMsg);
 	}
 
-	// 추가
-	public List<UserSession> getParticipantsList(UserSession user) {
+	public List<UserSession> getParticipantsList(UserSession user) { // 추가
 		if (user == null) { // 모든 참가자들
 			final List<UserSession> participantsList = new ArrayList<>(participants.values().size());
 			for (final UserSession participant : this.getParticipants()) {

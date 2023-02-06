@@ -82,7 +82,6 @@ public class CallHandler extends TextWebSocketHandler {
 				user.receiveVideoFrom(sender, sdpOffer);
 				break;
 			case "leaveRoom":
-				// noticeLeaving(user); //
 				leaveRoom(user);
 				break;
 			case "onIceCandidate":
@@ -95,35 +94,28 @@ public class CallHandler extends TextWebSocketHandler {
 				}
 				break;
 			case "sendChat":
-				log.info("...receive Chat from client...");
 				sendChat(jsonMessage);
 				break;
-			case "controlOtherVideos": // TODO: 지우기
-				controlOtherVideos(jsonMessage);
+			case "sendImageData":
+				sendImageData(jsonMessage);
 				break;
-			case "toggleAuthorization": //
+			// case "controlOtherVideos": // TODO: 지우기
+			// 	controlOtherVideos(jsonMessage);
+			// 	break;
+			case "toggleAuthorization":
 				controlAuthorization(jsonMessage);
-				break;
-			case "hostLeft":
-				hostLeft(jsonMessage.get("roomName").getAsString(), user);
 				break;
 			case "startRelay":
 				startReading(user);
 				break;
 			case "endReading":
-				// startCoding(jsonMessage);
-				System.out.println("...endReading:");
 				announceUserTurn(jsonMessage.get("roomName").getAsString(), 0);
 				break;
 			case "endMyTurn":
-				// System.out.println("...endMyTurn[relayCoding]:" + relayCodingOrder);
-				// System.out.println("...endMyTurn[index]:" + jsonMessage.get("index").getAsInt());
-				// System.out.println("...endMyTurn[relayCoding.size()]:" + relayCodingOrder.size());
-				// System.out.println("...");
 				announceUserTurn(jsonMessage.get("roomName").getAsString(), jsonMessage.get("index").getAsInt());
 				break;
-			case "sendImageData":
-				sendImageData(jsonMessage); // 그림판
+			case "hostLeft":
+				announceHostLeft(jsonMessage.get("roomName").getAsString(), user);
 				break;
 			default:
 				break;
@@ -138,8 +130,8 @@ public class CallHandler extends TextWebSocketHandler {
 		//
 		// roomManager.getRoom(roomName).leave(user);
 		//
-		// if (roomName == userName) { // 호스트가 ConnectionClosed됐다. 나머지 참
-		// 	hostLeft(roomName, null);
+		// if (roomName == userName) { // 호스트가 ConnectionClosed됐다. 나머지 참  ==> leave Room 끝나고 afterConnectionClosed가 실행된다??!
+		// 	announceHostLeft(roomName, null);
 		// 	roomService.DeleteRoom(roomName); // 해당 방 DB에서 지우기
 		// }
 
@@ -157,22 +149,49 @@ public class CallHandler extends TextWebSocketHandler {
 		// System.out.println("...After Connection Closed room: " + roomManager.getRoom(roomName)); //
 	}
 
-	private void noticeLeaving(UserSession user) throws Exception {
-		// 해당 룸에 있는 참여자들에게 user님이 떠났다고 알리기
-		final List<UserSession> participantsList = roomManager.getRoom(user.getRoomName()).getParticipantsList(user);
+	private void sendChat(JsonObject params) throws Exception {
+		final String roomName = params.get("roomName").getAsString();
+		final String userName = params.get("userName").getAsString();
+
+		final List<UserSession> participantsList = roomManager.getRoom(roomName).getParticipantsList(null);
 
 		final JsonObject chat = new JsonObject();
-		chat.addProperty("id", "noticeLeaving");
-		chat.addProperty("userName", user.getName());
-
-		noticeMessage(participantsList, chat);
+		chat.addProperty("id", "noticeChat");
+		chat.addProperty("userName", userName);
+		chat.addProperty("chat", params.get("chat").getAsString());
+		emitMessage(participantsList, chat);
 	}
 
-	// 1분 릴레이 코딩
+	private void sendImageData(JsonObject params) throws Exception {
+		final UserSession user = registry.getByName(params.get("userName").getAsString());
+		final List<UserSession> participantsList = roomManager.getRoom(user.getRoomName()).getParticipantsList(user);
+		emitMessage(participantsList, params);
+	}
+
+	// private void controlOtherVideos(JsonObject params) throws Exception {
+	// 	final String roomName = params.get("roomName").getAsString();
+	// 	final String userName = params.get("userName").getAsString();
+	//
+	// 	final UserSession userSession = registry.getByName(userName);
+	// 	final List<UserSession> participantsList = roomManager.getRoom(roomName).getParticipantsList(userSession);
+	//
+	// 	final JsonObject message = new JsonObject();
+	// 	message.addProperty("id", "turnVideoOff");
+	//
+	// 	emitMessage(participantsList, message);
+	// }
+
+	private void controlAuthorization(JsonObject params) throws Exception {
+		final String userName = params.get("userName").getAsString();
+		final List<UserSession> participantsList = roomManager.getRoom(registry.getByName(userName).getRoomName())
+			.getParticipantsList(null);
+		emitMessage(participantsList, params);
+	}
+
 	private Map<String, List<UserSession>> relayCodingOrder = new HashMap<>();
 
 	private void startReading(UserSession user) throws Exception {
-		String roomName = user.getRoomName();
+		final String roomName = user.getRoomName();
 		final List<UserSession> participantsList = roomManager.getRoom(roomName).getParticipantsList(null);
 
 		Collections.shuffle(participantsList); // 랜덤으로 순서 재배치
@@ -180,7 +199,7 @@ public class CallHandler extends TextWebSocketHandler {
 
 		final JsonObject message = new JsonObject();
 		message.addProperty("id", "startReading");
-		noticeMessage(participantsList, message);
+		emitMessage(participantsList, message);
 	}
 
 	// private void startCoding(JsonObject params) throws Exception {
@@ -197,7 +216,7 @@ public class CallHandler extends TextWebSocketHandler {
 	private void announceUserTurn(String roomName, int index) throws Exception {
 		final List<UserSession> order = relayCodingOrder.get(roomName);
 		final List<UserSession> participantsList = roomManager.getRoom(roomName).getParticipantsList(null);
-		int size = order.size();
+		final int size = order.size();
 
 		String nowName = null;
 		for (int i = index; i < size; i++) {
@@ -211,7 +230,7 @@ public class CallHandler extends TextWebSocketHandler {
 		if (index == size) {
 			final JsonObject message = new JsonObject();
 			message.addProperty("id", "endRelay");
-			noticeMessage(participantsList, message);
+			emitMessage(participantsList, message);
 
 			relayCodingOrder.remove(roomName);
 		} else {
@@ -230,7 +249,7 @@ public class CallHandler extends TextWebSocketHandler {
 			message.addProperty("index", index);
 			message.addProperty("now", nowName);
 			message.addProperty("next", nextName);
-			noticeMessage(participantsList, message);
+			emitMessage(participantsList, message);
 			// // 지금 차례인 사용자에게 알리기
 			// final JsonObject yourTurnMessage = new JsonObject();
 			// yourTurnMessage.addProperty("id", "yourTurn");
@@ -240,65 +259,26 @@ public class CallHandler extends TextWebSocketHandler {
 
 	}
 
-	private void sendChat(JsonObject params) throws Exception {
-		// 해당 룸에 있는 참여자들에게 메시지 보내기
-		final String roomName = params.get("roomName").getAsString();
-		final String userName = params.get("userName").getAsString();
-
-		// final UserSession userSession = registry.getByName(userName);
-		// final List<UserSession> participantsList = roomManager.getRoom(roomName).getParticipantsList(userSession);
-		final List<UserSession> participantsList = roomManager.getRoom(roomName).getParticipantsList(null);
-
-		final JsonObject chat = new JsonObject();
-		chat.addProperty("id", "noticeChat");
-		chat.addProperty("userName", userName);
-		chat.addProperty("chat", params.get("chat").getAsString());
-
-		noticeMessage(participantsList, chat);
-	}
-
-	private void sendImageData(JsonObject params) throws Exception {
-		String userName = params.get("userName").getAsString();
-		UserSession user = registry.getByName(userName);
-		List<UserSession> participantsList = roomManager.getRoom(user.getRoomName()).getParticipantsList(user);
-
-		noticeMessage(participantsList, params);
-	}
-
-	private void hostLeft(String roomName, UserSession host) throws Exception {
+	// private void noticeLeaving(UserSession user) throws Exception { // TODO: 지우기
+	// 	// 해당 룸에 있는 참여자들에게 user님이 떠났다고 알리기
+	// 	final List<UserSession> participantsList = roomManager.getRoom(user.getRoomName()).getParticipantsList(user);
+	//
+	// 	final JsonObject chat = new JsonObject();
+	// 	chat.addProperty("id", "noticeLeaving");
+	// 	chat.addProperty("userName", user.getName());
+	//
+	// 	emitMessage(participantsList, chat);
+	// }
+	private void announceHostLeft(String roomName, UserSession host) throws Exception {
 		final List<UserSession> participantsList = roomManager.getRoom(roomName)
-			.getParticipantsList(host); // 해당 룸에 있는 다른 모든 참여자들에게
+			.getParticipantsList(host);
 
 		final JsonObject message = new JsonObject();
 		message.addProperty("id", "leaveByHost");
-
-		noticeMessage(participantsList, message);
-
-		roomService.DeleteRoom(roomName); // 해당 방 DB에서 지우기
+		emitMessage(participantsList, message);
 	}
 
-	private void controlOtherVideos(JsonObject params) throws Exception {
-		final String roomName = params.get("roomName").getAsString();
-		final String userName = params.get("userName").getAsString();
-
-		final UserSession userSession = registry.getByName(userName);
-		final List<UserSession> participantsList = roomManager.getRoom(roomName).getParticipantsList(userSession);
-
-		final JsonObject message = new JsonObject();
-		message.addProperty("id", "turnVideoOff");
-
-		noticeMessage(participantsList, message);
-	}
-
-	private void controlAuthorization(JsonObject params) throws Exception {
-		final String userName = params.get("userName").getAsString();
-		final List<UserSession> participantsList = roomManager.getRoom(registry.getByName(userName).getRoomName())
-			.getParticipantsList(null);
-
-		noticeMessage(participantsList, params);
-	}
-
-	private void noticeMessage(List<UserSession> users, JsonObject message) throws IOException {
+	private void emitMessage(List<UserSession> users, JsonObject message) throws IOException {
 		for (final UserSession user : users) {
 			user.sendMessage(message);
 		}
@@ -311,8 +291,6 @@ public class CallHandler extends TextWebSocketHandler {
 		log.info("PARTICIPANT {}: trying to join room {}", name, roomName);
 
 		Room room = roomManager.getRoom(roomName);
-		log.info("...joinRoom, WebSocket: ", session, session.getId()); //
-		// System.out.println("...joinRoom, WebSocket: " + session + ", " + session.getId());
 		final UserSession user = room.join(name, session);
 		registry.register(user);
 
@@ -328,7 +306,7 @@ public class CallHandler extends TextWebSocketHandler {
 			// System.out.println("...room participants empty...");
 			roomManager.removeRoom(room);
 		}
-		// TODO: host이면 DB에서도 삭제
+		// TODO: host이면 DB에서도 삭제?? => leaveRoom다음에 AfterConnectionClosed 호출된다면 필요없다.
 		// System.out.println("...2After LeaveRoom removeBySession: " + registry.getBySession(session));
 
 		// System.out.println("...After LeaveRoom room: " + roomManager.getRoom(roomName)); //
