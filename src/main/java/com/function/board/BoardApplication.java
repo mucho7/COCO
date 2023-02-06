@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 @EnableJpaAuditing
 @EnableEurekaClient
-@CrossOrigin("*")
 @SpringBootApplication
 public class BoardApplication {
 	public static void main(String[] args) {
