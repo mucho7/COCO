@@ -65,6 +65,11 @@ spring:
           uri: http://MemberService:8012/
           predicates:
             - Path=/check/**
+        - id: validateRequest
+          uri: http://MemberService:8012/
+          predicates:
+            - Path=/validate
+            - Method=POST
         - id: sessionFunction
           uri: http://SessionFunctionService:8013/
           predicates:
