@@ -66,7 +66,7 @@ ws.onmessage = function(message) {
     case 'turnVideoOff':
         turnVideoOffFromHost();
         break;
-    case 'leaveByHost':
+    case 'leaveByHost': // TODO
         leaveRoom();
         break;
     case 'startReading':
@@ -349,9 +349,10 @@ function onExistingParticipants(msg) {
 }
 
 function leaveRoom() {
-	sendMessage({
-		id : 'leaveRoom'
-	});
+    // TODO: Ver 2. leaveRoom 안 부름
+//	sendMessage({
+//		id : 'leaveRoom'
+//	});
 
 	for ( var key in participants) {
 		participants[key].dispose();

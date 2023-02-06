@@ -81,9 +81,9 @@ public class CallHandler extends TextWebSocketHandler {
 				final String sdpOffer = jsonMessage.get("sdpOffer").getAsString();
 				user.receiveVideoFrom(sender, sdpOffer);
 				break;
-			case "leaveRoom":
-				leaveRoom(user);
-				break;
+			// case "leaveRoom":
+			// 	leaveRoom(user);
+			// 	break;
 			case "onIceCandidate":
 				JsonObject candidate = jsonMessage.get("candidate").getAsJsonObject();
 
@@ -114,39 +114,12 @@ public class CallHandler extends TextWebSocketHandler {
 			case "endMyTurn":
 				announceUserTurn(jsonMessage.get("roomName").getAsString(), jsonMessage.get("index").getAsInt());
 				break;
-			case "hostLeft":
+			case "hostLeft": // TODO: 지우기
 				announceHostLeft(jsonMessage.get("roomName").getAsString(), user);
 				break;
 			default:
 				break;
 		}
-	}
-
-	@Override
-	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		// UserSession user = registry.removeBySession(session);
-		// final String roomName = user.getRoomName();
-		// final String userName = user.getName();
-		//
-		// roomManager.getRoom(roomName).leave(user);
-		//
-		// if (roomName == userName) { // 호스트가 ConnectionClosed됐다. 나머지 참  ==> leave Room 끝나고 afterConnectionClosed가 실행된다??!
-		// 	announceHostLeft(roomName, null);
-		// 	roomService.DeleteRoom(roomName); // 해당 방 DB에서 지우기
-		// }
-
-		// LEAVE ROOM에서는 registry.removeBySession(session)을 안한다. 대신 if(room.getParic 비워있으면 방을 지운다.
-		// AFTERCONNECTION: registry.re을 한다.                       대신                            방 지우는게 없다.
-		// final Room room = roomManager.getRoom(user.getRoomName());
-		// room.leave(user);
-		// if (room.getParticipants().isEmpty()) {
-		// 	roomManager.removeRoom(room);
-		// }
-
-		UserSession user = registry.removeBySession(session);
-		// String roomName = user.getRoomName(); //
-		roomManager.getRoom(user.getRoomName()).leave(user);
-		// System.out.println("...After Connection Closed room: " + roomManager.getRoom(roomName)); //
 	}
 
 	private void sendChat(JsonObject params) throws Exception {
@@ -284,6 +257,41 @@ public class CallHandler extends TextWebSocketHandler {
 		}
 	}
 
+	@Override
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+		// UserSession user = registry.removeBySession(session);
+		// roomManager.getRoom(user.getRoomName()).leave(user);
+
+		System.out.println("...After Connection Closed..."); //
+
+		// // Ver 1.
+		// UserSession user = registry.removeBySession(session);
+		// final String roomName = user.getRoomName();
+		// final String userName = user.getName();
+		// // if (userName.equals(roomName)) { // 호스트가 나가면
+		// if (userName.equals("host")) { // 호스트가 나가면
+		// 	announceHostLeft(roomName, user);
+		// 	// roomService.DeleteRoom(roomName); // TODO: 해당 방 DB에서 지우기
+		// }
+		// roomManager.getRoom(roomName).leave(user);
+
+		// Ver.2: leaveRoom + AfterConnectionClosed
+		UserSession user = registry.removeBySession(session);
+		final String roomName = user.getRoomName();
+		final String userName = user.getName();
+		final Room room = roomManager.getRoom(roomName);
+		room.leave(user);
+		if (room.getParticipants().isEmpty()) {
+			roomManager.removeRoom(room);
+		}
+		if (userName.equals("host")) { // if (userName.equals(roomName)) { // TODO: 호스트가 나가면
+			System.out.println("...호스트가 나갔다!!...");
+			announceHostLeft(roomName, null);
+			// roomService.DeleteRoom(roomName); // TODO: 해당 방 DB에서 지우기
+			System.out.println("...DB에서 해당 방 삭제하기...");
+		}
+	}
+
 	private void joinRoom(JsonObject params, WebSocketSession session) throws IOException {
 		final String roomName = params.get("room").getAsString();
 		final String name = params.get("name").getAsString();
@@ -297,18 +305,11 @@ public class CallHandler extends TextWebSocketHandler {
 	}
 
 	private void leaveRoom(UserSession user) throws IOException {
-		// registry.removeBySession(session);//
-		// System.out.println("...1After LeaveRoom removeBySession: ");
-		// String roomName = user.getRoomName(); //
+		System.out.println("...Leave Room..."); //
 		final Room room = roomManager.getRoom(user.getRoomName());
 		room.leave(user);
 		if (room.getParticipants().isEmpty()) {
-			// System.out.println("...room participants empty...");
 			roomManager.removeRoom(room);
 		}
-		// TODO: host이면 DB에서도 삭제?? => leaveRoom다음에 AfterConnectionClosed 호출된다면 필요없다.
-		// System.out.println("...2After LeaveRoom removeBySession: " + registry.getBySession(session));
-
-		// System.out.println("...After LeaveRoom room: " + roomManager.getRoom(roomName)); //
 	}
 }
