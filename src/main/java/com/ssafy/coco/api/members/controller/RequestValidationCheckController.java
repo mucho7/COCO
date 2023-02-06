@@ -24,7 +24,7 @@ public class RequestValidationCheckController {
 	private final JwtTokenService jwtTokenService;
 
 	@PostMapping
-	@ApiOperation(value = "요청 검증", notes = "넘겨받은 회원정보를 바탕으로 회원을 DB에 등록한다.")
+	@ApiOperation(value = "요청 검증", notes = "브라우저에 있는 사용자 ID와 JWT 토큰 상에 있는 사용자 ID가 일치하는지 여부를 판단한다.")
 	public boolean validateRequest(
 		@RequestBody @ApiParam(value = "브라우저에 있는 사용자 ID", required = true) ValidateRequestDto requestDto,
 		HttpServletRequest request) {
