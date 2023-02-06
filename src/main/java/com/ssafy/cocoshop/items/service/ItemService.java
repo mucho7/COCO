@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.cocoshop.items.data.Item;
 import com.ssafy.cocoshop.items.data.ItemRepository;
-import com.ssafy.cocoshop.items.dto.ItemRegisterRequestDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,8 +34,8 @@ public class ItemService {
 		return itemRepository.findAll();
 	}
 
-	public long registerItem(ItemRegisterRequestDto requestDto){
-		return itemRepository.save(requestDto.toEntity()).getId();
+	public long registerItem(Item requestItem){
+		return itemRepository.save(requestItem).getId();
 	}
 
 }

@@ -28,23 +28,23 @@ import lombok.ToString;
 public class Item {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(columnDefinition = "INT UNSIGNED")
+	@Column(columnDefinition = "int unsigned")
 	private Long id;
 
 	@Column(length = 100, nullable = false)
 	private String itemName;
 
-	@Column(nullable = false, columnDefinition = "INT UNSIGNED")
+	@Column(nullable = false, columnDefinition = "int unsigned")
 	private Long price;
 
 	@Column(length = 100, nullable = false)
-	@ColumnDefault("CoCo 아이콘 팀")
+	@ColumnDefault("\"CoCo 아이콘 팀\"")
 	private String authorName;
 
 	@Column(length = 100, nullable = false)
-	private String itemFileName;
+	private String storedFileName;
 
-	@Column(nullable = false, columnDefinition = "INT UNSIGNED")
+	@Column(nullable = false, columnDefinition = "int unsigned")
 	@ColumnDefault("0")
 	private Long buyCount;
 

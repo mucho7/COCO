@@ -2,7 +2,6 @@ spring:
   jpa:
     properties:
       hibernate:
-        globally_quoted_identifiers: true
         dialect: org.hibernate.dialect.MySQL8Dialect
     generate-ddl: true
     hibernate:
