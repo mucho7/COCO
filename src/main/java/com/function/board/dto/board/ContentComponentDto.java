@@ -6,7 +6,6 @@ import lombok.Data;
 public class ContentComponentDto {
 
 	private String content;
-
 	private int index;
 
 }
