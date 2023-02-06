@@ -1,8 +1,10 @@
 package com.function.board.dto.board;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class BoardSearchCondition {
 
 	private String title;
