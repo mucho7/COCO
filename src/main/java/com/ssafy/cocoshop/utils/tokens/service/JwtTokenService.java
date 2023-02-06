@@ -28,5 +28,10 @@ public class JwtTokenService {
 		return Jwts.parserBuilder().setSigningKey(uniqueKey).build().parseClaimsJws(accessToken).getBody().getSubject();
 	}
 
+	public boolean isValidRequest(String userId, String accessToken) {
+		if (accessToken.startsWith("bearer "))
+			accessToken = accessToken.substring(7);
+		String extractedUserId = getUserIdFromAccessToken(accessToken);
+		return userId.equals(extractedUserId);
+	}
 }
-
