@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useCookies } from "react-cookie"
 import { useNavigate } from "react-router-dom"
 
@@ -14,6 +14,15 @@ function ArticleCreate(params) {
     const [inputContent, setInputContent ] = useState()
     const [inputCode, setInputCode] = useState()
     
+    // 로그인 안했다면 퇴장
+    useEffect(() => {
+        console.log(localStorage.getItem("userId"))
+        if (localStorage.getItem("userId") === null) {
+            navigate('/useri/login')
+            alert("로그인이 필요한 서비스입니다.")
+        }
+    }, [navigate])
+
     const onTypingHandler = (e) => {
         // 4개의 케이스에 따라 각자의 스테이트에 저장
         switch (e.target.id) {

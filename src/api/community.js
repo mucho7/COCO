@@ -12,13 +12,13 @@ const api = axios.create({
   },
 });
 
-async function boardRead(success, fail) {
-  const res = await api.get(`/list`).then(success).catch(fail);
-  return res
-}
+// async function boardRead(success, fail) {
+//   const res = await api.get(`/list`).then(success).catch(fail);
+//   return res
+// }
 // 차후에 boardRead를 대체할 것
 async function boardPaging(pageInfo,success, fail) {
-  const res = await api.get(`/`, JSON.stringify(pageInfo)).then(success).catch(fail);
+  const res = await api.get(`/`, {params: {size: pageInfo.size, page: pageInfo.page}}).then(success).catch(fail);
   return res
 }
 
@@ -47,4 +47,4 @@ async function commentUpdate(comment, success, fail) {
   await api.put(`/comment/${comment.board_id}/modify/${comment.pk}`, JSON.stringify(comment.content)).then(success).catch(fail);
 }
 
-export { boardRead, boardPaging, boardDetail, articleCreate, articleDelete, articleUpdate, commentDelete, commentUpdate }
+export { boardPaging, boardDetail, articleCreate, articleDelete, articleUpdate, commentDelete, commentUpdate }

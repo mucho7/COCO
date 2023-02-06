@@ -12,8 +12,8 @@ function CommentForm(params) {
 
     return (
         <>
-            <TextField onChange={onTypingHandler} />
-            <Button variant="contained">작성</Button>
+            <TextField onChange={onTypingHandler} size="small" style={{width: "60%"}} />
+            <Button variant="contained" >작성</Button>
         </>
     )    
 }

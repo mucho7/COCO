@@ -31,10 +31,30 @@ function CommuSidebar(params) {
                     sx={{ ml: 1, flex: 1 }}
                     placeholder=""
                 />
-                <IconButton onClick={onClickHandler} type="button" sx={{ p: '10px', color: '#FCA311' }} aria-label="search">
-                    <Search />
-                </IconButton>
+
             </Paper>
+            <Paper
+                component="form"
+                sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', height: '2rem' }}
+                >
+                <InputBase
+                    sx={{ ml: 1, flex: 1 }}
+                    placeholder=""
+                />
+
+            </Paper>
+            <Paper
+                component="form"
+                sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', height: '2rem' }}
+                >
+                <InputBase
+                    sx={{ ml: 1, flex: 1 }}
+                    placeholder=""
+                />
+            </Paper>
+            <IconButton onClick={onClickHandler} type="button" sx={{ p: '10px', color: '#FCA311' }} aria-label="search">
+                <Search />
+            </IconButton>
             <Link to={"/community/write"} style={{textDecoration: "none"}}>
                 <Button variant="contained" className="submit" fullWidth style={{height:"2.5rem", backgroundColor: "#FCA311"}}> <b>글 쓰기</b></Button>
             </Link>

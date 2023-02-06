@@ -68,7 +68,7 @@ function CommuArticleDetail() {
         <hr/>
 
             <CommentSectiom>
-                {window.localStorage.getItem("userId") === undefined ? <CommentForm/> : <Typography textAlign={"center"}>로그인 하시면 댓글을 쓸 수 있어요</Typography>}
+                {window.localStorage.getItem("userId") !== null ? <CommentForm/> : <Typography textAlign={"center"}>로그인 하시면 댓글을 쓸 수 있어요</Typography>}
                 {article.comments.empty ? <Typography textAlign={"center"}>아직 댓글이 없어요!</Typography> : <Comments comments={article.comments}/> }
             </CommentSectiom>
         </>
@@ -103,6 +103,7 @@ const CodeSection = styled.section`
 const CommentSectiom = styled.section`
     width: 100%;
     height: 100px;
+    margin-top: 15px;
 
 `
 

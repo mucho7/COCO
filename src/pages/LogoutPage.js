@@ -5,7 +5,7 @@ import { logout } from "../api/member"
 
 function LogoutPage() {
     const navigate = useNavigate()
-    const [ cookie, removeCookie ] = useCookies(["userInfo"])
+    const [ cookie, setCookie ] = useCookies(["userInfo"])
 
     const token = {
         'Authorization': cookie.userInfo.jwt_token,
@@ -17,7 +17,8 @@ function LogoutPage() {
         token,
         (data) => {
             console.log(data)
-            removeCookie(["userInfo"])
+            localStorage.clear()
+            setCookie(["userInfo"], undefined)
             navigate("/")
         },
         (error) => {
