@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.function.board.domain.board.BoardRepository;
 import com.function.board.dto.board.BoardListResponseDto;
 import com.function.board.dto.board.BoardResponseDto;
 import com.function.board.dto.board.BoardSaveRequestDto;
@@ -35,7 +34,6 @@ import lombok.RequiredArgsConstructor;
 public class BoardController {
 
 	private final BoardService boardService;
-	private final BoardRepository boardRepository;
 
 	@ApiOperation(value = "게시글 생성")
 	@PostMapping()
@@ -53,8 +51,7 @@ public class BoardController {
 	@ApiOperation(value = "게시글 목록 페이징")
 	@GetMapping()
 	public ResponseEntity<Page<BoardListResponseDto>> paging(Pageable pageable) {
-		return ResponseEntity.ok(boardRepository.findAll(pageable)
-			.map(BoardListResponseDto::new));
+		return ResponseEntity.ok(boardService.paging(pageable));
 	}
 
 	@ApiOperation(value = "{board_id}로 게시글 조회")
@@ -64,17 +61,10 @@ public class BoardController {
 		return ResponseEntity.ok(boardService.findById(id, pageable));
 	}
 
-	// @ApiOperation(value = "제목(title)에 {keyword}가 포함된 게시글 검색")
-	// @GetMapping("/searchTitle")
-	// public ResponseEntity<Page<BoardListResponseDto>> searchTitle(String keyword, Pageable pageable) {
-	// 	return ResponseEntity.ok(boardService.searchByTitle(keyword, pageable)
-	// 		.map(BoardListResponseDto::new));
-	// }
-
 	@ApiOperation(value = "조건 설정 및 키워드 이용하여 게시글 검색")
 	@GetMapping("/search")
 	public ResponseEntity<Page<BoardListResponseDto>> searchPage(BoardSearchCondition condition, Pageable pageable) {
-		return ResponseEntity.ok(boardRepository.searchPage(condition, pageable));
+		return ResponseEntity.ok(boardService.searchPage(condition, pageable));
 	}
 
 	@ApiOperation(value = "게시글 수정")
