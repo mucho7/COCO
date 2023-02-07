@@ -12,8 +12,8 @@ import lombok.Setter;
 @ApiModel("사용자 로그인 요청 정보")
 public class MemberLoginRequestDto {
 	@ApiModelProperty(name = "사용자 ID")
-	String userId;
+	private String userId;
 
 	@ApiModelProperty(name = "암호화된 사용자 Password")
-	String password;
+	private String password;
 }
