@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react"
 import { useLocation, Link, useNavigate } from "react-router-dom"
 
-import {CommentForm, Comments } from "./index"
+import { CommentForm, Comments, CommuArticleDetailContent } from "./index"
 import { boardDetail, articleDelete } from "../../api/community"
 
 import styled from "styled-components"
@@ -10,12 +10,12 @@ import { Button, Typography } from "@mui/material"
 function CommuArticleDetail() {
     const navigate = useNavigate()
     const location = useLocation()
-    
-    const pk = 46
+    // 지금 등록돼있는 모든 게시글을 날리고 새로운 더미 데이터 생성이 필요함
+    const pk = location.state.id
     const [article, setArticle ] = useState({
         id: "",
-        content: [],
-        code: [],
+        content: [{content:[""], index: -1},],
+        code: [{content: [""], index: -1},],
         comments: {
             empty: true
         }
@@ -26,12 +26,14 @@ function CommuArticleDetail() {
         const getArticlelDetail = async () => {
             await boardDetail(
             pk,
-            (data) => console.log(data),
+            (data) => {return data.data},
             (error) => console.log(error)
-        ).then((data) => setArticle(data))
+        ).then((data) => {
+            setArticle(data)
+            // console.log(data)
+        })
     }
     getArticlelDetail()
-    console.log(article)
     }, [pk])
 
     async function onClickDeleteHandler(params) {
@@ -49,6 +51,7 @@ function CommuArticleDetail() {
         <>
             <TitleSection>
                 <h2>{article.title}</h2>
+                {/* <h2>static Title</h2> */}
                 <div>
                     <Link to={`/community/update/${pk}`} state={article} style={{textDecoration: "none"}} article={article}>
                         <Button variant="contained">수정</Button>
@@ -58,9 +61,7 @@ function CommuArticleDetail() {
             </TitleSection>
             <hr/>
             <ArticleSection>
-                <ContentSection>{article.content[0].content}</ContentSection>
-                <Vr/>
-                <CodeSection>{article.code[0]}</CodeSection>
+                <CommuArticleDetailContent content={article} />
             </ArticleSection>
             <hr/>
             <CommentSectiom>
@@ -86,27 +87,23 @@ const ArticleSection = styled.section`
     display: flex;
     justify-content: space-around;
 `
-const ContentSection = styled.section`
-    width: 45%;
-    height: 500px;
 
-`
-const CodeSection = styled.section`
-    width: 45%;
-    height: 500px;
+// const ContentSection = styled.section`
+//     width: 45%;
+//     height: 500px;
 
-`
+// `
+// const CodeSection = styled.section`
+//     width: 45%;
+//     height: 500px;
+// `
+
 const CommentSectiom = styled.section`
     width: 100%;
     margin-top: 15px;
 
 `
 
-const Vr = styled.div`
-    width: 1px;
-    height: 100%;
 
-    background: gray;
-`
 
 export default CommuArticleDetail
