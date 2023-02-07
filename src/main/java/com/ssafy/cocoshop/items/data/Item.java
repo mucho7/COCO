@@ -10,6 +10,8 @@ import javax.persistence.Id;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +26,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@DynamicInsert
+@DynamicUpdate
 @Entity
 public class Item {
 	@Id
@@ -47,7 +51,7 @@ public class Item {
 	@Column(nullable = false)
 	private String storedFilePath;
 
-	@Column(columnDefinition = "int unsigned default 0")
+	@Column(columnDefinition = "int unsigned default 0", nullable = false)
 	private Integer buyCount;
 
 	@CreationTimestamp
