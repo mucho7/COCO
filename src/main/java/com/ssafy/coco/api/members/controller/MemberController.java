@@ -89,10 +89,9 @@ public class MemberController {
 	@ApiOperation(value = "회원 탈퇴", notes = "{id}의 사용자 정보에 탈퇴일(del_flag)을 기록한다.")
 	public String deleteMember(@PathVariable @ApiParam(value = "탈퇴할 회원 ID", required = true) String id,
 		HttpServletRequest request) {
-		String accessToken =
-			request.getHeader("Authorization").startsWith("bearer ") ? request.getHeader("Authorization").substring(7) :
-				request.getHeader("Authorization");
-		return memberService.deleteMember(id, accessToken);
+		String accessToken = request.getHeader("Authorization").substring(7);
+		String refreshToken = request.getHeader("refreshToken").substring(7);
+		return memberService.deleteMember(id, accessToken, refreshToken);
 	}
 
 	@PutMapping("/rating")
