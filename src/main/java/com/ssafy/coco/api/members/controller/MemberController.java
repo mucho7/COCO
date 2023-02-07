@@ -47,9 +47,13 @@ public class MemberController {
 
 	@PostMapping("/register")
 	@ApiOperation(value = "회원 가입", notes = "넘겨받은 회원정보를 바탕으로 회원을 DB에 등록한다.")
-	public Long registerMember(
-		@RequestBody @ApiParam(value = "회원가입 정보", required = true) MemberRegisterRequestDto requestDto) {
-		return memberService.registerMember(requestDto);
+	public ResponseEntity registerMember(
+		@RequestBody @ApiParam(value = "회원가입 정보", required = true) MemberRegisterRequestDto requestDto,
+		HttpServletRequest request) {
+		if (request.getHeader("refreshToken") != null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비정상적인 접근입니다.");
+		}
+		return ResponseEntity.ok(memberService.registerMember(requestDto));
 	}
 
 	@PutMapping("/info/{id}")
