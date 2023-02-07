@@ -56,7 +56,7 @@ public class BoardController {
 
 	@ApiOperation(value = "{board_id}로 게시글 조회")
 	@GetMapping("/{id}")
-	public ResponseEntity<BoardDetailTransferDto> findById(@PathVariable("id") Long id, @PageableDefault(size=3) Pageable pageable) {
+	public ResponseEntity<BoardDetailTransferDto> findById(@PathVariable("id") Long id, @PageableDefault(size=20) Pageable pageable) {
 		boardService.updateView(id);
 		return ResponseEntity.ok(boardService.findById(id, pageable));
 	}
