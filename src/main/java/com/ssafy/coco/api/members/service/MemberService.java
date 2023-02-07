@@ -59,7 +59,6 @@ public class MemberService {
 		if (tokenOwner.equals(userId)) {
 			Member member = memberRepository.findByUserId(userId)
 				.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. 사용자 ID: " + userId));
-			// System.out.println(member.getDelFlag() + ", 탈퇴했는가? : " + member.getDelFlag() != null);
 			if (member.getDelFlag() != null) {
 				throw new IllegalArgumentException("해당 사용자는 탈퇴한 사용자입니다. 사용자 ID: " + userId);
 			} else {
@@ -139,8 +138,7 @@ public class MemberService {
 		System.out.println("로그인 시도 ID: " + id + ", 입력한 비밀번호: " + password);
 		System.out.println("인코딩된 password: " + encodedPassword);
 
-		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(id,
-			password);
+		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(id, password);
 
 		System.out.println(authenticationToken);
 
@@ -190,8 +188,8 @@ public class MemberService {
 		String tempPassword = makeTempPassword();
 
 		try {
-			String sha256Password = sha256Converter.encrypt(
-				tempPassword); // TODO: sha256으로 한번 인코딩 한 뒤 DB에 저장해야함 (프론트에서 sha256으로 한번 변환되어 백으로 올 예정이라..)
+			String sha256Password = sha256Converter.encrypt(tempPassword);
+			// TODO: sha256으로 한번 인코딩 한 뒤 DB에 저장해야함 (프론트에서 sha256으로 한번 변환되어 백으로 올 예정이라..)
 			updatePassword(userId, tempPassword);
 			// updatePassword(userId, sha256Password);
 		} catch (Exception e) {

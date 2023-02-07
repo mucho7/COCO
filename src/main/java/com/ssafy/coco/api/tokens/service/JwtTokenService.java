@@ -1,9 +1,5 @@
 package com.ssafy.coco.api.tokens.service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -52,36 +48,6 @@ public class JwtTokenService {
 			System.out.println("DB에서 refreshToken 조회에 실패했습니다.");
 		}
 		return false;
-	}
-
-	public Optional<RefreshToken> getRefreshToken(String refreshToken) {
-
-		return refreshTokenRepository.findByRefreshToken(refreshToken.substring(7));
-	}
-
-	public Map<String, String> validateRefreshToken(String refreshToken) {
-		System.out.println("-> JWTTokenService#validateRefreshToken: " + refreshToken);
-		RefreshToken newRefreshToken = getRefreshToken(refreshToken).get();
-		System.out.println("new refreshToken: " + newRefreshToken);
-		String createdAccessToken = jwtTokenProvider.validateRefreshToken(newRefreshToken);
-		return createRefreshInfo(createdAccessToken);
-	}
-
-	public Map<String, String> createRefreshInfo(String createdAccessToken) {
-		Map<String, String> map = new HashMap<>();
-		log.info("Service가 받은 토큰: " + createdAccessToken);
-		if (createdAccessToken == null) {
-			map.put("status", "401");
-			log.info("[JwtTokenService - createRefreshInfo] 만료된 Refresh Token입니다. 재로그인이 필요합니다.");
-			// map.put("message", "만료된 Refresh Token입니다. 재로그인이 필요합니다.");
-			map.put("accessToken", null);
-		} else {
-			map.put("status", "200");
-			log.info("유효한 Refresh Token입니다. 새로 생성된 AccessToken을 반환합니다.");
-			// map.put("message", "[JwtTokenService - createRefreshInfo] 유효한 Refresh Token입니다. 새로 생성된 AccessToken을 반환합니다.");
-			map.put("accessToken", createdAccessToken);
-		}
-		return map;
 	}
 
 	public boolean validateRequest(String userId, String accessToken) {

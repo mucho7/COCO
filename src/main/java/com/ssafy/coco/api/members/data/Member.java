@@ -40,7 +40,7 @@ public class Member implements UserDetails {
 	private Long id;
 	@Column(length = 32, nullable = false)
 	private String userId;
-	@Column(length = 255, nullable = false)
+	@Column(nullable = false)
 	private String password;
 	@Column(length = 16, nullable = false)
 	private String name;
@@ -55,14 +55,6 @@ public class Member implements UserDetails {
 	private LocalDateTime regTime;
 
 	private LocalDateTime delFlag;
-
-	@Builder
-	public Member(String userId, String password, String name, String email) {
-		this.userId = userId;
-		this.password = password;
-		this.name = name;
-		this.email = email;
-	}
 
 	public void updateRating(Integer amount) {
 		this.rating += amount;
