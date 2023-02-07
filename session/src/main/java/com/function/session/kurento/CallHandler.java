@@ -271,7 +271,7 @@ public class CallHandler extends TextWebSocketHandler {
 		// // if (userName.equals(roomName)) { // 호스트가 나가면
 		// if (userName.equals("host")) { // 호스트가 나가면
 		// 	announceHostLeft(roomName, user);
-		// 	// roomService.DeleteRoom(roomName); // TODO: 해당 방 DB에서 지우기
+		// 	// roomService.DeleteRoom(roomName);
 		// }
 		// roomManager.getRoom(roomName).leave(user);
 
@@ -284,11 +284,11 @@ public class CallHandler extends TextWebSocketHandler {
 		if (room.getParticipants().isEmpty()) {
 			roomManager.removeRoom(room);
 		}
-		if (userName.equals("host")) { // if (userName.equals(roomName)) { // TODO: 호스트가 나가면
-			System.out.println("...호스트가 나갔다!!...");
-			announceHostLeft(roomName, null);
-			// roomService.DeleteRoom(roomName); // TODO: 해당 방 DB에서 지우기
+		// if (userName.equals(roomName)) { // 호스트가 나갔다면, 모두 나가기
+		if (userName.equals("host")) { // TODO: 호스트가 나가면
 			System.out.println("...DB에서 해당 방 삭제하기...");
+			// roomService.DeleteRoom(roomName); // TODO: 해당 방 DB에서 지우기
+			announceHostLeft(roomName, null);
 		}
 	}
 
