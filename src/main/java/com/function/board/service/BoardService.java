@@ -183,7 +183,7 @@ public class BoardService {
 		detailDto.setCode(codes);
 
 		Page<Comment> comments = commentRepository.findAllByBoardId(boardId, pageable);
-		return new BoardDetailTransferDto(detailDto, comments);
+		return new BoardDetailTransferDto(entity, detailDto, comments);
 	}
 
 	@Transactional

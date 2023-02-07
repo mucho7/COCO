@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.function.board.dto.board.BoardDetailTransferDto;
 import com.function.board.dto.board.BoardListResponseDto;
-import com.function.board.dto.board.BoardResponseDto;
 import com.function.board.dto.board.BoardSaveRequestDto;
 import com.function.board.dto.board.BoardSearchCondition;
 import com.function.board.dto.board.BoardUpdateRequestDto;
