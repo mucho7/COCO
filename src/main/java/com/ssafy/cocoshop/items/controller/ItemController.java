@@ -2,14 +2,14 @@ package com.ssafy.cocoshop.items.controller;
 
 import java.util.List;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,8 +26,8 @@ import lombok.RequiredArgsConstructor;
 @Api(tags = "상품 관련 API")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/itemshop/item")
-@CrossOrigin("*")
+@RequestMapping("/shopApi/item")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ItemController {
 
 	private final ItemService itemService;
@@ -51,14 +51,15 @@ public class ItemController {
 		@RequestParam(value = "author_name", required = false) @ApiParam(value = "검색 조건 중 상품 제작자 이름") String authorName,
 		@RequestParam(value = "start_price", required = false) @ApiParam(value = "검색 조건 중 상품 이름") String startPriceString,
 		@RequestParam(value = "end_price", required = false) @ApiParam(value = "검색 조건 중 상품 이름") String endPriceString) {
-		if (!itemName.equals("")) {
+		if (itemName != null && !itemName.equals("")) {
 			return itemService.getItemsByItemName(itemName);
 		}
-		if (!authorName.equals("")) {
+		if (authorName != null && !authorName.equals("")) {
 			return itemService.getItemsByAuthorName(authorName);
 		}
-		int startPrice = startPriceString.equals("") ? -1 : Integer.parseInt(startPriceString);
-		int endPrice = endPriceString.equals("") ? -1 : Integer.parseInt(endPriceString);
+		int startPrice =
+			startPriceString == null || startPriceString.equals("") ? -1 : Integer.parseInt(startPriceString);
+		int endPrice = endPriceString == null || endPriceString.equals("") ? -1 : Integer.parseInt(endPriceString);
 		if (startPrice != -1) {
 			if (endPrice != -1) {
 				return itemService.getItemsByPriceBetween(startPrice, endPrice);
@@ -74,16 +75,11 @@ public class ItemController {
 	// 파일 이미지 업로드 관련 참고
 	// https://velog.io/@pyo-sh/Spring-Boot-%ED%8C%8C%EC%9D%BC%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%97%85%EB%A1%9C%EB%93%9C-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0
 	@ApiOperation(value = "상품 등록", notes = "새로운 구매 가능 아이템을 평판점수 상점에 등록합니다.")
-	@PostMapping
-	public long registerItem(@RequestParam("file") @ApiParam("아이콘 이미지 파일") MultipartFile file,
-		@RequestBody @ApiParam(value = "상점에 등록할 새로운 물품 정보", required = true) ItemRegisterRequestDto requestDto) {
-		Item item = Item.builder()
-			.itemName(requestDto.getItemName())
-			.price(requestDto.getPrice())
-			.authorName(requestDto.getAuthorName())
-			.storedFileName(System.nanoTime() + "." + file.getContentType())
-			.build();
-		return itemService.registerItem(item);
+	@PostMapping(consumes = {"multipart/form-data"})
+	public long registerItem(@RequestPart MultipartFile iconImage, @ModelAttribute ItemRegisterRequestDto requestDto)
+		throws Exception {
+		System.out.println(requestDto);
+		return itemService.registerItem(requestDto, iconImage);
 	}
 
 }

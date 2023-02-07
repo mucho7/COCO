@@ -35,18 +35,20 @@ public class Item {
 	private String itemName;
 
 	@Column(nullable = false, columnDefinition = "int unsigned")
-	private Long price;
+	private Integer price;
 
 	@Column(length = 100, nullable = false)
 	@ColumnDefault("\"CoCo 아이콘 팀\"")
 	private String authorName;
 
-	@Column(length = 100, nullable = false)
+	@Column(nullable = false)
 	private String storedFileName;
 
-	@Column(nullable = false, columnDefinition = "int unsigned")
-	@ColumnDefault("0")
-	private Long buyCount;
+	@Column(nullable = false)
+	private String storedFilePath;
+
+	@Column(columnDefinition = "int unsigned default 0")
+	private Integer buyCount;
 
 	@CreationTimestamp
 	private LocalDateTime registerTime;
