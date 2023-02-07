@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { receiveChat, websocketInstances, setWebsocketId, setParticipantsId, participantsInstances, receiveImageData } from "../../../store/sessionSlice";
+import { receiveChat, websocketInstances, setWebsocketId, setParticipantsId, participantsInstances, receiveImageData, setUpdated, setIsCompilePossible, setIsDrawPossible, setIsMicPossible } from "../../../store/sessionSlice";
 
 import IdeArea from "../IdeArea";
 import SideArea from "../SideArea";
@@ -251,11 +251,28 @@ function NormalSession(props) {
       function toggleAuthorization(targetUserName, authorizationType) {
         let participant = participants[targetUserName]
         if (userName === targetUserName) {
-          console.log("Got ToggleAuth Message")
-          participant.rtcPeer.audioEnabled = !participant.rtcPeer.audioEnabled;
-          console.log(participant.rtcPeer.audioEnabled)
+          switch (authorizationType) {
+            case "compile":
+              dispatch(setIsCompilePossible());
+              break;
+            case "draw":
+              dispatch(setIsDrawPossible());
+              break;
+            case "mic":
+              participant.rtcPeer.audioEnabled = !participant.rtcPeer.audioEnabled;
+              dispatch(setIsMicPossible());
+              break;
+            case "drawButton":
+              break;
+            default:
+              break;
+          }
         }
         participant.onToggleAuthorization(authorizationType);
+        participants[targetUserName] = participant;
+        participantsInstances.set(1, participants);
+        dispatch(setUpdated(true));
+        console.log("after onToggleAuth: ", participant.authorization)
       }
 
   
@@ -284,7 +301,8 @@ function NormalSession(props) {
           isMicPossible: true,
           isDrawPossible: true
         }
-        this.isDrawButtonOn = isDrawButtonOn;
+        // 캔버스 관리를 위해 isDrawButtonOn도 속성으로 관리
+        this.isDrawButtonOn = false;
         this.onToggleAuthorization = function(authorizationType) {
           switch (authorizationType) {
             case "compile":
@@ -294,17 +312,16 @@ function NormalSession(props) {
               this.authorization.isMicPossible = !this.authorization.isMicPossible;
               // console.log(this.rtcPeer);
               // console.log(this.rtcPeer.peerConnection)
-              console.log("toggle button")
-              // this.rtcPeer.generateOffer (this.offerToReceiveVideo.bind(this))
               break;
             case "draw":
               this.authorization.isDrawPossible = !this.authorization.isDrawPossible;
               break;
+            case "drawButton":
+              this.isDrawButtonOn = !this.isDrawButtonOn;
+              break;
             default:
               break;
           }
-          participants[this.name] = this;
-          participantsInstances.set(1, participants);
         }
 
         var container = document.createElement('div');

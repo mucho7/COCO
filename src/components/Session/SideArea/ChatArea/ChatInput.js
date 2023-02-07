@@ -2,9 +2,9 @@ import styled from "styled-components";
 import TextField from "@mui/material/TextField";
 import Box from '@mui/material/Box';
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
-import { sendChat } from "../../../../store/sessionSlice";
+import { websocketInstances } from "../../../../store/sessionSlice";
 
 
 const boxSx = {
@@ -22,11 +22,12 @@ const ChatSubmitButton = styled.button`
   width: 30px;
 `
 
-function ChatInput({ handleChatSubmit }) {
+function ChatInput(props) {
   const [chatInput, setChatInput] = useState("");
-  // const userName = useSelector((state) => state.session.userName);
-  // const roomName = useSelector((state) => state.session.roomName);
-  const dispatch = useDispatch();
+  const websocketId = useSelector((state) => state.session.websocketId);
+  const ws = websocketInstances.get(websocketId);
+  const userName = useSelector((state) => state.session.userName);
+  const roomName = useSelector((state) => state.session.roomName);
 
   function handleChangeChatInput(event) {
     setChatInput(event.target.value);
@@ -34,8 +35,13 @@ function ChatInput({ handleChatSubmit }) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    handleChatSubmit(chatInput);
-    dispatch(sendChat(chatInput));
+    const message = {
+      id: "sendChat",
+      userName: userName,
+      roomName: roomName,
+      chat: chatInput
+    }
+    ws.send(JSON.stringify(message));
     setChatInput("");
   }
 

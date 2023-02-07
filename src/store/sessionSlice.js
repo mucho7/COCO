@@ -41,6 +41,7 @@ const initialState = {
   roomName: "",
   websocketId: null,
   participantsId: null,
+  updated: false,
   isCompilePossible: true,
   isDrawPossible: true,
   isMicPossible: true,
@@ -83,6 +84,9 @@ const sessionSlice = createSlice({
     },
     receiveImageData(state, action) {
       state.imageData = action.payload;
+    },
+    setUpdated(state, action) {
+      state.updated = action.payload;
     }
   },
   // extraReducers: (builder) => {
@@ -92,6 +96,17 @@ const sessionSlice = createSlice({
   // },
 });
 
-export const { sendChat, receiveChat, setSocketInfo, setWebsocketId, setParticipantsId, receiveImageData } = sessionSlice.actions;
+export const { 
+  sendChat, 
+  receiveChat, 
+  setSocketInfo, 
+  setWebsocketId, 
+  setParticipantsId, 
+  receiveImageData, 
+  setUpdated,
+  setIsCompilePossible,
+  setIsDrawPossible,
+  setIsMicPossible } = sessionSlice.actions;
+// export const { ...sessionSliceActions } = sessionSlice.actions;
 
 export default sessionSlice;

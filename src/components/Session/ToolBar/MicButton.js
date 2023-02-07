@@ -8,7 +8,7 @@ import { participantsInstances } from "../../../store/sessionSlice";
 
 function MicButton(props) {
   const isMicButtonOn = useSelector((state) => state.toolBarAction.isMicButtonOn);
-  const isMicPossible = useSelector((state) => state.toolBarAction.isMicPossible);
+  const isMicPossible = useSelector((state) => state.session.isMicPossible);
   
   const dispatch = useDispatch();
 

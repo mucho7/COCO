@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 
 import Ide from "./Ide";
 import MyDrawLayer from "./MyDrawLayer";
 import OthersDrawLayer from "./OthersDrawLayer";
-import { participantsInstances } from "../../../store/sessionSlice";
+import { participantsInstances, setUpdated } from "../../../store/sessionSlice";
 
 
 const IdeAreaDiv = styled.div`
@@ -19,28 +19,35 @@ const IdeAreaDiv = styled.div`
 
 function IdeArea(props) {
   const isDrawButtonOn = useSelector((state) => state.toolBarAction.isDrawButtonOn);
-  // const imageData = useSelector((state) => state.session.)
-  // const [participantsId, setParticipantsId] = useState(-1);
   const participantsId = useSelector((state) => state.session.participantsId);
-  const participants = participantsInstances.get(participantsId);
-  console.log("participantId: ", participantsId)
-  console.log("participants: ", participants);
-  console.log(participantsInstances)
-  console.log(participantsInstances.get(participantsId))
+  const [participants, setParticipants] = useState({});
+  // const participants = participantsInstances.get(participantsId);
+  const updated = useSelector((state) => state.session.updated);
+  const dispatch = useDispatch();
+  // console.log("participantId: ", participantsId)
+  // console.log("participants: ", participants);
+  // console.log(participantsInstances)
+  // console.log(participantsInstances.get(participantsId))
 
   useEffect(() => {
+    if (participantsId) {
+      setParticipants(participantsInstances.get(participantsId));
+    }
     
-    // setParticipants(participantsInstances.get(participantsId));
-  }, [participantsId])
+    if (updated) {
+      setParticipants(participantsInstances.get(participantsId));
+      dispatch(setUpdated(false));
+    }
+  }, [participantsId, updated, dispatch])
 
   return (
-    <IdeAreaDiv>
+    <IdeAreaDiv id="ideArea">
       {isDrawButtonOn && <MyDrawLayer />}
       {
         participantsId !== null && 
         Object.values(participants).map((participant) => {
           return (
-            <OthersDrawLayer userName={participant?.name} key={participant?.name} />
+            <OthersDrawLayer participant={participant} key={participant?.name} />
           )
         })
       }

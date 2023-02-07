@@ -15,85 +15,54 @@ const DrawDiv = styled.div`
 `;
 
 
-function DrawLayer(props) {
+function OthersDrawLayer(props) {
 
   const canvasRef = useRef(null)
   const contextRef = useRef(null)
-  // const imageData = useState()
   const imageData = useSelector((state) => state.session.imageData);
   const [isDrawing, setIsDrawing] = useState(false);
   const [drawColor, setDrawColor] = useState("#ffffff");
   const [isEraseMode, setIsEraseMode] = useState(false);
-  const userName = props.userName;
-  console.log(userName)
-
+  const participant = props.participant;
+  // console.log(participant)
   
-  function initCanvas() {
-    const drawDiv = document.querySelector("#canvas")
-    const canvas = canvasRef.current;
-    canvas.width = drawDiv.clientWidth * 2;
-    canvas.height = drawDiv.clientHeight * 2;
-    canvas.style.width = `${drawDiv.clientWidth}px`;
-    canvas.style.height = `${drawDiv.clientHeight}px`;
-
-    const context = canvas.getContext("2d");
-    context.scale(2, 2);
-    context.lineCap = "round";
-    context.strokeStyle = "#ffffff";
-    context.lineWidth = 5;
-    contextRef.current = context;
-
-  }
+  const tagId = `canvas-${participant.name}`;
+  console.log(participant)  
   
   useEffect(() => {
-    initCanvas();
-  }, [])
-
-  // useEffect(() => {
-  //   if (imageData) {
-  //     let binaryData = window.atob(imageData);
-  //     let uint8ArrayData = new Uint8Array(binaryData.length);
-  //     for (var i = 0; i < binaryData.length; i++) {
-  //       uint8ArrayData[i] = binaryData.charCodeAt(i);
-  //     }
-  //     let blob = new Blob([uint8ArrayData], { type: 'image/png' })
-  //     let url = URL.createObjectURL(blob);
-  //     let img = new Image();
-  //     img.src = url
-  //     img.onload = function() {
-  //       contextRef.current.drawImage(img, 0, 0, canvasRef.current.clientWidth, canvasRef.current.clientHeight);
-  //     }
-  //   }
-  // }, [imageData])
-
-
-  useEffect(() => {
+    function initCanvas() {
+      const drawDiv = document.getElementById(tagId)
+      const canvas = canvasRef.current;
+      canvas.width = drawDiv.clientWidth * 2;
+      canvas.height = drawDiv.clientHeight * 2;
+      canvas.style.width = `${drawDiv.clientWidth}px`;
+      canvas.style.height = `${drawDiv.clientHeight}px`;
+  
+      const context = canvas.getContext("2d");
+      context.scale(2, 2);
+      context.lineCap = "round";
+      context.strokeStyle = "#ffffff";
+      context.lineWidth = 5;
+      contextRef.current = context;
+    }
+    
     function handleResize() {
       let prevImageData = canvasRef.current.toDataURL();
       let img = new Image();
-      // console.log(imageData)
-      // // console.log(img)
       initCanvas();
       img.src = prevImageData;
       img.onload = function() {
         contextRef.current.drawImage(img, 0, 0, canvasRef.current.clientWidth, canvasRef.current.clientHeight);
       };
-      // console.log(imageData)
-      // console.log(typeof imageData)
-      // console.log(canvasRef.current.width)
-      // console.log(canvasRef.current)
-      // let image = contextRef.current.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height)
-      // initCanvas();
-      // contextRef.current.putImageData(image, 0, 0)
     }
+  
+    initCanvas();
 
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
     }
-  }, [])
-
-
+  }, [tagId])
   
   useEffect(() => {
     const startDrawing = (x, y) => {
@@ -107,11 +76,9 @@ function DrawLayer(props) {
     const finishDrawing = () => {
       contextRef.current.closePath();
       setIsDrawing(false);
-  
     }
   
     const draw = (x, y) => {
-      // console.log(nativeEvent)
       if (!isDrawing) {
         return
       }
@@ -138,8 +105,8 @@ function DrawLayer(props) {
       setDrawColor(color);
       contextRef.current.strokeStyle = drawColor;
     }
-    
-    if (imageData && imageData?.userName === userName) {
+
+    if (imageData?.userName === participant.name) {
       switch (imageData.imageData.type) {
         case "startDrawing":
           startDrawing(imageData.imageData.x, imageData.imageData.y);
@@ -163,10 +130,15 @@ function DrawLayer(props) {
           break;
       }
     }
-  }, [drawColor, imageData, isDrawing, isEraseMode, userName])
+    console.log(participant.isDrawButtonOn)
+    if (!participant.isDrawButtonOn) {
+      eraseAll();
+    }
+  }, [drawColor, imageData, isDrawing, isEraseMode, participant.isDrawButtonOn, participant.name])
 
+  
   return (
-    <DrawDiv id="canvas">
+    <DrawDiv id={tagId}>
       <canvas
         ref={canvasRef}
       />
@@ -174,4 +146,4 @@ function DrawLayer(props) {
   );
 }
 
-export default DrawLayer;
+export default OthersDrawLayer;

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { websocketInstances, participantsInstances } from "../../../../store/sessionSlice";
-import { CustomButton } from "../ToolBar";
+import { participantsInstances } from "../../../../store/sessionSlice";
 import UserListItem from "./UserListItem";
+import { setUpdated } from "../../../../store/sessionSlice";
 
 
 const UserListDiv = styled.div`
@@ -13,36 +13,26 @@ const UserListDiv = styled.div`
 `
 
 function UserList() {
-  // const ws = useSelector((state) => state.session.ws);
-  // const websocketId = useSelector((state) => state.session.websocketId)
-  // const ws = websocketInstances.get(websocketId)
-  // console.log("websocketId: ", websocketId)
-  // console.log("get ws??", ws)
   const participantsId = useSelector((state) => state.session.participantsId);
   const [participants, setParticipants] = useState(participantsInstances.get(participantsId));
+  const updated = useSelector((state) => state.session.updated);
+  const dispatch = useDispatch();
 
-  // console.log("participantsId: ", participantsId);
-  // console.log("receive participants in UserList: ", participants)
+  
+  useEffect(() => {
+    if (updated) {
+      setParticipants(participantsInstances.get(participantsId));
+      dispatch(setUpdated(false));
+    }
+  }, [dispatch, participantsId, updated])
 
-  // useEffect(() => {
-    
-  // },)
-
-  function handleParticipants(participant) {
-    // let copiedParticipants = {...participants};
-    // let participantName = participant.name;
-    // copiedParticipants[participantName] = participant;
-    // setParticipants(copiedParticipants);
-    // console.log("CHANGED")
-    setParticipants(participantsInstances.get(participantsId));
-  }
 
   return (
     <UserListDiv>
       <p>유저 권한 목록</p>
       {Object.values(participants).map((participant, index) => {
         return (
-          <UserListItem participant={participant} key={index} handleParticipants={handleParticipants} />
+          <UserListItem participant={participant} key={index} />
         )
       })}
     </UserListDiv>

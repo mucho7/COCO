@@ -15,7 +15,7 @@ const DrawDiv = styled.div`
 `;
 
 
-function DrawLayer(props) {
+function MyDrawLayer(props) {
 
   const canvasRef = useRef(null)
   const contextRef = useRef(null)
@@ -42,35 +42,13 @@ function DrawLayer(props) {
     context.strokeStyle = "#ffffff";
     context.lineWidth = 5;
     contextRef.current = context;
+
+    // const stream = canvas.captureStream(25);
+    // console.log("stream:",stream);
   }
   
-  // 리사이즈시 다시 지정 크기로 리사이즈 시킴
-  // 리사이즈시 캔버스 크기 조정하고, 그 위에 기존에 그려졌던 정보 다시 그리기
   useEffect(() => {
     initCanvas();
-    // setScaleWidth(canvasRef.current.clientWidth);
-    // setScaleHeight(canvasRef.current.clientHeight);
-    // window.addEventListener("resize", initCanvas);
-    // window.addEventListener("resize", () => {
-    //   setClientWidth(DrawDiv.clientWidth);
-    //   setClientHeight(DrawDiv.clientHeight);
-
-    //   let imageData = canvasRef.current.toDataURL();
-    //   let img = new Image();
-    //   // // console.log(imageData)
-    //   // // console.log(img)
-    //   initCanvas();
-    //   img.src = imageData;
-    //   img.onload = function() {
-    //     contextRef.drawImage(img, 0, 0, clientWidth, clientHeight);
-    //   };
-    //   // let image = contextRef.current.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height)
-    //   // initCanvas();
-    //   // contextRef.current.putImageData(image, 0, 0)
-    // });
-    // return () => {
-    //   window.removeEventListener("resize", initCanvas);
-    // }
   }, []);
 
   
@@ -101,50 +79,8 @@ function DrawLayer(props) {
     }
   }, [])
 
-  // useEffect(() => {
-  //   function sendImageData() {
-  //     let imageData = canvasRef.current.toDataURL();
-  
-  //     const message = {
-  //       id: "sendImageData",
-  //       userName: userName,
-  //       imageData: imageData
-  //     };
-  
-  //     ws.send(JSON.stringify(message));
-  //     // console.log("Send Image")
-  //   }
-
-  //   if (isDrawing) {
-  //     sendImageData();
-  //   }
-  // }, [isDrawing, userName, ws])
 
   function sendImageData(type, data) {
-    // let imageDataURL = canvasRef.current.toDataURL();
-    // let base64Data = imageDataURL.split(",")[1];
-    // let binaryData = window.atob(base64Data);
-    // let uint8ArrayData = new Uint8Array(binaryData.length);
-    // for (let i = 0; i < binaryData.length; i++) {
-    //   uint8ArrayData[i] = binaryData.charCodeAt(i);
-    // }
-    
-    // let base64EncodedData =  window.btoa(String.fromCharCode.apply(null, uint8ArrayData));
-
-    // const byteSize = (str) => new Blob([str]).size;
-    // const size = byteSize(base64EncodedData)
-    // console.log("SIZE: ", size)
-    // const urlMessage = {
-    //   id: "sendImageData",
-    //   userName: userName,
-    //   imageData: base64EncodedData
-    // };
-
-    // ws.send(JSON.stringify(message));
-
-    // console.log(base64EncodedData)
-    // console.log(base64Data)
-
     let imageData;
 
     switch (type) {
@@ -240,4 +176,4 @@ function DrawLayer(props) {
   );
 }
 
-export default DrawLayer;
+export default MyDrawLayer;

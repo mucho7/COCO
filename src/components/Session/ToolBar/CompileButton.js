@@ -6,7 +6,7 @@ import { onClickCompileButton } from "../../../store/toolBarActionSlice";
 
 function CompileButton(props) {
   const isCompileButtonOn = useSelector((state) => state.toolBarAction.isCompileButtonOn);
-  const isCompilePossible = useSelector((state) => state.toolBarAction.isCompilePossible);
+  const isCompilePossible = useSelector((state) => state.session.isCompilePossible);
   
   const dispatch = useDispatch();
 
