@@ -18,9 +18,9 @@ public class RoomRegisterRequestDto {
 	private Integer max;
 
 	@Builder
-	public RoomRegisterRequestDto(String hostId, String title, String content, Integer hostRating,
+	public RoomRegisterRequestDto(String roomId, String hostId, String title, String content, Integer hostRating,
 		String mode, Integer max) {
-		this.roomId = hostId;
+		this.roomId = roomId;
 		this.hostId = hostId;
 		this.title = title;
 		this.content = content;
@@ -31,7 +31,7 @@ public class RoomRegisterRequestDto {
 
 	public Room toEntity() {
 		return Room.builder()
-			.roomId(roomId)
+			.roomId(hostId)
 			.hostId(hostId)
 			.title(title)
 			.content(content)
