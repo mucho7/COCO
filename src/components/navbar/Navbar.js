@@ -29,7 +29,6 @@ function Navbar() {
         ]
 
     }
-    console.log(cookie.userInfo)
 
     return (
         <Grid container spacing={1} style={Nav}>

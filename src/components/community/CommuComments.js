@@ -3,11 +3,13 @@ import { useLocation } from "react-router-dom"
 import { commentDelete, commentUpdate } from "../../api/community"
 
 import { Card, Button, CardContent, Typography, Grid, ButtonGroup, TextField } from "@mui/material"
+// import CommuCommentPaging from "./CommuCommentPaging"
 
 function Comments(props) {
     const location = useLocation()
     const [ updateFlag, setUpdateFlag ] = useState(false)
     const [ updateComment, setUpdateComment ] = useState("")
+    const [ updateTarget, setUpdateTarget ] = useState("")
 
     async function onDeleteClick(params) {
         console.log(params)
@@ -38,6 +40,8 @@ function Comments(props) {
                 console.log(data)
                 alert("수정 완료!")
                 setUpdateFlag(false)
+                setUpdateTarget("")
+
             },
             (err) => console.log(err)
         )
@@ -48,8 +52,10 @@ function Comments(props) {
             onUpdateClick(params)
         }  else {
             setUpdateComment(params.content)
+            setUpdateTarget(params.id)
             setUpdateFlag(true)
         }
+        console.log(params)
     }
 
 
@@ -60,11 +66,11 @@ function Comments(props) {
                 <Card sx={{ width: '100%', height: 'auto', margin: '4px'}} key={comment.id}>
                     <CardContent>
                         <Grid container>
-                            <Grid item xs={1} textAlign="center">
+                            <Grid item xs={2} textAlign="center">
                                 <Typography>{comment.writer}</Typography>
                             </Grid>
-                            <Grid item xs={8} textAlign="center">
-                                {updateFlag === false ? <Typography>{comment.content}</Typography> : <TextField onChange={onTypingHandler} value={updateComment} size="small"/>}
+                            <Grid item xs={7}>
+                                {updateTarget !== comment.id ? <Typography>{comment.content}</Typography> : <TextField onChange={onTypingHandler} value={updateComment} size="small"/>}
                             </Grid>
                             <Grid item xs={1} textAlign="center">
                                 {/* 오늘 /  이번 년 / 그 외 */}
@@ -72,16 +78,20 @@ function Comments(props) {
                             </Grid>
                             <Grid item xs={2} textAlign="center">
                                 {/* 삼항연산자로 권한인 없는 사람은 거를 것 */}
-                                <ButtonGroup>
-                                    {updateFlag === false ? <Button onClick={() => flagClickHandler(comment)}>수정</Button> : <Button variant="contained" onClick={() => flagClickHandler(comment)}>수정</Button>}
-                                    <Button onClick={() => onDeleteClick(comment)}>삭제</Button>
-                                </ButtonGroup>
+                                {localStorage.getItem("userId") === comment.writer
+                                ?   <ButtonGroup>
+                                        {updateFlag === false ? <Button onClick={() => flagClickHandler(comment)}>수정</Button> : <Button variant="contained" onClick={() => {setUpdateFlag(false); setUpdateTarget("");}}>취소</Button>}
+                                        {updateFlag === false ? <Button onClick={() => onDeleteClick(comment)}>삭제</Button> : <Button variant="contained" onClick={() => flagClickHandler(comment)}>수정</Button> }
+                                    </ButtonGroup>
+                                : <></>
+                                }
                             </Grid>
                         </Grid>
                     </CardContent>
                 </Card>
                 )
-            })}
+        })}
+        {/* <CommuCommentPaging/> */}
         </>
     )
 }

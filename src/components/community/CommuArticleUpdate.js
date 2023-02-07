@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useCookies } from "react-cookie"
-import { useLocation } from "react-router-dom"
+import { useLocation, Link } from "react-router-dom"
 
 import { articleUpdate } from "../../api/community"
 
@@ -15,6 +15,7 @@ function ArticleUpdate(props) {
     const [inputTitle, setInputTitle ] = useState("")
     const [inputContent, setInputContent ] = useState("")
     const [inputCode, setInputCode] = useState("")
+    const [pk, setPk] = useState("")
     
     const onTypingHandler = (e) => {
         // 4개의 케이스에 따라 각자의 스테이트에 저장
@@ -38,18 +39,22 @@ function ArticleUpdate(props) {
         content: inputContent,
         code: inputCode,
         writer: window.localStorage.getItem("userId"),
+        id: pk,
         tokenL: {
             jwt_token: cookie.userInfo,
             refresh_token: cookie.userInfo
         }
     }
 
-    useEffect(() => {
-        setInputTitle(location.state.article.title)
-        setInputContent(location.state.article.content)
-        setInputCode(location.state.article.code)
+    const article = location.state
 
-    }, [location])
+    useEffect(() => {
+        setPk(article.id)
+        setInputTitle(article.title)
+        setInputContent(article.content)
+        setInputCode(article.code)
+
+    }, [article])
 
     async function onClickHandler() {
         await articleUpdate(
@@ -75,7 +80,9 @@ function ArticleUpdate(props) {
                 </CodeSection>
             </ArticleSection>
             <hr/>
-            <Button onClick={onClickHandler} variant="contained">수정 완료</Button>
+            <Link to={`/community/${pk}`} state={article}>
+                <Button onClick={onClickHandler} variant="contained">수정 완료</Button>
+            </Link>
         </>
     )
 }

@@ -11,11 +11,11 @@ function CommuArticleDetail() {
     const navigate = useNavigate()
     const location = useLocation()
     
-    const pk = location.state.id
+    const pk = 46
     const [article, setArticle ] = useState({
         id: "",
-        content: "",
-        code: "",
+        content: [],
+        code: [],
         comments: {
             empty: true
         }
@@ -26,11 +26,12 @@ function CommuArticleDetail() {
         const getArticlelDetail = async () => {
             await boardDetail(
             pk,
-            (data) => {return data.data},
+            (data) => console.log(data),
             (error) => console.log(error)
         ).then((data) => setArticle(data))
     }
     getArticlelDetail()
+    console.log(article)
     }, [pk])
 
     async function onClickDeleteHandler(params) {
@@ -46,29 +47,24 @@ function CommuArticleDetail() {
 
     return (
         <>
-        <TitleSection>
-            <h2>{article.title}</h2>
-            <div>
-                <Link to={`/community/update/${pk}`} state={{article: article}} style={{textDecoration: "none"}} article={article}>
-                    <Button variant="contained">수정</Button>
-                </Link>
-                <Button onClick={onClickDeleteHandler} variant="contained">삭제</Button>
-            </div>
-        </TitleSection>
-        <hr/>
+            <TitleSection>
+                <h2>{article.title}</h2>
+                <div>
+                    <Link to={`/community/update/${pk}`} state={article} style={{textDecoration: "none"}} article={article}>
+                        <Button variant="contained">수정</Button>
+                    </Link>
+                    <Button onClick={onClickDeleteHandler} variant="contained">삭제</Button>
+                </div>
+            </TitleSection>
+            <hr/>
             <ArticleSection>
-                <ContentSection>
-                    {article.content}
-                </ContentSection>
+                <ContentSection>{article.content[0].content}</ContentSection>
                 <Vr/>
-                <CodeSection>
-                    {article.code}
-                </CodeSection>
+                <CodeSection>{article.code[0]}</CodeSection>
             </ArticleSection>
-        <hr/>
-
+            <hr/>
             <CommentSectiom>
-                {window.localStorage.getItem("userId") !== null ? <CommentForm/> : <Typography textAlign={"center"}>로그인 하시면 댓글을 쓸 수 있어요</Typography>}
+                {window.localStorage.getItem("userId") !== null ? <CommentForm board_id={pk}/> : <Typography textAlign={"center"}>로그인 하시면 댓글을 쓸 수 있어요</Typography>}
                 {article.comments.empty ? <Typography textAlign={"center"}>아직 댓글이 없어요!</Typography> : <Comments comments={article.comments}/> }
             </CommentSectiom>
         </>
@@ -102,7 +98,6 @@ const CodeSection = styled.section`
 `
 const CommentSectiom = styled.section`
     width: 100%;
-    height: 100px;
     margin-top: 15px;
 
 `
