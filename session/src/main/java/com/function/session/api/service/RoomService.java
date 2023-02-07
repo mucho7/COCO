@@ -46,6 +46,7 @@ public class RoomService {
 		return roomRepository.save(requestDto.toEntity()).getRoomId();
 	}
 
+	@Transactional
 	public Room UpdateRoom(RoomUpdateRequestDto requestDto, String roomId) {
 		Room room = roomRepository.findById(roomId).orElse(null);
 		if (room != null) {
