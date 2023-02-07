@@ -5,16 +5,6 @@ import { Search } from '@mui/icons-material';
 import { Link } from "react-router-dom";
 
 function CommuSidebar(params) {
-    // const temp_article_info = {
-    //     url: 'createArticle',
-    //     method: 'POST',
-    //     body: {
-    //         code: 'code', 
-    //         content: 'content',
-    //         title: 'title',
-    //         writer: 'writer',
-    //     }
-    // }
 
     const onClickHandler = (e) => {
         e.preventDefault()
