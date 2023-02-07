@@ -142,6 +142,8 @@ public class JwtTokenProvider {
 		if (requestHeader != null) {
 			tokenDto.setAccessToken(requestHeader.get("Authorization").get(0).substring(7));
 			tokenDto.setRefreshToken(requestHeader.get("refreshToken").get(0).substring(7));
+			if(!refreshTokenRepository.existsByRefreshToken(tokenDto.getRefreshToken()))
+				tokenDto=null;
 		}
 		System.out.println("[resolveToken@JwtTokenProvider]" + tokenDto);
 		return tokenDto;
