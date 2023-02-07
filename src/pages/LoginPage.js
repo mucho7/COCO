@@ -6,9 +6,8 @@ function LoginPage(params) {
     return (
         <SidePaddingBox>
             <Navbar />
-            <LoginForm>
-                
-            </LoginForm>
+            <h2>로그인</h2><hr/>
+            <LoginForm/>
         </SidePaddingBox>
     )   
 }

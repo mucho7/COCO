@@ -1,41 +1,71 @@
-import styled from "styled-components"
 import { useState } from "react"
+import { Button } from "@mui/material"
+import { useCookies } from "react-cookie"
+
+import { updateUserInfo } from "../../api/member"
+
+import styled from "styled-components"
 
 function ProfileUserInfoForm(props) {
-    const [inputPassword, setInputPassword] = useState()
-    // const [inputCheckPassword, setInputChcekPassword] = useState()
-    // const [inputEmail, setInputEmail] = useState()
+    const [ cookie ] = useCookies(['userInfo'])
+    const [inputEmail, setInputEmail] = useState()
+    const [inputName, setInputName] = useState()
     
     const onTypingHandler = (e) => {
         // 4개의 케이스에 따라 각자의 스테이트에 저장
         switch (e.target.id) {
             case 'User E-Mail':
-                setInputPassword(e.target.value)
-                console.log(e.target.value)
+                setInputEmail(e.target.value)
+                console.log(e.target.value, inputEmail)
                 break
-            // case 'outlined-password-check':
-            //     setInputChcekPassword(e.target.value)
-            //     break
-            // case 'outlined-email':
-            //     setInputEmail(e.target.value)
-            //     break
+            case 'User Name':
+                setInputName(e.target.value)
+                console.log(e.target.value, inputName)
+                break
             default:
                 // nothing
         }
     }
 
+    const updating_user_info = {
+        email: inputEmail,
+        name: inputName,
+        'Authorization': cookie.userInfo.jwt_token,
+        'refreshToken':  cookie.userInfo.refresh_token,
+    }
+
+    async function updateUser() {
+        await updateUserInfo(
+            updating_user_info,
+        )
+    }
+
     return (
         <Col>
             {props.userInfo.map((item) => {
-                return (
-                    <UserInfoBox key={item.name}>
+                if (item[0] === "name" || item[0] === "email") {
+                    return (
+                        <UserInfoBox key={item[0]}>
+                            <UserInfoNameBox>
+                                {item[0]}
+                            </UserInfoNameBox>
+                            <UserInfoContentForm id={item[0]} onChange={onTypingHandler} placeholder={item[1]}/>
+                        </UserInfoBox>
+                    )
+                } else {
+                    return (
+                    <UserInfoBox key={item[0]}>
                         <UserInfoNameBox>
-                            {item.name}
+                            {item[0]}
                         </UserInfoNameBox>
-                        <UserInfoContentForm id={item.name} onChange={onTypingHandler} placeholder={item.content}/>
+                        <UserInfoContentBox>
+                            {item[1]}
+                        </UserInfoContentBox>
                     </UserInfoBox>
-                )
+                    )
+                }
             })}
+            <Button onClick={updateUser} >임시 버튼</Button>
         </Col>
     )
 }
@@ -86,6 +116,17 @@ const UserInfoContentForm = styled.input`
     &:focus {
         outline: internal;
     }
+`
+const UserInfoContentBox = styled.div`
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 900;
+    font-size: 24px;
+    line-height: 29px;
+
+    text-align: end;
+    margin-top: 3px;
+    margin-right: 5px;
 `
 
 export default ProfileUserInfoForm

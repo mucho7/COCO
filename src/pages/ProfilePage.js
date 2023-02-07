@@ -1,44 +1,77 @@
 import styled  from 'styled-components'
-import { useState } from 'react'
+import { useState, useEffect,  } from 'react'
+import { useNavigate } from 'react-router-dom'
+// import { useDispatch } from 'react-redux';
+import { useCookies } from 'react-cookie'
+
+import  { Navbar } from '../components/navbar';
+// import { onEnterProfile,  } from "../store/userInfoUpdateSlice"
+import { deleteUserInfo, readUserInfo } from "../api/member"
+
 import { Button } from '@mui/material'
 import { AccountCircle } from '@mui/icons-material'
-import { ProfileUserInfoItem, ProfileUserInfoForm, ProfileUserTrophy, ProfilePasswordUpdateButton } from '../components/profile'
+
 import SidePaddingBox from './SidePaddingBox'
-import  { Navbar } from '../components/navbar';
+
+import { ProfileUserInfoItem, ProfileUserInfoForm, ProfileUserTrophy, ProfilePasswordUpdateButton } from '../components/profile'
+
 
 function ProfilePage(params) {
-    const [updateFlag, setUpdateFlag] = useState(false)
-
-    // Axios로 교체될 정보
-    const userInfo = [
-        {name: 'User ID', content: 'SSAFY_Gorilla'},
-        {name: 'User Name', content: '채치수'},
-        {name: 'User E-Mail', content: 'SSAFY@edu.ssafy.com'},
-        {name: 'Since', content: '23.01.01'},
-    ]
-
-    async function deleteUser() {
-        console.log('들어간다')
-        
-        // user_id의 입출력에 관한 코드 정리가 필요함
-        const response = await fetch(`/member/delete/${params.user_id}`, {
-            method: 'PUT',
-            body: JSON.stringify(),
-            headers: {
-                "Content-Type": `application/json`,
+    const navigate = useNavigate()
+    const [ userInfo, setUesrInfo ] = useState([])
+    const [ cookie, removeCookie ] = useCookies(["userInfo"])
+    const [ updateFlag, setUpdateFlag ] = useState(false)
+    
+    async function deleteUser() {       
+        await deleteUserInfo(
+            {
+                userId: cookie.userInfo.user_id,
+                Authorization: cookie.userInfo.Authorization,
+                refreshToken: cookie.userInfo.refreshToken,
+            },
+            (data) => {
+                console.log(data)
+                removeCookie()
+                navigate('/')
             }
-        })
-        const data = await response.json()
-        console.log('들어옴', data)
+        )
     } 
-
+        
     const flagClickHandler = () => {
-        updateFlag ? setUpdateFlag(false) : setUpdateFlag(true)
+        if (updateFlag) {
+            setUpdateFlag(false)
+        }  else setUpdateFlag(true)
     }
+        
+    useEffect(() => {
+        const objectToArray = (obj) => {
+            const keys = Object.keys(obj);
+            return keys.map((key) => [key, obj[key]]);
+        };
+        
+        const filterObject = (obj, keys) => {
+            const filteredArray = objectToArray(obj).filter((item) => 
+                keys.includes(item[0])
+            );
+            return (filteredArray);
+        };
 
-    const deleteUserHandler = () => {
-        deleteUser()
-    }
+        const readUser = async () => {
+            await readUserInfo(
+                {
+                    userId: cookie.userInfo.user_id,
+                    'Authorization': cookie.userInfo.jwt_token,
+                    'refreshToken':  cookie.userInfo.refresh_token,
+                },
+                (data) => {return data.data},
+                (err) => {console.log(err)}
+        ).then(data => {
+            setUesrInfo(filterObject(data, ['id', 'name', 'email', 'regTime']))
+        })}
+        readUser()
+    }, [cookie])
+
+    console.log(userInfo)
 
     return (
         <SidePaddingBox>
@@ -51,7 +84,7 @@ function ProfilePage(params) {
                 {updateFlag === false 
                 ? <Button onClick={flagClickHandler} variant="contained" className="submit" fullWidth style={{ width: "7rem", height:"2.8rem", marginRight: "15px"}}> <b>프로필 편집</b></Button>
                 :<>
-                    <Button onClick={deleteUserHandler} variant="contained" className="submit" fullWidth style={{ width: "7rem", height:"2.8rem", marginRight: "15px", backgroundColor: "red"}}><b>계정 삭제</b></Button>
+                    <Button onClick={deleteUser} variant="contained" className="submit" fullWidth style={{ width: "7rem", height:"2.8rem", marginRight: "15px", backgroundColor: "red"}}><b>계정 삭제</b></Button>
                     <ProfilePasswordUpdateButton/>
                     <Button onClick={flagClickHandler} variant="contained" className="submit" fullWidth style={{ width: "7rem", height:"2.8rem", marginRight: "15px"}}><b>편집 완료</b></Button>
                 </>}
@@ -61,7 +94,7 @@ function ProfilePage(params) {
                     <ProfileUserTrophy/>
                 </LeftBox>
                 <RightBox>
-                    {updateFlag === false ? <ProfileUserInfoItem userInfo={userInfo}/> : <ProfileUserInfoForm userInfo={userInfo} />}
+                    {updateFlag === false ? <ProfileUserInfoItem userInfo={(userInfo)}/> : <ProfileUserInfoForm userInfo={userInfo} />}
                 </RightBox>
             </TestingBox>
         </SidePaddingBox>
@@ -73,7 +106,6 @@ const BackgroundBox = styled.div`
     width: 100vw;
     margin-left: calc(-50vw + 50%);
     overflow: hidden;
-
 `
 
 const BackgroundImg = styled.img`

@@ -3,21 +3,21 @@ import { Link } from "react-router-dom"
 
 import { Card, CardActionArea, Typography, CardContent, Grid } from '@mui/material'
 
-function SessionListItem(props) {
+function CommuArticleListItem(props) {
     return (
         <>
-        {props.sessionList.map(session => {
+        {props.articles.map(article => {
             return (
-                <Card sx={{ width: '100%', height: 'auto', margin: '4px'}} key={session.roomId}>
+                <Card sx={{ width: '100%', height: 'auto', margin: '4px'}} key={article.id}>
                     <CardActionArea>
-                        <Link to={`${session.roomId}`} state={session} style={{textDecoration: 'none', color: 'black'}}>
+                        <Link to={`${article.id}`} state={article} style={{textDecoration: 'none', color: 'black'}}>
                             <CardContent>
                                 <Grid container>
                                     <Grid item xs={4} textAlign="center">
-                                        <Typography>{session.title}</Typography>
+                                        <Typography>{article.title}</Typography>
                                     </Grid>
                                     <Grid item xs={8} textAlign="center">
-                                        <Typography>{session.hostId}</Typography>
+                                        <Typography>{article.writer}</Typography>
                                     </Grid>
                                 </Grid>
                             </CardContent>
@@ -31,4 +31,4 @@ function SessionListItem(props) {
     
 }
 
-export default SessionListItem;
+export default CommuArticleListItem

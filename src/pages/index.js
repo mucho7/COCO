@@ -1,13 +1,17 @@
 import NormalSession from "./NormalSessionPage";
 import RelaySession from "./RelaySessionPage";
 import CreateSession from "./CreateSessionPage";
-import SessionList from "./SessionListPage";
+import SessionListPage from "./SessionListPage";
 import SessionDetail from "./SessionDetailPage";
 import HomePage from "./HomePage";
 import CommuPage from "./CommuPage";
 import SigninPage from "./SigninPage";
 import LoginPage from "./LoginPage";
 import ProfilePage from "./ProfilePage";
+import LogoutPage from "./LogoutPage";
+import ArticleDetailPage from "./ArticleDetailPage";
+import ArticleCreatePage from "./ArticleCreatePage";
+import ArticleUpdatePage from "./ArticleUpdatePage"
 
 import { createBrowserRouter } from "react-router-dom";
 
@@ -18,10 +22,6 @@ const router = createBrowserRouter([
     element: <HomePage/>,
   },
   {
-    path: "/community",
-    element: <CommuPage/>,
-  },
-  {
     path: "/useri",
     element: <SigninPage/>,
   },
@@ -30,16 +30,37 @@ const router = createBrowserRouter([
     element: <LoginPage/>,
   },
   {
-    path: "/useri/user_id",
+    path: "/useri/logout",
+    element: <LogoutPage/>,
+  },
+  {
+    path: "/useri/:user_id",
     element: <ProfilePage/>,
+  },
+  // 게시판 관련
+  {
+    path: "/community",
+    element: <CommuPage/>,
+  },
+  {
+    path: "/community/write",
+    element: <ArticleCreatePage/>,
+  },
+  {
+    path: "/community/:articlePk",
+    element: <ArticleDetailPage/>,
+  },
+  {
+    path: "/community/update/:articlePk",
+    element: <ArticleUpdatePage/>,
   },
   // Session 관련
   {
-    path: "/normal",
+    path: "room/:roomId/study",
     element: <NormalSession />,
   },
   {
-    path: "/relay",
+    path: "/room/:roomId/relay",
     element: <RelaySession />,
   },
   {
@@ -52,7 +73,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/room",
-    element: <SessionList />,
+    element: <SessionListPage />,
   },
 ]);
 

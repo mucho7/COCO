@@ -1,9 +1,26 @@
 import styled from "styled-components"
-
+// import { useDispatch } from "react-redux";
 import { Paper, InputBase, IconButton, Button } from '@mui/material';
 import { Search } from '@mui/icons-material';
+import { Link } from "react-router-dom";
 
 function CommuSidebar(params) {
+    // const temp_article_info = {
+    //     url: 'createArticle',
+    //     method: 'POST',
+    //     body: {
+    //         code: 'code', 
+    //         content: 'content',
+    //         title: 'title',
+    //         writer: 'writer',
+    //     }
+    // }
+
+    const onClickHandler = (e) => {
+        e.preventDefault()
+        console.log("clicked")
+    }
+
     return (
         <Sidebar>
             <Paper
@@ -14,11 +31,33 @@ function CommuSidebar(params) {
                     sx={{ ml: 1, flex: 1 }}
                     placeholder=""
                 />
-                <IconButton type="button" sx={{ p: '10px', color: '#FCA311' }} aria-label="search">
-                    <Search />
-                </IconButton>
+
             </Paper>
-            <Button variant="contained" className="submit" fullWidth style={{height:"2.5rem", backgroundColor: "#FCA311"}}> <b>글 쓰기</b></Button>
+            <Paper
+                component="form"
+                sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', height: '2rem' }}
+                >
+                <InputBase
+                    sx={{ ml: 1, flex: 1 }}
+                    placeholder=""
+                />
+
+            </Paper>
+            <Paper
+                component="form"
+                sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', height: '2rem' }}
+                >
+                <InputBase
+                    sx={{ ml: 1, flex: 1 }}
+                    placeholder=""
+                />
+            </Paper>
+            <IconButton onClick={onClickHandler} type="button" sx={{ p: '10px', color: '#FCA311' }} aria-label="search">
+                <Search />
+            </IconButton>
+            <Link to={"/community/write"} style={{textDecoration: "none"}}>
+                <Button variant="contained" className="submit" fullWidth style={{height:"2.5rem", backgroundColor: "#FCA311"}}> <b>글 쓰기</b></Button>
+            </Link>
         </Sidebar>
     )
 }

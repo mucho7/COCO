@@ -1,15 +1,15 @@
-import { SigninForm } from "../components/signin"
 import SidePaddingBox from './SidePaddingBox'
 import  { Navbar } from '../components/navbar';
+import { CommuArticleDetail } from '../components/community'
 
-function SigninPage(params) {
+function ArticleDetailPage(params) {
+
     return (
         <SidePaddingBox>
             <Navbar />
-            <h2>회원 가입</h2><hr/>
-            <SigninForm/>
+            <CommuArticleDetail></CommuArticleDetail>
         </SidePaddingBox>
     )
 }
 
-export default SigninPage
+export default ArticleDetailPage
