@@ -1,4 +1,4 @@
-import { useState }  from 'react'
+import { useState,  }  from 'react'
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 
@@ -36,7 +36,6 @@ function LoginForm () {
         await login(
         temp_user_info,
         (data) => {
-            console.log(data)
             const headers = data.headers
             setCookie(
                 'userInfo',
@@ -47,6 +46,7 @@ function LoginForm () {
                 },
                 {path: '/'}
             )
+            window.localStorage.setItem("userId", temp_user_info.userId)
             console.log(cookie)
             navigate("/")
         },
@@ -56,10 +56,20 @@ function LoginForm () {
         }
     )}
 
+    // 버튼을 누르면 실행
     const onClickHandler = (e) => {
         e.preventDefault()
         log_in()
     }
+
+    // 엔터를 누르면 실행
+    const handleKeyDown = (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault()
+            log_in()
+        }
+    }
+
 
     return (
         <Container fixed>
@@ -70,7 +80,7 @@ function LoginForm () {
                         <TextField onChange={onTypingHandler} id="outlined-id" autoFocus label="ID" fullWidth />
                     </Grid>
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} id="outlined-password" label="Password" type="password" fullWidth />
+                        <TextField onChange={onTypingHandler} onKeyDown={handleKeyDown} id="outlined-password" label="Password" type="password" fullWidth />
                     </Grid>
                     <Grid item xs={7} style={{textAlign: "center"}}>
                         <LoginTempPassword/>

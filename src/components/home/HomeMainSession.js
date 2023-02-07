@@ -1,14 +1,6 @@
 import './HomeMainSession.css'
-import { useEffect } from 'react'
-import { useCookies } from 'react-cookie'
 
 function HomeMainSession() {
-    const [ cookie, setCookie ] = useCookies(["userInfo"])
-
-    useEffect(() => {
-        console.log(cookie)
-        if (cookie.userInfo === undefined) setCookie("userInfo", "undefined")
-    })
 
     return (
         <div className='main-session'>
