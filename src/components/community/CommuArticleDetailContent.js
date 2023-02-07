@@ -4,8 +4,8 @@ import styled from "styled-components";
 import { Typography,  } from "@mui/material";
 
 function CommuArticleDetailContent(params) {
-    const [ hoverTarget, setHoverTarget ] = useState(0)
-    const [ target, setTarget ] = useState(0)
+    const [ hoverTarget, setHoverTarget ] = useState(-2)
+    const [ target, setTarget ] = useState(-2)
     const content = (params.content.content)
     const code = (params.content.code)
     
@@ -15,11 +15,11 @@ function CommuArticleDetailContent(params) {
             setHoverTarget(event.target.parentElement.id)
 
         } else {
-            setHoverTarget(0)
+            setHoverTarget(-2)
         }
     }
     const onMouseLeaveHandler = () => {
-        setHoverTarget(0)
+        setHoverTarget(-2)
     }
     
     const onContentBlockClickHandler = (event) => {
