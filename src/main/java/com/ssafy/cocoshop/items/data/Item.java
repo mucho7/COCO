@@ -59,4 +59,8 @@ public class Item {
 
 	private LocalDateTime sellEndTime;
 
+	public void addBuyCount(){
+		this.buyCount++;
+	}
+
 }

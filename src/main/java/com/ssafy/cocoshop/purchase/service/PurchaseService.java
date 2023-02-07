@@ -32,14 +32,15 @@ public class PurchaseService {
 	public Optional<PurchaseInfo> purchaseItem(PurchaseRequestDto requestDto, String accessToken) {
 		if (jwtTokenService.isValidRequest(requestDto.getUserId(), accessToken)) {
 			System.out.println(requestDto);
-			int amount = itemService.getItemById(requestDto.getItemNo()).getPrice();
-			memberService.updatePointByUsername(requestDto.getUserId(), -amount);
+			Item targetItem = itemService.getItemById(requestDto.getItemNo());
 			PurchaseInfo purchaseInfo = purchaseInfoRepository.findById(requestDto.getUserId())
 				.orElse(PurchaseInfo.builder()
 					.userId(requestDto.getUserId()).purchaseList(new ArrayList<>()).build());
 			if (!purchaseInfo.getPurchaseList().contains(requestDto.getItemNo())) {
+				memberService.updatePointByUsername(requestDto.getUserId(), -targetItem.getPrice());
 				purchaseInfo.getPurchaseList().add(requestDto.getItemNo());
 				purchaseInfoRepository.save(purchaseInfo);
+				targetItem.addBuyCount();
 			} else {
 				throw new RuntimeException("이미 구매한 물품입니다.");
 			}
