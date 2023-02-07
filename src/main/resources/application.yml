@@ -19,7 +19,13 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: cossafyco
-    url: jdbc:mysql://i8a703.p.ssafy.io:3306/project1db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+    url: jdbc:mysql://localhost:3306/project1db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      authentication-database: admin
+      uri: mongodb://localhost:27017/admin
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -45,7 +51,7 @@ server:
   port: 8019
   compression:
     enabled: true
-    mime-types: application/json,application/xml,text/html,text/xml,text/plain,application/javascript,text/css
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain,application/javascript,text/css,multipart/form-data
 
 springfox:
   documentation:
