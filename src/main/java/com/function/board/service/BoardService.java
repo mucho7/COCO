@@ -71,8 +71,8 @@ public class BoardService {
 		ContentComponentDto codeComponent = new ContentComponentDto();
 
 		//라인별로 저장하기 위해 필요한 StringBuilder
-		StringBuilder sbContent = new StringBuilder();
-		StringBuilder sbCode = new StringBuilder();
+		List<String> contentList = new ArrayList<>();
+		List<String> codeList = new ArrayList<>();
 
 		int codeIndex = 0;
 		boolean isFirst = true;
@@ -93,26 +93,26 @@ public class BoardService {
 					startIndex = Integer.parseInt(content[i].replace("---", ""))-1;
 					isFirst = false;
 					//저장할 내용이 있으니깐
-					if(sbContent.length() != 0){
+					if(contentList.size() != 0){
 						contentComponent = new ContentComponentDto();
-						contentComponent.setContent(sbContent.toString());
+						contentComponent.setContent(contentList);
 						contentComponent.setIndex(-1);
 						contents.add(contentComponent);
 
-						sbContent = new StringBuilder();
+						contentList = new ArrayList<>();
 
 
 						while (codeIndex != startIndex) {
-							sbCode.append(code[codeIndex]+"\n");
+							codeList.add(code[codeIndex]);
 							codeIndex++;
 						}
 
 						codeComponent = new ContentComponentDto();
-						codeComponent.setContent(sbCode.toString());
+						codeComponent.setContent(codeList);
 						codeComponent.setIndex(-1);
 						codes.add(codeComponent);
 
-						sbCode = new StringBuilder();
+						codeList = new ArrayList<>();
 
 					}
 
@@ -123,22 +123,22 @@ public class BoardService {
 					codeComponent = new ContentComponentDto();
 					contentComponent = new ContentComponentDto();
 					//2. 컴포넌트에 담고 리스트에 추가
-					contentComponent.setContent(sbContent.toString());
+					contentComponent.setContent(contentList);
 					contentComponent.setIndex(codes.size());
-					sbContent = new StringBuilder();
+					contentList = new ArrayList<>();
 
 					//3. 코드도 잘라서 인덱스 매핑
 					while (codeIndex != startIndex)
 						codeIndex++;
 
 					while (codeIndex -1  != endIndex) {
-						sbCode.append(code[codeIndex]+"\n");
+						codeList.add(code[codeIndex]);
 						codeIndex++;
 					}
 
-					codeComponent.setContent(sbCode.toString());
+					codeComponent.setContent(codeList);
 					codeComponent.setIndex(contents.size());
-					sbCode = new StringBuilder();
+					codeList = new ArrayList<>();
 
 					//4. 리스트 추가
 					contents.add(contentComponent);
@@ -151,13 +151,13 @@ public class BoardService {
 			}
 			else {
 				//StringBuilder에 한 줄씩 넣는 과정
-				sbContent.append(content[i]+"\n");
+				contentList.add(content[i]);
 			}
 		}
 
-		if(sbContent.length() != 0){
+		if(contentList.size() != 0){
 			contentComponent = new ContentComponentDto();
-			contentComponent.setContent(sbContent.toString());
+			contentComponent.setContent(contentList);
 			contentComponent.setIndex(-1);
 			contents.add(contentComponent);
 		}
@@ -166,11 +166,11 @@ public class BoardService {
 			codeComponent = new ContentComponentDto();
 
 			while(codeIndex != code.length){
-				sbCode.append(code[codeIndex]+"\n");
+				codeList.add(code[codeIndex]);
 				codeIndex++;
 			}
 
-			codeComponent.setContent(sbCode.toString());
+			codeComponent.setContent(codeList);
 			codeComponent.setIndex(-1);
 			codes.add(codeComponent);
 		}

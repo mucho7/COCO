@@ -1,11 +1,13 @@
 package com.function.board.dto.board;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
 public class ContentComponentDto {
 
-	private String content;
+	private List<String> content;
 	private int index;
 
 }
