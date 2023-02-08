@@ -14,6 +14,7 @@ import com.service.gateway.tokens.dto.JwtTokenDto;
 
 import lombok.Getter;
 import lombok.Setter;
+import reactor.core.publisher.Mono;
 
 @Component
 public class AuthenticationHeaderFilter extends AbstractGatewayFilterFactory<AuthenticationHeaderFilter.Config> {
@@ -80,11 +81,17 @@ public class AuthenticationHeaderFilter extends AbstractGatewayFilterFactory<Aut
 				return chain.filter(newExchange);
 			} else {
 				response.setStatusCode(HttpStatus.BAD_REQUEST);
-				// response.getHeaders().setLocation(URI.create("http://i8a703.p.ssafy.io:8012/member/logout")); // 이 경우
-				return chain.filter(newExchange.mutate().request(request).response(response).build());
+				return handleUnAuthorized(exchange);
 			}
 		});
 
+	}
+
+	private Mono<Void> handleUnAuthorized(ServerWebExchange exchange) {
+		ServerHttpResponse response = exchange.getResponse();
+
+		response.setStatusCode(HttpStatus.UNAUTHORIZED);
+		return response.setComplete();
 	}
 
 	@Getter
