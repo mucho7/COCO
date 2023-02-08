@@ -16,19 +16,25 @@ function CommentForm(params) {
     }
 
     function onSubmitClickHandler() {
-        commentCreate(
-            {
-                content: comment,
-                board_id: board_id,
-                writer: localStorage.userId
-            },
-            (data) => {
-                console.log(data)
-                setComment("")
-                alert("댓글 작성 완료")
-            },
-            (err) => console.log(err)
-        )
+        if (comment === undefined){
+            alert("댓글 내용이 없습니다!")
+        } else if (comment.trim() === "") {
+            alert("댓글엔 공백이 아닌 문자가 있어야 합니다!!")
+        } else {
+            commentCreate(
+                {
+                    content: comment,
+                    board_id: board_id,
+                    writer: localStorage.userId
+                },
+                (data) => {
+                    console.log(data)
+                    setComment("")
+                    alert("댓글 작성 완료")
+                },
+                (err) => console.log(err)
+            )
+        }
     }
 
 
