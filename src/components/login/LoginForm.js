@@ -44,6 +44,7 @@ function LoginForm () {
                     jwt_token: headers.get('Authorization'),
                     refresh_token: headers.get('refreshToken'),
                 },
+                {maxAge: 60 * 5},
                 {path: '/'}
             )
             window.localStorage.setItem("userId", temp_user_info.userId)
@@ -52,7 +53,7 @@ function LoginForm () {
         },
         (error) => {
             console.log(error);
-            alert(error.response.data)
+            alert(error)
         }
     )}
 

@@ -1,6 +1,6 @@
 // custom hook에 대한 이해가 필요함
 
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { signup } from '../../api/member'
@@ -26,7 +26,7 @@ function SigninForm() {
 
     // validation
     const emailValidation = new RegExp('[a-z0-9_.]+@[a-z]+.[a-z]{2,3}')
-    const idValidation = useCallback(() => {
+    useEffect(() => {
         const idForm = /^[a-z0-9]{4,16}$/
         const idErrorMessage = {
             null: "필수 입력입니다.",
@@ -45,7 +45,7 @@ function SigninForm() {
         }
     }, [inputID])
 
-    const passwordValidation = useCallback(() => {
+    useEffect(() => {
         const passwordForm = /^[a-z0-9]{4,12}$/
         const passwordErrorMessage = {
             null: "필수 입력입니다.",
@@ -112,18 +112,13 @@ function SigninForm() {
         }
     )} 
 
-    useEffect(() => {
-        
-    })
-
+    
     // 제출
     const onClickHandler = () => {
         setIsEmailValid(!(emailValidation.test(inputEmail)))
-        passwordValidation()
-        idValidation()
         if (isOkToSubmit){axios_test()} else { alert('잘못된 접근입니다.')}
     }
-
+    
     return (
         <Container fixed>
             <Box component="form">

@@ -34,6 +34,7 @@ function ProfilePage(params) {
             (data) => {
                 console.log(data)
                 setCookie("userInfo", "undefined")
+                localStorage.setItem("userId", undefined)
                 navigate('/')
             },
             (err) => console.log(err)

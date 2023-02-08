@@ -18,7 +18,7 @@ function LogoutPage() {
         (data) => {
             console.log(data)
             localStorage.clear()
-            setCookie(["userInfo"], undefined)
+            setCookie("userInfo", "undefined")
             navigate("/")
         },
         (error) => {
