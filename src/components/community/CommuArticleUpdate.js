@@ -57,11 +57,17 @@ function ArticleUpdate(props) {
     }, [article])
 
     async function onClickHandler() {
-        await articleUpdate(
-            updateArticle,
-            (data) => console.log(data),
-            (err) => console.log(err)
-        )
+        if (inputTitle === undefined || inputContent === undefined){
+            alert("제목이나 내용은 필수 입력입니다!!")
+        } else if (inputTitle.trim() === "" || inputContent.trim() === "") {
+            alert("제목이나 내용엔 공백이 아닌 문자가 있어야 합니다!!")
+        } else {
+            await articleUpdate(
+                updateArticle,
+                (data) => console.log(data),
+                (err) => console.log(err)
+            )
+        }
     }
 
     return (
