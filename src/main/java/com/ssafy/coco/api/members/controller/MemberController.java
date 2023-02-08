@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +32,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/member")
-@CrossOrigin("*")
 public class MemberController {
 
 	private final MemberService memberService;
@@ -156,14 +154,13 @@ public class MemberController {
 	public ResponseEntity logout(HttpServletRequest request) {
 		String refreshToken = request.getHeader("refreshToken");
 		if (refreshToken != null) {
-			boolean isLogoutSuccessful = memberService.logout(refreshToken);
-			if (isLogoutSuccessful) {
-				return ResponseEntity.ok().body("정상적으로 로그아웃되었습니다.");
+			if (memberService.logout(refreshToken)) {
+				return ResponseEntity.ok("정상적으로 로그아웃되었습니다.");
 			} else {
-				return ResponseEntity.internalServerError().body("로그아웃 중 문제가 발생하였습니다. 유효하지 않은 토큰입니다.");
+				return ResponseEntity.accepted().body("refreshToken DB에는 현재 세션에 대한 리프레시 토큰이 없습니다.\n강제 로그아웃 합니다.");
 			}
 		}
-		return ResponseEntity.status(HttpStatus.FORBIDDEN).body("토큰 값이 유효하지 않습니다.");
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body("로그인 중인 세션이 아닙니다.");
 	}
 
 	@PostMapping("/changePassword")
