@@ -57,7 +57,7 @@ public class CallHandler extends TextWebSocketHandler {
 	private UserRegistry registry;
 
 	@Autowired
-	private RoomService roomService; //
+	private RoomService roomService; // 호스트가 나가면 해당 룸 DB에서 삭제하기 위함
 
 	@Override
 	public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
@@ -275,7 +275,7 @@ public class CallHandler extends TextWebSocketHandler {
 		// }
 		// roomManager.getRoom(roomName).leave(user);
 
-		// Ver.2: leaveRoom + AfterConnectionClosed
+		// Ver.2: leaveRoom + afterConnectionClosed
 		UserSession user = registry.removeBySession(session);
 		final String roomName = user.getRoomName();
 		final String userName = user.getName();
@@ -284,10 +284,20 @@ public class CallHandler extends TextWebSocketHandler {
 		if (room.getParticipants().isEmpty()) {
 			roomManager.removeRoom(room);
 		}
-		// if (userName.equals(roomName)) { // 호스트가 나갔다면, 모두 나가기
-		if (userName.equals("host")) { // TODO: 호스트가 나가면
+		// 인원수 - 1
+		// roomService.UpdateRoomLeave(roomName); // TODO: 주석 정리
+		if (roomService.UpdateRoomLeave(roomName) != null) {
+			System.out.println("...인원수 - 1 성공...");
+		} else {
+			System.out.println("...인원수 - 1 실패: 해당 룸 없음...");
+		}
+		// 호스트가 나갔다면, 해당 방 삭제하고 모두 나가기
+		// if (userName.equals(roomName)) {
+		if (userName.equals("host")) { // TODO: 주석 정리
 			System.out.println("...DB에서 해당 방 삭제하기...");
-			// roomService.DeleteRoom(roomName); // TODO: 해당 방 DB에서 지우기
+			if (roomService.DeleteRoom(roomName) == null) {
+				System.out.println("...삭제 실패: 해당 룸 없음...");
+			}
 			announceHostLeft(roomName, null);
 		}
 	}
