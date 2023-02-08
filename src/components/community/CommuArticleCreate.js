@@ -53,17 +53,22 @@ function ArticleCreate(params) {
     
     async function onClickHandler() {
         console.log(newArticle)
-
-        await articleCreate(
-            newArticle,
-            // 성공 시에 해당 글로 navigate 해야함, response에 따라 좀 달라질듯
-            (data) => {
-                console.log(data)
-                alert("작성완료")
-                navigate("/community")
-            },
-            (err) => console.log(err)
-        )
+        if (inputTitle === undefined || inputContent === undefined || inputCode === undefined){
+            alert("제목이나 내용은 필수 입력입니다!!")
+        } else if (inputTitle.trim() === "" || inputContent.trim() === "" || inputCode.trim() === "") {
+            alert("제목이나 내용엔 공백이 아닌 문자가 있어야 합니다!!")
+        } else {
+            await articleCreate(
+                newArticle,
+                // 성공 시에 해당 글로 navigate 해야함, response에 따라 좀 달라질듯
+                (data) => {
+                    console.log(data)
+                    alert("작성완료")
+                    navigate("/community")
+                },
+                (err) => console.log(err)
+            )
+        }
     }
 
     return (

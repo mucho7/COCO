@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom"
 
-
 import { Card, CardActionArea, Typography, CardContent, Grid } from '@mui/material'
 
 function CommuArticleListItem(props) {

@@ -13,13 +13,13 @@ const api = axios.create({
 });
 
 
-async function boardPaging(pageInfo,success, fail) {
+async function boardPaging(pageInfo, success, fail) {
   const res = await api.get(`/board`, {params: {size: pageInfo.size, page: pageInfo.page}}).then(success).catch(fail);
   return res
 }
 
-async function boardDetail(article_pk, success, fail) {
-  const res = await api.get(`/board/${article_pk}`).then(success).catch(fail);
+async function boardDetail(article, success, fail) {
+  const res = await api.get(`/board/${article.pk}`, {params: {page: article.pageNumber}}).then(success).catch(fail);
   return res
 }
 
