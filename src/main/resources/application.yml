@@ -22,7 +22,9 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: 'http://i8a703.p.ssafy.io:443'
+            allowedOrigins:
+              - 'http://i8a703.p.ssafy.io:443'
+              - 'http://localhost:3000'
             allow-credentials: true
             allowedHeaders: '*'
             exposed-headers: '*'
