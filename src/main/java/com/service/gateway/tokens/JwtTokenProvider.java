@@ -139,11 +139,10 @@ public class JwtTokenProvider {
 	public JwtTokenDto resolveToken(ServerHttpRequest request) {
 		JwtTokenDto tokenDto = new JwtTokenDto();
 		HttpHeaders requestHeader = request.getHeaders();
-		if (requestHeader != null) {
-			tokenDto.setAccessToken(requestHeader.get("Authorization").get(0).substring(7));
-			tokenDto.setRefreshToken(requestHeader.get("refreshToken").get(0).substring(7));
-			if(!refreshTokenRepository.existsByRefreshToken(tokenDto.getRefreshToken()))
-				tokenDto=null;
+		tokenDto.setAccessToken(requestHeader.get("Authorization").get(0).substring(7));
+		tokenDto.setRefreshToken(requestHeader.get("refreshToken").get(0).substring(7));
+		if (!refreshTokenRepository.existsByRefreshToken(tokenDto.getRefreshToken())) {
+			tokenDto = null;
 		}
 		System.out.println("[resolveToken@JwtTokenProvider]" + tokenDto);
 		return tokenDto;
@@ -160,13 +159,13 @@ public class JwtTokenProvider {
 			Jws<Claims> claims = Jwts.parser().setSigningKey(uniqueKey).parseClaimsJws(token);
 			return !claims.getBody().getExpiration().before(new Date());
 		} catch (SecurityException | MalformedJwtException e) {
-			log.info("유효하지 않은 Access Token !! -> " + token);
+			log.info("유효하지 않은 Token !! -> " + token);
 		} catch (ExpiredJwtException e) {
-			log.info("만료된 Access Token !! -> " + token);
+			log.info("만료된 Token !! -> " + token);
 		} catch (UnsupportedJwtException e) {
-			log.info("지원하지 않는 형식의 Access Token !! -> " + token);
+			log.info("지원하지 않는 형식의 Token !! -> " + token);
 		} catch (IllegalArgumentException e) {
-			log.info("Access Token이 빈 문자열을 반환하였습니다 !! -> " + token);
+			log.info("Token이 빈 문자열을 반환하였습니다 !! -> " + token);
 		}
 		return false;
 	}
