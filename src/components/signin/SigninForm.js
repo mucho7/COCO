@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { signup } from '../../api/member'
 
 import { Grid, Box, Container, Button, TextField } from '@mui/material'
+import { useEffect } from 'react'
 
 function SigninForm() {
     const navigate = useNavigate()
@@ -111,6 +112,10 @@ function SigninForm() {
         }
     )} 
 
+    useEffect(() => {
+        
+    })
+
     // 제출
     const onClickHandler = () => {
         setIsEmailValid(!(emailValidation.test(inputEmail)))
@@ -118,9 +123,6 @@ function SigninForm() {
         idValidation()
         if (isOkToSubmit){axios_test()} else { alert('잘못된 접근입니다.')}
     }
-
-
-
 
     return (
         <Container fixed>

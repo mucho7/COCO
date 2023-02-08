@@ -26,7 +26,7 @@ async function readUserInfo(user, success, fail) {
 async function updateUserInfo(user, success, fail) {
   api.defaults.headers["Authorization"] = user["Authorization"]
   api.defaults.headers["refreshToken"] = user["refreshToken"]
-  await api.post(`/member/info/${user.userId}`, JSON.stringify(user)).then(success).catch(fail);
+  await api.put(`/member/info/${user.userId}`, JSON.stringify(user)).then(success).catch(fail);
 }
 
 async function changeUserPassword(user, success, fail) {
