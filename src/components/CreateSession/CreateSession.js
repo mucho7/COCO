@@ -87,7 +87,7 @@ function CreateSession() {
           <Grid item xs={12}>
             <FormLabel id="mode">모드</FormLabel>
             <RadioGroup name="mode" row>
-              <FormControlLabel value="normal" control={<Radio />} label="normal" />
+              <FormControlLabel value="study" control={<Radio />} label="study" />
               <FormControlLabel value="relay" control={<Radio />} label="relay" />
             </RadioGroup>
           </Grid>

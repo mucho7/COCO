@@ -12,6 +12,7 @@ import LogoutPage from "./LogoutPage";
 import ArticleDetailPage from "./ArticleDetailPage";
 import ArticleCreatePage from "./ArticleCreatePage";
 import ArticleUpdatePage from "./ArticleUpdatePage"
+import UpdateSession from "./UpdateSessionPage";
 
 import { createBrowserRouter } from "react-router-dom";
 
@@ -56,12 +57,16 @@ const router = createBrowserRouter([
   },
   // Session 관련
   {
-    path: "room/:roomId/study",
+    path: "/room/:roomId/study",
     element: <NormalSession />,
   },
   {
     path: "/room/:roomId/relay",
     element: <RelaySession />,
+  },
+  {
+    path: "/room/:roomId/update",
+    element: <UpdateSession />
   },
   {
     path: "/room/create",

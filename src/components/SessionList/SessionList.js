@@ -39,7 +39,7 @@ function SessionList() {
   useMemo(() => {
     const enterSessionList = async () => {
       await getSessionList(
-        "relay",
+        "study",
         (data) => {return data.data},
         (err) => console.log(err)
       ).then((data) => {

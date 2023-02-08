@@ -4,7 +4,7 @@ import SidePaddingBox from './SidePaddingBox'
 import  { Navbar } from '../components/navbar';
 
 import SessionList from "../components/SessionList";
-import { CommuSidebar,  } from "../components/community"
+import SessionListSideBar from "../components/SessionList/SessinListSideBar";
 
 function SessionListPage() {
 
@@ -13,7 +13,7 @@ function SessionListPage() {
             <Navbar />
             <SessionListSection>
                 <SessionList/>
-                <CommuSidebar/>
+                <SessionListSideBar/>
             </SessionListSection>
         </SidePaddingBox>
     )

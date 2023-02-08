@@ -47,5 +47,22 @@ async function deleteSession(roomId, success, fail) {
   return res
 }
 
+async function updateSession(roomId, sessionInfo, success, fail) {
+  const res = await api.put(`/room/${roomId}`, sessionInfo).then(success).catch(fail);
+  return res
+}
 
-export { getSessionList, getSessionDetail, createSession, deleteSession };
+async function enterSession(roomId, userId, success, fail) {
+  const res = await api.put(`/room/enter/${roomId}?userId=${userId}`).then(success).catch(fail);
+  return res
+}
+
+
+export { 
+  getSessionList, 
+  getSessionDetail, 
+  createSession, 
+  deleteSession, 
+  updateSession, 
+  enterSession 
+};

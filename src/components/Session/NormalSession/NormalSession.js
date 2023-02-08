@@ -1,14 +1,16 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { receiveChat, websocketInstances, setWebsocketId, setParticipantsId, participantsInstances, receiveImageData, setUpdated, setIsCompilePossible, setIsDrawPossible, setIsMicPossible } from "../../../store/sessionSlice";
 
 import IdeArea from "../IdeArea";
 import SideArea from "../SideArea";
 import ToolBar from "../ToolBar";
+import adapter from "webrtc-adapter";
 
 let kurentoUtils = require("kurento-utils");
-const adapter = require("webrtc-adapter");
+// const adapter = require("webrtc-adapter");
 
 
 const NormalSessionDiv = styled.div`
@@ -24,21 +26,14 @@ const NormalSessionDiv = styled.div`
 function NormalSession(props) {
   let ws = useRef(null);
   const dispatch = useDispatch();
-  let sendingMessage = useSelector((state) => state.session.sendMessage);
-  let userName = useSelector((state) => state.session.userName);
-  let roomName = useSelector((state) => state.session.roomName);
+  const userName = useSelector((state) => state.session.userName);
+  // const roomName = useSelector((state) => state.session.roomName);
+  // const userName = window.localStorage.getItem("userId");
+  const { roomId } = useParams();
+  const roomName = roomId
+  console.log(roomName)
+
   const isDrawButtonOn = useSelector((state) => state.toolBarAction.isDrawButtonOn);
-  
-  // console.log("xx", userName, roomName);
-  // console.log(sendingMessage)
-  
-  
-  // useEffect(() => {
-    //   if (ws.current) {
-      //     console.log(participants)
-      //     dispatch(getParticipants(participants));
-      //   }
-      // }, [dispatch, participants])
       
   useEffect(() => {
     // window.addEventListener("resize", () => {
@@ -130,17 +125,6 @@ function NormalSession(props) {
         }
       }
 
-      if (ws.current && sendingMessage) {
-        // console.log(sendingMessage)
-        const msg = {
-          id: "sendChat",
-          userName: userName,
-          roomName: roomName,
-          chat: sendingMessage
-        }
-        sendMessage(msg);
-      }
-
       // 새 참여자 입장
       function onNewParticipant(request) {
         receiveVideo(request.name);
@@ -201,16 +185,9 @@ function NormalSession(props) {
       }
 
       function leaveRoom() {
-        sendMessage({
-          id : 'leaveRoom'
-        });
-      
         for ( var key in participants) {
           participants[key].dispose();
         }
-      
-        // document.getElementById('join').style.display = 'block';
-        // document.getElementById('room').style.display = 'none';
       
         ws.current.close();
       }
@@ -243,7 +220,7 @@ function NormalSession(props) {
       function onParticipantLeft(request) {
         console.log('Participant ' + request.name + ' left');
         var participant = participants[request.name];
-        // participant.dispose();
+        participant.dispose();
         delete participants[request.name];
       }
 
@@ -394,30 +371,16 @@ function NormalSession(props) {
         this.dispose = function() {
           console.log('Disposing participant ' + this.name);
           this.rtcPeer.dispose();
-          container.parentNode.removeChild(container);
         };
       }
-
-      // return () => {
-      //   ws.current.close();
-      // }
     }
-  }, [dispatch, isDrawButtonOn, roomName, sendingMessage, userName])
+  }, [dispatch, isDrawButtonOn, roomName, userName])
 
-  // useEffect(() => {
-  //   console.log(sendingMessage);
-  //   if (ws.current && sendingMessage) {
-  //     // console.log(sendingMessage)
-  //     const msg = {
-  //       id: "sendChat",
-  //       userName: userName,
-  //       roomName: roomName,
-  //       chat: sendingMessage
-  //     }
-  //     sendMessage(msg);
-  //   }
-  // }, [sendingMessage])
-  
+  useEffect(() => {
+    return () => {
+      ws.current.close();
+    }
+  }, [])
   
   return (
     <NormalSessionDiv>

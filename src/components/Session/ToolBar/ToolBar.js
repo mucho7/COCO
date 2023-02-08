@@ -36,6 +36,7 @@ function ToolBar(props) {
         <CompileButton />
         <DrawButton />
         <MicButton />
+        {/* {participantsInstances.isHost && } */}
         <AuthorizeButton />
         <ChatButton />
         <QuitButton />
