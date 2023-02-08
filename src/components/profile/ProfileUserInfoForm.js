@@ -14,11 +14,11 @@ function ProfileUserInfoForm(props) {
     const onTypingHandler = (e) => {
         // 4개의 케이스에 따라 각자의 스테이트에 저장
         switch (e.target.id) {
-            case 'User E-Mail':
+            case 'email':
                 setInputEmail(e.target.value)
                 console.log(e.target.value, inputEmail)
                 break
-            case 'User Name':
+            case 'name':
                 setInputName(e.target.value)
                 console.log(e.target.value, inputName)
                 break
@@ -28,8 +28,9 @@ function ProfileUserInfoForm(props) {
     }
 
     const updating_user_info = {
-        "email": inputEmail,
-        "name": inputName,
+        email: inputEmail,
+        name: inputName,
+
         userId: props.userInfo[0][1],
         "Authorization": cookie.userInfo.jwt_token,
         "refreshToken":  cookie.userInfo.refresh_token,

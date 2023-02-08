@@ -73,7 +73,8 @@ function ProfilePage(params) {
             setUesrInfo(filterObject(data, ['id', 'name', 'email', 'regTime']))
         })}
         readUser()
-    }, [cookie])
+        console.log(updateFlag)
+    }, [cookie, updateFlag])
 
     console.log(userInfo)
 
