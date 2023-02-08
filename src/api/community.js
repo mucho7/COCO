@@ -4,8 +4,10 @@ import axios from "axios";
 const api = axios.create({
 // env로 대체할 것
 // baseURL: "http://APIgateway:8000/",
+baseURL: "http://i8a703.p.ssafy.io:8000",
+
 // 
-  baseURL: "http://i8a703.p.ssafy.io:8111",
+  // baseURL: "http://i8a703.p.ssafy.io:8111",
 
   headers: {
     "Content-Type": "application/json",
