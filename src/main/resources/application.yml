@@ -25,6 +25,7 @@ spring:
             allowedOrigins: 'http://i8a703.p.ssafy.io:443'
             allow-credentials: true
             allowedHeaders: '*'
+            exposed-headers: '*'
             allowedMethods:
               - PUT
               - GET
