@@ -12,12 +12,14 @@ public class BoardListResponseDto {
 	private Long id;
 	private String title;
 	private String writer;
+	private int commentCnt;
 	private int hit;
 	private LocalDateTime createdAt;
 
 	@QueryProjection
-	public BoardListResponseDto(Long id, String title, String writer, int hit, LocalDateTime createdAt) {
+	public BoardListResponseDto(Long id, int commentCnt, String title, String writer, int hit, LocalDateTime createdAt) {
 		this.id = id;
+		this.commentCnt = commentCnt;
 		this.title = title;
 		this.writer = writer;
 		this.hit = hit;
@@ -26,6 +28,7 @@ public class BoardListResponseDto {
 
 	public BoardListResponseDto(Board entity) {
 		this.id = entity.getId();
+		this.commentCnt = entity.getComments().size();
 		this.title = entity.getTitle();
 		this.writer = entity.getWriter();
 		this.hit = entity.getHit();
