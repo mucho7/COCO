@@ -1,5 +1,5 @@
 server:
-  port: 8111
+  port: 8011
 
 spring:
   application:
@@ -24,4 +24,4 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://i8a703.p.ssafy.io:8761/eureka
+      defaultZone: http://APIGateway:8761/eureka
