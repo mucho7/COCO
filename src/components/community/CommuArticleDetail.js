@@ -12,6 +12,7 @@ function CommuArticleDetail() {
     const navigate = useNavigate()
     const location = useLocation()
     const pk = location.state.id
+    const hit = location.state.hit
 
     const [ pageNumber, setPageNumber ] = useState(1)
     const [ maxPage, setMaxPage ] = useState(5)
@@ -23,7 +24,8 @@ function CommuArticleDetail() {
         comments: {
             empty: true,
             totalPages: 1,
-        }
+        },
+        hit: hit
     })
     
     // article 정보를 가져옴
@@ -38,8 +40,11 @@ function CommuArticleDetail() {
             setMaxPage(article.comments.totalPages)
         })
     }
-    getArticlelDetail()
-    }, [pk, article, pageNumber])
+    if (hit === article.hit){
+            getArticlelDetail()
+            console.log("조회수 증가!!!")
+    }
+    }, [pk, article, pageNumber, hit])
 
     async function onClickDeleteHandler(params) {
         await articleDelete(

@@ -7,12 +7,7 @@ import { Grid } from '@mui/material'
 
 function Navbar() {
     const [ cookie, ] = useCookies(["userInfo"])
-    const [ userId, ] = useState("null")
-
-    // useMemo(() => {
-    //     if (cookie.userInfo === undefined) setCookie("userInfo", "undefined")
-    //     else (setUserId(cookie.userInfo.user_id))
-    // }, [setUserId, setCookie, cookie])
+    const [ userId, ] = useState(localStorage.userId)
 
     const navlist = {
         left: [

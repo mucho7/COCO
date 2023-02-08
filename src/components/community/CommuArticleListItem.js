@@ -15,8 +15,11 @@ function CommuArticleListItem(props) {
                                     <Grid item xs={4} textAlign="center">
                                         <Typography>{article.title}</Typography>
                                     </Grid>
-                                    <Grid item xs={8} textAlign="center">
+                                    <Grid item xs={3} textAlign="center">
                                         <Typography>{article.writer}</Typography>
+                                    </Grid>
+                                    <Grid item xs={5} textAlign="center">
+                                        <Typography>{article.hit}</Typography>
                                     </Grid>
                                 </Grid>
                             </CardContent>
