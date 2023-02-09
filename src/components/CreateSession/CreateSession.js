@@ -3,26 +3,37 @@ import { Container, Box, Button, Typography, FormLabel, FormControlLabel,
   RadioGroup, Radio, TextField, Grid   } from '@mui/material';
 
 import { useDispatch } from 'react-redux';
-import { createSession } from '../../store/sessionListSlice';
+// import { createSession } from '../../store/sessionListSlice';
 import { useNavigate } from 'react-router-dom';
+import { createSession } from '../../api/session';
 
 
 function CreateSession() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleCreateSession = (event) => {
+  async function handleCreateSession(event) {
     event.preventDefault();
     const sessionData = new FormData(event.currentTarget);
     const payload = {
       // host_id, host_rating, max 추가로 전달
-      title: sessionData.get('title'),
-      content: sessionData.get('content'),
-      mode: sessionData.get('mode')
+      hostId: sessionData.get("hostId"),
+      title: sessionData.get("title"),
+      content: sessionData.get("content"),
+      hostRating: 10,
+      mode: sessionData.get("mode"),
+      max: sessionData.get("max")
     }
     // 백엔드의 "/room" URI로 POST 요청 보내는 함수로 변경
-    dispatch(createSession(payload));
-    navigate("/room");
+    // dispatch(createSession(payload));
+    await createSession(
+      payload,
+      (data) => {
+        console.log(data)
+        navigate(`/room/${sessionData.get("hostId")}`);
+      },
+      (err) => console.log(err)
+    )
   }
   
   
@@ -33,6 +44,16 @@ function CreateSession() {
       </Typography>
       <Box component="form" noValidate sx={{ mt: 3 }} onSubmit={handleCreateSession}>
         <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              required
+              fullWidth
+              id="hostId"
+              label="HOST ID"
+              name="hostId"
+              autoComplete="hostId"
+            />
+          </Grid>
           <Grid item xs={12}>
             <TextField
               required
@@ -58,9 +79,20 @@ function CreateSession() {
           <Grid item xs={12}>
             <FormLabel id="mode">모드</FormLabel>
             <RadioGroup name="mode" row>
-              <FormControlLabel value="normal" control={<Radio />} label="normal" />
+              <FormControlLabel value="study" control={<Radio />} label="study" />
               <FormControlLabel value="relay" control={<Radio />} label="relay" />
             </RadioGroup>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              required
+              fullWidth
+              id="max"
+              label="최대 참여자 수"
+              name="max"
+              type="number"
+              autoComplete="max"
+            />
           </Grid>
         </Grid>
         <Button

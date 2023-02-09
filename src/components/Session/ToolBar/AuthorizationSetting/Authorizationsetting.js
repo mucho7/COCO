@@ -9,6 +9,7 @@ const AuthorizationSettingDiv = styled.div`
   display: flex;
   flex-direction: column;
   position: absolute;
+  z-index: 150;
   bottom: 65px;
   right: 30%;
   width: 300px;

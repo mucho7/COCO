@@ -5,8 +5,10 @@ import { onClickCompileButton } from "../../../store/toolBarActionSlice";
 
 
 function CompileButton(props) {
-  const dispatch = useDispatch();
   const isCompileButtonOn = useSelector((state) => state.toolBarAction.isCompileButtonOn);
+  const isCompilePossible = useSelector((state) => state.session.isCompilePossible);
+  
+  const dispatch = useDispatch();
 
   function handleOnClick() {
     if (isCompileButtonOn) {
@@ -20,6 +22,7 @@ function CompileButton(props) {
     <CustomButton 
       onClick={handleOnClick} 
       isButtonOn={isCompileButtonOn}
+      disabled={!isCompilePossible}
     >
       컴파
     </CustomButton>

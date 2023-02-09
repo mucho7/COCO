@@ -1,11 +1,12 @@
 import styled from "styled-components";
-import TextField from "@mui/material/TextField";
 
-import { useState } from "react";
-import { onChangeCode } from "../../../store/compileSlice";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from "react";
 
-import DrawLayer from "./DrawLayer";
+import Ide from "./Ide";
+import MyDrawLayer from "./MyDrawLayer";
+import OthersDrawLayer from "./OthersDrawLayer";
+import { participantsInstances, setUpdated } from "../../../store/sessionSlice";
 
 
 const IdeAreaDiv = styled.div`
@@ -13,33 +14,48 @@ const IdeAreaDiv = styled.div`
   background-color: #14213D;
   color: white;
   position: relative;
+  grid-row-start: 1;
+  grid-row-end: 12;
+  grid-column-start: 1;
+  grid-column-end: 4;
 `;
 
 
 function IdeArea(props) {
-  const [code, setCode] = useState("");
-  const dispatch = useDispatch();
   const isDrawButtonOn = useSelector((state) => state.toolBarAction.isDrawButtonOn);
+  const participantsId = useSelector((state) => state.session.participantsId);
+  const [participants, setParticipants] = useState({});
+  // const participants = participantsInstances.get(participantsId);
+  const updated = useSelector((state) => state.session.updated);
+  const dispatch = useDispatch();
+  // console.log("participantId: ", participantsId)
+  // console.log("participants: ", participants);
+  // console.log(participantsInstances)
+  // console.log(participantsInstances.get(participantsId))
 
-  function handleChangeCode(event) {
-    setCode(event.target.value);
-    dispatch(onChangeCode(event.target.value));
-  }
+  useEffect(() => {
+    if (participantsId) {
+      setParticipants(participantsInstances.get(participantsId));
+    }
+    
+    if (updated) {
+      setParticipants(participantsInstances.get(participantsId));
+      dispatch(setUpdated(false));
+    }
+  }, [participantsId, updated, dispatch])
 
   return (
-    <IdeAreaDiv>
-      {isDrawButtonOn && <DrawLayer />}
-      <h1>IDE Area</h1>
-      <TextField
-        label="메세지를 입력하세요."
-        multiline
-        maxRows={20}
-        sx={{ m: 2, width: "75%", ' .MuiOutlinedInput-root': {
-          color: 'white',
-          }, }}
-        value={code}
-        onChange={handleChangeCode}
-      />
+    <IdeAreaDiv id="ideArea">
+      {isDrawButtonOn && <MyDrawLayer />}
+      {
+        participantsId !== null && 
+        Object.values(participants).map((participant) => {
+          return (
+            <OthersDrawLayer participant={participant} key={participant?.name} />
+          )
+        })
+      }
+      <Ide />
     </IdeAreaDiv>
   );
 }
