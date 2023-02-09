@@ -80,7 +80,6 @@ public class AuthenticationHeaderFilter extends AbstractGatewayFilterFactory<Aut
 				}
 				return chain.filter(newExchange);
 			} else {
-				response.setStatusCode(HttpStatus.BAD_REQUEST);
 				return handleUnAuthorized(exchange);
 			}
 		});

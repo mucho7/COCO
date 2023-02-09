@@ -13,7 +13,6 @@ import lombok.ToString;
 @ToString
 public class JwtTokenDto {
 
-	private String grantType;
 	private String accessToken;
 	private String refreshToken;
 	private String userId;
