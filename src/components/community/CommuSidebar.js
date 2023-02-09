@@ -44,7 +44,10 @@ function CommuSidebar(params) {
                     return data.data
                 },
                 (err) => console.log(err)
-            ).then(console.log("하이잭해서 프린트 해야함"))
+            )
+            .then(() => {
+
+            })
         }
         getSearchedList()
     }
