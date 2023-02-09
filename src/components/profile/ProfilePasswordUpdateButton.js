@@ -1,13 +1,14 @@
-import { useState, useCallback } from 'react'
+import { useState,  } from 'react'
 import { Button, Modal, Box, Typography, TextField, Grid } from '@mui/material'
 import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
 
 import { changeUserPassword } from "../../api/member"
+import { useEffect } from 'react'
 
 
 function ProfilePasswordUpdateButton(params) {
-    const [ cookie ] = useCookies(['userInfo'])
+    const [ cookie ] = useCookies(["userInfo"])
     const navigate = useNavigate()
 
     const [inputPassword, setInputPassword] = useState()
@@ -38,7 +39,7 @@ function ProfilePasswordUpdateButton(params) {
         }
     }
 
-    const passwordValidation = useCallback(() => {
+    useEffect(() => {
         const passwordForm = /^[a-z0-9]{4,12}$/
         const passwordErrorMessage = {
             null: "필수 입력입니다.",
@@ -66,15 +67,14 @@ function ProfilePasswordUpdateButton(params) {
         await changeUserPassword(
             {
                 newPassword: inputPassword,
-                'Authorization': cookie.userInfo.jwt_token,
-                'refreshToken':  cookie.userInfo.refresh_token,
+                "Authorization": cookie.userInfo.jwt_token,
+                "refreshToken":  cookie.userInfo.refresh_token,
             },
-            (data) => navigate('/useri/user_id')
+            () => navigate('/useri/user_id')
         )
     } 
 
     const passwordChangeHandler = () => {
-        passwordValidation()
         if (isOkToSubmit) {updatePassword()} else { alert('다시!!')}
     }
 
@@ -89,7 +89,7 @@ function ProfilePasswordUpdateButton(params) {
             >
                 <Box sx={style}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
-                        This is a modal
+                        비밀번호 변경
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                         비밀번호 변경 모달입니다.

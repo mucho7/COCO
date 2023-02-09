@@ -4,7 +4,6 @@ const api = http;
 
 function failHandler(params) {
   const statusCode = params.response.status
-
   if (statusCode === 401) {
     console.log("STATUS CODE IS 401")
     localStorage.clear()
@@ -28,33 +27,33 @@ async function logout(token, success) {
   await api.post(`/member/logout`, JSON.stringify()).then(success).catch(failHandler);
 }
 
-async function readUserInfo(user, success, fail) {
+async function readUserInfo(user, success) {
   api.defaults.headers["Authorization"] = user["Authorization"]
   api.defaults.headers["refreshToken"] = user["refreshToken"]
-  const res = await api.get(`/member/info/${user.userId}`, JSON.stringify(user)).then(success).catch(fail);
+  const res = await api.get(`/member/info/${user.userId}`, JSON.stringify(user)).then(success).catch(failHandler);
   return res
 }
 
 async function updateUserInfo(user, success, fail) {
   api.defaults.headers["Authorization"] = user["Authorization"]
   api.defaults.headers["refreshToken"] = user["refreshToken"]
-  await api.put(`/member/info/${user.userId}`, JSON.stringify(user)).then(success).catch(fail);
+  await api.put(`/member/info/${user.userId}`, JSON.stringify(user)).then(success).catch(failHandler);
 }
 
 async function changeUserPassword(user, success, fail) {
   api.defaults.headers["Authorization"] = user["Authorization"]
   api.defaults.headers["refreshToken"] = user["refreshToken"]
-  await api.post(`/member/changePassword`, JSON.stringify(user)).then(success).catch(fail);
+  await api.post(`/member/changePassword`, JSON.stringify(user)).then(success).catch(failHandler);
 }
 
 async function deleteUserInfo(user, success, fail) {
   api.defaults.headers["Authorization"] = user["Authorization"]
   api.defaults.headers["refreshToken"] = user["refreshToken"]
-  await api.post(`/member/delete/${user.userId}`, JSON.stringify(user.userId)).then(success).catch(fail);
+  await api.post(`/member/delete/${user.userId}`, JSON.stringify(user.userId)).then(success).catch(failHandler);
 }
   
 async function visaTempPassword(user, success, fail) {
-  await api.post(`/member/tempPassword`, JSON.stringify(user)).then(success).catch(fail);
+  await api.post(`/member/tempPassword`, JSON.stringify(user)).then(success).catch(failHandler);
 }
 
 export { signup, login, logout, readUserInfo, updateUserInfo, changeUserPassword, deleteUserInfo, visaTempPassword } ; 
