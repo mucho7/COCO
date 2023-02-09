@@ -34,8 +34,8 @@ public class BoardService {
 
 	@Transactional
 	public Long save(BoardSaveRequestDto requestDto) {
-		if(requestDto.getContent().length() > 255) {
-			throw new InvalidInputException("내용은 255자를 넘을 수 없습니다.");
+		if(requestDto.getContent().length() > 3000) {
+			throw new InvalidInputException("내용은 3000자를 넘을 수 없습니다.");
 		}
 		return boardRepository.save(requestDto.toEntity()).getId();
 	}
@@ -73,8 +73,8 @@ public class BoardService {
 		Board board = boardRepository.findById(boardId)
 			.orElseThrow(() -> new ResourceNotFoundException("해당 게시글이 없습니다."));
 
-		if(requestDto.getContent().length() > 255) {
-			throw new InvalidInputException("내용은 255자를 넘을 수 없습니다.");
+		if(requestDto.getContent().length() > 3000) {
+			throw new InvalidInputException("내용은 3000자를 넘을 수 없습니다.");
 		}
 
 		board.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getCode());
