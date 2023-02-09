@@ -11,12 +11,12 @@ function LoginForm () {
     const navigate = useNavigate()
     const [ cookie, setCookie ] = useCookies(["userInfo"])
     
-    const [ inputID, setInputID ] = useState()
-    const [ inputPassword, setInputPassword ] = useState()
+    const [ inputID, setInputID ] = useState("")
+    const [ inputPassword, setInputPassword ] = useState("")
 
     const temp_user_info = {
-        userId: inputID, 
-        password: inputPassword,
+        userId: inputID.substring(),
+        password: inputPassword.substring(),
     }
 
     const onTypingHandler = (e) => {
@@ -37,13 +37,15 @@ function LoginForm () {
         temp_user_info,
         (data) => {
             const headers = data.headers
+            console.log(headers.get("Authorization"))
             setCookie(
-                'userInfo',
+                "userInfo",
                 {
                     user_id: temp_user_info.userId,
-                    jwt_token: headers.get('Authorization'),
-                    refresh_token: headers.get('refreshToken'),
+                    jwt_token: headers.get("Authorization"),
+                    refresh_token: headers.get("refreshToken"),
                 },
+                // {maxAge: 60 * 5},
                 {path: '/'}
             )
             window.localStorage.setItem("userId", temp_user_info.userId)
@@ -52,7 +54,7 @@ function LoginForm () {
         },
         (error) => {
             console.log(error);
-            alert(error.response.data)
+            alert(error)
         }
     )}
 

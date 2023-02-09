@@ -1,11 +1,6 @@
 import styled from "styled-components";
-// import { useEffect } from "react";
-// import { useDispatch } from "react-redux";
-import ScrollToBottom from 'react-scroll-to-bottom';
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
-
-// import { receiveChat } from "../../../../store/sessionSlice";
 
 
 const ChatListDiv = styled.div`
@@ -20,23 +15,39 @@ function ChatList(props) {
   // 서버로부터 받은 채팅 메시지 객체
   const newMessage = useSelector((state) => state.session.newMessage);
   
-  // 새로운 메시지가 도착하면 채팅창 화면에 보여준다
+  // 새로운 메시지가 도착하면 채팅창에 표시
   useEffect(() => {
-    if (newMessage.chat) {
+    if (newMessage?.id !== "") {
       const ul = document.querySelector("#chatList");
       const li = document.createElement("li");
-      li.innerText = `${newMessage.user} : ${newMessage.chat}`;
+      switch (newMessage.id) {
+        case "newUser":
+          li.innerText = `${newMessage.user} 님이 방에 입장했습니다.`;
+          break;
+        case "userLeft":
+          li.innerText = `${newMessage.user} 님이 방을 떠났습니다.`;
+          break;
+        case "chat":
+          li.innerText = `${newMessage.user} : ${newMessage.chat}`;
+          break;
+        default:
+          break;
+      }
       ul.appendChild(li);
     }
   }, [newMessage])
 
-  return (
-    <ChatListDiv>
-      <ScrollToBottom>
-        <ul id="chatList">
+  const chatBox = document.querySelector("#chatBox");
+  // chatBox.addEventListener("scroll", () => {
+    
+  // })
 
-        </ul>
-      </ScrollToBottom>
+  return (
+    <ChatListDiv id="chatBox">
+      <ul id="chatList">
+
+      </ul>
+      {/* <div ref={message}></div> */}
     </ChatListDiv>
   )
 }

@@ -19,24 +19,28 @@ import { ProfileUserInfoItem, ProfileUserInfoForm, ProfileUserTrophy, ProfilePas
 function ProfilePage(params) {
     const navigate = useNavigate()
     const [ userInfo, setUesrInfo ] = useState([])
-    const [ cookie, removeCookie ] = useCookies(["userInfo"])
+    const [ cookie, setCookie ] = useCookies(["userInfo"])
     const [ updateFlag, setUpdateFlag ] = useState(false)
     
+    console.log(cookie)
+
     async function deleteUser() {       
         await deleteUserInfo(
             {
                 userId: cookie.userInfo.user_id,
-                Authorization: cookie.userInfo.Authorization,
-                refreshToken: cookie.userInfo.refreshToken,
+                "Authorization": cookie.userInfo.jwt_token,
+                "refreshToken": cookie.userInfo.refresh_token,
             },
             (data) => {
                 console.log(data)
-                removeCookie()
+                setCookie("userInfo", "undefined")
+                localStorage.setItem("userId", undefined)
                 navigate('/')
-            }
+            },
+            (err) => console.log(err)
         )
     } 
-        
+    
     const flagClickHandler = () => {
         if (updateFlag) {
             setUpdateFlag(false)
@@ -69,7 +73,8 @@ function ProfilePage(params) {
             setUesrInfo(filterObject(data, ['id', 'name', 'email', 'regTime']))
         })}
         readUser()
-    }, [cookie])
+        console.log(updateFlag)
+    }, [cookie, updateFlag])
 
     console.log(userInfo)
 
@@ -77,7 +82,7 @@ function ProfilePage(params) {
         <SidePaddingBox>
             <Navbar />
             <BackgroundBox>
-                <BackgroundImg src='https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg'/>
+                {/* <BackgroundImg src='https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg'/> */}
             </BackgroundBox>
             <AccountCircle sx={{ fontSize: '150px', color: '#FCA311', position: 'absolute', left: '100px', top: '140px', background: 'white', borderRadius: '100%' }}/>
             <PaddingBox>
@@ -106,12 +111,14 @@ const BackgroundBox = styled.div`
     width: 100vw;
     margin-left: calc(-50vw + 50%);
     overflow: hidden;
+
+    background-color: black;
 `
 
-const BackgroundImg = styled.img`
-    width: 100%;    
-    margin: -280px 0px 0px 0px;
-`
+// const BackgroundImg = styled.img`
+//     width: 100%;    
+//     margin: -280px 0px 0px 0px;
+// `
 
 const TestingBox = styled.div`
     display: flex;

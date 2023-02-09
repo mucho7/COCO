@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 
@@ -8,9 +9,11 @@ const ParticipantsInfoBarDiv = styled.div`
 `
 
 function ParticipantsInfoBar() {
+  const countUsers = useSelector((state) => state.session.countUsers);
+
   return (
     <ParticipantsInfoBarDiv>
-      <p>참여자 수 정보</p>
+      <p>현재 인원 수: { countUsers }</p>
     </ParticipantsInfoBarDiv>
   )
 }

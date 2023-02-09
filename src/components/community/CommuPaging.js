@@ -30,7 +30,7 @@ function CommuPaging(params) {
             disabled={index[0] < 5 ? true : false} > &lt;&lt;&lt; </Button>
             {index.map(item => {
                 return (
-                    <Button value={item} onClick={params.onClick} disabled={params.maxPage <= item ? true : false} style={{textDecoration: "none"}} key={item}>{item}</Button>
+                    <Button value={item} onClick={params.onClick} disabled={params.maxPage < item ? true : false} style={{textDecoration: "none"}} key={item}>{item}</Button>
                 )
             })}
             {/* 다음 페이지 목록을 보여주고 N + 5로 이동 */}

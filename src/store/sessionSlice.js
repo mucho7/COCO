@@ -19,7 +19,8 @@ const initialState = {
   isCompilePossible: true,
   isDrawPossible: true,
   isMicPossible: true,
-  imageData: null
+  imageData: null,
+  countUsers: null
 };
 
 
@@ -61,6 +62,9 @@ const sessionSlice = createSlice({
     },
     setUpdated(state, action) {
       state.updated = action.payload;
+    },
+    setCountUsers(state, action) {
+      state.countUsers = action.payload;
     }
   }
 });
@@ -74,6 +78,7 @@ export const {
   setUpdated,
   setIsCompilePossible,
   setIsDrawPossible,
-  setIsMicPossible } = sessionSlice.actions;
+  setIsMicPossible,
+  setCountUsers } = sessionSlice.actions;
 
 export default sessionSlice;

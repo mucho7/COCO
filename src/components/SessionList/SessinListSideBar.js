@@ -45,6 +45,7 @@ function SessionListSideBar(props) {
             <IconButton onClick={onClickHandler} type="button" sx={{ p: '10px', color: '#FCA311' }} aria-label="search">
                 <Search />
             </IconButton>
+            {/*  */}
             <Link to={"/room/create"} style={{textDecoration: "none"}}>
                 <Button variant="contained" className="submit" fullWidth style={{height:"2.5rem", backgroundColor: "#FCA311"}}> <b>세션 만들기</b></Button>
             </Link>

@@ -17,7 +17,10 @@ const Box = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  grid-column: span 3;
+  grid-row-start: 12;
+  grid-row-end: 13;
+  grid-column-start: 1;
+  grid-column-end: 5;
 `;
 
 const CustomButton = styled.button`

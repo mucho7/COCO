@@ -14,6 +14,10 @@ const IdeAreaDiv = styled.div`
   background-color: #14213D;
   color: white;
   position: relative;
+  grid-row-start: 1;
+  grid-row-end: 12;
+  grid-column-start: 1;
+  grid-column-end: 4;
 `;
 
 

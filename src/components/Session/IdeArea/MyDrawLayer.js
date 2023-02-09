@@ -22,7 +22,6 @@ function MyDrawLayer(props) {
   const [isDrawing, setIsDrawing] = useState(false);
   const [drawColor, setDrawColor] = useState("#ffffff");
   const [isEraseMode, setIsEraseMode] = useState(false);
-  const isDrawButtonOn = useSelector((state) => state.toolBarAction.isDrawButtonOn);
   const userName = useSelector((state) => state.session.userName);
   const websocketId = useSelector((state) => state.session.websocketId);
   const ws = websocketInstances.get(websocketId);
@@ -63,10 +62,11 @@ function MyDrawLayer(props) {
       img.onload = function() {
         contextRef.current.drawImage(img, 0, 0, canvasRef.current.clientWidth, canvasRef.current.clientHeight);
       };
-      console.log(imageData)
-      console.log(typeof imageData)
-      console.log(img)
-      console.log(canvasRef.current.width)
+      // console.log(imageData)
+      // console.log(typeof imageData)
+      // console.log(img)
+      console.log("width:", canvasRef.current.width)
+      console.log("clientWidth:", canvasRef.current.clientWidth)
       // console.log(canvasRef.current)
       // let image = contextRef.current.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height)
       // initCanvas();
@@ -141,6 +141,7 @@ function MyDrawLayer(props) {
       contextRef.current.lineTo(offsetX, offsetY);
       contextRef.current.stroke()
     }
+    console.log(offsetX)
     sendImageData("draw", {x: offsetX, y: offsetY});
   }
 

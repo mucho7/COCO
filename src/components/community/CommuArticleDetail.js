@@ -1,38 +1,56 @@
 import { useState, useMemo } from "react"
+// import { useCookies } from "react-cookie"
 import { useLocation, Link, useNavigate } from "react-router-dom"
 
-import {CommentForm, Comments } from "./index"
+import { CommentForm, Comments, CommuArticleDetailContent } from "./index"
 import { boardDetail, articleDelete } from "../../api/community"
 
 import styled from "styled-components"
 import { Button, Typography } from "@mui/material"
+import CommuCommentPaging from "./CommuCommentPaging"
 
 function CommuArticleDetail() {
     const navigate = useNavigate()
+    // const [ viewList ] = useCookies(["view"])
     const location = useLocation()
-    
-    const pk = 46
+    console.log(location)
+    const pk = location.state.id
+    const hit = location.state.hit
+
+    const [ pageNumber, setPageNumber ] = useState(1)
+    const [ maxPage, setMaxPage ] = useState(5)
     const [article, setArticle ] = useState({
         id: "",
-        content: [],
-        code: [],
+        title:"",
+        content: [{content:[""], index: -1},],
+        code: [{content: [""], index: -1},],
         comments: {
-            empty: true
-        }
+            empty: true,
+            totalPages: 1,
+        },
+        hit: hit
     })
     
-    // article 정보를 가져옴
     useMemo(() => {
         const getArticlelDetail = async () => {
             await boardDetail(
-            pk,
-            (data) => console.log(data),
+            {pk: pk, pageNumber: pageNumber},
+            (data) => {return data.data},
             (error) => console.log(error)
-        ).then((data) => setArticle(data))
+        ).then((data) => {
+            setArticle(data)
+            setMaxPage(data.comments.totalPages)
+        })
     }
     getArticlelDetail()
-    console.log(article)
-    }, [pk])
+    // dkdkdkdkdaijsdoijasdjas
+    // cookie List에 저장한 값을 back에 request를 보내서 조회수를 controll
+    // if (hit === article.hit){
+    //         console.log("조회수 증가!!!")
+    // }
+    }, [pk, pageNumber])
+
+    
 
     async function onClickDeleteHandler(params) {
         await articleDelete(
@@ -45,27 +63,39 @@ function CommuArticleDetail() {
             )
     }
 
+    const onPagingClickHandler = (page) => {
+        // console.log(page)
+        if (page.target === undefined) {
+            setPageNumber(page)
+        } else {
+            setPageNumber(page.target.value)
+        }
+    }
+
     return (
         <>
             <TitleSection>
                 <h2>{article.title}</h2>
-                <div>
-                    <Link to={`/community/update/${pk}`} state={article} style={{textDecoration: "none"}} article={article}>
-                        <Button variant="contained">수정</Button>
-                    </Link>
-                    <Button onClick={onClickDeleteHandler} variant="contained">삭제</Button>
-                </div>
+                {/* <h2>static Title</h2> */}
+                {article.writer === localStorage.userId ?  
+                    <div>
+                        <Link to={`/community/update/${pk}`} state={article} style={{textDecoration: "none"}} article={article}>
+                            <Button variant="contained">수정</Button>
+                        </Link>
+                        <Button onClick={onClickDeleteHandler} variant="contained">삭제</Button>
+                    </div>
+                : ""}
             </TitleSection>
             <hr/>
             <ArticleSection>
-                <ContentSection>{article.content[0].content}</ContentSection>
-                <Vr/>
-                <CodeSection>{article.code[0]}</CodeSection>
+                <CommuArticleDetailContent content={article} />
             </ArticleSection>
             <hr/>
             <CommentSectiom>
+                {/* comment 작성 시 append하는 방법으로 해결하자 */}
                 {window.localStorage.getItem("userId") !== null ? <CommentForm board_id={pk}/> : <Typography textAlign={"center"}>로그인 하시면 댓글을 쓸 수 있어요</Typography>}
                 {article.comments.empty ? <Typography textAlign={"center"}>아직 댓글이 없어요!</Typography> : <Comments comments={article.comments}/> }
+                <CommuCommentPaging maxPage={maxPage} onClick={onPagingClickHandler}/>
             </CommentSectiom>
         </>
     )
@@ -86,27 +116,23 @@ const ArticleSection = styled.section`
     display: flex;
     justify-content: space-around;
 `
-const ContentSection = styled.section`
-    width: 45%;
-    height: 500px;
 
-`
-const CodeSection = styled.section`
-    width: 45%;
-    height: 500px;
+// const ContentSection = styled.section`
+//     width: 45%;
+//     height: 500px;
 
-`
+// `
+// const CodeSection = styled.section`
+//     width: 45%;
+//     height: 500px;
+// `
+
 const CommentSectiom = styled.section`
     width: 100%;
     margin-top: 15px;
 
 `
 
-const Vr = styled.div`
-    width: 1px;
-    height: 100%;
 
-    background: gray;
-`
 
 export default CommuArticleDetail

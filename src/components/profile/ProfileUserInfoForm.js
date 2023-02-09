@@ -7,18 +7,18 @@ import { updateUserInfo } from "../../api/member"
 import styled from "styled-components"
 
 function ProfileUserInfoForm(props) {
-    const [ cookie ] = useCookies(['userInfo'])
+    const [ cookie ] = useCookies(["userInfo"])
     const [inputEmail, setInputEmail] = useState()
     const [inputName, setInputName] = useState()
-    
+
     const onTypingHandler = (e) => {
         // 4개의 케이스에 따라 각자의 스테이트에 저장
         switch (e.target.id) {
-            case 'User E-Mail':
+            case 'email':
                 setInputEmail(e.target.value)
                 console.log(e.target.value, inputEmail)
                 break
-            case 'User Name':
+            case 'name':
                 setInputName(e.target.value)
                 console.log(e.target.value, inputName)
                 break
@@ -30,13 +30,18 @@ function ProfileUserInfoForm(props) {
     const updating_user_info = {
         email: inputEmail,
         name: inputName,
-        'Authorization': cookie.userInfo.jwt_token,
-        'refreshToken':  cookie.userInfo.refresh_token,
+
+        userId: props.userInfo[0][1],
+        "Authorization": cookie.userInfo.jwt_token,
+        "refreshToken":  cookie.userInfo.refresh_token,
     }
+    console.log(updating_user_info)
 
     async function updateUser() {
         await updateUserInfo(
             updating_user_info,
+            (data) => console.log(data),
+            (err) => console.log(err)
         )
     }
 

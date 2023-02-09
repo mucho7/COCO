@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { receiveChat, websocketInstances, setWebsocketId, setParticipantsId, participantsInstances, receiveImageData, setUpdated, setIsCompilePossible, setIsDrawPossible, setIsMicPossible } from "../../../store/sessionSlice";
+import { receiveChat, websocketInstances, setWebsocketId, setParticipantsId, participantsInstances, receiveImageData, setUpdated, setIsCompilePossible, setIsDrawPossible, setIsMicPossible, setCountUsers } from "../../../store/sessionSlice";
 
 import IdeArea from "../IdeArea";
 import SideArea from "../SideArea";
@@ -12,12 +12,14 @@ import adapter from "webrtc-adapter";
 let kurentoUtils = require("kurento-utils");
 // const adapter = require("webrtc-adapter");
 
+// grid-template-columns: 9fr 3fr;
+// grid-template-rows: 11fr 1fr;
 
 const NormalSessionDiv = styled.div`
   box-sizing: border-box;
   display: grid;
-  grid-template-columns: 9fr 3fr;
-  grid-template-rows: 11fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(12, 1fr);
   width: 100vw;
   height: 100vh;
 `;
@@ -61,13 +63,26 @@ function NormalSession(props) {
   
     // 웹소켓 서버로부터 noticeChat 메세지를 받는 경우(누군가가 입력한 채팅을 채팅창에 띄우기 위해 메세지 수신)
     function noticeChat(user, chat) {
-      dispatch(receiveChat({user, chat}));
+      const newChatMessage = {
+        id: "chat",
+        user: user,
+        chat: chat
+      }
+      dispatch(receiveChat(newChatMessage));
+    }
+
+    function countUsers() {
+      let count = Object.keys(participants).length;
+      dispatch(setCountUsers(count));
     }
 
     // 세션 컴포넌트 마운트시 웹소켓 생성하고 register 함수를 통해 서버에 등록
     if (!ws.current) {
-      ws.current = new WebSocket("wss://localhost:8443/groupcall")
-      console.log(ws.current);
+      ws.current = new WebSocket("wss://localhost:8443/groupcall");
+      // console.log(ws.current);
+      ws.current.addEventListener('error', (event) => {
+        console.log('WebSocket error: ', event);
+      });
       ws.current.onopen = () => {
         console.log(ws.current);
         register();
@@ -87,15 +102,18 @@ function NormalSession(props) {
         switch (parsedMessage.id) {
           case 'existingParticipants':
             onExistingParticipants(parsedMessage);
+            countUsers();
             // console.log("rrrrrrrrrrrr",participants)
             participantsInstances.set(1, participants);
             dispatch(setParticipantsId(1));
             break;
           case 'newParticipantArrived':
             onNewParticipant(parsedMessage);
+            countUsers();
             break;
           case 'participantLeft':
             onParticipantLeft(parsedMessage);
+            countUsers();
             break;
           case 'receiveVideoAnswer':
             receiveVideoResponse(parsedMessage);
@@ -128,6 +146,12 @@ function NormalSession(props) {
       // 새 참여자 입장
       function onNewParticipant(request) {
         receiveVideo(request.name);
+        const newUserMessage = {
+          id: "newUser",
+          user: request.name,
+          chat: ""
+        }
+        dispatch(receiveChat(newUserMessage));
       }
 
       function receiveVideoResponse(result) {
@@ -222,6 +246,12 @@ function NormalSession(props) {
         var participant = participants[request.name];
         participant.dispose();
         delete participants[request.name];
+        const userLeftMessage = {
+          id: "userLeft",
+          user: request.name,
+          chat: ""
+        }
+        dispatch(receiveChat(userLeftMessage));
       }
 
       // 권한 변경 이벤트에 반응

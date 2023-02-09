@@ -1,11 +1,13 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
-import { Button, TextField } from "@mui/material"
+import { Link, useLocation } from "react-router-dom"
 
 import { commentCreate } from "../../api/community"
-import styled from "styled-components"
 
+import styled from "styled-components"
+import { Button, TextField } from "@mui/material"
 function CommentForm(params) {
+    const location = useLocation()
+    
     const board_id = params.board_id
     const [ comment, setComment ] = useState("")
 
@@ -13,23 +15,33 @@ function CommentForm(params) {
         setComment(e.target.value)
     }
 
-    function onSubmitClickHandler(params) {
-        commentCreate(
-            {
-                content: comment,
-                board_id: board_id,
-                writer: localStorage.userId
-            },
-            (data) => console.log(data),
-            (err) => console.log(err)
-        )
+    function onSubmitClickHandler() {
+        if (comment === undefined){
+            alert("댓글 내용이 없습니다!")
+        } else if (comment.trim() === "") {
+            alert("댓글엔 공백이 아닌 문자가 있어야 합니다!!")
+        } else {
+            commentCreate(
+                {
+                    content: comment,
+                    board_id: board_id,
+                    writer: localStorage.userId
+                },
+                (data) => {
+                    console.log(data)
+                    setComment("")
+                    alert("댓글 작성 완료")
+                },
+                (err) => console.log(err)
+            )
+        }
     }
 
 
     return (
         <CommentFormBox>
-            <TextField onChange={onTypingHandler} size="small" style={{width: "60%"}} />
-            <Link to={`/community/${board_id}`} state={{id: board_id}} style={{textDecoration: "none"}}>
+            <TextField value={comment} onChange={onTypingHandler} size="small" style={{width: "60%"}} />
+            <Link to={location.pathname} state={{id: board_id}} style={{textDecoration: "none"}}>
                 <Button onClick={onSubmitClickHandler} variant="contained" >작성</Button>
             </Link>
         </CommentFormBox>

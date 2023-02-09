@@ -43,8 +43,8 @@ function Ide(props) {
     <Editor 
       id="editor"
       options={{fontSize: 16, minimap: { enabled: false }, scrollbar: { vertical: "auto", horizontal: "auto" }}}
-      // height="100%"
-      // width="100%"
+      height="100%"
+      width="100%"
       language={userLanguage}
       theme={userTheme}
       defaultValue="# 코드를 입력하세요."

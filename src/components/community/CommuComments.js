@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom"
 import { commentDelete, commentUpdate } from "../../api/community"
 
 import { Card, Button, CardContent, Typography, Grid, ButtonGroup, TextField } from "@mui/material"
-// import CommuCommentPaging from "./CommuCommentPaging"
 
 function Comments(props) {
     const location = useLocation()
@@ -60,8 +59,7 @@ function Comments(props) {
 
 
     return (
-        <>
-        {props.comments.content.map(comment => {
+        <>{props.comments.content.map(comment => {
             return (
                 <Card sx={{ width: '100%', height: 'auto', margin: '4px'}} key={comment.id}>
                     <CardContent>
@@ -90,9 +88,7 @@ function Comments(props) {
                     </CardContent>
                 </Card>
                 )
-        })}
-        {/* <CommuCommentPaging/> */}
-        </>
+        })}</>
     )
 }
 

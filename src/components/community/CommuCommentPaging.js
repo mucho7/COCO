@@ -30,7 +30,7 @@ function CommuCommentPaging(params) {
             disabled={index[0] < 5 ? true : false} > &lt;&lt;&lt; </Button>
             {index.map(item => {
                 return (
-                    <Button value={item} disabled={params.maxPage <= item ? true : false} style={{textDecoration: "none"}} key={item}>{item}</Button>
+                    <Button value={item} onClick={params.onClick} disabled={params.maxPage <= item - 1 ? true : false} style={{textDecoration: "none"}} key={item}>{item}</Button>
                 )
             })}
             <Button value={index[0] + 5} style={{textDecoration: "none"}} onClick={onArrClickHandler} 
