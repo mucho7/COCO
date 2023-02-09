@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link,  } from "react-router-dom";
 
 import { boardSearching } from "../../api/community";
 
@@ -8,7 +8,7 @@ import { Search } from '@mui/icons-material';
 import { IconButton, Button, TextField } from '@mui/material';
 
 function CommuSidebar(params) {
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
 
     const [ searchTitle, serSearchTitle] = useState("")
     const [ searchWriter, serSearchWriter] = useState("")
@@ -46,7 +46,6 @@ function CommuSidebar(params) {
                 (err) => console.log(err)
             )
             .then(() => {
-
             })
         }
         getSearchedList()

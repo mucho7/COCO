@@ -23,7 +23,7 @@ function CommuArticleDetail() {
         id: "",
         title:"",
         content: [{content:[""], index: -1},],
-        code: [{content: [""], index: -1},],
+        code: [""],
         comments: {
             empty: true,
             totalPages: 1,

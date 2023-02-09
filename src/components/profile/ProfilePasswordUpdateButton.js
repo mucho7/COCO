@@ -69,9 +69,7 @@ function ProfilePasswordUpdateButton(params) {
                 'Authorization': cookie.userInfo.jwt_token,
                 'refreshToken':  cookie.userInfo.refresh_token,
             },
-            (data) => {
-                navigate('/useri/user_id')
-            }
+            (data) => navigate('/useri/user_id')
         )
     } 
 

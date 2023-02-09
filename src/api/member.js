@@ -2,6 +2,17 @@ import http from "./http.js";
 
 const api = http;
 
+function failHandler(params) {
+  const statusCode = params.response.status
+
+  if (statusCode === 401) {
+    console.log("STATUS CODE IS 401")
+    localStorage.clear()
+    document.cookie = "userInfo=undefined"
+    window.location.href = "/"
+  }
+} 
+
 async function signup(user, success, fail) {
   await api.post(`/member/register`, JSON.stringify(user)).then(success).catch(fail);
 }
@@ -10,10 +21,10 @@ async function login(user, success, fail) {
   await api.post(`/member/login`, JSON.stringify(user)).then(success).catch(fail);
 }
 
-async function logout(token, success, fail) {
+async function logout(token, success) {
   api.defaults.headers["Authorization"] = token["Authorization"]
   api.defaults.headers["refreshToken"] = token["refreshToken"]
-  await api.post(`/member/logout`, JSON.stringify()).then(success).catch(fail);
+  await api.post(`/member/logout`, JSON.stringify()).then(success).catch(failHandler);
 }
 
 async function readUserInfo(user, success, fail) {
