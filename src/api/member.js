@@ -10,6 +10,7 @@ function failHandler(params) {
     localStorage.clear()
     document.cookie = "userInfo=undefined"
     window.location.href = "/"
+    alert("강 제 로 그 아 웃 !!")
   }
 } 
 

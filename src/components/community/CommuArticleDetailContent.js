@@ -10,8 +10,6 @@ function CommuArticleDetailContent(params) {
     const content = (params.content.content)
     const code = (params.content.code)
 
-    console.log(params)
-
     const onMouseEnterHandler = (startIndex, endIndex, uniqueKey) => {
         if (startIndex === -1){
             setHoverTarget({isActive: false, key:uniqueKey, startIndex: startIndex, endIndex: endIndex})
@@ -23,18 +21,18 @@ function CommuArticleDetailContent(params) {
         setHoverTarget({isActive: false, key:uniqueKey, startIndex: startIndex, endIndex: endIndex})
     }
     
-    const onContentBlockClickHandler = (event) => {
-        if (event.target.parentElement.id !== "-1"){
-            setTarget(event.target.parentElement.id)
+    const onContentBlockClickHandler = (startIndex, endIndex, uniqueKey) => {
+        if (startIndex === -1){
+            setTarget({isActive: false, key:uniqueKey, startIndex: startIndex, endIndex: endIndex})
         } else {
-            setTarget(0)
+            setTarget({isActive: true, key: uniqueKey, startIndex: startIndex, endIndex: endIndex})
         }
     }
 
-    useEffect(() => {
-        // console.log(target)
-        // console.log(hoverTarget)
-    }, [ target, hoverTarget ])
+    // useEffect(() => {
+    //     // console.log(target)
+    //     // console.log(hoverTarget)
+    // }, [ target, hoverTarget ])
 
     return (
         <>
@@ -43,7 +41,7 @@ function CommuArticleDetailContent(params) {
                     return(
                         <StyeldCard 
                         onClick={() => onContentBlockClickHandler(item.startIndex, item.endIndex, uniqueKey)} onMouseEnter={() => onMouseEnterHandler(item.startIndex, item.endIndex, uniqueKey)} onMouseLeave={onMouseLeaveHandler} 
-                        istarget={uniqueKey == target.key} ishovering={uniqueKey == hoverTarget.key && hoverTarget.isActive} key={uniqueKey}>
+                        istarget={target.isActive && uniqueKey == target.key} ishovering={uniqueKey == hoverTarget.key && hoverTarget.isActive} key={uniqueKey}>
                             {item.content.map((string, uniqueKey) => {
                                 return(
                                     <Typography key={uniqueKey} >{string}</Typography>
@@ -57,7 +55,7 @@ function CommuArticleDetailContent(params) {
             <CodeSection>
                 {code.map((item, uniqueKey) => {
                     return(
-                        <StyeldCodeBox istarget={(item.index == target)} ishovering={(hoverTarget.isActive && hoverTarget.startIndex <= uniqueKey && hoverTarget.endIndex >= uniqueKey)} 
+                        <StyeldCodeBox istarget={(target.isActive && target.startIndex <= uniqueKey && target.endIndex >= uniqueKey)} ishovering={(hoverTarget.isActive && hoverTarget.startIndex <= uniqueKey && hoverTarget.endIndex >= uniqueKey)} 
                         id={item.index} key={uniqueKey}>
                             {item}
                         </StyeldCodeBox>
