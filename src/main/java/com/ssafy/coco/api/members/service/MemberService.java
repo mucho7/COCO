@@ -136,6 +136,7 @@ public class MemberService {
 		return tempPassword;
 	}
 
+	@Transactional
 	public String updatePassword(String userId, String tempPassword) {
 		Member member = getActiveMember(userId);
 		String encodedPassword = passwordEncoder.encode(tempPassword);
@@ -161,6 +162,7 @@ public class MemberService {
 	public String changePassword(String accessToken, String newPassword) {
 		String userId = jwtService.getUserIdFromAccessToken(accessToken);
 		System.out.println("[changePassword@MemberService]  AccessToken에서 추출한 userId: " + userId);
+		System.out.println(newPassword);
 		return updatePassword(userId, newPassword);
 	}
 
