@@ -11,10 +11,6 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import com.service.gateway.member.data.MemberRepository;
@@ -50,11 +46,10 @@ public class JwtTokenProvider {
 	@Value("${jwt.secret}")
 	private String uniqueKey;
 
-	private int accessTokenValidTime = 1000 * 60 * 90; // AccessToken 유효시간 : 90분
+	private int accessTokenValidTime = 1000 * 30; // AccessToken 유효시간. (단위: ms) DEFAULT: 90분, QA 및 디버깅: 30초
 
-	private int refreshTokenValidTime = 1000 * 60 * 60 * 12; // RefreshToken 유효시간 : 12시간
+	private int refreshTokenValidTime = 1000 * 60 * 5; // RefreshToken 유효시간. (단위: ms) DEFAULT: 12시간, QA 및 디버깅: 5분
 
-	private final UserDetailsService userDetailsService;
 	private final MemberRepository memberRepository;
 
 	private final RefreshTokenRepository refreshTokenRepository;
@@ -89,12 +84,10 @@ public class JwtTokenProvider {
 		updateRefreshTokenInRepository(userId, refreshToken);
 
 		return JwtTokenDto.builder()
-			.grantType("Bearer")
 			.accessToken(accessToken)
 			.refreshToken(refreshToken)
 			.userId(userId)
 			.build();
-
 	}
 
 	@Transactional
@@ -109,20 +102,6 @@ public class JwtTokenProvider {
 		}
 		log.info(userId + "의 Refresh Token을 생성합니다.");
 		refreshTokenRepository.save(refreshTokenData);
-	}
-
-	// Jwt 토큰을 복호화하여 인증 정보 조회
-	public Authentication getAuthentication(String token) {
-		String userId = this.getUserIdFromAccessToken(token);
-		System.out.println("토큰에서 추출한 userId: " + userId);
-		UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
-		System.out.println("loadUserByUserName 이후 추출한 userdetails: " + userDetails);
-		return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
-	}
-
-	// Jwt 토큰에서 회원 ID 추출
-	public String getUserIdFromAccessToken(String token) {
-		return Jwts.parser().setSigningKey(uniqueKey).parseClaimsJws(token).getBody().getSubject();
 	}
 
 	// RefreshToken에는 기본적으로 사용자 ID가 없음. 따라서 refreshToken Repository를 찾아서 사용자 ID를 가져오는 방식 사용.
@@ -148,11 +127,6 @@ public class JwtTokenProvider {
 		return tokenDto;
 	}
 
-	public boolean existsRefreshToken(String refreshToken) {
-		return refreshTokenRepository.existsByRefreshToken(refreshToken);
-
-	}
-
 	// 토큰 정보를 검증하는 메서드
 	public boolean validateToken(String token) {
 		try {
@@ -168,48 +142,6 @@ public class JwtTokenProvider {
 			log.info("Token이 빈 문자열을 반환하였습니다 !! -> " + token);
 		}
 		return false;
-	}
-
-	// refreshToken에 대한 유효성 검사
-	public String validateRefreshToken(RefreshToken requestToken) {
-		// Refresh Token 객체에서 refreshToken 추출
-		String refreshToken = requestToken.getRefreshToken().trim();
-		if (refreshToken.startsWith("bearer ")) {
-			refreshToken = refreshToken.substring(7);
-		}
-		System.out.println(refreshToken);
-		try {
-			// Refresh Token 검증
-			Jws<Claims> claims = Jwts.parser().setSigningKey(uniqueKey).parseClaimsJws(refreshToken);
-
-			if (!claims.getBody().getExpiration().before(new Date())) {
-				String userId = requestToken.getUserId();
-				System.out.println("토큰 상의 UserID: " + userId + ", claims상의 UserId: " + claims.getBody().getId());
-				return recreateAccessToken(userId, (memberRepository.findByUserId(userId)).get().getRoles());
-			}
-		} catch (Exception e) {
-			//  Refresh Token이 만료된 경우 로그인 필요
-			e.printStackTrace();
-			return null;
-		}
-		return null;
-	}
-
-	// refresh token을 받아 유효성을 검증하고, 유효성 통과시 새로운 access token을 생성하여 반환해준다.
-	private String recreateAccessToken(String userId, Object roles) {
-		Claims claims = Jwts.claims().setSubject(userId);
-		claims.put("roles", roles);
-		Date now = new Date();
-
-		//Access Token
-		String accessToken = Jwts.builder()
-			.setClaims(claims)
-			.setIssuedAt(now)
-			.setExpiration(new Date(now.getTime() + accessTokenValidTime))
-			.signWith(SignatureAlgorithm.HS256, uniqueKey)
-			.compact();
-
-		return accessToken;
 	}
 
 }
