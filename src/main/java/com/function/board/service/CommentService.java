@@ -10,6 +10,7 @@ import com.function.board.domain.comment.CommentRepository;
 import com.function.board.dto.comment.CommentResponseDto;
 import com.function.board.dto.comment.CommentSaveRequestDto;
 import com.function.board.dto.comment.CommentUpdateRequestDto;
+import com.function.board.exception.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,7 +24,7 @@ public class CommentService {
 	@Transactional
 	public Long save(Long boardId, CommentSaveRequestDto requestDto) {
 		Board board = boardRepository.findById(boardId)
-			.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+			.orElseThrow(() -> new ResourceNotFoundException("해당 게시글이 존재하지 않습니다."));
 
 		Comment comment = Comment.builder()
 			.board(board)
@@ -36,14 +37,14 @@ public class CommentService {
 
 	public CommentResponseDto findById(Long commentId) {
 		Comment entity = commentRepository.findById(commentId)
-			.orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다."));
+			.orElseThrow(() -> new ResourceNotFoundException("해당 댓글이 없습니다."));
 		return new CommentResponseDto(entity);
 	}
 
 	@Transactional
 	public Long update(Long commentId, CommentUpdateRequestDto requestDto) {
 		Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
-			new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+			new ResourceNotFoundException("해당 댓글이 존재하지 않습니다."));
 
 		comment.update(requestDto.getContent());
 		return commentId;
@@ -52,7 +53,7 @@ public class CommentService {
 	@Transactional
 	public void delete(Long commentId) {
 		var comment = commentRepository.findById(commentId).orElseThrow(() ->
-			new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+			new ResourceNotFoundException("해당 댓글이 존재하지 않습니다."));
 		commentRepository.delete(comment);
 	}
 }

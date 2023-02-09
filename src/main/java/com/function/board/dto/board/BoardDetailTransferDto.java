@@ -20,9 +20,10 @@ public class BoardDetailTransferDto {
 	private long id;
 	private String title;
 	private List<ContentComponentDto> content;
+	private String rawContent;
 	private String writer;
 	private int hit;
-	private List<ContentComponentDto> code;
+	private List<String> code;
 	private Page<CommentResponseDto> comments;
 	private LocalDateTime createdAt;
 
@@ -31,6 +32,7 @@ public class BoardDetailTransferDto {
 		this.id = entity.getId();
 		this.title = entity.getTitle();
 		this.content = dto.getContent();
+		this.rawContent = entity.getContent();
 		this.writer = entity.getWriter();
 		this.hit = entity.getHit();
 		this.code = dto.getCode();

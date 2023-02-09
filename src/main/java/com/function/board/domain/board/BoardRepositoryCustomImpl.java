@@ -26,6 +26,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
 		List<BoardListResponseDto> content = queryFactory
 			.select(new QBoardListResponseDto(
 				board.id,
+				board.comments.size(),
 				board.title,
 				board.writer,
 				board.hit,
