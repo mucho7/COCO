@@ -57,7 +57,7 @@ public class CallHandler extends TextWebSocketHandler {
 	private UserRegistry registry;
 
 	@Autowired
-	private RoomService roomService; // 호스트가 나가면 해당 룸 DB에서 삭제하기 위함
+	private RoomService roomService; // 호스트가 나가면 해당 룸 DB에서 삭제하기 위함, 일반 사용자 나가면 인원수-- 하기 위함.
 
 	@Override
 	public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
@@ -287,14 +287,14 @@ public class CallHandler extends TextWebSocketHandler {
 		// 인원수 - 1
 		// roomService.UpdateRoomLeave(roomName); // TODO: 주석 정리
 		if (roomService.UpdateRoomLeave(roomName) != null) {
-			System.out.println("...인원수 - 1 성공...");
+			System.out.println("...인원수 - 1 성공, 방이름: " + roomName);
 		} else {
-			System.out.println("...인원수 - 1 실패: 해당 룸 없음...");
+			System.out.println("...인원수 - 1 실패: 해당 룸 없음, 방이름: " + roomName);
 		}
 		// 호스트가 나갔다면, 해당 방 삭제하고 모두 나가기
 		// if (userName.equals(roomName)) {
 		if (userName.equals("host")) { // TODO: 주석 정리
-			System.out.println("...DB에서 해당 방 삭제하기...");
+			System.out.println("...DB에서 해당 방 삭제하기, 방이름: " + roomName);
 			if (roomService.DeleteRoom(roomName) == null) {
 				System.out.println("...삭제 실패: 해당 룸 없음...");
 			}
