@@ -5,13 +5,10 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.ssafy.coco.api.members.data.MemberRepository;
-import com.ssafy.coco.api.tokens.data.RefreshTokenRepository;
 import com.ssafy.coco.api.tokens.dto.JwtTokenDto;
 
 import io.jsonwebtoken.Claims;
@@ -38,12 +35,8 @@ public class JwtTokenProvider {
 	@Value("${jwt.secret}")
 	private String uniqueKey;
 
-	private int accessTokenValidTime = 1000 * 30; // AccessToken 유효시간 : 90분 -> QA 테스트시 30초
-	private int refreshTokenValidTime = 1000 * 60 * 5; // RefreshToken 유효시간 : 12시간 -> QA 테스트시 5분
-
-	private final MemberRepository memberRepository;
-
-	private final RefreshTokenRepository refreshTokenRepository;
+	private int accessTokenValidTime = 1000 * 60 * 90; // AccessToken 유효시간 : 90분 -> QA 테스트시 30초
+	private int refreshTokenValidTime = 1000 * 60 * 60 * 12; // RefreshToken 유효시간 : 12시간 -> QA 테스트시 5분
 
 	@PostConstruct
 	protected void init() {
@@ -72,7 +65,6 @@ public class JwtTokenProvider {
 			.compact();
 
 		return JwtTokenDto.builder()
-			.grantType("Bearer")
 			.accessToken(accessToken)
 			.refreshToken(refreshToken)
 			.userId(userId)
@@ -83,23 +75,6 @@ public class JwtTokenProvider {
 	// Jwt 토큰에서 회원 ID 추출
 	public String getUserIdFromAccessToken(String token) {
 		return Jwts.parser().setSigningKey(uniqueKey).parseClaimsJws(token).getBody().getSubject();
-	}
-
-	public List<String> getRoles(String userId) {
-		return memberRepository.findByUserId(userId).get().getRoles();
-	}
-
-	public JwtTokenDto resolveToken(HttpServletRequest request) {
-		JwtTokenDto tokenDto = new JwtTokenDto();
-		if (request.getHeader("authorization") != null)
-			tokenDto.setAccessToken(request.getHeader("authorization").substring(7));
-		if (request.getHeader("refreshToken") != null)
-			tokenDto.setRefreshToken(request.getHeader("refreshToken").substring(7));
-		return tokenDto;
-	}
-
-	public boolean existsRefreshToken(String refreshToken) {
-		return refreshTokenRepository.existsByRefreshToken(refreshToken);
 	}
 
 }
