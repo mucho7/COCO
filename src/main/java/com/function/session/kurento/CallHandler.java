@@ -99,9 +99,6 @@ public class CallHandler extends TextWebSocketHandler {
 			case "sendImageData":
 				sendImageData(jsonMessage);
 				break;
-			// case "controlOtherVideos": // TODO: 지우기
-			// 	controlOtherVideos(jsonMessage);
-			// 	break;
 			case "toggleAuthorization":
 				controlAuthorization(jsonMessage);
 				break;
@@ -113,9 +110,6 @@ public class CallHandler extends TextWebSocketHandler {
 				break;
 			case "endMyTurn":
 				announceUserTurn(jsonMessage.get("roomName").getAsString(), jsonMessage.get("index").getAsInt());
-				break;
-			case "hostLeft": // TODO: 지우기
-				announceHostLeft(jsonMessage.get("roomName").getAsString(), user);
 				break;
 			default:
 				break;
@@ -140,19 +134,6 @@ public class CallHandler extends TextWebSocketHandler {
 		final List<UserSession> participantsList = roomManager.getRoom(user.getRoomName()).getParticipantsList(user);
 		emitMessage(participantsList, params);
 	}
-
-	// private void controlOtherVideos(JsonObject params) throws Exception {
-	// 	final String roomName = params.get("roomName").getAsString();
-	// 	final String userName = params.get("userName").getAsString();
-	//
-	// 	final UserSession userSession = registry.getByName(userName);
-	// 	final List<UserSession> participantsList = roomManager.getRoom(roomName).getParticipantsList(userSession);
-	//
-	// 	final JsonObject message = new JsonObject();
-	// 	message.addProperty("id", "turnVideoOff");
-	//
-	// 	emitMessage(participantsList, message);
-	// }
 
 	private void controlAuthorization(JsonObject params) throws Exception {
 		final String userName = params.get("userName").getAsString();
@@ -232,16 +213,6 @@ public class CallHandler extends TextWebSocketHandler {
 
 	}
 
-	// private void noticeLeaving(UserSession user) throws Exception { // TODO: 지우기
-	// 	// 해당 룸에 있는 참여자들에게 user님이 떠났다고 알리기
-	// 	final List<UserSession> participantsList = roomManager.getRoom(user.getRoomName()).getParticipantsList(user);
-	//
-	// 	final JsonObject chat = new JsonObject();
-	// 	chat.addProperty("id", "noticeLeaving");
-	// 	chat.addProperty("userName", user.getName());
-	//
-	// 	emitMessage(participantsList, chat);
-	// }
 	private void announceHostLeft(String roomName, UserSession host) throws Exception {
 		final List<UserSession> participantsList = roomManager.getRoom(roomName)
 			.getParticipantsList(host);
@@ -285,15 +256,14 @@ public class CallHandler extends TextWebSocketHandler {
 			roomManager.removeRoom(room);
 		}
 		// 인원수 - 1
-		// roomService.UpdateRoomLeave(roomName); // TODO: 주석 정리
+		// roomService.UpdateRoomLeave(roomName);
 		if (roomService.UpdateRoomLeave(roomName) != null) {
 			System.out.println("...인원수 - 1 성공, 방이름: " + roomName);
 		} else {
 			System.out.println("...인원수 - 1 실패: 해당 룸 없음, 방이름: " + roomName);
 		}
 		// 호스트가 나갔다면, 해당 방 삭제하고 모두 나가기
-		// if (userName.equals(roomName)) {
-		if (userName.equals("host")) { // TODO: 주석 정리
+		if (userName.equals(roomName)) {
 			System.out.println("...DB에서 해당 방 삭제하기, 방이름: " + roomName);
 			if (roomService.DeleteRoom(roomName) == null) {
 				System.out.println("...삭제 실패: 해당 룸 없음...");
