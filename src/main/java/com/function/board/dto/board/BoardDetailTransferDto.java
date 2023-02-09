@@ -10,14 +10,14 @@ import com.function.board.domain.comment.Comment;
 import com.function.board.dto.comment.CommentResponseDto;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 @NoArgsConstructor
 public class BoardDetailTransferDto {
 
-	private long id;
+	private Long id;
 	private String title;
 	private List<ContentComponentDto> content;
 	private String rawContent;
@@ -28,7 +28,7 @@ public class BoardDetailTransferDto {
 	private LocalDateTime createdAt;
 
 	@Builder
-	public BoardDetailTransferDto(Board entity, BoardDetailTransferDto dto, Page<Comment> comments) {
+	public BoardDetailTransferDto(Board entity, RefinedBoardDto dto, Page<Comment> comments) {
 		this.id = entity.getId();
 		this.title = entity.getTitle();
 		this.content = dto.getContent();

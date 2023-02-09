@@ -46,7 +46,7 @@ public class CommentService {
 		Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
 			new ResourceNotFoundException("해당 댓글이 존재하지 않습니다."));
 
-		comment.update(requestDto.getContent());
+		comment.update(requestDto);
 		return commentId;
 	}
 

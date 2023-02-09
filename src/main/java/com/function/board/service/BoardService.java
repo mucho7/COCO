@@ -1,6 +1,7 @@
 package com.function.board.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -24,6 +25,7 @@ import com.function.board.dto.board.BoardSaveRequestDto;
 import com.function.board.dto.board.BoardSearchCondition;
 import com.function.board.dto.board.BoardUpdateRequestDto;
 import com.function.board.dto.board.ContentComponentDto;
+import com.function.board.dto.board.RefinedBoardDto;
 import com.function.board.exception.InvalidInputException;
 import com.function.board.exception.ResourceNotFoundException;
 
@@ -68,9 +70,9 @@ public class BoardService {
 			.orElseThrow(() -> new ResourceNotFoundException("해당 게시글이 없습니다."));
 
 		updateViewCheck(boardId, request, response);
-		BoardDetailTransferDto detailDto = convertComponent(entity);
+		RefinedBoardDto refinedBoardDto = refineData(entity);
 		Page<Comment> comments = commentRepository.findAllByBoardId(boardId, pageable);
-		return new BoardDetailTransferDto(entity, detailDto, comments);
+		return new BoardDetailTransferDto(entity, refinedBoardDto, comments);
 	}
 
 	@Transactional
@@ -82,7 +84,7 @@ public class BoardService {
 			throw new InvalidInputException("내용은 3000자를 넘을 수 없습니다.");
 		}
 
-		board.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getCode());
+		board.update(requestDto);
 		return boardId;
 	}
 
@@ -128,22 +130,17 @@ public class BoardService {
 	}
 
 	@Transactional
-	public BoardDetailTransferDto convertComponent(Board board) {
+	public RefinedBoardDto refineData(Board board) {
 		String[] content = board.getContent().split("\n");
-
-		BoardDetailTransferDto detailDto = new BoardDetailTransferDto();
 
 		List<ContentComponentDto> contents = new ArrayList<>();
 		List<String> codeList = new ArrayList<>();
-		for(String c : board.getCode().split("\n")){
-			codeList.add(c);
-		}
+
+		Collections.addAll(codeList, board.getCode().split("\n"));
 
 		ContentComponentDto contentComponent;
-
 		List<String> contentList = new ArrayList<>();
 
-		int codeIndex = 0;
 		boolean isFirst = true;
 
 		//0-4. 검색 패턴 설정(---[숫자])
@@ -151,14 +148,14 @@ public class BoardService {
 
 		int startIndex = 0;
 		int endIndex = 0;
-		int num = 0;
+
 		for(String c : content) {
-			System.out.println(num++);
+
 			//1. 블록 구문 검사
 			if(Pattern.matches(pattern, c)) {
 				//시작과 끝 인덱스 지정
 				if(isFirst) {
-					startIndex = Integer.parseInt(c.replace("---", ""))-1;
+					startIndex = Integer.parseInt(c.replace("---", "")) - 1;
 					isFirst = false;
 
 					//저장할 내용이 있으니깐
@@ -173,16 +170,14 @@ public class BoardService {
 					}
 				}
 				else {
-					endIndex = Integer.parseInt(c.replace("---", ""))-1;
+					endIndex = Integer.parseInt(c.replace("---", "")) - 1;
 
 					if(endIndex < startIndex){
 						isFirst = true;
 						continue;
 					}
 
-
 					isFirst = true;
-
 					contentComponent = new ContentComponentDto();
 
 					//2. 컴포넌트에 담고 리스트에 추가
@@ -196,7 +191,6 @@ public class BoardService {
 				}
 			}
 			else {
-				//contentList에 한 줄씩 넣는 과정
 				contentList.add(c);
 			}
 		}
@@ -209,15 +203,10 @@ public class BoardService {
 			contents.add(contentComponent);
 		}
 
-
-		for(ContentComponentDto c : contents) {
-			System.out.println(c);
-		}
-
-		detailDto.setContent(contents);
-		detailDto.setCode(codeList);
-
-		return detailDto;
+		return RefinedBoardDto.builder()
+			.content(contents)
+			.code(codeList)
+			.build();
 	}
 
 }

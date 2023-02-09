@@ -21,16 +21,11 @@ import lombok.RequiredArgsConstructor;
 public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
 
 	private final JPAQueryFactory queryFactory;
+
 	@Override
 	public Page<BoardListResponseDto> searchPage(BoardSearchCondition condition, Pageable pageable) {
 		List<BoardListResponseDto> content = queryFactory
-			.select(new QBoardListResponseDto(
-				board.id,
-				board.comments.size(),
-				board.title,
-				board.writer,
-				board.hit,
-				board.createdAt))
+			.select(new QBoardListResponseDto(board))
 			.from(board)
 			.where(titleContaining(condition.getTitle()),
 				contentContaining(condition.getContent()),
@@ -38,7 +33,6 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
-
 
 		return new PageImpl<>(content, pageable, content.size());
 	}
