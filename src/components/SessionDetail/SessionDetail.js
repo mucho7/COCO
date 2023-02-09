@@ -42,24 +42,14 @@ function SessionDetail() {
       }
       enterSessionDetail();
     }, [roomId])
-    
-  // 회원 기능 연결 없이 임시로 username roomname 정하는 코드
-  const [userName, setUserName] = useState("");
-  const [roomName, setRoomName] = useState("");
-  function handleChangeUserName(event) {
-    setUserName(event.target.value)
-  }
-  function handleChangeRoomName(event) {
-    setRoomName(event.target.value)
-  }
 
   // 세션 참여
   async function handleEnterSession() {
     await enterSession(
-      roomId, userName,
+      roomId, localStorage.getItem("userId"),
       (data) => {
         console.log(data)
-        dispatch(setSocketInfo({userName: userName, roomName: roomId}))
+        dispatch(setSocketInfo({userName: localStorage.getItem("userId"), roomName: roomId}))
         switch (session.mode) {
           case "study":
             navigate(`/room/${roomId}/study`)
@@ -111,20 +101,26 @@ function SessionDetail() {
           <hr />
           <p>{ session.content }</p>
         </Box>
-        <Stack spacing={2} direction="row" sx={{  display: "flex", justifyContent: "flex-end", mr: 2, mb: 2 }}>
+        {/* <Stack spacing={2} direction="row" sx={{  display: "flex", justifyContent: "flex-end", mr: 2, mb: 2 }}>
           username: <input type="text" value={userName} onChange={handleChangeUserName} />
           roomname: <input type="text" value={roomName} onChange={handleChangeRoomName} />
-        </Stack>
+        </Stack> */}
         <Stack spacing={2} direction="row" sx={{  display: "flex", justifyContent: "flex-end", mr: 2 }}>
           <Link to={"/room"} style={{textDecoration: "none"}}>
             <Button variant="contained">뒤로</Button>
           </Link>
           <Button variant="contained" onClick={handleEnterSession}>참여</Button>
-          {/* 작성자 여부 검사 {session.hostId === userId && } */}
-          <Link to={`/room/${roomId}/update`} state={session} style={{textDecoration: "none"}} session={session}>
-            <Button variant="contained">수정</Button>
-          </Link>
-          <Button variant="contained" onClick={handleDeleteSession}>삭제</Button>
+          {/* 작성자 여부에 따라 수정, 삭제 버튼 표시  */}
+          {
+            (session.hostId === localStorage.getItem("userId")) && 
+            <Link to={`/room/${roomId}/update`} state={session} style={{textDecoration: "none"}} session={session}>
+              <Button variant="contained">수정</Button>
+            </Link>
+          }
+          {
+            (session.hostId === localStorage.getItem("userId")) &&
+            <Button variant="contained" onClick={handleDeleteSession}>삭제</Button>
+          }
         </Stack>
       </Box>
     </Container>
