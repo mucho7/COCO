@@ -21,9 +21,10 @@ function LogoutPage() {
             setCookie("userInfo", "undefined")
             navigate("/")
         },
-        (error) => {
-            console.log(error);
-        }
+        // (error) => {
+        //     console.log(error);
+        //     console.log(error.response.status);
+        // }
     )}
 
     useEffect(() => {

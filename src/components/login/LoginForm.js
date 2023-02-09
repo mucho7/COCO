@@ -54,7 +54,6 @@ function LoginForm () {
         },
         (error) => {
             console.log(error);
-            alert(error)
         }
     )}
 
