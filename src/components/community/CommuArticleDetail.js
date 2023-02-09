@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react"
+// import { useCookies } from "react-cookie"
 import { useLocation, Link, useNavigate } from "react-router-dom"
 
 import { CommentForm, Comments, CommuArticleDetailContent } from "./index"
@@ -10,7 +11,9 @@ import CommuCommentPaging from "./CommuCommentPaging"
 
 function CommuArticleDetail() {
     const navigate = useNavigate()
+    // const [ viewList ] = useCookies(["view"])
     const location = useLocation()
+    console.log(location)
     const pk = location.state.id
     const hit = location.state.hit
 
@@ -28,7 +31,6 @@ function CommuArticleDetail() {
         hit: hit
     })
     
-    // article 정보를 가져옴
     useMemo(() => {
         const getArticlelDetail = async () => {
             await boardDetail(
@@ -37,14 +39,18 @@ function CommuArticleDetail() {
             (error) => console.log(error)
         ).then((data) => {
             setArticle(data)
-            setMaxPage(article.comments.totalPages)
+            setMaxPage(data.comments.totalPages)
         })
     }
-    if (hit === article.hit){
-            getArticlelDetail()
-            console.log("조회수 증가!!!")
-    }
-    }, [pk, article, pageNumber, hit])
+    getArticlelDetail()
+    // dkdkdkdkdaijsdoijasdjas
+    // cookie List에 저장한 값을 back에 request를 보내서 조회수를 controll
+    // if (hit === article.hit){
+    //         console.log("조회수 증가!!!")
+    // }
+    }, [pk, pageNumber])
+
+    
 
     async function onClickDeleteHandler(params) {
         await articleDelete(
