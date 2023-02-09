@@ -60,10 +60,7 @@ public class MemberController {
 		@PathVariable @ApiParam(value = "회원정보를 수정할 사용자의 {id}", required = true) String id,
 		@RequestBody @ApiParam(value = "수정할 내용이 담긴 데이터 객체", required = true) MemberUpdateRequestDto requestDto,
 		HttpServletRequest request) {
-		System.out.println("[UpdateMember@MemberController] id: " + id + ", requestDto: " + requestDto);
-		String accessToken =
-			request.getHeader("Authorization").startsWith("bearer ") ? request.getHeader("Authorization").substring(7) :
-				request.getHeader("Authorization");
+		String accessToken = request.getHeader("Authorization").substring(7);
 		String updatedUserId = memberService.updateInfo(id, requestDto, accessToken);
 		if (updatedUserId == null) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(id + " 사용자의 수정 권한이 없는 사용자입니다.");
@@ -73,8 +70,7 @@ public class MemberController {
 
 	@GetMapping("/info/{id}")
 	@ApiOperation(value = "정보 조회", notes = "{id}에 해당하는 사용자 정보를 DB에서 가져온다.")
-	public ResponseEntity findById(
-		@PathVariable @ApiParam(value = "회원정보를 조회할 사용자의 {id}", required = true) String id) {
+	public ResponseEntity findById(@PathVariable @ApiParam(value = "회원정보를 조회할 사용자의 {id}", required = true) String id) {
 		MemberResponseDto member = memberService.findByUserId(id);
 		if (member.getDelFlag() != null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("탈퇴한 사용자입니다.");
@@ -85,11 +81,16 @@ public class MemberController {
 
 	@PostMapping("/delete/{id}")
 	@ApiOperation(value = "회원 탈퇴", notes = "{id}의 사용자 정보에 탈퇴일(del_flag)을 기록한다.")
-	public String deleteMember(@PathVariable @ApiParam(value = "탈퇴할 회원 ID", required = true) String id,
+	public ResponseEntity deleteMember(@PathVariable @ApiParam(value = "탈퇴할 회원 ID", required = true) String id,
 		HttpServletRequest request) {
 		String accessToken = request.getHeader("Authorization").substring(7);
 		String refreshToken = request.getHeader("refreshToken").substring(7);
-		return memberService.deleteMember(id, accessToken, refreshToken);
+		String changedId = memberService.deleteMember(id, accessToken, refreshToken);
+		if (changedId == null) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없는 사용자입니다.");
+		} else {
+			return ResponseEntity.ok(changedId);
+		}
 	}
 
 	@PutMapping("/rating")
@@ -97,18 +98,6 @@ public class MemberController {
 	public String ratingUpdate(
 		@RequestBody @ApiParam(value = "평판점수 변경 요청 정보", required = true) MemberRatingUpdateRequestDto requestDto) {
 		return memberService.ratingUpdate(requestDto);
-	}
-
-	@PostMapping("/extract")
-	@ApiOperation(value = "Jwt 토큰 정보 추출", notes = "제공된 AccessToken으로부터 사용자 ID를 추출해 반환한다.")
-	public ResponseEntity getUserIdFromJwtToken(HttpServletRequest request) {
-		String userId = memberService.getUserIdFromAccessToken(request.getHeader("Authorization").substring(7),
-			request.getHeader("refreshToken"));
-		if (userId != null) {
-			return ResponseEntity.ok(userId);
-		} else {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("세션이 만료되었습니다. 다시 로그인하세요.");
-		}
 	}
 
 	@PostMapping("/tempPassword")
@@ -138,8 +127,6 @@ public class MemberController {
 
 		JwtTokenDto jwtToken = memberService.login(userId, password);
 
-		System.out.println("로그인 - " + jwtToken);
-
 		if (jwtToken != null) {
 			response.setHeader("Authorization", "bearer " + jwtToken.getAccessToken());
 			response.setHeader("refreshToken", "bearer " + jwtToken.getRefreshToken());
@@ -168,13 +155,8 @@ public class MemberController {
 	public ResponseEntity changePassword(
 		@RequestBody @ApiParam(value = "새로운 비밀번호", required = true) PasswordChangeRequestDto requestDto,
 		HttpServletRequest request) {
-		String accessToken = request.getHeader("Authorization");
-		String result = memberService.changePassword(accessToken, requestDto.getNewPassword());
-		if (result.startsWith("[error] ")) {
-			return ResponseEntity.badRequest().body(result.split(" ")[1]);
-		} else {
-			return ResponseEntity.ok(result);
-		}
+		String accessToken = request.getHeader("Authorization").substring(7);
+		return ResponseEntity.ok(memberService.changePassword(accessToken, requestDto.getNewPassword()));
 	}
 
 }

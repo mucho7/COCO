@@ -1,5 +1,7 @@
 package com.ssafy.coco.api.tokens.service;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -21,9 +23,11 @@ public class JwtTokenService {
 	private final RefreshTokenRepository refreshTokenRepository;
 
 	@Transactional
-	public void login(JwtTokenDto tokenDto) {
+	public JwtTokenDto login(String userId, List<String> roles) {
+		JwtTokenDto tokenDto = jwtTokenProvider.createToken(userId, roles);
+		log.info("로그인 과정에서 생성된 JwtTokenDto: " + tokenDto);
 		RefreshToken refreshToken = RefreshToken.builder()
-			.userId(tokenDto.getUserId())
+			.userId(userId)
 			.refreshToken(tokenDto.getRefreshToken())
 			.build();
 		String requestUserId = refreshToken.getUserId();
@@ -33,6 +37,7 @@ public class JwtTokenService {
 		}
 		log.info(requestUserId + "의 Refresh Token을 생성합니다.");
 		refreshTokenRepository.save(refreshToken);
+		return tokenDto;
 	}
 
 	@Transactional
@@ -45,17 +50,18 @@ public class JwtTokenService {
 			refreshTokenRepository.deleteByRefreshToken(refreshToken);
 			return true;
 		} else {
-			System.out.println("DB에서 refreshToken 조회에 실패했습니다.");
+			log.info("DB에서 refreshToken 조회에 실패했습니다.");
 		}
 		return false;
 	}
 
 	public boolean validateRequest(String userId, String accessToken) {
-		if (accessToken.startsWith("bearer ")) {
-			accessToken = accessToken.substring(7);
-		}
 		String extractedId = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
 		System.out.println("[validateRequest@JwtTokenService]Id: " + userId + ", extractedId: " + extractedId);
 		return extractedId.equals(userId);
+	}
+
+	public String getUserIdFromAccessToken(String accessToken) {
+		return jwtTokenProvider.getUserIdFromAccessToken(accessToken);
 	}
 }

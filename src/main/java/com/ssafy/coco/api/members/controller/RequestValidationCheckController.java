@@ -28,7 +28,7 @@ public class RequestValidationCheckController {
 	public boolean validateRequest(
 		@RequestBody @ApiParam(value = "브라우저에 있는 사용자 ID", required = true) ValidateRequestDto requestDto,
 		HttpServletRequest request) {
-		String accessToken = request.getHeader("Authorization");
+		String accessToken = request.getHeader("Authorization").substring(7);
 		return jwtTokenService.validateRequest(requestDto.getUserId(), accessToken);
 	}
 
