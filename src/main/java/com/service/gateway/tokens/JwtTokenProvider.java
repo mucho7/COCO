@@ -46,9 +46,9 @@ public class JwtTokenProvider {
 	@Value("${jwt.secret}")
 	private String uniqueKey;
 
-	private int accessTokenValidTime = 1000 * 60 * 90; // AccessToken 유효시간 : 90분
+	private int accessTokenValidTime = 1000 * 30; // AccessToken 유효시간. (단위: ms) DEFAULT: 90분, QA 및 디버깅: 30초
 
-	private int refreshTokenValidTime = 1000 * 60 * 60 * 12; // RefreshToken 유효시간 : 12시간
+	private int refreshTokenValidTime = 1000 * 60 * 5; // RefreshToken 유효시간. (단위: ms) DEFAULT: 12시간, QA 및 디버깅: 5분
 
 	private final MemberRepository memberRepository;
 
