@@ -106,7 +106,6 @@ public class BoardService {
 		}
 
 		if (oldCookie != null) {
-
 			if (!oldCookie.getValue().contains("["+ boardId +"]")) {
 				updateView(boardId);
 				oldCookie.setValue(oldCookie.getValue() + "_[" + boardId + "]");
@@ -124,25 +123,25 @@ public class BoardService {
 	}
 
 	@Transactional
-	public void updateView(Long boardId) {
-		boardRepository.updateView(boardId);
+	public int updateView(Long boardId) {
+		return boardRepository.updateView(boardId);
 	}
 
 	@Transactional
 	public BoardDetailTransferDto convertComponent(Board board) {
 		String[] content = board.getContent().split("\n");
-		String[] code = board.getCode().split("\n");
 
 		BoardDetailTransferDto detailDto = new BoardDetailTransferDto();
 
 		List<ContentComponentDto> contents = new ArrayList<>();
-		List<ContentComponentDto> codes = new ArrayList<>();
+		List<String> codeList = new ArrayList<>();
+		for(String c : board.getCode().split("\n")){
+			codeList.add(c);
+		}
 
 		ContentComponentDto contentComponent;
-		ContentComponentDto codeComponent;
 
 		List<String> contentList = new ArrayList<>();
-		List<String> codeList = new ArrayList<>();
 
 		int codeIndex = 0;
 		boolean isFirst = true;
@@ -153,7 +152,6 @@ public class BoardService {
 		int startIndex = 0;
 		int endIndex = 0;
 		int num = 0;
-		System.out.println(content.length);
 		for(String c : content) {
 			System.out.println(num++);
 			//1. 블록 구문 검사
@@ -167,58 +165,38 @@ public class BoardService {
 					if(contentList.size() != 0){
 						contentComponent = new ContentComponentDto();
 						contentComponent.setContent(contentList);
-						contentComponent.setIndex(-1);
+						contentComponent.setStartIndex(-1);
+						contentComponent.setEndIndex(-1);
 						contents.add(contentComponent);
 
 						contentList = new ArrayList<>();
-
-						while (codeIndex != startIndex) {
-							codeList.add(code[codeIndex]);
-							codeIndex++;
-						}
-						codeComponent = new ContentComponentDto();
-						codeComponent.setContent(codeList);
-						codeComponent.setIndex(-1);
-						codes.add(codeComponent);
-
-						codeList = new ArrayList<>();
 					}
 				}
 				else {
 					endIndex = Integer.parseInt(c.replace("---", ""))-1;
 
+					if(endIndex < startIndex){
+						isFirst = true;
+						continue;
+					}
+
+
 					isFirst = true;
 
-					codeComponent = new ContentComponentDto();
 					contentComponent = new ContentComponentDto();
 
 					//2. 컴포넌트에 담고 리스트에 추가
 					contentComponent.setContent(contentList);
-					contentComponent.setIndex(codes.size());
+					contentComponent.setStartIndex(startIndex);
+					contentComponent.setEndIndex(endIndex);
 					contentList = new ArrayList<>();
-
-					//3. 코드도 잘라서 인덱스 매핑
-					while (codeIndex != startIndex)
-						codeIndex++;
-
-					while (codeIndex -1 != endIndex) {
-						codeList.add(code[codeIndex]);
-						codeIndex++;
-					}
-					codeComponent.setContent(codeList);
-					codeComponent.setIndex(contents.size());
-					codeList = new ArrayList<>();
 
 					//4. 리스트 추가
 					contents.add(contentComponent);
-					codes.add(codeComponent);
-
-					codeComponent = new ContentComponentDto();
-					contentComponent = new ContentComponentDto();
 				}
 			}
 			else {
-				//StringBuilder에 한 줄씩 넣는 과정
+				//contentList에 한 줄씩 넣는 과정
 				contentList.add(c);
 			}
 		}
@@ -226,29 +204,18 @@ public class BoardService {
 		if(contentList.size() != 0) {
 			contentComponent = new ContentComponentDto();
 			contentComponent.setContent(contentList);
-			contentComponent.setIndex(-1);
+			contentComponent.setStartIndex(-1);
+			contentComponent.setEndIndex(-1);
 			contents.add(contentComponent);
 		}
 
-		if(codeIndex != code.length -1){
-			codeComponent = new ContentComponentDto();
 
-			while(codeIndex != code.length){
-				codeList.add(code[codeIndex]);
-				codeIndex++;
-			}
-
-			codeComponent.setContent(codeList);
-			codeComponent.setIndex(-1);
-			codes.add(codeComponent);
+		for(ContentComponentDto c : contents) {
+			System.out.println(c);
 		}
-		//
-		// for(ContentComponentDto c : contents) {
-		// 	System.out.println("test: " + c.getContent() + " " + c.getIndex());
-		// }
 
 		detailDto.setContent(contents);
-		detailDto.setCode(codes);
+		detailDto.setCode(codeList);
 
 		return detailDto;
 	}
