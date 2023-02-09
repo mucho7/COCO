@@ -59,8 +59,7 @@ function Comments(props) {
 
 
     return (
-        <>
-        {props.comments.content.map(comment => {
+        <>{props.comments.content.map(comment => {
             return (
                 <Card sx={{ width: '100%', height: 'auto', margin: '4px'}} key={comment.id}>
                     <CardContent>
@@ -89,8 +88,7 @@ function Comments(props) {
                     </CardContent>
                 </Card>
                 )
-        })}
-        </>
+        })}</>
     )
 }
 

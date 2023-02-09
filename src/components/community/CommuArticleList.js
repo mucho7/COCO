@@ -7,7 +7,7 @@ import styled from "styled-components"
 
 
 function CommuArticleList() {
-    const [ someArticle, setSomeArticle ] = useState([{id: 1}, {id: 2}])
+    const [ someArticle, setSomeArticle ] = useState([{id: 1, createdAt: "i dont know when i was born"}, {id: 2, createdAt: "i dont know when i was born"}])
     // 일단은 8로 고정하고 심화기능이 필요하다면 변경하는 버튼을 추가 예정
     const [ pageSize ] = useState(8)
     const [ pageNumber, setPageNumber ] = useState(1)
@@ -16,6 +16,7 @@ function CommuArticleList() {
     useMemo(() => {
         const enterBoard = async () => {
             await boardPaging(
+
                 {size: pageSize, page: pageNumber},
                 (data) => {return data.data},
                 (err) => console.log(err)
@@ -30,7 +31,7 @@ function CommuArticleList() {
     const onPagingClickHandler = (page) => {
         // console.log(page)
         if (page.target === undefined) {
-            setPageNumber(page)
+            setPageNumber(page) 
         } else {
             setPageNumber(page.target.value)
         }
