@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -58,11 +62,12 @@ public class BoardService {
 			.collect(Collectors.toList());
 	}
 
-	@Transactional(readOnly = true)
-	public BoardDetailTransferDto findById(Long boardId, Pageable pageable) {
+	@Transactional
+	public BoardDetailTransferDto findById(Long boardId, HttpServletRequest request, HttpServletResponse response, Pageable pageable) {
 		Board entity = boardRepository.findById(boardId)
 			.orElseThrow(() -> new ResourceNotFoundException("해당 게시글이 없습니다."));
 
+		updateViewCheck(boardId, request, response);
 		BoardDetailTransferDto detailDto = convertComponent(entity);
 		Page<Comment> comments = commentRepository.findAllByBoardId(boardId, pageable);
 		return new BoardDetailTransferDto(entity, detailDto, comments);
@@ -89,8 +94,38 @@ public class BoardService {
 	}
 
 	@Transactional
-	public int updateView(Long boardId) {
-		return boardRepository.updateView(boardId);
+	public void updateViewCheck(Long boardId, HttpServletRequest request, HttpServletResponse response) {
+		Cookie oldCookie = null;
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals("viewCount")) {
+					oldCookie = cookie;
+				}
+			}
+		}
+
+		if (oldCookie != null) {
+
+			if (!oldCookie.getValue().contains("["+ boardId +"]")) {
+				updateView(boardId);
+				oldCookie.setValue(oldCookie.getValue() + "_[" + boardId + "]");
+				oldCookie.setPath("/");
+				oldCookie.setMaxAge(60 * 60 * 24);
+				response.addCookie(oldCookie);
+			}
+		} else {
+			updateView(boardId);
+			Cookie newCookie = new Cookie("viewCount", "[" + boardId + "]");
+			newCookie.setPath("/");
+			newCookie.setMaxAge(60 * 60 * 24);
+			response.addCookie(newCookie);
+		}
+	}
+
+	@Transactional
+	public void updateView(Long boardId) {
+		boardRepository.updateView(boardId);
 	}
 
 	@Transactional
@@ -207,10 +242,10 @@ public class BoardService {
 			codeComponent.setIndex(-1);
 			codes.add(codeComponent);
 		}
-
-		for(ContentComponentDto c : contents) {
-			System.out.println("test: " + c.getContent() + " " + c.getIndex());
-		}
+		//
+		// for(ContentComponentDto c : contents) {
+		// 	System.out.println("test: " + c.getContent() + " " + c.getIndex());
+		// }
 
 		detailDto.setContent(contents);
 		detailDto.setCode(codes);

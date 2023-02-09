@@ -2,6 +2,9 @@ package com.function.board.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -56,9 +59,8 @@ public class BoardController {
 
 	@ApiOperation(value = "{board_id}로 게시글 조회")
 	@GetMapping("/{id}")
-	public ResponseEntity<BoardDetailTransferDto> findById(@PathVariable("id") Long id, @PageableDefault(size=20) Pageable pageable) {
-		boardService.updateView(id);
-		return ResponseEntity.ok(boardService.findById(id, pageable));
+	public ResponseEntity<BoardDetailTransferDto> findById(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response, @PageableDefault(size=20) Pageable pageable) {
+		return ResponseEntity.ok(boardService.findById(id, request, response, pageable));
 	}
 
 	@ApiOperation(value = "조건 설정 및 키워드 이용하여 게시글 검색")
