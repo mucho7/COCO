@@ -6,7 +6,9 @@ const initialState = {
   isMicButtonOn: false,
   isAuthorizeButtonOn: false,
   isChatButtonOn: false,
-  isQuitButtonClicked: false,
+  isCompilePossible: true,
+  isDrawPossible: true,
+  isMicPossible: true
 };
 
 const toolBarActionSlice = createSlice({
@@ -27,19 +29,16 @@ const toolBarActionSlice = createSlice({
     },
     onClickChatButton(state) {
       state.isChatButtonOn = !state.isChatButtonOn;
-    },
-    onClickQuitButton(state) {
-      state.isQuitButtonOn = !state.isQuitButtonOn;
-    },
+    }
   }
 });
 
-export default toolBarActionSlice;
 export const { 
   onClickCompileButton, 
   onClickDrawButton,
   onClickMicButton,
   onClickAuthorizeButton,
-  onClickChatButton,
-  onClickQuitButton
+  onClickChatButton
 } = toolBarActionSlice.actions;
+
+export default toolBarActionSlice;
