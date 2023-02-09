@@ -1,7 +1,7 @@
 import NormalSession from "./NormalSessionPage";
 import RelaySession from "./RelaySessionPage";
 import CreateSession from "./CreateSessionPage";
-import SessionList from "./SessionListPage";
+import SessionListPage from "./SessionListPage";
 import SessionDetail from "./SessionDetailPage";
 import HomePage from "./HomePage";
 import CommuPage from "./CommuPage";
@@ -12,6 +12,7 @@ import LogoutPage from "./LogoutPage";
 import ArticleDetailPage from "./ArticleDetailPage";
 import ArticleCreatePage from "./ArticleCreatePage";
 import ArticleUpdatePage from "./ArticleUpdatePage"
+import UpdateSession from "./UpdateSessionPage";
 
 import { createBrowserRouter } from "react-router-dom";
 
@@ -56,12 +57,16 @@ const router = createBrowserRouter([
   },
   // Session 관련
   {
-    path: "/normal",
+    path: "/room/:roomId/study",
     element: <NormalSession />,
   },
   {
-    path: "/relay",
+    path: "/room/:roomId/relay",
     element: <RelaySession />,
+  },
+  {
+    path: "/room/:roomId/update",
+    element: <UpdateSession />
   },
   {
     path: "/room/create",
@@ -73,7 +78,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/room",
-    element: <SessionList />,
+    element: <SessionListPage />,
   },
 ]);
 
