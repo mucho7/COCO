@@ -4,8 +4,9 @@ import axios from "axios";
 const api = axios.create({
 // env로 대체할 것
 // baseURL: "http://APIgateway:8000/",
-// 
-  baseURL: "http://i8a703.p.ssafy.io:8111",
+baseURL: "http://i8a703.p.ssafy.io:8000",
+  // 
+  // baseURL: "http://i8a703.p.ssafy.io:8011",
 
   headers: {
     "Content-Type": "application/json",
@@ -13,13 +14,18 @@ const api = axios.create({
 });
 
 
-async function boardPaging(pageInfo,success, fail) {
+async function boardPaging(pageInfo, success, fail) {
   const res = await api.get(`/board`, {params: {size: pageInfo.size, page: pageInfo.page}}).then(success).catch(fail);
   return res
 }
 
-async function boardDetail(article_pk, success, fail) {
-  const res = await api.get(`/board/${article_pk}`).then(success).catch(fail);
+async function boardSearching(searchInfo, success, fail) {
+  const res = await api.get(`/board/search`, {params: {title: searchInfo.title, content: searchInfo.content, writer: searchInfo.writer}}).then(success).catch(fail);
+  return res
+}
+
+async function boardDetail(article, success, fail) {
+  const res = await api.get(`/board/${article.pk}`, {params: {page: article.pageNumber}}).then(success).catch(fail);
   return res
 }
 
@@ -47,4 +53,4 @@ async function commentUpdate(comment, success, fail) {
   await api.put(`/comment/${comment.board_id}/modify/${comment.pk}`, JSON.stringify(comment.content)).then(success).catch(fail);
 }
 
-export { boardPaging, boardDetail, articleCreate, articleDelete, articleUpdate, commentCreate, commentDelete, commentUpdate }
+export { boardPaging, boardSearching, boardDetail, articleCreate, articleDelete, articleUpdate, commentCreate, commentDelete, commentUpdate }

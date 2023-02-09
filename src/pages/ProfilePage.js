@@ -1,19 +1,15 @@
-import styled  from 'styled-components'
 import { useState, useEffect,  } from 'react'
 import { useNavigate } from 'react-router-dom'
-// import { useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie'
 
 import  { Navbar } from '../components/navbar';
-// import { onEnterProfile,  } from "../store/userInfoUpdateSlice"
 import { deleteUserInfo, readUserInfo } from "../api/member"
+import { ProfileUserInfoItem, ProfileUserInfoForm, ProfileUserTrophy, ProfilePasswordUpdateButton } from '../components/profile'
 
+import styled  from 'styled-components'
+import SidePaddingBox from './SidePaddingBox'
 import { Button } from '@mui/material'
 import { AccountCircle } from '@mui/icons-material'
-
-import SidePaddingBox from './SidePaddingBox'
-
-import { ProfileUserInfoItem, ProfileUserInfoForm, ProfileUserTrophy, ProfilePasswordUpdateButton } from '../components/profile'
 
 
 function ProfilePage(params) {

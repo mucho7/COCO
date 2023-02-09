@@ -2,6 +2,18 @@ import http from "./http.js";
 
 const api = http;
 
+function failHandler(params) {
+  const statusCode = params.response.status
+
+  if (statusCode === 401) {
+    console.log("STATUS CODE IS 401")
+    localStorage.clear()
+    document.cookie = "userInfo=undefined"
+    window.location.href = "/"
+    alert("강 제 로 그 아 웃 !!")
+  }
+} 
+
 async function signup(user, success, fail) {
   await api.post(`/member/register`, JSON.stringify(user)).then(success).catch(fail);
 }
@@ -10,10 +22,10 @@ async function login(user, success, fail) {
   await api.post(`/member/login`, JSON.stringify(user)).then(success).catch(fail);
 }
 
-async function logout(token, success, fail) {
+async function logout(token, success) {
   api.defaults.headers["Authorization"] = token["Authorization"]
   api.defaults.headers["refreshToken"] = token["refreshToken"]
-  await api.post(`/member/logout`, JSON.stringify()).then(success).catch(fail);
+  await api.post(`/member/logout`, JSON.stringify()).then(success).catch(failHandler);
 }
 
 async function readUserInfo(user, success, fail) {
@@ -26,7 +38,7 @@ async function readUserInfo(user, success, fail) {
 async function updateUserInfo(user, success, fail) {
   api.defaults.headers["Authorization"] = user["Authorization"]
   api.defaults.headers["refreshToken"] = user["refreshToken"]
-  await api.post(`/member/info/${user.userId}`, JSON.stringify(user)).then(success).catch(fail);
+  await api.put(`/member/info/${user.userId}`, JSON.stringify(user)).then(success).catch(fail);
 }
 
 async function changeUserPassword(user, success, fail) {

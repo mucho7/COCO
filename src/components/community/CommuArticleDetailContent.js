@@ -5,43 +5,43 @@ import styled from "styled-components";
 import { Typography,  } from "@mui/material";
 
 function CommuArticleDetailContent(params) {
-    const [ hoverTarget, setHoverTarget ] = useState(-2)
+    const [ hoverTarget, setHoverTarget ] = useState([-1, -1])
     const [ target, setTarget ] = useState(-2)
     const content = (params.content.content)
     const code = (params.content.code)
-    
-    // 비동기 이슈로 인해서 hoverTarget이 set되기 전에 렌더링이 끝나버림
-    const onMouseEnterHandler = (event) => {
-        if (event.target.parentElement.id !== "-1"){
-            setHoverTarget(event.target.parentElement.id)
 
+    const onMouseEnterHandler = (startIndex, endIndex, uniqueKey) => {
+        if (startIndex === -1){
+            setHoverTarget({isActive: false, key:uniqueKey, startIndex: startIndex, endIndex: endIndex})
         } else {
-            setHoverTarget(-2)
+            setHoverTarget({isActive: true, key: uniqueKey, startIndex: startIndex, endIndex: endIndex})
         }
     }
-    const onMouseLeaveHandler = () => {
-        setHoverTarget(-2)
+    const onMouseLeaveHandler = (startIndex, endIndex, uniqueKey) => {
+        setHoverTarget({isActive: false, key:uniqueKey, startIndex: startIndex, endIndex: endIndex})
     }
     
-    const onContentBlockClickHandler = (event) => {
-        if (event.target.parentElement.id !== "-1"){
-            setTarget(event.target.parentElement.id)
+    const onContentBlockClickHandler = (startIndex, endIndex, uniqueKey) => {
+        if (startIndex === -1){
+            setTarget({isActive: false, key:uniqueKey, startIndex: startIndex, endIndex: endIndex})
         } else {
-            setTarget(0)
+            setTarget({isActive: true, key: uniqueKey, startIndex: startIndex, endIndex: endIndex})
         }
     }
 
-    useEffect(() => {
-        // console.log(target)
-        // console.log(hoverTarget)
-    }, [ target, hoverTarget ])
+    // useEffect(() => {
+    //     // console.log(target)
+    //     // console.log(hoverTarget)
+    // }, [ target, hoverTarget ])
 
     return (
         <>
             <ContentSection >
                 {content.map((item, uniqueKey) => {
                     return(
-                        <StyeldCard onClick={onContentBlockClickHandler} onMouseEnter={onMouseEnterHandler} onMouseLeave={onMouseLeaveHandler} isTarget={item.index == target} isHovering={item.index == hoverTarget} id={item.index} key={uniqueKey}>
+                        <StyeldCard 
+                        onClick={() => onContentBlockClickHandler(item.startIndex, item.endIndex, uniqueKey)} onMouseEnter={() => onMouseEnterHandler(item.startIndex, item.endIndex, uniqueKey)} onMouseLeave={onMouseLeaveHandler} 
+                        istarget={target.isActive && uniqueKey == target.key} ishovering={uniqueKey == hoverTarget.key && hoverTarget.isActive} key={uniqueKey}>
                             {item.content.map((string, uniqueKey) => {
                                 return(
                                     <Typography key={uniqueKey} >{string}</Typography>
@@ -55,13 +55,10 @@ function CommuArticleDetailContent(params) {
             <CodeSection>
                 {code.map((item, uniqueKey) => {
                     return(
-                        <StyeldCard onClick={onContentBlockClickHandler} onMouseEnter={onMouseEnterHandler} onMouseLeave={onMouseLeaveHandler} isTarget={item.index == target} isHovering={item.index == hoverTarget} id={item.index} key={uniqueKey}>
-                            {item.content.map((string, uniqueKey) => {
-                                return(
-                                    <Typography key={uniqueKey}>{string}</Typography>
-                                )
-                            })}                        
-                        </StyeldCard>
+                        <StyeldCodeBox istarget={(target.isActive && target.startIndex <= uniqueKey && target.endIndex >= uniqueKey)} ishovering={(hoverTarget.isActive && hoverTarget.startIndex <= uniqueKey && hoverTarget.endIndex >= uniqueKey)} 
+                        id={item.index} key={uniqueKey}>
+                            {item}
+                        </StyeldCodeBox>
                     )
                 })}
             </CodeSection>
@@ -92,7 +89,14 @@ const StyeldCard = styled.div`
     margin: 15px 0 0 0;
     padding-left: 10px;
     border-radius: 10px;
-    background-color: ${props => {if (props.isHovering) {return 'blue'} else if (props.isTarget) {return 'red'} else { return 'white'} }};
+    background-color: ${props => {if (props.ishovering) {return 'blue'} else if (props.istarget) {return 'red'} else { return 'white'} }};
+`
+
+const StyeldCodeBox = styled.div`
+    margin: 15px 0 0 0;
+    padding-left: 10px;
+    border-radius: 10px;
+    background-color: ${props => {if (props.ishovering) {return 'blue'} else if (props.istarget) {return 'red'} else { return 'white'} }};
 `
 
 export default CommuArticleDetailContent

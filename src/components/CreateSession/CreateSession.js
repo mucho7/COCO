@@ -1,14 +1,6 @@
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
 // import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import Typography from '@mui/material/Typography';
+import { Container, Box, Button, Typography, FormLabel, FormControlLabel, 
+  RadioGroup, Radio, TextField, Grid   } from '@mui/material';
 
 import { useDispatch } from 'react-redux';
 // import { createSession } from '../../store/sessionListSlice';
