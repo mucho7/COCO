@@ -1,9 +1,9 @@
 import { CustomButton } from "./ToolBar";
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
 import { onClickMicButton } from "../../../store/toolBarActionSlice";
 
-import { participantsInstances } from "../../../store/sessionSlice";
+import MicNoneOutlinedIcon from '@mui/icons-material/MicNoneOutlined';
+import MicOffOutlinedIcon from '@mui/icons-material/MicOffOutlined';
 
 
 function MicButton(props) {
