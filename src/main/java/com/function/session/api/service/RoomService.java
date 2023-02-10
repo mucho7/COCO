@@ -10,11 +10,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.function.session.api.data.Room;
+import com.function.session.api.data.RoomRepository;
 import com.function.session.api.dto.request.RoomRegisterRequestDto;
 import com.function.session.api.dto.request.RoomUpdateRequestDto;
 import com.function.session.api.dto.response.RoomDetailResponseDto;
-import com.function.session.data.Room;
-import com.function.session.data.RoomRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,19 +35,19 @@ public class RoomService {
 		return roomRepository.findAll(spec, Sort.by(desc("hostRating")));
 	}
 
-	public RoomDetailResponseDto GetRoom(String roomId) {
+	public RoomDetailResponseDto GetRoom(Long roomId) {
 		Room room = roomRepository.findById(roomId)
 			.orElseThrow(() -> new IllegalArgumentException("해당 방은 없습니다. 방 ID: " + roomId)); // error code: 500
 		return new RoomDetailResponseDto(room);
 	}
 
 	@Transactional
-	public String RegisterRoom(RoomRegisterRequestDto requestDto) {
+	public Long RegisterRoom(RoomRegisterRequestDto requestDto) {
 		return roomRepository.save(requestDto.toEntity()).getRoomId();
 	}
 
 	@Transactional
-	public Room UpdateRoom(RoomUpdateRequestDto requestDto, String roomId) {
+	public Room UpdateRoom(RoomUpdateRequestDto requestDto, Long roomId) {
 		Room room = roomRepository.findById(roomId).orElse(null);
 		if (room != null) {
 			room.UpdateRoom(requestDto.getTitle(), requestDto.getContent(), requestDto.getMode(),
@@ -58,9 +58,23 @@ public class RoomService {
 	}
 
 	@Transactional
-	public Room UpdateRoomEnter(String roomId, String userId) {
+	public Room UpdateRoomEnter(Long roomId, String userId) {
 		Room room = roomRepository.findById(roomId).orElse(null);
 		if (room != null) {
+			// if (room.getIsLive() == 0) { // 아직 호스트 입장 전
+			// 	if (room.getHostId().equals(userId)) { // 호스트가 방에 입장할 때
+			// 		room.UpdateRoomIsLive();
+			// 		room.UpdateRoomNumberUsers(1);
+			// 	}else{
+			//
+			// 	}
+			// } else {
+			// 	if (room.getNumberUsers() >= room.getMax()) {
+			// 		throw new IllegalArgumentException("꽉 찬 방입니다. 최대 참여자 수: " + room.getMax());
+			// 	} else { // 입장하기
+			// 		room.UpdateRoomNumberUsers(1);
+			// 	}
+			// }
 			if (room.getHostId().equals(userId)) { // 호스트가 방에 입장할 때
 				room.UpdateRoomIsLive();
 				room.UpdateRoomNumberUsers(1);
@@ -78,7 +92,7 @@ public class RoomService {
 	}
 
 	@Transactional
-	public Room UpdateRoomLeave(String roomId) {
+	public Room UpdateRoomLeave(Long roomId) {
 		Room room = roomRepository.findById(roomId).orElse(null);
 		if (room != null) {
 			room.UpdateRoomNumberUsers(-1);
@@ -87,7 +101,7 @@ public class RoomService {
 	}
 
 	@Transactional
-	public Room DeleteRoom(String roomId) {
+	public Room DeleteRoom(Long roomId) {
 		Room room = roomRepository.findById(roomId).orElse(null);
 		if (room != null) {
 			roomRepository.deleteById(roomId);

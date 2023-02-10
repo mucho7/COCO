@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.function.session.data.Room;
-import com.function.session.data.RoomRepository;
+import com.function.session.api.data.Room;
+import com.function.session.api.data.RoomRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

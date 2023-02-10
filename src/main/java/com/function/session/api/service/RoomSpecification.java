@@ -7,7 +7,7 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.function.session.data.Room;
+import com.function.session.api.data.Room;
 
 public class RoomSpecification {
 	public static Specification<Room> equalMode(String mode) {
