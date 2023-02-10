@@ -5,33 +5,27 @@ import java.time.LocalDateTime;
 import com.function.board.domain.board.Board;
 import com.querydsl.core.annotations.QueryProjection;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 
-@Data
+@Getter
 public class BoardListResponseDto {
-	private Long id;
-	private String title;
-	private String writer;
-	private int commentCnt;
-	private int hit;
-	private LocalDateTime createdAt;
+	private final Long id;
+	private final String title;
+	private final String writer;
+	private final int commentCnt;
+	private final int hit;
+	private final LocalDateTime createdAt;
 
 	@QueryProjection
-	public BoardListResponseDto(Long id, int commentCnt, String title, String writer, int hit, LocalDateTime createdAt) {
-		this.id = id;
-		this.commentCnt = commentCnt;
-		this.title = title;
-		this.writer = writer;
-		this.hit = hit;
-		this.createdAt = createdAt;
-	}
-
+	@Builder
 	public BoardListResponseDto(Board entity) {
 		this.id = entity.getId();
-		this.commentCnt = entity.getComments().size();
 		this.title = entity.getTitle();
 		this.writer = entity.getWriter();
+		this.commentCnt = entity.getComments().size();
 		this.hit = entity.getHit();
 		this.createdAt = entity.getCreatedAt();
 	}
+
 }

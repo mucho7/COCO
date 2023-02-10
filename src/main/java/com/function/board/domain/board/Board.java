@@ -18,6 +18,7 @@ import org.hibernate.annotations.Where;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.function.board.domain.BaseTimeEntity;
 import com.function.board.domain.comment.Comment;
+import com.function.board.dto.board.BoardUpdateRequestDto;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -58,9 +59,11 @@ public class Board extends BaseTimeEntity {
 		this.code = code;
 	}
 
-	public void update(String title, String content, String code) {
-		this.title = title;
-		this.content = content;
-		this.code = code;
+	public void update(BoardUpdateRequestDto requestDto) {
+		this.title = requestDto.getTitle();
+		this.content = requestDto.getContent();
+		this.code = requestDto.getCode();
+
 	}
+
 }

@@ -16,6 +16,7 @@ import org.hibernate.annotations.Where;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.function.board.domain.BaseTimeEntity;
 import com.function.board.domain.board.Board;
+import com.function.board.dto.comment.CommentUpdateRequestDto;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -29,6 +30,7 @@ import lombok.NoArgsConstructor;
 @SQLDelete(sql = "UPDATE comment SET is_deleted = true WHERE comment_id=?")
 @Where(clause = "is_deleted = false")
 public class Comment extends BaseTimeEntity {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "comment_id")
@@ -49,7 +51,8 @@ public class Comment extends BaseTimeEntity {
 		this.content = content;
 	}
 
-	public void update(String content) {
-		this.content = content;
+	public void update(CommentUpdateRequestDto requestDto) {
+		this.content = requestDto.getContent();
 	}
+
 }

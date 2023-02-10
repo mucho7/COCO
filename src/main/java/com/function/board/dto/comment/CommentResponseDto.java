@@ -4,15 +4,17 @@ import java.time.LocalDateTime;
 
 import com.function.board.domain.comment.Comment;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 
-@Data
+@Getter
 public class CommentResponseDto {
 	private final Long id;
 	private final String content;
 	private final String writer;
 	private final LocalDateTime createdAt;
 
+	@Builder
 	public CommentResponseDto(Comment entity) {
 		this.id = entity.getId();
 		this.content = entity.getContent();
