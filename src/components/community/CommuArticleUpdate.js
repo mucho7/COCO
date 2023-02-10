@@ -8,7 +8,7 @@ import styled from "styled-components"
 import { Button, TextField } from "@mui/material"
 import { useEffect } from "react"
 
-function ArticleUpdate(props) {
+function ArticleUpdate() {
     const location = useLocation()
     const [ cookie ] = useCookies(["userInfo"])
     
@@ -36,8 +36,8 @@ function ArticleUpdate(props) {
     
     const updateArticle ={
         title: inputTitle,
-        content: inputContent,
         code: inputCode,
+        rawContent: inputContent,
         writer: window.localStorage.getItem("userId"),
         id: pk,
         tokenL: {
@@ -51,7 +51,7 @@ function ArticleUpdate(props) {
     useEffect(() => {
         setPk(article.id)
         setInputTitle(article.title)
-        setInputContent(article.content)
+        setInputContent(article.rawContent)
         setInputCode(article.code)
 
     }, [article])
@@ -78,7 +78,7 @@ function ArticleUpdate(props) {
             <hr/>
             <ArticleSection>
                 <ContentSection style={{paddingTop: 20}}>
-                    <TextField value={updateArticle.content} onChange={onTypingHandler} id="content" minRows={18} fullWidth multiline style={{maxHeight: 450, overflowY: "auto"}} />
+                    <TextField value={updateArticle.rawContent} onChange={onTypingHandler} id="content" minRows={18} fullWidth multiline style={{maxHeight: 450, overflowY: "auto"}} />
                 </ContentSection>
                 <Vr/>
                 <CodeSection style={{paddingTop: 20}}>

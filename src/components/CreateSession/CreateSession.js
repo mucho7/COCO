@@ -1,41 +1,45 @@
-// import FormControl from '@mui/material/FormControl';
 import { Container, Box, Button, Typography, FormLabel, FormControlLabel, 
-  RadioGroup, Radio, TextField, Grid   } from '@mui/material';
-
-import { useDispatch } from 'react-redux';
-// import { createSession } from '../../store/sessionListSlice';
+  RadioGroup, Radio, TextField, Grid } from '@mui/material';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createSession } from '../../api/session';
 
 
 function CreateSession() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // 로그인 안했다면 퇴장
+  useEffect(() => {
+    console.log(localStorage.getItem("userId"))
+    if (localStorage.getItem("userId") === null) {
+        navigate('/useri/login')
+        alert("로그인이 필요한 서비스입니다.")
+    }
+  }, [navigate])
 
   async function handleCreateSession(event) {
     event.preventDefault();
     const sessionData = new FormData(event.currentTarget);
     const payload = {
-      // host_id, host_rating, max 추가로 전달
-      hostId: sessionData.get("hostId"),
+      // host_rating, max 추가로 전달
+      hostId: localStorage.getItem("userId"),
       title: sessionData.get("title"),
       content: sessionData.get("content"),
       hostRating: 10,
       mode: sessionData.get("mode"),
       max: sessionData.get("max")
     }
-    // 백엔드의 "/room" URI로 POST 요청 보내는 함수로 변경
-    // dispatch(createSession(payload));
+    
     await createSession(
       payload,
       (data) => {
         console.log(data)
-        navigate(`/room/${sessionData.get("hostId")}`);
+        const roomId = data.data;
+        navigate(`/room/${roomId}`);
       },
       (err) => console.log(err)
     )
   }
-  
   
   return (
     <Container component="main" maxWidth="xs">
@@ -44,16 +48,6 @@ function CreateSession() {
       </Typography>
       <Box component="form" noValidate sx={{ mt: 3 }} onSubmit={handleCreateSession}>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              required
-              fullWidth
-              id="hostId"
-              label="HOST ID"
-              name="hostId"
-              autoComplete="hostId"
-            />
-          </Grid>
           <Grid item xs={12}>
             <TextField
               required
@@ -91,6 +85,7 @@ function CreateSession() {
               label="최대 참여자 수"
               name="max"
               type="number"
+              InputProps={{ inputProps: { min: "2", max: "10", step: "1" } }}
               autoComplete="max"
             />
           </Grid>
@@ -108,7 +103,7 @@ function CreateSession() {
           fullWidth
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
-          onClick={() => {navigate("/room");}}
+          onClick={() => {navigate("/room")}}
         >
           취소
         </Button>

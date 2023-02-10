@@ -6,6 +6,7 @@ import { commentCreate } from "../../api/community"
 import styled from "styled-components"
 import { Button, TextField } from "@mui/material"
 function CommentForm(params) {
+    console.log(params)
     const location = useLocation()
     
     const board_id = params.board_id
@@ -30,6 +31,7 @@ function CommentForm(params) {
                 (data) => {
                     console.log(data)
                     setComment("")
+                    params.isRenderNeeded()
                     alert("댓글 작성 완료")
                 },
                 (err) => console.log(err)

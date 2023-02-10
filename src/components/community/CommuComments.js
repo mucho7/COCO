@@ -28,19 +28,20 @@ function Comments(props) {
     }
 
     async function onUpdateClick(params) {
+        console.log(props)
         const commentInfo = {
             pk: params.id,
-            content: params.content,
+            content: updateComment,
             board_id:location.state.id
         }
         await commentUpdate(
             commentInfo,
             (data) => {
                 console.log(data)
-                alert("수정 완료!")
                 setUpdateFlag(false)
                 setUpdateTarget("")
-
+                props.isRenderNeeded()
+                alert("수정 완료!")
             },
             (err) => console.log(err)
         )
@@ -49,12 +50,12 @@ function Comments(props) {
     const flagClickHandler = (params) => {
         if (updateFlag) {
             onUpdateClick(params)
+
         }  else {
             setUpdateComment(params.content)
             setUpdateTarget(params.id)
             setUpdateFlag(true)
         }
-        console.log(params)
     }
 
 
@@ -75,11 +76,10 @@ function Comments(props) {
                                 <Typography>{comment.createdAt.slice(5, 10)}</Typography>
                             </Grid>
                             <Grid item xs={2} textAlign="center">
-                                {/* 삼항연산자로 권한인 없는 사람은 거를 것 */}
                                 {localStorage.getItem("userId") === comment.writer
                                 ?   <ButtonGroup>
                                         {updateFlag === false ? <Button onClick={() => flagClickHandler(comment)}>수정</Button> : <Button variant="contained" onClick={() => {setUpdateFlag(false); setUpdateTarget("");}}>취소</Button>}
-                                        {updateFlag === false ? <Button onClick={() => onDeleteClick(comment)}>삭제</Button> : <Button variant="contained" onClick={() => flagClickHandler(comment)}>수정</Button> }
+                                        {updateFlag === false ? <Button onClick={() => onDeleteClick(comment)}>삭제</Button> : <Button variant="contained" onClick={() => flagClickHandler(comment)}>완료</Button> }
                                     </ButtonGroup>
                                 : <></>
                                 }

@@ -4,9 +4,9 @@ import axios from "axios";
 const api = axios.create({
 // env로 대체할 것
 // baseURL: "http://APIgateway:8000/",
-baseURL: "http://i8a703.p.ssafy.io:8000",
+// baseURL: "http://i8a703.p.ssafy.io:8000",
   // 
-  // baseURL: "http://i8a703.p.ssafy.io:8011",
+  baseURL: "http://i8a703.p.ssafy.io:8011",
 
   headers: {
     "Content-Type": "application/json",
@@ -50,7 +50,7 @@ async function commentDelete(comment, success, fail) {
 }
 
 async function commentUpdate(comment, success, fail) {
-  await api.put(`/comment/${comment.board_id}/modify/${comment.pk}`, JSON.stringify(comment.content)).then(success).catch(fail);
+  await api.put(`/comment/${comment.board_id}/modify/${comment.pk}`, JSON.stringify(comment)).then(success).catch(fail);
 }
 
 export { boardPaging, boardSearching, boardDetail, articleCreate, articleDelete, articleUpdate, commentCreate, commentDelete, commentUpdate }
