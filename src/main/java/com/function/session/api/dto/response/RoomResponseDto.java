@@ -1,12 +1,12 @@
 package com.function.session.api.dto.response;
 
-import com.function.session.data.Room;
+import com.function.session.api.data.Room;
 
 import lombok.Getter;
 
 @Getter
 public class RoomResponseDto {
-	private String roomId;
+	private Long roomId;
 	private String hostId;
 	private String title;
 	private Integer hostRating;

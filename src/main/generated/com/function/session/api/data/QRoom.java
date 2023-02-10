@@ -1,4 +1,4 @@
-package com.function.session.data;
+package com.function.session.api.data;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -15,7 +15,7 @@ import com.querydsl.core.types.Path;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QRoom extends EntityPathBase<Room> {
 
-    private static final long serialVersionUID = 1649144670L;
+    private static final long serialVersionUID = -1952644854L;
 
     public static final QRoom room = new QRoom("room");
 
@@ -33,7 +33,7 @@ public class QRoom extends EntityPathBase<Room> {
 
     public final NumberPath<Integer> numberUsers = createNumber("numberUsers", Integer.class);
 
-    public final StringPath roomId = createString("roomId");
+    public final NumberPath<Long> roomId = createNumber("roomId", Long.class);
 
     public final DateTimePath<java.time.LocalDateTime> startTime = createDateTime("startTime", java.time.LocalDateTime.class);
 

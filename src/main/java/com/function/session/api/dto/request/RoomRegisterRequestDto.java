@@ -1,6 +1,6 @@
 package com.function.session.api.dto.request;
 
-import com.function.session.data.Room;
+import com.function.session.api.data.Room;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class RoomRegisterRequestDto {
-	private String roomId;
 	private String hostId;
 	private String title;
 	private String content;
@@ -18,9 +17,8 @@ public class RoomRegisterRequestDto {
 	private Integer max;
 
 	@Builder
-	public RoomRegisterRequestDto(String roomId, String hostId, String title, String content, Integer hostRating,
+	public RoomRegisterRequestDto(String hostId, String title, String content, Integer hostRating,
 		String mode, Integer max) {
-		this.roomId = roomId;
 		this.hostId = hostId;
 		this.title = title;
 		this.content = content;
@@ -31,7 +29,6 @@ public class RoomRegisterRequestDto {
 
 	public Room toEntity() {
 		return Room.builder()
-			.roomId(hostId)
 			.hostId(hostId)
 			.title(title)
 			.content(content)

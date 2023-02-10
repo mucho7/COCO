@@ -1,4 +1,4 @@
-package com.function.session.data;
+package com.function.session.api.data;
 
 import java.time.LocalDateTime;
 
