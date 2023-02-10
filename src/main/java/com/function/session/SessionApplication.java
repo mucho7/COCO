@@ -1,11 +1,8 @@
 package com.function.session;
 
-import org.apache.catalina.connector.Connector;
 import org.kurento.client.KurentoClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
@@ -36,7 +33,8 @@ public class SessionApplication implements WebSocketConfigurer {
 
 	@Bean
 	public KurentoClient kurentoClient() {
-		return KurentoClient.create("ws://i8a703.p.ssafy.io:8888");
+		return KurentoClient.create();
+		// return KurentoClient.create("ws://i8a703.p.ssafy.io:8888/kurento");
 	}
 
 	@Bean
@@ -46,21 +44,21 @@ public class SessionApplication implements WebSocketConfigurer {
 		return container;
 	}
 
-	@Bean
-	public ServletWebServerFactory serverFactory() {
-		TomcatServletWebServerFactory tomcatServletWebServerFactory
-			= new TomcatServletWebServerFactory();
-		tomcatServletWebServerFactory.addAdditionalTomcatConnectors(createStandardConnector());
+	// @Bean
+	// public ServletWebServerFactory serverFactory() {
+	// 	TomcatServletWebServerFactory tomcatServletWebServerFactory
+	// 		= new TomcatServletWebServerFactory();
+	// 	tomcatServletWebServerFactory.addAdditionalTomcatConnectors(createStandardConnector());
+	//
+	// 	return tomcatServletWebServerFactory;
+	// }
 
-		return tomcatServletWebServerFactory;
-	}
-
-	private Connector createStandardConnector() {
-		Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
-		connector.setPort(8013);
-
-		return connector;
-	}
+	// private Connector createStandardConnector() {
+	// 	Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+	// 	// connector.setPort(8013);
+	//
+	// 	return connector;
+	// }
 
 	public static void main(String[] args) {
 		SpringApplication.run(SessionApplication.class, args);
