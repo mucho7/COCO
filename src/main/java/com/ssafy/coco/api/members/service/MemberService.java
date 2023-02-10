@@ -132,6 +132,7 @@ public class MemberService {
 			updatePassword(userId, tempPassword);
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
 		return tempPassword;
 	}
