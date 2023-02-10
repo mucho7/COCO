@@ -8,7 +8,7 @@ import styled from "styled-components"
 
 function ProfileUserInfoForm(props) {
     const emailValidation = new RegExp('[a-z0-9_.]+@[a-z]+.[a-z]{2,3}')
-    const [ cookie ] = useCookies(["userInfo"])
+    const [cookie] = useCookies(["userInfo"])
     const [inputEmail, setInputEmail] = useState()
     const [inputName, setInputName] = useState()
     const [isOkToUpdate, setISOkToUpdate] = useState(false)
@@ -26,7 +26,7 @@ function ProfileUserInfoForm(props) {
                 // console.log(e.target.value, inputName)
                 break
             default:
-                // nothing
+            // nothing
         }
     }
 
@@ -36,16 +36,41 @@ function ProfileUserInfoForm(props) {
 
         userId: props.userInfo[0][1],
         "Authorization": cookie.userInfo.jwt_token,
-        "refreshToken":  cookie.userInfo.refresh_token,
+        "refreshToken": cookie.userInfo.refresh_token,
     }
     console.log(updating_user_info)
 
     async function updateUser() {
+        if (!updating_user_info.email != null && !emailValidation.test(updating_user_info.email)) {
+            alert('유효하지 않은 이메일 형식입니다.');
+            return;
+        }
+        if (!updating_user_info.name != null && !checkString(updating_user_info.name)) {
+            alert('사용자명은 한글, 영문자, 숫자만 입력할 수 있습니다.')
+            return;
+        }
         await updateUserInfo(
             updating_user_info,
-            (data) => console.log(data),
-            (err) => console.log(err)
+            (data) => {
+                alert('정상적으로 수정되었습니다.')
+            },
+            (err) => {
+                alert('정상적으로 수정되었습니다.')
+                console.log(err)
+            }
         )
+    }
+
+    // 영어, 한글, 숫자만 허용하는 정규식 함수
+    function checkString(str) {
+        const koreanRegex = /[\u1100-\u11FF|\u3130-\u318F|\uA960-\uA97F|\uAC00-\uD7AF|\uD7B0-\uD7FF]/;
+        const englishRegex = /^[a-zA-Z\d]+$/;
+
+        if (koreanRegex.test(str) || englishRegex.test(str)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     return (
@@ -57,19 +82,19 @@ function ProfileUserInfoForm(props) {
                             <UserInfoNameBox>
                                 {item[0]}
                             </UserInfoNameBox>
-                            <UserInfoContentForm id={item[0]} onChange={onTypingHandler} placeholder={item[1]}/>
+                            <UserInfoContentForm id={item[0]} onChange={onTypingHandler} placeholder={item[1]} />
                         </UserInfoBox>
                     )
                 } else {
                     return (
-                    <UserInfoBox key={item[0]}>
-                        <UserInfoNameBox>
-                            {item[0]}
-                        </UserInfoNameBox>
-                        <UserInfoContentBox>
-                            {item[1]}
-                        </UserInfoContentBox>
-                    </UserInfoBox>
+                        <UserInfoBox key={item[0]}>
+                            <UserInfoNameBox>
+                                {item[0]}
+                            </UserInfoNameBox>
+                            <UserInfoContentBox>
+                                {item[1]}
+                            </UserInfoContentBox>
+                        </UserInfoBox>
                     )
                 }
             })}
@@ -78,7 +103,7 @@ function ProfileUserInfoForm(props) {
     )
 }
 
-const UserInfoBox = styled.div `
+const UserInfoBox = styled.div`
     width: 20rem;
     height: 70px;
 

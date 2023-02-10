@@ -1,4 +1,4 @@
-import { useState,  } from 'react'
+import { useState, } from 'react'
 import { Button, Modal, Box, Typography, TextField, Grid } from '@mui/material'
 import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
@@ -8,15 +8,15 @@ import { useEffect } from 'react'
 
 
 function ProfilePasswordUpdateButton(params) {
-    const [ cookie ] = useCookies(["userInfo"])
+    const [cookie] = useCookies(["userInfo"])
     const navigate = useNavigate()
 
     const [inputPassword, setInputPassword] = useState()
     const [inputUpdatedPassword, setInputUpdatedPassword] = useState()
     const [inputUpdatedCheckPassword, setInputUpdatedCheckPassword] = useState()
-    
+
     const [isOkToSubmit, setIsOkToSubmit] = useState(false)
-    const [isPasswordValid, setIsPasswordValid] = useState({isVaild: false})
+    const [isPasswordValid, setIsPasswordValid] = useState({ isVaild: false })
 
     const [modalOpen, setModalOpen] = useState(false)
     const handleOpen = () => setModalOpen(true);
@@ -35,12 +35,12 @@ function ProfilePasswordUpdateButton(params) {
                 setInputUpdatedCheckPassword(e.target.value)
                 break
             default:
-                // nothing
+            // nothing
         }
     }
 
     useEffect(() => {
-        const passwordForm = /^[a-z0-9]{4,12}$/
+        const passwordForm = /^[A-Za-z\d@$!%*#?&]{4,32}$/
         const passwordErrorMessage = {
             null: "필수 입력입니다.",
             form: "비밀번호가 취약합니다.",
@@ -48,17 +48,17 @@ function ProfilePasswordUpdateButton(params) {
         }
         if (inputUpdatedPassword === undefined || inputUpdatedPassword === '') {
             setIsOkToSubmit(false)
-            setIsPasswordValid({isVaild: true, message: passwordErrorMessage.null})
+            setIsPasswordValid({ isVaild: true, message: passwordErrorMessage.null })
         } else if (inputUpdatedPassword !== inputUpdatedCheckPassword) {
             setIsOkToSubmit(false)
-            setIsPasswordValid({isVaild: true, message: passwordErrorMessage.same})
+            setIsPasswordValid({ isVaild: true, message: passwordErrorMessage.same })
         } else if (!passwordForm.test(inputUpdatedPassword)) {
             setIsOkToSubmit(false)
-            setIsPasswordValid({isVaild: true, message: passwordErrorMessage.form})
+            setIsPasswordValid({ isVaild: true, message: passwordErrorMessage.form })
         }
         else {
             setIsOkToSubmit(true)
-            setIsPasswordValid({isValid: false})
+            setIsPasswordValid({ isValid: false })
         }
     }, [inputUpdatedPassword, inputUpdatedCheckPassword])
 
@@ -69,27 +69,27 @@ function ProfilePasswordUpdateButton(params) {
             {
                 newPassword: inputUpdatedPassword,
                 "Authorization": cookie.userInfo.jwt_token,
-                "refreshToken":  cookie.userInfo.refresh_token,
+                "refreshToken": cookie.userInfo.refresh_token,
             },
             () => {
                 navigate('/useri/logout')
                 alert("다시 로그인 해주세요")
             }
         )
-    } 
+    }
 
     const passwordChangeHandler = () => {
-        if (isOkToSubmit) {updatePassword()} else { alert('다시!!')}
+        if (isOkToSubmit) { updatePassword() } else { alert('다시!!') }
     }
 
     return (
         <div>
-            <Button onClick={handleOpen} variant="contained" className="submit" fullWidth style={{ width: "8rem", height:"2.8rem", marginRight: "15px", backgroundColor: "white", color: "red", border: "solid 2px red"}}><b>비밀번호 변경</b></Button>
+            <Button onClick={handleOpen} variant="contained" className="submit" fullWidth style={{ width: "8rem", height: "2.8rem", marginRight: "15px", backgroundColor: "white", color: "red", border: "solid 2px red" }}><b>비밀번호 변경</b></Button>
             <Modal
-            open={modalOpen}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
+                open={modalOpen}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -98,25 +98,25 @@ function ProfilePasswordUpdateButton(params) {
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                         비밀번호 변경 모달입니다.
                     </Typography>
-                    <Grid container spacing={2} style={{padding: '2rem', justifyContent: 'center'}}>
+                    <Grid container spacing={2} style={{ padding: '2rem', justifyContent: 'center' }}>
                         <Grid item xs={10}>
-                            <TextField onChange={onTypingHandler} id="password" label="Current Password" type="password" fullWidth/>
+                            <TextField onChange={onTypingHandler} id="password" label="Current Password" type="password" fullWidth />
                         </Grid>
                         <Grid item xs={10}>
-                            <TextField onChange={onTypingHandler} error={isPasswordValid.isVaild} helperText={isPasswordValid.isVaild ? isPasswordValid.message : ""}id="updated-password" type="password" label="Password" fullWidth/>
+                            <TextField onChange={onTypingHandler} error={isPasswordValid.isVaild} helperText={isPasswordValid.isVaild ? isPasswordValid.message : ""} id="updated-password" type="password" label="Password" fullWidth />
                         </Grid>
                         <Grid item xs={10}>
-                            <TextField onChange={onTypingHandler} error={isPasswordValid.isVaild} helperText={isPasswordValid.isVaild ? isPasswordValid.message : ""} id="updated-password-check" type="password" label="Password Check" fullWidth/>
+                            <TextField onChange={onTypingHandler} error={isPasswordValid.isVaild} helperText={isPasswordValid.isVaild ? isPasswordValid.message : ""} id="updated-password-check" type="password" label="Password Check" fullWidth />
                         </Grid>
                         <Grid item xs={6}>
-                            <Button onClick={passwordChangeHandler} variant="contained" className="submit" fullWidth style={{ width: "8rem", height:"2.8rem", marginRight: "15px", backgroundColor: "white", color: "red", border: "solid 2px red"}}><b>비밀번호 변경</b></Button>
+                            <Button onClick={passwordChangeHandler} variant="contained" className="submit" fullWidth style={{ width: "8rem", height: "2.8rem", marginRight: "15px", backgroundColor: "white", color: "red", border: "solid 2px red" }}><b>비밀번호 변경</b></Button>
                         </Grid>
                     </Grid>
                 </Box>
             </Modal>
         </div>
     )
-    
+
 }
 
 const style = {
@@ -129,6 +129,6 @@ const style = {
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
-  };
+};
 
 export default ProfilePasswordUpdateButton
