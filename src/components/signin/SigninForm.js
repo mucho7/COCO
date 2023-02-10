@@ -162,7 +162,7 @@ function SigninForm() {
                         <TextField onChange={onTypingHandler} error={isPasswordValid.isVaild} helperText={isPasswordValid.isVaild ? isPasswordValid.message : ""} id="outlined-password-check" type="password" label="Password Check" fullWidth />
                     </Grid>
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} id="outlined-name" label="Name" fullWidth />
+                        <TextField onChange={onTypingHandler} error={isNameValid.isVaild} helperText={isNameValid.isVaild ? isNameValid.message : ""} id="outlined-name" label="Name" fullWidth />
                     </Grid>
                     <Grid item xs={7}>
                         <TextField onChange={onTypingHandler} error={isEmailValid} helperText={isEmailValid ? "유효한 이메일을 입력해주십시오." : ""} id="outlined-email" label="E-Mail" fullWidth />
