@@ -35,14 +35,24 @@ spring:
               - DELETE
               - OPTIONS
       routes:
-        - id: board
+        - id: communityCreate
           uri: http://BoardService:8011/
           predicates:
-            - Path=/board/**
-        - id: comment
+            - Path=/board, /comment/**
+            - Method=POST
+          filters:
+            - AuthenticationHeaderFilter
+        - id: communityEdit
           uri: http://BoardService:8011/
           predicates:
-            - Path=/comment/**
+            - Path=/board/**, /comment/**
+            - Method=PUT, DELETE
+          filters:
+            - AuthenticationHeaderFilter
+        - id: community
+          uri: http://BoardService:8011/
+          predicates:
+            - Path=/board/**, /comment/**
         - id: member
           uri: http://MemberService:8012/
           #          uri: http://localhost:8012/
