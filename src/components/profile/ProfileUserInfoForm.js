@@ -19,11 +19,12 @@ function ProfileUserInfoForm(props) {
             case 'email':
                 setInputEmail(e.target.value)
                 setISOkToUpdate(emailValidation.test(e.target.value))
-                // console.log(e.target.value, inputEmail)
+                // console.log(e.target.value, isOkToUpdate)
                 break
             case 'name':
                 setInputName(e.target.value)
-                // console.log(e.target.value, inputName)
+                setISOkToUpdate(checkString(e.target.value))
+                // console.log(e.target.value, isOkToUpdate)
                 break
             default:
             // nothing
@@ -41,11 +42,11 @@ function ProfileUserInfoForm(props) {
     console.log(updating_user_info)
 
     async function updateUser() {
-        if (!updating_user_info.email != null && !emailValidation.test(updating_user_info.email)) {
+        if (updating_user_info.email != undefined && !emailValidation.test(updating_user_info.email)) {
             alert('유효하지 않은 이메일 형식입니다.');
             return;
         }
-        if (!updating_user_info.name != null && !checkString(updating_user_info.name)) {
+        if (updating_user_info.name != undefined && !checkString(updating_user_info.name)) {
             alert('사용자명은 한글, 영문자, 숫자만 입력할 수 있습니다.')
             return;
         }
@@ -55,7 +56,7 @@ function ProfileUserInfoForm(props) {
                 alert('정상적으로 수정되었습니다.')
             },
             (err) => {
-                alert('정상적으로 수정되었습니다.')
+                alert('변경에 실패하였습니다.')
                 console.log(err)
             }
         )
@@ -98,7 +99,7 @@ function ProfileUserInfoForm(props) {
                     )
                 }
             })}
-            <Button disabled={isOkToUpdate} onClick={updateUser} >임시 버튼</Button>
+            <Button disabled={!isOkToUpdate} onClick={updateUser} >임시 버튼</Button>
         </Col>
     )
 }
