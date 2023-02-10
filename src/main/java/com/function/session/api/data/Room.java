@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.hibernate.annotations.ColumnDefault;
@@ -24,7 +26,8 @@ import lombok.ToString;
 @DynamicInsert
 public class Room {
 	@Id
-	private String roomId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long roomId;
 	@Column(length = 32, nullable = false)
 	private String hostId;
 	@Column(length = 45, nullable = false)
@@ -45,9 +48,8 @@ public class Room {
 	private Integer max;
 
 	@Builder
-	public Room(String roomId, String hostId, String title, String content, Integer hostRating, String mode,
+	public Room(String hostId, String title, String content, Integer hostRating, String mode,
 		Integer max) {
-		this.roomId = roomId;
 		this.hostId = hostId;
 		this.title = title;
 		this.content = content;
