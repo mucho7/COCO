@@ -24,7 +24,7 @@ import com.function.session.api.service.RoomService;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/room")
+@RequestMapping("/session")
 // @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class RoomController {
 	@Autowired
