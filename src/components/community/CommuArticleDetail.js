@@ -17,6 +17,7 @@ function CommuArticleDetail() {
     const pk = location.state.id
     const hit = location.state.hit
 
+    const [ sival, setSival ] = useState(0)
     const [ pageNumber, setPageNumber ] = useState(1)
     const [ maxPage, setMaxPage ] = useState(5)
     const [article, setArticle ] = useState({
@@ -48,7 +49,7 @@ function CommuArticleDetail() {
     // if (hit === article.hit){
     //         console.log("조회수 증가!!!")
     // }
-    }, [pk, pageNumber])
+    }, [pk, pageNumber, sival])
 
     
 
@@ -93,8 +94,8 @@ function CommuArticleDetail() {
             <hr/>
             <CommentSectiom>
                 {/* comment 작성 시 append하는 방법으로 해결하자 */}
-                {window.localStorage.getItem("userId") !== null ? <CommentForm board_id={pk}/> : <Typography textAlign={"center"}>로그인 하시면 댓글을 쓸 수 있어요</Typography>}
-                {article.comments.empty ? <Typography textAlign={"center"}>아직 댓글이 없어요!</Typography> : <Comments comments={article.comments}/> }
+                {window.localStorage.getItem("userId") !== null ? <CommentForm isRenderNeeded={() => setSival(sival + 1)} board_id={pk}/> : <Typography textAlign={"center"}>로그인 하시면 댓글을 쓸 수 있어요</Typography>}
+                {article.comments.empty ? <Typography textAlign={"center"}>아직 댓글이 없어요!</Typography> : <Comments isRenderNeeded={() => setSival(sival + 1)} comments={article.comments}/> }
                 <CommuCommentPaging maxPage={maxPage} onClick={onPagingClickHandler}/>
             </CommentSectiom>
         </>
