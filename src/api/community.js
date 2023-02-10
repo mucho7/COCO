@@ -50,7 +50,7 @@ async function commentDelete(comment, success, fail) {
 }
 
 async function commentUpdate(comment, success, fail) {
-  await api.put(`/comment/${comment.board_id}/modify/${comment.pk}`, JSON.stringify(comment.content)).then(success).catch(fail);
+  await api.put(`/comment/${comment.board_id}/modify/${comment.pk}`, JSON.stringify(comment)).then(success).catch(fail);
 }
 
 export { boardPaging, boardSearching, boardDetail, articleCreate, articleDelete, articleUpdate, commentCreate, commentDelete, commentUpdate }

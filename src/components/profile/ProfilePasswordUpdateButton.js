@@ -64,13 +64,17 @@ function ProfilePasswordUpdateButton(params) {
 
 
     async function updatePassword() {
+        console.log(inputPassword)
         await changeUserPassword(
             {
-                newPassword: inputPassword,
+                newPassword: inputUpdatedPassword,
                 "Authorization": cookie.userInfo.jwt_token,
                 "refreshToken":  cookie.userInfo.refresh_token,
             },
-            () => navigate('/useri/user_id')
+            () => {
+                navigate('/useri/logout')
+                alert("다시 로그인 해주세요")
+            }
         )
     } 
 
