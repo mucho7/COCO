@@ -10,6 +10,6 @@ import lombok.Getter;
 public class RefinedBoardDto {
 
 	private List<ContentComponentDto> content;
-	private List<String> code;
+	private String code;
 
 }

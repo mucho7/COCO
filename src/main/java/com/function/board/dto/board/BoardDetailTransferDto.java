@@ -23,7 +23,7 @@ public class BoardDetailTransferDto {
 	private String rawContent;
 	private String writer;
 	private int hit;
-	private List<String> code;
+	private String code;
 	private Page<CommentResponseDto> comments;
 	private LocalDateTime createdAt;
 

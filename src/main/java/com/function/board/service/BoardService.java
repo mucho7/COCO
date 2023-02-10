@@ -134,9 +134,6 @@ public class BoardService {
 		String[] content = board.getContent().split("\n");
 
 		List<ContentComponentDto> contents = new ArrayList<>();
-		List<String> codeList = new ArrayList<>();
-
-		Collections.addAll(codeList, board.getCode().split("\n"));
 
 		ContentComponentDto contentComponent;
 		List<String> contentList = new ArrayList<>();
@@ -205,7 +202,7 @@ public class BoardService {
 
 		return RefinedBoardDto.builder()
 			.content(contents)
-			.code(codeList)
+			.code(board.getCode())
 			.build();
 	}
 
