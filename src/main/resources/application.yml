@@ -7,8 +7,8 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://EurekaDiscoveryService:8761/eureka
-#      defaultZone: http://i8a703.p.ssafy.io:8761/eureka
+      #      defaultZone: http://EurekaDiscoveryService:8761/eureka
+      defaultZone: http://i8a703.p.ssafy.io:8761/eureka
 
 jwt:
   secret: PorkCurtletFriedChickenSundubuJJigaeGrilledPorkBelly
@@ -24,7 +24,7 @@ spring:
         cors-configurations:
           '[/**]':
             allowedOrigins:
-              - 'http://i8a703.p.ssafy.io:443'
+              - 'http://i8a703.p.ssafy.io:*'
               - 'http://localhost:3000'
             allow-credentials: true
             allowedHeaders: '*'
