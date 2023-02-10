@@ -88,11 +88,9 @@ function NormalSession(props) {
         register();
       }
       
-      // let name;
       websocketInstances.set(1, ws.current);
       dispatch(setWebsocketId(1));
       console.log(participants);
-      // dispatch(getParticipants(participants));
   
       // 서버로부터 메시지 수신
       ws.current.onmessage = function(message) {
@@ -103,7 +101,6 @@ function NormalSession(props) {
           case 'existingParticipants':
             onExistingParticipants(parsedMessage);
             countUsers();
-            // console.log("rrrrrrrrrrrr",participants)
             participantsInstances.set(1, participants);
             dispatch(setParticipantsId(1));
             break;

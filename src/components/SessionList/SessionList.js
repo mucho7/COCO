@@ -50,21 +50,6 @@ function SessionList() {
   }, [])
 
   return (
-    // 기존 임시 코드
-    // <Container>
-    //   <Box sx={{ px: 2, py: 3, display: "flex", flexDirection: "column", bgcolor: '#E5E5E5', height: '100vh' }}>
-    //     <Box>상태표시줄</Box>
-    //     <hr />
-    //     {sessionList.map((session) => {
-    //       return (
-    //         <Box key={session.id} onClick={() => goToDetail(session.id)}>
-    //           {session.id} : {session.title}
-    //         </Box>
-    //       );
-    //     })}
-    //   </Box>
-    //   <button onClick={() => {navigate("/room/create");}}>만들기</button>
-    // </Container>
     <SessionListBox>
       <SessionListItem sessionList={sessionList} />
     </SessionListBox>
@@ -77,9 +62,7 @@ const SessionListBox = styled.article`
     flex-direction: column;
     justify-content: space-between;
     align-items: start;
-
     width: 80%;
-
 `
 
 export default SessionList;
