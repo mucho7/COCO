@@ -111,7 +111,8 @@ public class MemberController {
 
 		if (isValidInformation) {
 			String tempPassword = memberService.getTmpPassword(userId);
-			return userId + " 님의 임시 비밀번호는 [ " + tempPassword + " ] 입니다.";
+			return tempPassword != null ? userId + " 님의 임시 비밀번호는 [ " + tempPassword + " ] 입니다." :
+				userId + " 회원님은 탈퇴한 회원입니다.";
 		} else {
 			return "입력하신 정보에 일치하는 회원이 없습니다.";
 		}
