@@ -8,6 +8,7 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://EurekaDiscoveryService:8761/eureka
+#      defaultZone: http://i8a703.p.ssafy.io:8761/eureka
 
 jwt:
   secret: PorkCurtletFriedChickenSundubuJJigaeGrilledPorkBelly
@@ -37,6 +38,7 @@ spring:
       routes:
         - id: communityCreate
           uri: http://BoardService:8011/
+          #          uri: http://localhost:8011/
           predicates:
             - Path=/board, /comment/**
             - Method=POST
@@ -44,6 +46,7 @@ spring:
             - AuthenticationHeaderFilter
         - id: communityEdit
           uri: http://BoardService:8011/
+          #          uri: http://localhost:8011/
           predicates:
             - Path=/board/**, /comment/**
             - Method=PUT, DELETE
@@ -51,6 +54,7 @@ spring:
             - AuthenticationHeaderFilter
         - id: community
           uri: http://BoardService:8011/
+          #          uri: http://localhost:8011/
           predicates:
             - Path=/board/**, /comment/**
         - id: member
@@ -69,32 +73,36 @@ spring:
           filters:
             - AuthenticationHeaderFilter
         - id: member
-          #          uri: http://localhost:8012/
           uri: http://MemberService:8012/
+          #          uri: http://localhost:8012/
           predicates:
             - Path=/member/**
         - id: uniqueCheck
-          #          uri: http://localhost:8012/
           uri: http://MemberService:8012/
+          #          uri: http://localhost:8012/
           predicates:
             - Path=/check/**
         - id: validateRequest
           uri: http://MemberService:8012/
+          #          uri: http://localhost:8012/
           predicates:
             - Path=/validate
             - Method=POST
         - id: sessionFunction
           uri: http://SessionFunctionService:8013/
+          #          uri: http://localhost:8013/
           predicates:
             - Path=/sessionFunction/**
         - id: session
-          uri: http://SessionService:8014/
+          uri: http://SessionService:8443/
+          #          uri: http://localhost:8443/
           predicates:
             - Path=/session/**
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     url: jdbc:mysql://mysql:3306/project1db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+    #    url: jdbc:mysql://i8a703.p.ssafy.io:3306/project1db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
     password: cossafyco
   jpa:
     generate-ddl: true
