@@ -1,4 +1,4 @@
-import { useState,  }  from 'react'
+import { useState, } from 'react'
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,12 +7,12 @@ import { login } from "../../api/member"
 
 import LoginTempPassword from './LoginTempPassword';
 
-function LoginForm () {
+function LoginForm() {
     const navigate = useNavigate()
-    const [ cookie, setCookie ] = useCookies(["userInfo"])
-    
-    const [ inputID, setInputID ] = useState("")
-    const [ inputPassword, setInputPassword ] = useState("")
+    const [cookie, setCookie] = useCookies(["userInfo"])
+
+    const [inputID, setInputID] = useState("")
+    const [inputPassword, setInputPassword] = useState("")
 
     const temp_user_info = {
         userId: inputID.substring(),
@@ -28,34 +28,36 @@ function LoginForm () {
                 setInputPassword(e.target.value)
                 break
             default:
-                // nothing
+            // nothing
         }
     }
 
     async function log_in() {
         await login(
-        temp_user_info,
-        (data) => {
-            const headers = data.headers
-            console.log(headers.get("Authorization"))
-            setCookie(
-                "userInfo",
-                {
-                    user_id: temp_user_info.userId,
-                    jwt_token: headers.get("Authorization"),
-                    refresh_token: headers.get("refreshToken"),
-                },
-                // {maxAge: 60 * 5},
-                {path: '/'}
-            )
-            window.localStorage.setItem("userId", temp_user_info.userId)
-            console.log(cookie)
-            navigate("/")
-        },
-        (error) => {
-            console.log(error);
-        }
-    )}
+            temp_user_info,
+            (data) => {
+                const headers = data.headers
+                console.log(headers.get("Authorization"))
+                setCookie(
+                    "userInfo",
+                    {
+                        user_id: temp_user_info.userId,
+                        jwt_token: headers.get("Authorization"),
+                        refresh_token: headers.get("refreshToken"),
+                    },
+                    // {maxAge: 60 * 5},
+                    { path: '/' }
+                )
+                window.localStorage.setItem("userId", temp_user_info.userId)
+                console.log(cookie)
+                navigate("/")
+            },
+            (error) => {
+                alert('아이디, 비밀번호를 다시 확인하세요.')
+                console.log(error);
+            }
+        )
+    }
 
     // 버튼을 누르면 실행
     const onClickHandler = (e) => {
@@ -75,7 +77,7 @@ function LoginForm () {
     return (
         <Container fixed>
             <Box component="form">
-                <Grid container spacing={2} style={{padding: '2rem', justifyContent: 'center'}}>
+                <Grid container spacing={2} style={{ padding: '2rem', justifyContent: 'center' }}>
                     {/* map을 활용한 반복문으로 고쳤으면 함 */}
                     <Grid item xs={7}>
                         <TextField onChange={onTypingHandler} id="outlined-id" autoFocus label="ID" fullWidth />
@@ -83,16 +85,16 @@ function LoginForm () {
                     <Grid item xs={7}>
                         <TextField onChange={onTypingHandler} onKeyDown={handleKeyDown} id="outlined-password" label="Password" type="password" fullWidth />
                     </Grid>
-                    <Grid item xs={7} style={{textAlign: "center"}}>
-                        <LoginTempPassword/>
+                    <Grid item xs={7} style={{ textAlign: "center" }}>
+                        <LoginTempPassword />
                     </Grid>
                     <Grid item xs={6}>
-                        <Button onClick={onClickHandler} variant="contained" className="submit" style={{height: '3rem'}} fullWidth> <b>로그인</b></Button>
+                        <Button onClick={onClickHandler} variant="contained" className="submit" style={{ height: '3rem' }} fullWidth> <b>로그인</b></Button>
                     </Grid>
                 </Grid>
             </Box>
         </Container>
-    )   
+    )
 }
 
 export default LoginForm;
