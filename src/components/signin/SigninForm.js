@@ -26,7 +26,7 @@ function SigninForm() {
     // const [passwordValidation, setPasswordValidation] = useState(false)
 
     // validation
-    const emailValidation = new RegExp('[a-z0-9_.]+@[a-z]+.[a-z]{2,3}')
+    const emailValidation = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}')
     useEffect(() => {
         const idForm = /^[A-Za-z\d_]{4,16}$/
         const idErrorMessage = {

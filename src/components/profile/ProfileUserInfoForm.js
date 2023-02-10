@@ -7,7 +7,7 @@ import { updateUserInfo } from "../../api/member"
 import styled from "styled-components"
 
 function ProfileUserInfoForm(props) {
-    const emailValidation = new RegExp('[a-z0-9_.]+@[a-z]+.[a-z]{2,3}')
+    const emailValidation = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}')
     const [cookie] = useCookies(["userInfo"])
     const [inputEmail, setInputEmail] = useState()
     const [inputName, setInputName] = useState()
