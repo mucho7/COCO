@@ -24,7 +24,8 @@ spring:
         cors-configurations:
           '[/**]':
             allowedOrigins:
-              - 'http://i8a703.p.ssafy.io:*'
+              - 'http://i8a703.p.ssafy.io:80'
+              - 'http://i8a703.p.ssafy.io:443'
               - 'http://localhost:3000'
             allow-credentials: true
             allowedHeaders: '*'
