@@ -5,8 +5,8 @@ import { commentCreate } from "../../api/community"
 
 import styled from "styled-components"
 import { Button, TextField } from "@mui/material"
+
 function CommentForm(params) {
-    console.log(params)
     const location = useLocation()
     
     const board_id = params.board_id

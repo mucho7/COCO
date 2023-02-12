@@ -13,7 +13,6 @@ function CommuArticleDetail() {
     const navigate = useNavigate()
     // const [ viewList ] = useCookies(["view"])
     const location = useLocation()
-    console.log(location)
     const pk = location.state.id
     const hit = location.state.hit
 
@@ -39,16 +38,12 @@ function CommuArticleDetail() {
             (data) => {return data.data},
             (error) => console.log(error)
         ).then((data) => {
+            console.log(data)
             setArticle(data)
             setMaxPage(data.comments.totalPages)
-        })
-    }
-    getArticlelDetail()
-    // dkdkdkdkdaijsdoijasdjas
-    // cookie List에 저장한 값을 back에 request를 보내서 조회수를 controll
-    // if (hit === article.hit){
-    //         console.log("조회수 증가!!!")
-    // }
+        })}
+        getArticlelDetail()
+        console.log("It's rerendered " + sival + " time")
     }, [pk, pageNumber, sival])
 
     
@@ -78,7 +73,7 @@ function CommuArticleDetail() {
             <TitleSection>
                 <h2>{article.title}</h2>
                 {/* <h2>static Title</h2> */}
-                {article.writer === localStorage.userId ?  
+                {localStorage.userId && article.writer === localStorage.userId ?  
                     <div>
                         <Link to={`/community/update/${pk}`} state={article} style={{textDecoration: "none"}} article={article}>
                             <Button variant="contained">수정</Button>
