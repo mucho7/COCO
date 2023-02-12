@@ -5,6 +5,7 @@ import toolBarActionSlice from "./toolBarActionSlice";
 import compileSlice from "./compileSlice";
 import updateUserSlice from "./userInfoUpdateSlice";
 import sessionSlice from "./sessionSlice";
+import commuSideBarSlice from "./commuSearchSlice";
 
 const store = configureStore({
   reducer: {
@@ -13,7 +14,8 @@ const store = configureStore({
     sessionList: sessionListSlice.reducer,
     toolBarAction: toolBarActionSlice.reducer,
     updateUser: updateUserSlice.reducer,
-    session: sessionSlice.reducer
+    session: sessionSlice.reducer,
+    boardSearch: commuSideBarSlice.reducer,
   }
 })
 

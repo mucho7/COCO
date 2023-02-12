@@ -61,6 +61,12 @@ function ArticleUpdate() {
             alert("제목이나 내용은 필수 입력입니다!!")
         } else if (inputTitle.trim() === "" || inputContent.trim() === "") {
             alert("제목이나 내용엔 공백이 아닌 문자가 있어야 합니다!!")
+        } else if (inputTitle.length > 255) {
+            alert("제목의 길이는 최대 255자 까지입니다.")
+        } else if (inputContent.length > 3000) {
+            alert("본문의 길이는 최대 3000자 까지입니다.")
+        } else if (inputCode.length > 3000) {
+            alert("코드의 길이는 최대 3000자 까지입니다.")
         } else {
             await articleUpdate(
                 updateArticle,

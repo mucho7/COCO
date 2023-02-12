@@ -21,6 +21,8 @@ function CommentForm(params) {
             alert("댓글 내용이 없습니다!")
         } else if (comment.trim() === "") {
             alert("댓글엔 공백이 아닌 문자가 있어야 합니다!!")
+        } else if (comment.length > 255) {
+            alert("댓글의 길이는 최대 255자 까지입니다.")
         } else {
             commentCreate(
                 {

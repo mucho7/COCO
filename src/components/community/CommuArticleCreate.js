@@ -24,8 +24,6 @@ function ArticleCreate(params) {
     }, [navigate, cookie])
 
     const onTypingHandler = (e) => {
-        console.log(e)
-
         // 4개의 케이스에 따라 각자의 스테이트에 저장
         switch (e.target.id) {
             case 'title':
@@ -40,7 +38,6 @@ function ArticleCreate(params) {
     }
 
     const onCodeTypingHandler = (e) => {
-            console.log(e)
             setInputCode(e)
     }
 
@@ -56,11 +53,17 @@ function ArticleCreate(params) {
     }
     
     async function onClickHandler() {
-        console.log(newArticle)
+        console.log(newArticle.title.length)
         if (inputTitle === undefined || inputContent === undefined || inputCode === undefined){
             alert("제목이나 내용은 필수 입력입니다!!")
         } else if (inputTitle.trim() === "" || inputContent.trim() === "" || inputCode.trim() === "") {
             alert("제목이나 내용엔 공백이 아닌 문자가 있어야 합니다!!")
+        } else if (newArticle.title.length > 255) {
+            alert("제목의 길이는 최대 255자 까지입니다.")
+        } else if (newArticle.content.length > 3000) {
+            alert("본문의 길이는 최대 3000자 까지입니다.")
+        } else if (newArticle.code.length > 3000) {
+            alert("코드의 길이는 최대 3000자 까지입니다.")
         } else {
             await articleCreate(
                 newArticle,
