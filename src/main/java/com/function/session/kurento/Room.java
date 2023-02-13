@@ -48,7 +48,7 @@ public class Room implements Closeable {
 	private final ConcurrentMap<String, UserSession> participants = new ConcurrentHashMap<>();
 	private final MediaPipeline pipeline;
 	private final String name;
-	private final String hostName; // 방 생성자 (host) username
+	private String hostName; // 방 생성자 (host) username
 
 	public String getName() {
 		return name;
@@ -56,6 +56,10 @@ public class Room implements Closeable {
 
 	public String getHostName() {
 		return hostName;
+	}
+
+	public void setHostName(String name) {
+		this.hostName = name;
 	}
 
 	public Room(String roomName, MediaPipeline pipeline, String hostName) { // 수정 2023.02.13.

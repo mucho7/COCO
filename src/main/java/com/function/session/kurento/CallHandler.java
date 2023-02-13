@@ -257,14 +257,17 @@ public class CallHandler extends TextWebSocketHandler {
 			roomManager.removeRoom(room);
 		}
 		// 인원수 - 1
-		// roomService.UpdateRoomLeave(roomName);
-		if (roomService.UpdateRoomLeave(Long.parseLong(roomName)) != null) {
-			System.out.println("...인원수 - 1 성공, 방이름: " + roomName);
-		} else {
-			System.out.println("...인원수 - 1 실패: 해당 룸 없음, 방이름: " + roomName);
+		if (hostName != null) {
+			// roomService.UpdateRoomLeave(roomName);
+			if (roomService.UpdateRoomLeave(Long.parseLong(roomName)) != null) {
+				System.out.println("...인원수 - 1 성공, 방이름: " + roomName);
+			} else {
+				System.out.println("...인원수 - 1 실패: 해당 룸 없음, 방이름: " + roomName);
+			}
 		}
 		// 호스트가 나갔다면, 해당 방 삭제하고 모두 나가기
 		if (userName.equals(hostName)) {
+			room.setHostName(null);
 			System.out.println("...DB에서 해당 방 삭제하기, 방이름: " + roomName);
 			if (roomService.DeleteRoom(Long.parseLong(roomName)) == null) {
 				System.out.println("...삭제 실패: 해당 룸 없음...");
