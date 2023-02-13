@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
-import { onChangeCode } from "../../../store/compileSlice";
-import { useDispatch } from "react-redux";
+import { onChangeCode, onChangeLanguage } from "../../../store/compileSlice";
+import { useDispatch, useSelector } from "react-redux";
+import Compiler from "./Compiler";
 
 import * as Y from 'yjs'
 import { WebrtcProvider } from 'y-webrtc'
@@ -19,6 +20,7 @@ function Ide(props) {
   const [userCode, setUserCode] = useState(``);
   const [userLanguage, setUserLanguage] = useState("java");
   const [userTheme, setUserTheme] = useState("vs-dark");
+  const isCompileButtonOn = useSelector((state) => state.toolBarAction.isCompileButtonOn);
   
   const dispatch = useDispatch();
   const participant = props.participant;
@@ -31,7 +33,7 @@ function Ide(props) {
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
     const ydoc = new Y.Doc();
-    const provider = new WebrtcProvider(`monaco1`, ydoc);
+    const provider = new WebrtcProvider(`monaco-${roomId}`, ydoc);
     const yText = ydoc.getText("monaco");
 
     const monacoBinding = new MonacoBinding(
@@ -43,7 +45,7 @@ function Ide(props) {
   }
 
   const languageSelector = (
-    <Box sx={{ minWidth: 120, height: 30 }}>
+    <Box sx={{ minWidth: 120, height: 60, bgcolor: "white" }}>
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">Language</InputLabel>
         <Select
@@ -51,7 +53,10 @@ function Ide(props) {
           id="demo-simple-select"
           value={userLanguage}
           label="userLanguage"
-          onChange={(e) => {setUserLanguage(e.target.value)}}
+          onChange={(e) => {
+            setUserLanguage(e.target.value)
+            dispatch(onChangeLanguage(e.target.value))
+          }}
         >
           <MenuItem value={"java"}>JAVA</MenuItem>
           <MenuItem value={"python"}>PYTHON</MenuItem>
@@ -64,8 +69,8 @@ function Ide(props) {
 
   return (
     <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
-      {/* {participant.isHost && languageSelector} */}
-      {languageSelector}
+      {participant.isHost && languageSelector}
+      {/* {languageSelector} */}
       <Editor 
         id="editor"
         options={{fontSize: 16, minimap: { enabled: false }, scrollbar: { vertical: "auto", horizontal: "auto" }}}
@@ -81,6 +86,7 @@ function Ide(props) {
         sx={{ m: 0, flexGrow: 1 }}
         onMount={handleEditorDidMount}
       />
+      <Compiler />
     </Box>
   );
 }

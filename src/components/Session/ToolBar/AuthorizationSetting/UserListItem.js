@@ -1,8 +1,11 @@
-import { useState, useEffect } from "react";
-import { websocketInstances, setUpdated } from "../../../../store/sessionSlice";
-import { onToggleAuthorization } from "../../../../store/toolBarActionSlice";
-import { CustomButton } from "../ToolBar";
-import { useDispatch, useSelector } from "react-redux";
+import { websocketInstances } from "../../../../store/sessionSlice";
+import { useSelector } from "react-redux";
+
+import IconButton from '@mui/material/IconButton';
+import IntegrationInstructionsOutlinedIcon from '@mui/icons-material/IntegrationInstructionsOutlined';
+import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined';
+import MicNoneOutlinedIcon from '@mui/icons-material/MicNoneOutlined';
+import MicOffOutlinedIcon from '@mui/icons-material/MicOffOutlined';
 
 
 function UserListItem(props) {
@@ -25,24 +28,45 @@ function UserListItem(props) {
   return (
     <div>
       {participant.name}
-      <CustomButton 
+      <IconButton 
         onClick={() => toggleAuthorization(participant, "compile")} 
-        isButtonOn={participant.authorization.isCompilePossible}
+        type="button"
+        sx={{ 
+          width: "40px", 
+          height: "40px", 
+          m: '5px', 
+          p: '5px', 
+          bgcolor: participant.authorization.isCompilePossible ? "#FCA311" : "#E5E5E5" 
+        }}
       >
-        컴파
-      </CustomButton>
-      <CustomButton 
+        <IntegrationInstructionsOutlinedIcon />
+      </IconButton>
+      <IconButton 
         onClick={() => toggleAuthorization(participant, "draw")} 
-        isButtonOn={participant.authorization.isDrawPossible}
+        type="button"
+        sx={{ 
+          width: "40px", 
+          height: "40px", 
+          m: '5px', 
+          p: '5px', 
+          bgcolor: participant.authorization.isDrawPossible ? "#FCA311" : "#E5E5E5" 
+        }}
       >
-        그림
-      </CustomButton>
-      <CustomButton 
+        <PaletteOutlinedIcon />
+      </IconButton>
+      <IconButton 
         onClick={() => toggleAuthorization(participant, "mic")} 
-        isButtonOn={participant.authorization.isMicPossible}
+        type="button"
+        sx={{ 
+          width: "40px", 
+          height: "40px", 
+          m: '5px', 
+          p: '5px', 
+          bgcolor: participant.authorization.isMicPossible ? "#FCA311" : "#E5E5E5" 
+        }}
       >
-        음성
-      </CustomButton>
+        {participant.authorization.isMicPossible ? <MicNoneOutlinedIcon /> : <MicOffOutlinedIcon />}
+      </IconButton>
     </div>
   );
 }

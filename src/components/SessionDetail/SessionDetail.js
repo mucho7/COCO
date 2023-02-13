@@ -1,7 +1,7 @@
 import { Container, Box, Stack, Button } from '@mui/material';
 
-import { useSelector, useDispatch } from "react-redux";
-import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useParams, useNavigate, Link } from "react-router-dom";
 
 // import { deleteSession } from "../../store/sessionListSlice";
 import { setSocketInfo } from "../../store/sessionSlice";
@@ -52,7 +52,7 @@ function SessionDetail() {
         dispatch(setSocketInfo({userName: localStorage.getItem("userId"), roomName: roomId}))
         switch (session.mode) {
           case "study":
-            navigate(`/room/${roomId}/study`)
+            navigate(`/session/${roomId}/study`)
             // const sessionWindow = window.open("http://localhost:3000/normal", "sessionWindow", "popup")
             // sessionWindow.resizeTo(1600, 900);
             break;
@@ -67,7 +67,7 @@ function SessionDetail() {
         switch (err.response.status) {
           case 404:
             alert("해당 세션이 종료, 삭제되었거나 존재하지 않는 방입니다.")
-            navigate("/room")
+            navigate("/session")
             break;
           case 500:
             alert(err.response.data.message)
@@ -84,7 +84,7 @@ function SessionDetail() {
       roomId,
       (data) => {
         console.log(data);
-        navigate("/room");
+        navigate("/session");
       },
       (err) => console.log(err)
     )
@@ -106,14 +106,14 @@ function SessionDetail() {
           roomname: <input type="text" value={roomName} onChange={handleChangeRoomName} />
         </Stack> */}
         <Stack spacing={2} direction="row" sx={{  display: "flex", justifyContent: "flex-end", mr: 2 }}>
-          <Link to={"/room"} style={{textDecoration: "none"}}>
+          <Link to={"/session"} style={{textDecoration: "none"}}>
             <Button variant="contained">뒤로</Button>
           </Link>
           <Button variant="contained" onClick={handleEnterSession}>참여</Button>
           {/* 작성자 여부에 따라 수정, 삭제 버튼 표시  */}
           {
             (session.hostId === localStorage.getItem("userId")) && 
-            <Link to={`/room/${roomId}/update`} state={session} style={{textDecoration: "none"}} session={session}>
+            <Link to={`/session/${roomId}/update`} state={session} style={{textDecoration: "none"}} session={session}>
               <Button variant="contained">수정</Button>
             </Link>
           }

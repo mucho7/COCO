@@ -35,7 +35,7 @@ function CreateSession() {
       (data) => {
         console.log(data)
         const roomId = data.data;
-        navigate(`/room/${roomId}`);
+        navigate(`/session/${roomId}`);
       },
       (err) => console.log(err)
     )
@@ -103,7 +103,7 @@ function CreateSession() {
           fullWidth
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
-          onClick={() => {navigate("/room")}}
+          onClick={() => {navigate("/session")}}
         >
           취소
         </Button>
