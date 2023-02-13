@@ -35,7 +35,7 @@ function CreateSession() {
       (data) => {
         console.log(data)
         const roomId = data.data;
-        navigate(`/room/${roomId}`);
+        navigate(`/session/${roomId}`);
       },
       (err) => console.log(err)
     )
