@@ -52,10 +52,10 @@ public class SessionApplication implements WebSocketConfigurer {
 	//
 	// 	return tomcatServletWebServerFactory;
 	// }
-
+	//
 	// private Connector createStandardConnector() {
 	// 	Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
-	// 	// connector.setPort(8013);
+	// 	connector.setPort(8013);
 	//
 	// 	return connector;
 	// }
@@ -66,7 +66,7 @@ public class SessionApplication implements WebSocketConfigurer {
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		// registry.addHandler(groupCallHandler(), "/groupcall").setAllowedOrigins("*"); // setAllowedOrigins("http://~~")
-		registry.addHandler(groupCallHandler(), "/groupcall");
+		registry.addHandler(groupCallHandler(), "/groupcall").setAllowedOrigins("*"); // setAllowedOrigins("http://~~")
+		// registry.addHandler(groupCallHandler(), "/groupcall");
 	}
 }
