@@ -46,7 +46,7 @@ function SessionListSideBar(props) {
                 <Search />
             </IconButton>
             {/*  */}
-            <Link to={"/room/create"} style={{textDecoration: "none"}}>
+            <Link to={"/session/create"} style={{textDecoration: "none"}}>
                 <Button variant="contained" className="submit" fullWidth style={{height:"2.5rem", backgroundColor: "#FCA311"}}> <b>세션 만들기</b></Button>
             </Link>
         </Sidebar>
