@@ -42,18 +42,15 @@ function ArticleCreate(params) {
     }
 
     const newArticle ={
-        "title": inputTitle,
-        "content": inputContent,
-        "code": inputCode,
-        "writer": window.localStorage.getItem("userId"),
-        token: {
-            jwt_token: cookie.userInfo,
-            refresh_token: cookie.userInfo
-        }
+        title: inputTitle,
+        content: inputContent,
+        code: inputCode,
+        writer: window.localStorage.getItem("userId"),
+        jwt_token: cookie.userInfo.jwt_token,
+        refresh_token: cookie.userInfo.refresh_token
     }
     
     async function onClickHandler() {
-        console.log(newArticle.title.length)
         if (inputTitle === undefined || inputContent === undefined || inputCode === undefined){
             alert("제목이나 내용은 필수 입력입니다!!")
         } else if (inputTitle.trim() === "" || inputContent.trim() === "" || inputCode.trim() === "") {
@@ -65,6 +62,7 @@ function ArticleCreate(params) {
         } else if (newArticle.code.length > 3000) {
             alert("코드의 길이는 최대 3000자 까지입니다.")
         } else {
+            console.log(newArticle)
             await articleCreate(
                 newArticle,
                 // 성공 시에 해당 글로 navigate 해야함, response에 따라 좀 달라질듯

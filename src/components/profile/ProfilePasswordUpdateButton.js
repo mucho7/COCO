@@ -40,10 +40,10 @@ function ProfilePasswordUpdateButton(params) {
     }
 
     useEffect(() => {
-        const passwordForm = /^(?=.*\d{1,32})(?=.*[~`!@#$%\^&*()-+=]{0,32})(?=.*[a-zA-Z]{1,32}).{4,32}$/
+        const passwordForm = /^(?=.*\d{1,32})(?=.*[~`!@#$%^&*()-+=]{0,32})(?=.*[a-zA-Z]{1,32}).{4,32}$/
         const passwordErrorMessage = {
             null: "필수 입력입니다.",
-            form: "비밀번호는 영문자, 숫자가 각각 반드시 1번 이상 포함된 4자 이상 32자 이하인 문자열이어야 합니다. (허용 특수문자: ~`!@#$%\^&*()-+=)",
+            form: "비밀번호는 영문자, 숫자가 각각 반드시 1번 이상 포함된 4자 이상 32자 이하인 문자열이어야 합니다. (허용 특수문자: ~`!@#$%^&*()-+=)",
             same: "비밀번호가 일치하지 않습니다.",
         }
         if (inputUpdatedPassword === undefined || inputUpdatedPassword === '') {

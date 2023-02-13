@@ -47,10 +47,10 @@ function SigninForm() {
     }, [inputID])
 
     useEffect(() => {
-        const passwordForm = /^(?=.*\d{1,32})(?=.*[~`!@#$%\^&*()-+=]{0,32})(?=.*[a-zA-Z]{1,32}).{4,32}$/
+        const passwordForm = /^(?=.*\d{1,32})(?=.*[~`!@#$%^&*()-+=]{0,32})(?=.*[a-zA-Z]{1,32}).{4,32}$/
         const passwordErrorMessage = {
             null: "필수 입력입니다.",
-            form: "비밀번호는 영문자, 숫자가 각각 반드시 1번 이상 포함된 4자 이상 32자 이하인 문자열이어야 합니다. (허용 특수문자: ~`!@#$%\^&*()-+=)",
+            form: "비밀번호는 영문자, 숫자가 각각 반드시 1번 이상 포함된 4자 이상 32자 이하인 문자열이어야 합니다. (허용 특수문자: ~`!@#$%^&*()-+=)",
             same: "비밀번호가 일치하지 않습니다.",
         }
         if (inputPassword === undefined || inputPassword === '') {
@@ -77,7 +77,7 @@ function SigninForm() {
             form: "사용자 이름은 한글, 영문자, 숫자만 허용합니다.",
             length: "사용자 이름은 4자이상 16자 이하이어야 합니다."
         }
-        if (inputName === undefined || inputName.trim().length == 0) {
+        if (inputName === undefined || inputName.trim().length === 0) {
             setIsOkToSubmit(false)
             setIsNameValid({ isVaild: true, message: nameErrorMessage.null })
         } else if (inputName.length < 4 || inputName.length > 32) {
