@@ -34,14 +34,17 @@ function CommuArticleDetail() {
     useMemo(() => {
         const getArticlelDetail = async () => {
             await boardDetail(
-            {pk: pk, pageNumber: pageNumber},
-            (data) => {return data.data},
-            (error) => console.log(error)
-        ).then((data) => {
-            console.log(data)
-            setArticle(data)
-            setMaxPage(data.comments.totalPages)
-        })}
+                {pk: pk, pageNumber: pageNumber},
+                (data) => {
+                    return data
+                },
+                (error) => console.log(error)
+            ).then((res) => {
+                console.log(res)
+                setArticle(res.data)
+                setMaxPage(res.data.comments.totalPages)
+            })
+        }
         getArticlelDetail()
         console.log("It's rerendered " + sival + " time")
     }, [pk, pageNumber, sival])

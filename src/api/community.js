@@ -26,6 +26,7 @@ async function boardSearching(searchInfo, success, fail) {
 
 async function boardDetail(article, success, fail) {
   const res = await api.get(`/board/${article.pk}`, {params: {page: article.pageNumber}}).then(success).catch(fail);
+  console.log(res)
   return res
 }
 
