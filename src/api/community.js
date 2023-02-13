@@ -2,8 +2,7 @@ import axios from "axios";
 
 // axios 객체 생성
 const api = axios.create({
-  // env로 대체할 것
-  baseURL: "https://ssafy.cossafyco.kro.kr:443/api/",
+  baseURL: "https://ssafy.cossafyco.kro.kr/api/",
   headers: {
     "Content-Type": "application/json",
   },
