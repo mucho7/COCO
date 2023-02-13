@@ -95,7 +95,7 @@ spring:
           predicates:
             - Path=/sessionFunction/**
         - id: session
-          uri: https://SessionService:8443/
+          uri: https://ssafy.cossafyco.kro.kr/session/
           #          uri: https://localhost:8443/
           predicates:
             - Path=/session/**
