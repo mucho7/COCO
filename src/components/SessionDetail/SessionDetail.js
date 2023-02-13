@@ -52,7 +52,7 @@ function SessionDetail() {
         dispatch(setSocketInfo({userName: localStorage.getItem("userId"), roomName: roomId}))
         switch (session.mode) {
           case "study":
-            navigate(`/room/${roomId}/study`)
+            navigate(`/session/${roomId}/study`)
             // const sessionWindow = window.open("http://localhost:3000/normal", "sessionWindow", "popup")
             // sessionWindow.resizeTo(1600, 900);
             break;
