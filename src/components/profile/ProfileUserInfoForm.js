@@ -42,11 +42,11 @@ function ProfileUserInfoForm(props) {
     console.log(updating_user_info)
 
     async function updateUser() {
-        if (updating_user_info.email != undefined && !emailValidation.test(updating_user_info.email)) {
+        if (updating_user_info.email !== undefined && !emailValidation.test(updating_user_info.email)) {
             alert('유효하지 않은 이메일 형식입니다.');
             return;
         }
-        if (updating_user_info.name != undefined && !checkString(updating_user_info.name)) {
+        if (updating_user_info.name !== undefined && !checkString(updating_user_info.name)) {
             alert('사용자명은 한글, 영문자, 숫자만 입력할 수 있습니다.')
             return;
         }

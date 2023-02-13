@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react"
-// import { useCookies } from "react-cookie"
+import { useCookies } from "react-cookie"
 import { useLocation, Link, useNavigate } from "react-router-dom"
 
 import { CommentForm, Comments, CommuArticleDetailContent } from "./index"
@@ -11,8 +11,9 @@ import CommuCommentPaging from "./CommuCommentPaging"
 
 function CommuArticleDetail() {
     const navigate = useNavigate()
-    // const [ viewList ] = useCookies(["view"])
+    const [ cookie ] = useCookies(["userInfo"])
     const location = useLocation()
+    console.log(location)
     const pk = location.state.id
     const hit = location.state.hit
 
@@ -23,7 +24,7 @@ function CommuArticleDetail() {
         id: "",
         title:"",
         content: [{content:[""], index: -1},],
-        code: [""],
+        code: "",
         comments: {
             empty: true,
             totalPages: 1,
@@ -40,7 +41,6 @@ function CommuArticleDetail() {
                 },
                 (error) => console.log(error)
             ).then((res) => {
-                console.log(res)
                 setArticle(res.data)
                 setMaxPage(res.data.comments.totalPages)
             })
@@ -53,7 +53,11 @@ function CommuArticleDetail() {
 
     async function onClickDeleteHandler(params) {
         await articleDelete(
-            pk,
+            {
+                pk: pk,
+                jwt_token: cookie.userInfo.jwt_token,
+                refresh_token: cookie.userInfo.refresh_token,
+            },
             (data) => {
                 console.log(data)
                 navigate("/community")
@@ -78,7 +82,7 @@ function CommuArticleDetail() {
                 {/* <h2>static Title</h2> */}
                 {localStorage.userId && article.writer === localStorage.userId ?  
                     <div>
-                        <Link to={`/community/update/${pk}`} state={article} style={{textDecoration: "none"}} article={article}>
+                        <Link to={`/community/update/${pk}`} state={article} style={{textDecoration: "none"}}>
                             <Button variant="contained">수정</Button>
                         </Link>
                         <Button onClick={onClickDeleteHandler} variant="contained">삭제</Button>

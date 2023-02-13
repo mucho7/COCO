@@ -21,7 +21,7 @@ const CommuSection = styled.section`
     display: flex;
     flex-direction: row;
 
-    height: 100%;
+    height: 500px;
 
 `
 
