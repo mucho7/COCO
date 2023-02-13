@@ -43,7 +43,6 @@ function ToolBar(props) {
         <AuthorizeButton />
         <ChatButton />
         <QuitButton />
-
         {isAuthorizeButtonOn && <AuthorizationSetting />}
       </div>
     </Box>
