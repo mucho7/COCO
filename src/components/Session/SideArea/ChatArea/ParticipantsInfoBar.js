@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 
 const ParticipantsInfoBarDiv = styled.div`
-  flex: 1;
+  flex-basis: 30px;
   background-color: #14213D;
   color: white;
 `

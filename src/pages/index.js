@@ -57,27 +57,27 @@ const router = createBrowserRouter([
   },
   // Session 관련
   {
-    path: "/room/:roomId/study",
+    path: "/session/:roomId/study",
     element: <NormalSession />,
   },
   {
-    path: "/room/:roomId/relay",
+    path: "/session/:roomId/relay",
     element: <RelaySession />,
   },
   {
-    path: "/room/:roomId/update",
+    path: "/session/:roomId/update",
     element: <UpdateSession />
   },
   {
-    path: "/room/create",
+    path: "/session/create",
     element: <CreateSession />,
   },
   {
-    path: "/room/:roomId",
+    path: "/session/:roomId",
     element: <SessionDetail />,
   },
   {
-    path: "/room",
+    path: "/session",
     element: <SessionListPage />,
   },
 ]);
