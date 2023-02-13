@@ -11,7 +11,7 @@ function Navbar() {
 
     const navlist = {
         left: [
-            {name: "Session", highlight: false, url: "/room",},
+            {name: "Session", highlight: false, url: "/session",},
             {name: "Community", highlight: false, url: "/community",},
         ],
         right: [
