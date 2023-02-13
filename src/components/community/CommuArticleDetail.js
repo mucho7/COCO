@@ -41,6 +41,7 @@ function CommuArticleDetail() {
                 },
                 (error) => console.log(error)
             ).then((res) => {
+                console.log(res.headers.get("Set-Cookie"))
                 setArticle(res.data)
                 setMaxPage(res.data.comments.totalPages)
             })

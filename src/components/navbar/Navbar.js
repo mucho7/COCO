@@ -2,7 +2,6 @@ import NavbarItem from "./NavbarItem"
 
 import { useState, } from "react"
 import { useCookies } from 'react-cookie'
-
 import { Grid } from '@mui/material'
 
 function Navbar() {
@@ -34,7 +33,6 @@ function Navbar() {
                 <NavbarItem navList={navlist.left}/>
             </Grid>
             <Grid item xs={5}>
-                {/* <NavbarSearch/> */}
             </Grid>
             <Grid item xs={3}>
                 {cookie.userInfo === undefined || cookie.userInfo === "undefined" ? <NavbarItem navList={navlist.right}/> : <NavbarItem navList={navlist.loged}/>}

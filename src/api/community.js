@@ -16,7 +16,7 @@ async function boardPaging(pageInfo, success, fail) {
 }
 
 async function boardSearching(searchInfo, success, fail) {
-  const res = await api.get(`/board/search`, {params: {title: searchInfo.title, content: searchInfo.content, writer: searchInfo.writer}}).then(success).catch(fail);
+  const res = await api.get(`/board/search`, {params: {[searchInfo.searchTarget]: searchInfo.searchWord}}).then(success).catch(fail);
   return res
 }
 
