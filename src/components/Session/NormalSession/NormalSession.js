@@ -79,7 +79,7 @@ function NormalSession(props) {
     // 세션 컴포넌트 마운트시 웹소켓 생성하고 register 함수를 통해 서버에 등록
     if (!ws.current) {
       // ws.current = new WebSocket("wss://localhost:8443/groupcall");
-      ws.current = new WebSocket(`wss://${window.location.host}:8443/groupcall`);
+      ws.current = new WebSocket(`wss://ssafy.cossafyco.kro.kr:8443/groupcall`);
       // console.log(ws.current);
       ws.current.addEventListener('error', (event) => {
         console.log('WebSocket error: ', event);

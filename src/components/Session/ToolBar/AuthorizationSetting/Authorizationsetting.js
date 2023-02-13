@@ -1,6 +1,5 @@
 import styled from "styled-components";
 
-import AuthorizationSettingTitleBar from "./AuthorizationSettingTitleBar";
 import UserList from "./UserList";
 
 const AuthorizationSettingDiv = styled.div`
@@ -13,15 +12,25 @@ const AuthorizationSettingDiv = styled.div`
   bottom: 65px;
   right: 30%;
   width: 300px;
-  height: 300px;
+  height: auto;
+  border-radius: 15px;
+  padding: 10px;
+  color: white;
+  box-shadow: 2px 3px 2px gray;
 `;
+
+const TitleBar = styled.div`
+  margin-bottom: 10px;
+  margin-left: 5px;
+  color: white;
+  font-size: 20px;
+`
+
 
 function AuthorizationSetting(props) {
   return (
     <AuthorizationSettingDiv>
-      {/* 영역 제목 바 */}
-      <AuthorizationSettingTitleBar />
-      {/* 사용자 권한 설정 버튼 */}
+      <TitleBar>참여자 권한 설정</TitleBar>
       <UserList />
     </AuthorizationSettingDiv>
   );
