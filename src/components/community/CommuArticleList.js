@@ -2,20 +2,19 @@ import { useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useSelector } from 'react-redux';
 
-
 import { boardPaging } from "../../api/community";
 import { CommuPaging, CommuArticleListItem } from "./index"
 
 import styled from "styled-components"
-
+import { Grid } from "@mui/material";
 
 function CommuArticleList() {
     const searchResult = useSelector(state => state.boardSearch)
     const [ searchParams, setSearchParams ] = useSearchParams()
     const [ someArticle, setSomeArticle ] = useState([{id: 1, createdAt: "i dont know when i was born"}, {id: 2, createdAt: "i dont know when i was born"}])
-    // 일단은 8로 고정하고 심화기능이 필요하다면 변경하는 버튼을 추가 예정
     const [ isArticleListExist, setIsArticleListExist ] = useState(true)
-    const [ pageSize ] = useState(8)
+    // 일단은 8로 고정하고 심화기능이 필요하다면 변경하는 버튼을 추가 예정
+    const [ pageSize ] = useState(6)
     const [ pageNumber, setPageNumber ] = useState(1)
     const [ maxPage, setMaxPage ] = useState(5)
 
@@ -31,7 +30,7 @@ function CommuArticleList() {
             })
         }
         // enterBoard()
-        console.log(searchResult)
+        console.log("This is search result" + searchResult)
         if (searchResult.content.empty) {
             setIsArticleListExist(false)
         } else if (searchResult.content.content[0].id === -1) {
@@ -54,8 +53,9 @@ function CommuArticleList() {
 
     return (
         <CommuArticleBox>
-            {isArticleListExist ? <CommuArticleListItem articles={someArticle}/> : <div>해당 글 없음</div> }
-            {/* 맨 밑으로 쳐박혔으면 */}
+            <Grid container height={"100%"}>
+                {isArticleListExist ? <CommuArticleListItem articles={someArticle}/> : <div>해당 글 없음</div> }
+            </Grid>
             <CommuPaging maxPage={maxPage} onClick={onPagingClickHandler}/>
         </CommuArticleBox>
     )
@@ -68,6 +68,7 @@ const CommuArticleBox = styled.article`
     align-items: start;
 
     width: 80%;
+    height: 100%;
 
 `
 

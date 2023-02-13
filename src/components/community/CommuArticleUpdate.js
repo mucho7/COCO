@@ -37,15 +37,12 @@ function ArticleUpdate() {
     const updateArticle ={
         title: inputTitle,
         code: inputCode,
-        rawContent: inputContent,
+        content: inputContent,
         writer: window.localStorage.getItem("userId"),
         id: pk,
-        tokenL: {
-            jwt_token: cookie.userInfo,
-            refresh_token: cookie.userInfo
-        }
+        jwt_token: cookie.userInfo.jwt_token,
+        refresh_token: cookie.userInfo.refresh_token
     }
-
     const article = location.state
 
     useEffect(() => {
@@ -56,7 +53,7 @@ function ArticleUpdate() {
 
     }, [article])
 
-    async function onClickHandler() {
+    async function onClickHandler(event) {
         if (inputTitle === undefined || inputContent === undefined){
             alert("제목이나 내용은 필수 입력입니다!!")
         } else if (inputTitle.trim() === "" || inputContent.trim() === "") {
@@ -68,9 +65,12 @@ function ArticleUpdate() {
         } else if (inputCode.length > 3000) {
             alert("코드의 길이는 최대 3000자 까지입니다.")
         } else {
+            console.log(updateArticle)
             await articleUpdate(
                 updateArticle,
-                (data) => console.log(data),
+                (data) => {
+                    console.log(data)
+                },
                 (err) => console.log(err)
             )
         }
@@ -84,7 +84,7 @@ function ArticleUpdate() {
             <hr/>
             <ArticleSection>
                 <ContentSection style={{paddingTop: 20}}>
-                    <TextField value={updateArticle.rawContent} onChange={onTypingHandler} id="content" minRows={18} fullWidth multiline style={{maxHeight: 450, overflowY: "auto"}} />
+                    <TextField value={updateArticle.content} onChange={onTypingHandler} id="content" minRows={18} fullWidth multiline style={{maxHeight: 450, overflowY: "auto"}} />
                 </ContentSection>
                 <Vr/>
                 <CodeSection style={{paddingTop: 20}}>
@@ -92,7 +92,7 @@ function ArticleUpdate() {
                 </CodeSection>
             </ArticleSection>
             <hr/>
-            <Link to={`/community/${pk}`} state={article}>
+            <Link to={`/community/${article.id}`} state={article} style={{textDecoration: "none"}}>
                 <Button onClick={onClickHandler} variant="contained">수정 완료</Button>
             </Link>
         </>

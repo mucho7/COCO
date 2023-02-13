@@ -21,19 +21,24 @@ async function boardSearching(searchInfo, success, fail) {
 
 async function boardDetail(article, success, fail) {
   const res = await api.get(`/board/${article.pk}`, {params: {page: article.pageNumber}}).then(success).catch(fail);
-  console.log(res)
   return res
 }
 
 async function articleCreate(article, success, fail) {
+  api.defaults.headers["Authorization"] = article.jwt_token
+  api.defaults.headers["refreshToken"] = article.refresh_token
   await api.post(`/board`, JSON.stringify(article)).then(success).catch(fail);
 }
 
-async function articleDelete(article_pk, success, fail) {
-  await api.delete(`/board/${article_pk}`).then(success).catch(fail);
+async function articleDelete(article, success, fail) {
+  api.defaults.headers["Authorization"] = article.jwt_token
+  api.defaults.headers["refreshToken"] = article.refresh_token
+  await api.delete(`/board/${article.pk}`).then(success).catch(fail);
 }
 
 async function articleUpdate(article, success, fail) {
+  api.defaults.headers["Authorization"] = article.jwt_token
+  api.defaults.headers["refreshToken"] = article.refresh_token
   await api.put(`/board/${article.id}`, JSON.stringify(article)).then(success).catch(fail);
 }
 
