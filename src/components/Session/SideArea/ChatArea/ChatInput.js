@@ -1,6 +1,8 @@
-import styled from "styled-components";
-import TextField from "@mui/material/TextField";
+import Paper from '@mui/material/Paper';
+import InputBase from '@mui/material/InputBase';
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -14,13 +16,6 @@ const boxSx = {
   p: 1,
 }
 
-const ChatSubmitButton = styled.button`
-  border: 2px solid #FCA311;
-  background-color: #FCA311;
-  border-radius: 50%;
-  height: 30px;
-  width: 30px;
-`
 
 function ChatInput(props) {
   const [chatInput, setChatInput] = useState("");
@@ -47,18 +42,22 @@ function ChatInput(props) {
 
   return (
     <Box component="form" sx={boxSx} onSubmit={(event) => handleSubmit(event)}>
-      <TextField
-        id="chat"
-        name="chat"
-        autoComplete="chat"
-        label="메세지를 입력하세요."
-        multiline
-        maxRows={4}
-        sx={{ flexGrow: 1, mr: 1 }}
-        value={chatInput}
-        onChange={handleChangeChatInput} 
-      />
-      <ChatSubmitButton type="submit" />
+      <Paper
+        component="form"
+        sx={{ flexGrow: 1, background: "#D9D9D9", color: "black", p: '2px 4px', display: 'flex', alignItems: 'center', borderRadius: "15px" }}
+      >
+        <InputBase
+          placeholder="메세지를 입력하세요."
+          sx={{ ml: 1, flex: 1 }}
+          multiline
+          maxRows={4}
+          value={chatInput}
+          onChange={handleChangeChatInput}
+        />
+        <IconButton onClick={handleSubmit} type="button" sx={{ m: '5px', p: '5px', bgcolor: "#FCA311" }}>
+          <SendOutlinedIcon />
+        </IconButton>
+      </Paper>
     </Box>
   )
 }

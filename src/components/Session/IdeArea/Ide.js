@@ -28,23 +28,19 @@ function Ide(props) {
   const editorRef = useRef(null);
   const { roomId } = useParams();
   
-  useEffect(() => {
-    function setEditorWebrtc(editor) {
-      editorRef.current = editor;
-      const ydoc = new Y.Doc();
-      const provider = new WebrtcProvider(`monaco-${roomId}`, ydoc);
-      const yText = ydoc.getText("monaco");
-  
-      const monacoBinding = new MonacoBinding(
-        yText,
-        editorRef.current.getModel(),
-        new Set([editorRef.current]),
-        provider.awareness
-      );
-    }
-    setEditorWebrtc();
-  }, [roomId])
+  function handleEditorDidMount(editor, monaco) {
+    editorRef.current = editor;
+    const ydoc = new Y.Doc();
+    const provider = new WebrtcProvider(`monaco1`, ydoc);
+    const yText = ydoc.getText("monaco");
 
+    const monacoBinding = new MonacoBinding(
+      yText,
+      editorRef.current.getModel(),
+      new Set([editorRef.current]),
+      provider.awareness
+    );
+  }
 
   const languageSelector = (
     <Box sx={{ minWidth: 120, height: 30 }}>
@@ -55,7 +51,7 @@ function Ide(props) {
           id="demo-simple-select"
           value={userLanguage}
           label="userLanguage"
-          onChange={setUserLanguage}
+          onChange={(e) => {setUserLanguage(e.target.value)}}
         >
           <MenuItem value={"java"}>JAVA</MenuItem>
           <MenuItem value={"python"}>PYTHON</MenuItem>
@@ -67,13 +63,12 @@ function Ide(props) {
   )
 
   return (
-    <div>
+    <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
       {/* {participant.isHost && languageSelector} */}
       {languageSelector}
       <Editor 
         id="editor"
         options={{fontSize: 16, minimap: { enabled: false }, scrollbar: { vertical: "auto", horizontal: "auto" }}}
-        height="auto"
         width="100%"
         language={userLanguage}
         theme={userTheme}
@@ -83,10 +78,10 @@ function Ide(props) {
           setUserCode(value)
           dispatch(onChangeCode(value))
         }}
-        sx={{m: 0}}
-        // onMount={handleEditorDidMount}
+        sx={{ m: 0, flexGrow: 1 }}
+        onMount={handleEditorDidMount}
       />
-    </div>
+    </Box>
   );
 }
 

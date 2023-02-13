@@ -1,16 +1,11 @@
-import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { participantsInstances, websocketInstances } from "../../../store/sessionSlice";
 
-const Button = styled.button`
-  border: 1px solid #FCA311;
-  background-color: #FCA311;
-  border-radius: 50%;
-  height: 50px;
-  width: 50px;
-`;
+import IconButton from '@mui/material/IconButton';
+import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
+
 
 function QuitButton(props) {
   const navigate = useNavigate();
@@ -38,9 +33,19 @@ function QuitButton(props) {
   }
   
   return (
-    <Button onClick={onClickQuitButton}>
-      종료
-    </Button>
+    <IconButton 
+      type="button"
+      onClick={onClickQuitButton}
+      sx={{ 
+        width: "50px", 
+        height: "50px", 
+        m: '5px', 
+        p: '5px', 
+        bgcolor: "#FCA311"
+      }}
+    >
+      <ExitToAppOutlinedIcon fontSize='large' />
+    </IconButton>
   );
 }
 
