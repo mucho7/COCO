@@ -27,6 +27,7 @@ function CommuArticleList() {
             ).then((data) => {
                 setSomeArticle(data.content)
                 setMaxPage(data.totalPages)
+                
             })
         }
         enterBoard()
