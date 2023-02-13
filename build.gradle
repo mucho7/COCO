@@ -29,9 +29,6 @@ dependencies {
     implementation 'mysql:mysql-connector-java:8.0.30'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-    // mongoDB 설정
-    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-
     //lombok
     annotationProcessor 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'
@@ -39,11 +36,6 @@ dependencies {
     // Swagger 2.9.2 버전
     implementation 'io.springfox:springfox-swagger-ui:2.9.2'
     implementation 'io.springfox:springfox-swagger2:2.9.2'
-
-    // jwt 0.11.5
-    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
 
     // JUnit 테스트 관련 설정
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -57,6 +49,9 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     implementation('org.springframework.boot:spring-boot-starter-web')
+
+    // eureka
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:3.1.4'
 }
 
 tasks.named('test') {

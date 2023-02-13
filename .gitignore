@@ -44,4 +44,4 @@ out/
 *.tar
 
 ### 업로드한 파일들 ###
-**/resources/static/icons/**
+**/resources/static/**

@@ -1,4 +1,4 @@
-package com.ssafy.cocoshop.utils.config;
+package com.ssafy.upload.utils.config;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +32,7 @@ public class SwaggerConfig {
 	//	http://localhost:8080/swagger-ui.html
 
 	private String version = "0.0.1-SNAPSHOT";
-	private String title = "CoCo 평판상점 백엔드 API 테스트";
+	private String title = "CoCo 이미지 업로드 백엔드 API 테스트";
 
 	private ApiInfo apiInfo() {
 		String descript = "CoCo 평판상점 백엔드 API 테스트 환경<br/>";
@@ -58,12 +58,10 @@ public class SwaggerConfig {
 			.groupName(groupName)
 			.apiInfo(apiInfo())
 			.select()
-			.apis(RequestHandlerSelectors.basePackage("com.ssafy.cocoshop"))
+			.apis(RequestHandlerSelectors.basePackage("com.ssafy.upload"))
 			.paths(predicate)
 			.apis(RequestHandlerSelectors.any())
-			.build()
-			.securityContexts(Arrays.asList(securityContext()))
-			.securitySchemes(Arrays.asList(accessToken()));
+			.build();
 	}
 
 	// swagger ui 설정.
@@ -72,21 +70,10 @@ public class SwaggerConfig {
 		return UiConfigurationBuilder.builder().displayRequestDuration(true).validatorUrl("").build();
 	}
 
-	private ApiKey accessToken() {
-		return new ApiKey("JWT", "Authorization", "header");
-	}
-
 	private SecurityContext securityContext() {
 		return SecurityContext
 			.builder()
-			.securityReferences(defaultAuth()).forPaths(PathSelectors.any()).build();
-	}
-
-	List<SecurityReference> defaultAuth() {
-		AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
-		AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-		authorizationScopes[0] = authorizationScope;
-		return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
+			.forPaths(PathSelectors.any()).build();
 	}
 
 }

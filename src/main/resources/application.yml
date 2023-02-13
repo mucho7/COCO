@@ -1,4 +1,9 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
+
   jpa:
     properties:
       hibernate:
@@ -19,13 +24,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: cossafyco
-    url: jdbc:mysql://localhost:3306/project1db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
-  data:
-    mongodb:
-      host: localhost
-      port: 27017
-      authentication-database: admin
-      uri: mongodb://localhost:27017/admin
+    url: jdbc:mysql://mysql:3306/project1db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -40,8 +39,14 @@ logging:
         tiles: INFO
     root: INFO
   file:
-    name: './shop-BE.log'
-
+    name: './fileUpload-BE.log'
+eureka:
+  client:
+    register-with:
+      eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://EurekaDiscoveryService:8761/eureka
 server:
   servlet:
     encoding:
@@ -57,5 +62,3 @@ springfox:
   documentation:
     swagger:
       use-model-v3: false
-jwt:
-  secret: PorkCurtletFriedChickenSundubuJJigaeGrilledPorkBelly

@@ -1,10 +1,10 @@
-package com.ssafy.cocoshop;
+package com.ssafy.upload;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CoCoShopApplicationTests {
+class UploadServiceApplicationTests {
 
 	@Test
 	void contextLoads() {
