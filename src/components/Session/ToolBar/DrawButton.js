@@ -1,7 +1,9 @@
-import { CustomButton } from "./ToolBar";
 import { useSelector, useDispatch } from "react-redux";
 import { onClickDrawButton } from "../../../store/toolBarActionSlice";
 import { websocketInstances } from "../../../store/sessionSlice";
+
+import IconButton from '@mui/material/IconButton';
+import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined';
 
 
 function DrawButton(props) {
@@ -26,16 +28,22 @@ function DrawButton(props) {
   
 
   return (
-    <CustomButton 
+    <IconButton 
       onClick={() => {
         dispatch(onClickDrawButton());
         toggleAuthorization();
       }} 
-      isButtonOn={isDrawButtonOn}
       disabled={!isDrawPossible}
+      sx={{ 
+        width: "50px", 
+        height: "50px", 
+        m: '5px', 
+        p: '2px',
+        bgcolor: isDrawButtonOn ? "#FCA311" : "#E5E5E5" 
+      }}
     >
-      그림
-    </CustomButton>
+      <PaletteOutlinedIcon fontSize="large" />
+    </IconButton>
   );
 }
 

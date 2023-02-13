@@ -2,9 +2,9 @@ import axios from "axios";
 
 // axios 객체 생성
 const api = axios.create({
-// env로 대체할 것
-// baseURL: "http://APIgateway:8000/",
-baseURL: "http://i8a703.p.ssafy.io:8000",
+  // env로 대체할 것
+  // baseURL: "http://APIgateway:8000/",
+  baseURL: "http://i8a703.p.ssafy.io:8000",
   // 
   // baseURL: "http://i8a703.p.ssafy.io:8011",
 
@@ -26,6 +26,7 @@ async function boardSearching(searchInfo, success, fail) {
 
 async function boardDetail(article, success, fail) {
   const res = await api.get(`/board/${article.pk}`, {params: {page: article.pageNumber}}).then(success).catch(fail);
+  console.log(res)
   return res
 }
 

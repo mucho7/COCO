@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useCookies } from "react-cookie"
 import { useNavigate } from "react-router-dom"
+import MonacoEditor from "@monaco-editor/react"
 
 import { articleCreate } from "../../api/community"
 
@@ -16,12 +17,11 @@ function ArticleCreate(params) {
     
     // 로그인 안했다면 퇴장
     useEffect(() => {
-        console.log(localStorage.getItem("userId"))
         if (localStorage.getItem("userId") === null) {
             navigate('/useri/login')
             alert("로그인이 필요한 서비스입니다.")
         }
-    }, [navigate])
+    }, [navigate, cookie])
 
     const onTypingHandler = (e) => {
         // 4개의 케이스에 따라 각자의 스테이트에 저장
@@ -32,12 +32,13 @@ function ArticleCreate(params) {
             case 'content':
                 setInputContent(e.target.value)
                 break
-            case 'code':
-                setInputCode(e.target.value)
-                break
             default:
                 // nothing
         }
+    }
+
+    const onCodeTypingHandler = (e) => {
+            setInputCode(e)
     }
 
     const newArticle ={
@@ -52,11 +53,17 @@ function ArticleCreate(params) {
     }
     
     async function onClickHandler() {
-        console.log(newArticle)
+        console.log(newArticle.title.length)
         if (inputTitle === undefined || inputContent === undefined || inputCode === undefined){
             alert("제목이나 내용은 필수 입력입니다!!")
         } else if (inputTitle.trim() === "" || inputContent.trim() === "" || inputCode.trim() === "") {
             alert("제목이나 내용엔 공백이 아닌 문자가 있어야 합니다!!")
+        } else if (newArticle.title.length > 255) {
+            alert("제목의 길이는 최대 255자 까지입니다.")
+        } else if (newArticle.content.length > 3000) {
+            alert("본문의 길이는 최대 3000자 까지입니다.")
+        } else if (newArticle.code.length > 3000) {
+            alert("코드의 길이는 최대 3000자 까지입니다.")
         } else {
             await articleCreate(
                 newArticle,
@@ -83,7 +90,7 @@ function ArticleCreate(params) {
                 </ContentSection>
                 <Vr/>
                 <CodeSection >
-                    <TextField onChange={onTypingHandler} id="code" placeholder="Code" minRows={18} fullWidth multiline style={{maxHeight: 450, overflowY: "auto"}} />
+                    <MonacoEditor id="editor" onChange={onCodeTypingHandler} />
                 </CodeSection>
             </ArticleSection>
             <hr/>
@@ -97,30 +104,34 @@ const TitleSection = styled.section`
     width: 100%;
 
     padding-top: 15px;
+    margin-bottom: 25px;
+
     display: flex;
     justify-content: space-between;
 `
 
 const ArticleSection = styled.section`
     width: 100%;
-    height: 500px;
+    height: 490px;
 
     display: flex;
     justify-content: space-around;
 `
 const ContentSection = styled.section`
     width: 45%;
-    height: 500px;
+    height: auto;
 
     padding-top: 15px;
-
-
 `
 const CodeSection = styled.section`
     width: 45%;
-    height: 500px;
-    
+    height: auto;
+    border: solid black;
+    border-radius: 5px;
+
     padding-top: 15px;
+    margin-top: 15px;
+    margin-bottom: 25px;
 
 `
 const Vr = styled.div`

@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import Box from '@mui/material/Box';
@@ -17,22 +16,6 @@ const boxSx = {
   p: 1,
 }
 
-const chatSubmitButtonSx = {
-  border: 2,
-  borderColor: "#FCA311",
-  bgcolor: "#FCA311",
-  borderRadius: "50%",
-  height: "30px",
-  width: "30px"
-}
-
-const ChatSubmitButton = styled.button`
-  border: 2px solid #FCA311;
-  background-color: #FCA311;
-  border-radius: 50%;
-  height: 30px;
-  width: 30px;
-`
 
 function ChatInput(props) {
   const [chatInput, setChatInput] = useState("");
@@ -59,19 +42,6 @@ function ChatInput(props) {
 
   return (
     <Box component="form" sx={boxSx} onSubmit={(event) => handleSubmit(event)}>
-      {/* <TextField
-        id="chat"
-        name="chat"
-        autoComplete="chat"
-        label="메세지를 입력하세요."
-        multiline
-        maxRows={4}
-        sx={{ flexGrow: 1, mr: 1, background: "#D9D9D9", color: "black", borderRadius: 4 }}
-        value={chatInput}
-        onChange={handleChangeChatInput} 
-      >
-        
-      </TextField> */}
       <Paper
         component="form"
         sx={{ flexGrow: 1, background: "#D9D9D9", color: "black", p: '2px 4px', display: 'flex', alignItems: 'center', borderRadius: "15px" }}

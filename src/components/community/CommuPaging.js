@@ -33,7 +33,6 @@ function CommuPaging(params) {
                     <Button value={item} onClick={params.onClick} disabled={params.maxPage < item ? true : false} style={{textDecoration: "none"}} key={item}>{item}</Button>
                 )
             })}
-            {/* 다음 페이지 목록을 보여주고 N + 5로 이동 */}
             <Button value={index[0] + 5} style={{textDecoration: "none"}} onClick={onArrClickHandler} 
             disabled={index[0] + 5 >= params.maxPage ? true : false}> &gt;&gt;&gt; </Button>
         </PagingNumberBox>

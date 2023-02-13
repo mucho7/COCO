@@ -1,18 +1,20 @@
 import { useState } from "react";
-import { Link,  } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { Link, useSearchParams } from "react-router-dom";
 
+import { setBoardSearch } from "../../store/commuSearchSlice";
 import { boardSearching } from "../../api/community";
 
 import styled from "styled-components"
 import { Search } from '@mui/icons-material';
 import { IconButton, Button, TextField } from '@mui/material';
 
-function CommuSidebar(params) {
-    // const navigate = useNavigate()
-
-    const [ searchTitle, serSearchTitle] = useState("")
-    const [ searchWriter, serSearchWriter] = useState("")
-    const [ searchContent, serSearchContent] = useState("")
+function CommuSidebar() {
+    const dispatch = useDispatch()
+    const [ searchParams, setSearchParams ] = useSearchParams()
+    const [ searchTitle, serSearchTitle] = useState(null)
+    const [ searchWriter, serSearchWriter] = useState(null)
+    const [ searchContent, serSearchContent] = useState(null)
 
     const onTypingHandler = (e) => {
         switch (e.target.id) {
@@ -45,7 +47,10 @@ function CommuSidebar(params) {
                 },
                 (err) => console.log(err)
             )
-            .then(() => {
+            .then((data) => {
+                setSearchParams({title: searchTitle, content: searchContent, writer: searchWriter})
+                dispatch(setBoardSearch(data))
+                console.log(searchParams)
             })
         }
         getSearchedList()

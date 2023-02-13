@@ -5,13 +5,11 @@ const api = axios.create({
 // env로 대체할 것
 // baseURL: "http://APIgateway:8000/",
 // 
-  // baseURL: "http://i8a703.p.ssafy.io:8000",
-  baseURL: "http://localhost:8013",
+  baseURL: "http://i8a703.p.ssafy.io:8000",
+  // baseURL: "http://localhost:8013",
 
   headers: {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": `http://localhost:3000`,
-    'Access-Control-Allow-Credentials':"true",
   },
 });
 

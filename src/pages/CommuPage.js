@@ -1,9 +1,8 @@
-import styled from "styled-components"
-
 import SidePaddingBox from './SidePaddingBox'
 import  { Navbar } from '../components/navbar';
-
 import { CommuArticleList, CommuSidebar,  } from "../components/community"
+
+import styled from "styled-components"
 
 function CommuPage() {
 

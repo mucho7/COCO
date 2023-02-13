@@ -1,7 +1,9 @@
-import { CustomButton } from "./ToolBar";
 import { useSelector, useDispatch } from "react-redux";
 import { onClickCompileButton } from "../../../store/toolBarActionSlice";
 // import { onCompileSubmit } from "../../../store/compileSlice";
+
+import IconButton from '@mui/material/IconButton';
+import IntegrationInstructionsOutlinedIcon from '@mui/icons-material/IntegrationInstructionsOutlined';
 
 
 function CompileButton(props) {
@@ -19,13 +21,20 @@ function CompileButton(props) {
   }
 
   return (
-    <CustomButton 
+    <IconButton 
       onClick={handleOnClick} 
       isButtonOn={isCompileButtonOn}
       disabled={!isCompilePossible}
+      sx={{ 
+        width: "50px", 
+        height: "50px", 
+        m: '5px', 
+        p: '5px', 
+        bgcolor: isCompileButtonOn ? "#FCA311" : "#E5E5E5" 
+      }}
     >
-      컴파
-    </CustomButton>
+      <IntegrationInstructionsOutlinedIcon fontSize="large" />
+    </IconButton>
   );
 }
 

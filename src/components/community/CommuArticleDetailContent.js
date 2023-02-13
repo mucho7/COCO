@@ -1,15 +1,22 @@
 /* eslint-disable */
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import MonacoEditor from "@monaco-editor/react"
+
 
 import styled from "styled-components";
 import { Typography,  } from "@mui/material";
 
+import myInlineDecoration from "./CommuArticleDetailContent.css";
+import { CookieSharp } from "@mui/icons-material";
+
 function CommuArticleDetailContent(params) {
     const [ hoverTarget, setHoverTarget ] = useState([-1, -1])
-    const [ target, setTarget ] = useState(-2)
+    const [ target, setTarget ] = useState({isActive: false, key:-2, startIndex: -2, endIndex: -2})
+    const editorRef = useRef(null)
+
     const content = (params.content.content)
     const code = (params.content.code)
-
+    
     const onMouseEnterHandler = (startIndex, endIndex, uniqueKey) => {
         if (startIndex === -1){
             setHoverTarget({isActive: false, key:uniqueKey, startIndex: startIndex, endIndex: endIndex})
@@ -23,16 +30,28 @@ function CommuArticleDetailContent(params) {
     
     const onContentBlockClickHandler = (startIndex, endIndex, uniqueKey) => {
         if (startIndex === -1){
-            setTarget({isActive: false, key:uniqueKey, startIndex: startIndex, endIndex: endIndex})
+            setTarget({...target, isActive: false, key:uniqueKey})
         } else {
             setTarget({isActive: true, key: uniqueKey, startIndex: startIndex, endIndex: endIndex})
         }
     }
-
-    // useEffect(() => {
-    //     // console.log(target)
-    //     // console.log(hoverTarget)
-    // }, [ target, hoverTarget ])
+    
+    useEffect(() => {
+        if (target.key === -2) return
+        const editor = monaco.editor.getModels()[0];
+        if (target.isActive) {
+            editor.deltaDecorations([], [{
+                range: new monaco.Range(target.startIndex, 0, target.endIndex, 0),
+                options: {
+                    isWholeLine: true,
+                    inlineClassName: 'myInlineDecoration'
+                }
+            }]);
+        } else {
+            console.log(monaco.editor.getModels()[0].deltaDecorations)
+            editor.removeAllDecorationsWithOwnerId()
+        }
+    }, [target])
 
     return (
         <>
@@ -53,14 +72,21 @@ function CommuArticleDetailContent(params) {
             </ContentSection>
             <Vr/>
             <CodeSection>
-                {code.map((item, uniqueKey) => {
+                <MonacoEditor
+                    language="javascript"
+                    value={params.content.rawContent}
+                    lineNumbers="on"
+                    options={{ readOnly: true }}
+                    theme="vs"
+                />;
+                {/* {code.map((item, uniqueKey) => {    
                     return(
                         <StyeldCodeBox istarget={(target.isActive && target.startIndex <= uniqueKey && target.endIndex >= uniqueKey)} ishovering={(hoverTarget.isActive && hoverTarget.startIndex <= uniqueKey && hoverTarget.endIndex >= uniqueKey)} 
                         id={item.index} key={uniqueKey}>
                             {item}
                         </StyeldCodeBox>
                     )
-                })}
+                })} */}
             </CodeSection>
         </>
     )
@@ -70,13 +96,15 @@ const ArticleContent = `
     width: 45%;
     height: 500px;
     overflow-wrap: break-word; 
-    overflow-y: scroll;
 `
 const ContentSection = styled.section`
     ${ArticleContent}
+    overflow-y: scroll;
+
 `
 const CodeSection = styled.section`
     ${ArticleContent}   
+    margin-top: 15px;
 `
 const Vr = styled.div`
     width: 1px;
