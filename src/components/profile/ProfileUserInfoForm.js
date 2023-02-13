@@ -19,7 +19,7 @@ function ProfileUserInfoForm(props) {
             case 'email':
                 setInputEmail(e.target.value)
                 setISOkToUpdate(emailValidation.test(e.target.value))
-                // console.log(e.target.value, isOkToUpdate)
+                // console.log(e.target.value, inputEmail)
                 break
             case 'name':
                 setInputName(e.target.value)
@@ -99,7 +99,7 @@ function ProfileUserInfoForm(props) {
                     )
                 }
             })}
-            <Button disabled={!isOkToUpdate} onClick={updateUser} >임시 버튼</Button>
+            <Button disabled={isOkToUpdate} onClick={updateUser} >임시 버튼</Button>
         </Col>
     )
 }
