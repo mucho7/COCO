@@ -3,6 +3,12 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { websocketInstances } from "../../../store/sessionSlice";
 
+import IconButton from '@mui/material/IconButton';
+import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import AutoFixHighOutlinedIcon from '@mui/icons-material/AutoFixHighOutlined';
+import Button from '@mui/material/Button';
+
 const DrawDiv = styled.div`
   box-sizing: border-box;
   background: rgba(0, 0, 0, 0);
@@ -13,6 +19,23 @@ const DrawDiv = styled.div`
   width: 100%;
   height: 100%;
 `;
+
+const DrawingTool = styled.div`
+  position: absolute;
+  z-index: 150;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+`
+
+const ColorPicker = styled.input`
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+`
 
 
 function MyDrawLayer(props) {
@@ -156,8 +179,15 @@ function MyDrawLayer(props) {
     sendImageData("erase", {});
   }
 
-  const onChangeColor = (event) => {
+  // const onChangeColor = (event) => {
+  //   setDrawColor(event.target.value);
+  //   console.log(event.target.value)
+  //   contextRef.current.strokeStyle = drawColor;
+  //   sendImageData("onChangeColor", {color: event.target.value});
+  // }
+  function onChangeColor(event) {
     setDrawColor(event.target.value);
+    console.log(event.target.value);
     contextRef.current.strokeStyle = drawColor;
     sendImageData("onChangeColor", {color: event.target.value});
   }
@@ -170,9 +200,19 @@ function MyDrawLayer(props) {
         onMouseMove={draw}
         ref={canvasRef}
       />
-      <button onClick={eraseAll}>전부 지우기</button>
-      <button onClick={erase}>{ isEraseMode ? "그리기" : "지우개" }</button>
-      <input type="color" id="color" onInput={onChangeColor} />
+      <DrawingTool>
+        <IconButton onClick={eraseAll} type="button" sx={{ bgcolor: "#E5E5E5", height: 40, width: 40 }}>
+          <DeleteOutlineOutlinedIcon />
+        </IconButton>
+        <IconButton onClick={erase} type="button" sx={{ bgcolor: "#E5E5E5", height: 40, width: 40 }}>
+          { isEraseMode ? <ModeEditOutlinedIcon /> : <AutoFixHighOutlinedIcon /> }
+        </IconButton>
+        <IconButton onClick={onChangeColor} value="#ffffff" sx={{border: 2, borderColor: "white", bgcolor: "#ffffff", height: 40, width: 40 }} />
+        <IconButton onClick={onChangeColor} value="#9999ff" sx={{border: 2, borderColor: "white", bgcolor: "#9999ff", height: 40, width: 40 }} />
+        <IconButton onClick={onChangeColor} value="#66ffcc" sx={{border: 2, borderColor: "white", bgcolor: "#66ffcc", height: 40, width: 40 }} />
+        <IconButton onClick={onChangeColor} value="#ffff66" sx={{border: 2, borderColor: "white", bgcolor: "#ffff66", height: 40, width: 40 }} />
+        <IconButton onClick={onChangeColor} value="#ff99cc" sx={{border: 2, borderColor: "white", bgcolor: "#ff99cc", height: 40, width: 40 }} />
+      </DrawingTool>
     </DrawDiv>
   );
 }

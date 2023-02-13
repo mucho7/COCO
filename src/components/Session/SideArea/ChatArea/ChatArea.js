@@ -15,6 +15,9 @@ const ChatAreaDiv = styled.div`
   overflow: auto;
 `;
 
+const ChatContentsDiv = styled.div`
+  
+`
 
 function ChatArea(props) {
 
@@ -23,6 +26,7 @@ function ChatArea(props) {
       {/* 참여자 정보 인퍼페이스 */}
       <ParticipantsInfoBar />
       {/* 메세지 컨텐츠 칸 */}
+      
       <ChatList />
       {/* 메세지 입력 칸 */}
       <ChatInput />
