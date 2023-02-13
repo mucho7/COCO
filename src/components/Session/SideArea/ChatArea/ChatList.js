@@ -16,6 +16,22 @@ const ChatListDiv = styled.div`
   margin: 5px 10px;
   border-radius: 15px;
   padding: 10px;
+  scrollbar-gutter: stable;
+  ::-webkit-scrollbar {
+    width: 10px;  /* 스크롤바의 너비 */
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #217af4; /* 스크롤바의 색상 */
+    border-radius: 15px;
+    padding-bottom:40px;
+    padding-top:40px;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  }
+  ::-webkit-scrollbar-track {
+    background-color: darkgrey;
+    border-radius: 15px;
+
+  }
 `
 
 function ChatList(props) {
@@ -45,7 +61,7 @@ function ChatList(props) {
         default:
           break;
         }
-      if (messageItem) {
+      if (chatList && messageItem) {
         chatList.appendChild(messageItem);
       }
     }

@@ -28,10 +28,10 @@ function SigninForm() {
     // validation
     const emailValidation = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}')
     useEffect(() => {
-        const idForm = /^[A-Za-z\d_]{4,16}$/
+        const idForm = /^(?=.*\d{0,16})(?=.*[\_.]{0,16})(?=.*[A-Za-z]{0,16}).{4,16}$/
         const idErrorMessage = {
             null: "필수 입력입니다.",
-            form: "ID는 영문자와 언더스코어(_) 로 구성하여 4자 ~ 16자 로 작성해주세요.",
+            form: "ID는 영문자, 숫자, 언더스코어(_) 로 구성하여 4자 ~ 16자 로 작성해주세요.",
         }
         if (inputID === undefined || inputID === '') {
             setIsOkToSubmit(false)
@@ -47,7 +47,7 @@ function SigninForm() {
     }, [inputID])
 
     useEffect(() => {
-        const passwordForm = /^(?=.*\d{1,32})(?=.*[~`!@#$%^&*()-+=]{0,32})(?=.*[a-zA-Z]{1,32}).{4,32}$/
+        const passwordForm = /^(?=.*\d{1,32})(?=.*[~`!@#$%^&*()-+=\_]{0,32})(?=.*[a-zA-Z]{1,32}).{4,32}$/
         const passwordErrorMessage = {
             null: "필수 입력입니다.",
             form: "비밀번호는 영문자, 숫자가 각각 반드시 1번 이상 포함된 4자 이상 32자 이하인 문자열이어야 합니다. (허용 특수문자: ~`!@#$%^&*()-+=)",

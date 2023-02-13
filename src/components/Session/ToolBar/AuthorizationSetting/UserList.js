@@ -7,9 +7,10 @@ import { setUpdated } from "../../../../store/sessionSlice";
 
 
 const UserListDiv = styled.div`
-  flex: 8;
   background-color: #4A4E69;
   color: white;
+  max-height: 200px;
+  overflow: auto;
 `
 
 function UserList() {
