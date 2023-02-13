@@ -25,6 +25,7 @@ function IdeArea(props) {
   const isDrawButtonOn = useSelector((state) => state.toolBarAction.isDrawButtonOn);
   const participantsId = useSelector((state) => state.session.participantsId);
   const [participants, setParticipants] = useState({});
+  const userId = localStorage.getItem("userId");
   // const participants = participantsInstances.get(participantsId);
   const updated = useSelector((state) => state.session.updated);
   const dispatch = useDispatch();
@@ -55,7 +56,7 @@ function IdeArea(props) {
           )
         })
       }
-      <Ide />
+      {participantsId !== null && <Ide participant={participants[userId]} />}
     </IdeAreaDiv>
   );
 }

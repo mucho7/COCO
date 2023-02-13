@@ -1,12 +1,12 @@
-import { useState, useEffect,  } from 'react'
+import { useState, useEffect, } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 
-import  { Navbar } from '../components/navbar';
+import { Navbar } from '../components/navbar';
 import { deleteUserInfo, readUserInfo } from "../api/member"
 import { ProfileUserInfoItem, ProfileUserInfoForm, ProfileUserTrophy, ProfilePasswordUpdateButton } from '../components/profile'
 
-import styled  from 'styled-components'
+import styled from 'styled-components'
 import SidePaddingBox from './SidePaddingBox'
 import { Button } from '@mui/material'
 import { AccountCircle } from '@mui/icons-material'
@@ -14,43 +14,45 @@ import { AccountCircle } from '@mui/icons-material'
 
 function ProfilePage(params) {
     const navigate = useNavigate()
-    const [ userInfo, setUesrInfo ] = useState([])
-    const [ cookie, setCookie ] = useCookies(["userInfo"])
-    const [ updateFlag, setUpdateFlag ] = useState(false)
-    
+    const [userInfo, setUesrInfo] = useState([])
+    const [cookie, setCookie] = useCookies(["userInfo"])
+    const [updateFlag, setUpdateFlag] = useState(false)
+
     console.log(cookie)
 
-    async function deleteUser() {       
-        await deleteUserInfo(
-            {
-                userId: cookie.userInfo.user_id,
-                "Authorization": cookie.userInfo.jwt_token,
-                "refreshToken": cookie.userInfo.refresh_token,
-            },
-            (data) => {
-                console.log(data)
-                setCookie("userInfo", "undefined")
-                localStorage.setItem("userId", undefined)
-                navigate('/')
-            },
-            (err) => console.log(err)
-        )
-    } 
-    
+    async function deleteUser() {
+        if (window.confirm('정말 탈퇴하시겠습니까?')) {
+            await deleteUserInfo(
+                {
+                    userId: cookie.userInfo.user_id,
+                    "Authorization": cookie.userInfo.jwt_token,
+                    "refreshToken": cookie.userInfo.refresh_token,
+                },
+                (data) => {
+                    console.log(data)
+                    setCookie("userInfo", "undefined")
+                    localStorage.setItem("userId", undefined)
+                    navigate('/')
+                },
+                (err) => console.log(err)
+            )
+        }
+    }
+
     const flagClickHandler = () => {
         if (updateFlag) {
             setUpdateFlag(false)
-        }  else setUpdateFlag(true)
+        } else setUpdateFlag(true)
     }
-        
+
     useEffect(() => {
         const objectToArray = (obj) => {
             const keys = Object.keys(obj);
             return keys.map((key) => [key, obj[key]]);
         };
-        
+
         const filterObject = (obj, keys) => {
-            const filteredArray = objectToArray(obj).filter((item) => 
+            const filteredArray = objectToArray(obj).filter((item) =>
                 keys.includes(item[0])
             );
             return (filteredArray);
@@ -61,13 +63,14 @@ function ProfilePage(params) {
                 {
                     userId: cookie.userInfo.user_id,
                     'Authorization': cookie.userInfo.jwt_token,
-                    'refreshToken':  cookie.userInfo.refresh_token,
+                    'refreshToken': cookie.userInfo.refresh_token,
                 },
-                (data) => {return data.data},
-                (err) => {console.log(err)}
-        ).then(data => {
-            setUesrInfo(filterObject(data, ['id', 'name', 'email', 'regTime']))
-        })}
+                (data) => { return data.data },
+                (err) => { console.log(err) }
+            ).then(data => {
+                setUesrInfo(filterObject(data, ['id', 'name', 'email', 'regTime']))
+            })
+        }
         readUser()
         console.log(updateFlag)
     }, [cookie, updateFlag])
@@ -80,26 +83,26 @@ function ProfilePage(params) {
             <BackgroundBox>
                 {/* <BackgroundImg src='https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg'/> */}
             </BackgroundBox>
-            <AccountCircle sx={{ fontSize: '150px', color: '#FCA311', position: 'absolute', left: '100px', top: '140px', background: 'white', borderRadius: '100%' }}/>
+            <AccountCircle sx={{ fontSize: '150px', color: '#FCA311', position: 'absolute', left: '100px', top: '140px', background: 'white', borderRadius: '100%' }} />
             <PaddingBox>
-                {updateFlag === false 
-                ? <Button onClick={flagClickHandler} variant="contained" className="submit" fullWidth style={{ width: "7rem", height:"2.8rem", marginRight: "15px"}}> <b>프로필 편집</b></Button>
-                :<>
-                    <Button onClick={deleteUser} variant="contained" className="submit" fullWidth style={{ width: "7rem", height:"2.8rem", marginRight: "15px", backgroundColor: "red"}}><b>계정 삭제</b></Button>
-                    <ProfilePasswordUpdateButton/>
-                    <Button onClick={flagClickHandler} variant="contained" className="submit" fullWidth style={{ width: "7rem", height:"2.8rem", marginRight: "15px"}}><b>편집 완료</b></Button>
-                </>}
+                {updateFlag === false
+                    ? <Button onClick={flagClickHandler} variant="contained" className="submit" fullWidth style={{ width: "7rem", height: "2.8rem", marginRight: "15px" }}> <b>프로필 편집</b></Button>
+                    : <>
+                        <Button onClick={deleteUser} variant="contained" className="submit" fullWidth style={{ width: "7rem", height: "2.8rem", marginRight: "15px", backgroundColor: "red" }}><b>계정 삭제</b></Button>
+                        <ProfilePasswordUpdateButton />
+                        <Button onClick={flagClickHandler} variant="contained" className="submit" fullWidth style={{ width: "7rem", height: "2.8rem", marginRight: "15px" }}><b>편집 완료</b></Button>
+                    </>}
             </PaddingBox>
             <TestingBox>
                 <LeftBox>
-                    <ProfileUserTrophy/>
+                    <ProfileUserTrophy />
                 </LeftBox>
                 <RightBox>
-                    {updateFlag === false ? <ProfileUserInfoItem userInfo={(userInfo)}/> : <ProfileUserInfoForm userInfo={userInfo} />}
+                    {updateFlag === false ? <ProfileUserInfoItem userInfo={(userInfo)} /> : <ProfileUserInfoForm userInfo={userInfo} />}
                 </RightBox>
             </TestingBox>
         </SidePaddingBox>
-    )   
+    )
 }
 
 const BackgroundBox = styled.div`
@@ -136,7 +139,7 @@ const LeftBox = styled.div`
     align-items: center;
 `
 
-const PaddingBox =  styled.div`
+const PaddingBox = styled.div`
     width: 100%;    
     height: 90px;
 
