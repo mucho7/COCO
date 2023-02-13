@@ -7,12 +7,10 @@ import styled from "styled-components";
 import { Typography,  } from "@mui/material";
 
 import myInlineDecoration from "./CommuArticleDetailContent.css";
-import { CookieSharp } from "@mui/icons-material";
 
 function CommuArticleDetailContent(params) {
     const [ hoverTarget, setHoverTarget ] = useState([-1, -1])
     const [ target, setTarget ] = useState({isActive: false, key:-2, startIndex: -2, endIndex: -2})
-    const editorRef = useRef(null)
 
     const content = (params.content.content)
     const code = (params.content.code)
@@ -41,7 +39,7 @@ function CommuArticleDetailContent(params) {
         const editor = monaco.editor.getModels()[0];
         if (target.isActive) {
             editor.deltaDecorations([], [{
-                range: new monaco.Range(target.startIndex, 0, target.endIndex, 0),
+                range: new monaco.Range(target.startIndex, 0, target.endIndex + 1, 0),
                 options: {
                     isWholeLine: true,
                     inlineClassName: 'myInlineDecoration'
@@ -74,7 +72,7 @@ function CommuArticleDetailContent(params) {
             <CodeSection>
                 <MonacoEditor
                     language="javascript"
-                    value={params.content.rawContent}
+                    value={code}
                     lineNumbers="on"
                     options={{ readOnly: true }}
                     theme="vs"
