@@ -247,7 +247,7 @@ function NormalSession(props) {
             this.generateOffer (participant.offerToReceiveVideo.bind(participant));
         });
         participant.rtcPeer.audioEnabled = false;
-        participant.rtcPeer.videoEnabled = false;
+        // participant.rtcPeer.videoEnabled = false;
       
         msg.data.forEach(receiveVideo);
       }
@@ -315,6 +315,9 @@ function NormalSession(props) {
               break;
             case "drawButton":
               break;
+            case "micButton":
+              participant.rtcPeer.audioEnabled = !participant.rtcPeer.audioEnabled;
+              break;
             default:
               break;
           }
@@ -323,7 +326,7 @@ function NormalSession(props) {
         participants[targetUserName] = participant;
         participantsInstances.set(1, participants);
         dispatch(setUpdated(true));
-        console.log("after onToggleAuth: ", participant.authorization)
+        console.log("after onToggleAuth: ", participant)
       }
 
   
@@ -369,6 +372,9 @@ function NormalSession(props) {
               break;
             case "drawButton":
               this.isDrawButtonOn = !this.isDrawButtonOn;
+              break;
+            case "micButton":
+              this.rtcPeer.audioEnabled = !this.rtcPeer.audioEnabled;
               break;
             default:
               break;
