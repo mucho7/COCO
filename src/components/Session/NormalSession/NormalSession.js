@@ -2,7 +2,8 @@ import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { receiveChat, websocketInstances, setWebsocketId, setParticipantsId, participantsInstances, receiveImageData, setUpdated, setIsCompilePossible, setIsDrawPossible, setIsMicPossible, setCountUsers } from "../../../store/sessionSlice";
+import { receiveChat, websocketInstances, setWebsocketId, setParticipantsId, participantsInstances, receiveImageData, setUpdated, setCountUsers } from "../../../store/sessionSlice";
+import { setIsCompilePossible, setIsDrawPossible, setIsMicPossible } from "../../../store/toolBarActionSlice";
 
 import IdeArea from "../IdeArea";
 import SideArea from "../SideArea";
@@ -306,8 +307,6 @@ function NormalSession(props) {
               participant.rtcPeer.audioEnabled = !participant.rtcPeer.audioEnabled;
               dispatch(setIsMicPossible());
               break;
-            case "drawButton":
-              break;
             default:
               break;
           }
@@ -346,8 +345,7 @@ function NormalSession(props) {
           isMicPossible: true,
           isDrawPossible: true
         }
-        // 캔버스 관리를 위해 isDrawButtonOn도 속성으로 관리
-        this.isDrawButtonOn = false;
+
         this.onToggleAuthorization = function(authorizationType) {
           switch (authorizationType) {
             case "compile":
@@ -355,14 +353,9 @@ function NormalSession(props) {
               break;
             case "mic":
               this.authorization.isMicPossible = !this.authorization.isMicPossible;
-              // console.log(this.rtcPeer);
-              // console.log(this.rtcPeer.peerConnection)
               break;
             case "draw":
               this.authorization.isDrawPossible = !this.authorization.isDrawPossible;
-              break;
-            case "drawButton":
-              this.isDrawButtonOn = !this.isDrawButtonOn;
               break;
             default:
               break;

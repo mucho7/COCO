@@ -29,7 +29,25 @@ const toolBarActionSlice = createSlice({
     },
     onClickChatButton(state) {
       state.isChatButtonOn = !state.isChatButtonOn;
-    }
+    },
+    setIsCompilePossible(state, action) {
+      state.isCompilePossible = !state.isCompilePossible;
+      if (!state.isCompilePossible) {
+        state.isCompileButtonOn = false;
+      }
+    },
+    setIsDrawPossible(state, action) {
+      state.isDrawPossible = !state.isDrawPossible;
+      if (!state.isDrawPossible) {
+        state.isDrawButtonOn = false;
+      }
+    },
+    setIsMicPossible(state, action) {
+      state.isMicPossible = !state.isMicPossible;
+      if (!state.isMicPossible) {
+        state.isMicButtonOn = false;
+      }
+    },
   }
 });
 
@@ -38,7 +56,10 @@ export const {
   onClickDrawButton,
   onClickMicButton,
   onClickAuthorizeButton,
-  onClickChatButton
+  onClickChatButton,
+  setIsCompilePossible,
+  setIsDrawPossible,
+  setIsMicPossible
 } = toolBarActionSlice.actions;
 
 export default toolBarActionSlice;
