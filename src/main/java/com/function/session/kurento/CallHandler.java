@@ -251,19 +251,18 @@ public class CallHandler extends TextWebSocketHandler {
 		final String roomName = user.getRoomName();
 		final String userName = user.getName();
 		final Room room = roomManager.getRoom(roomName);
+		final String hostName = room.getHostName();
 		room.leave(user);
 		if (room.getParticipants().isEmpty()) {
 			roomManager.removeRoom(room);
 		}
 		// 인원수 - 1
-		// roomService.UpdateRoomLeave(roomName);
-		if (roomService.UpdateRoomLeave(Long.parseLong(roomName)) != null) {
-			System.out.println("...인원수 - 1 성공, 방이름: " + roomName);
-		} else {
-			System.out.println("...인원수 - 1 실패: 해당 룸 없음, 방이름: " + roomName);
+		if (hostName != null) {
+			roomService.UpdateRoomLeave(Long.parseLong(roomName));
 		}
 		// 호스트가 나갔다면, 해당 방 삭제하고 모두 나가기
-		if (userName.equals(roomName)) {
+		if (userName.equals(hostName)) {
+			room.setHostName(null);
 			System.out.println("...DB에서 해당 방 삭제하기, 방이름: " + roomName);
 			if (roomService.DeleteRoom(Long.parseLong(roomName)) == null) {
 				System.out.println("...삭제 실패: 해당 룸 없음...");
@@ -278,7 +277,7 @@ public class CallHandler extends TextWebSocketHandler {
 
 		log.info("PARTICIPANT {}: trying to join room {}", name, roomName);
 
-		Room room = roomManager.getRoom(roomName);
+		Room room = roomManager.getRoom(roomName, name); // 수정 2023.02.13.
 		final UserSession user = room.join(name, session);
 		registry.register(user);
 
