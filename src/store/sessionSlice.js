@@ -11,18 +11,12 @@ export const participantsInstances = new Map();
 const initialState = {
   newMessage: {},
   sendMessage: "",
-  userName: "",
-  roomName: "",
   websocketId: null,
   participantsId: null,
   updated: false,
-  isCompilePossible: true,
-  isDrawPossible: true,
-  isMicPossible: true,
   imageData: null,
   countUsers: null
 };
-
 
 
 const sessionSlice = createSlice({
@@ -36,26 +30,11 @@ const sessionSlice = createSlice({
     receiveChat(state, action) {
       state.newMessage = action.payload;
     },
-    setSocketInfo(state, action) {
-      // console.log(action.payload.userName)
-      state.userName = action.payload.userName;
-      state.roomName = action.payload.roomName;
-      // console.log(state.userName)
-    },
     setWebsocketId(state, action) {
       state.websocketId = action.payload;
     },
     setParticipantsId(state, action) {
       state.participantsId = action.payload;
-    },
-    setIsCompilePossible(state, action) {
-      state.isCompilePossible = !state.isCompilePossible;
-    },
-    setIsDrawPossible(state, action) {
-      state.isDrawPossible = !state.isDrawPossible;
-    },
-    setIsMicPossible(state, action) {
-      state.isMicPossible = !state.isMicPossible;
     },
     receiveImageData(state, action) {
       state.imageData = action.payload;
@@ -70,15 +49,11 @@ const sessionSlice = createSlice({
 });
 
 export const { 
-  receiveChat, 
-  setSocketInfo, 
+  receiveChat,  
   setWebsocketId, 
   setParticipantsId, 
   receiveImageData, 
   setUpdated,
-  setIsCompilePossible,
-  setIsDrawPossible,
-  setIsMicPossible,
   setCountUsers } = sessionSlice.actions;
 
 export default sessionSlice;

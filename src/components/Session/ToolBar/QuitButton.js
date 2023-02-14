@@ -15,7 +15,7 @@ function QuitButton(props) {
   const participantsId = useSelector((state) => state.session.participantsId);
   const [participants, setParticipants] = useState(participantsInstances.get(participantsId));
   
-  const userName = useSelector((state) => state.session.userName);
+  const userName = localStorage.getItem("userId")
   
   useEffect(() => {
     setWs(websocketInstances.get(websoketId));
@@ -29,7 +29,7 @@ function QuitButton(props) {
     if (participants) {
       participants[userName].dispose();
     }
-    navigate("/room")
+    navigate("/session")
   }
   
   return (

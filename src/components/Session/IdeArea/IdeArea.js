@@ -56,7 +56,7 @@ function IdeArea(props) {
           )
         })
       }
-      {participantsId !== null && <Ide participant={participants[userId]} />}
+      {participantsId !== null && <Ide />}
     </IdeAreaDiv>
   );
 }

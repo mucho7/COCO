@@ -14,16 +14,32 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import { useEffect } from "react";
+import { participantsInstances, setUpdated } from "../../../store/sessionSlice";
 
 
 function Ide(props) {
   const [userCode, setUserCode] = useState(``);
   const [userLanguage, setUserLanguage] = useState("java");
   const [userTheme, setUserTheme] = useState("vs-dark");
+  const participantsId = useSelector((state) => state.session.participantsId);
+  const [participants, setParticipants] = useState({});
+  const updated = useSelector((state) => state.session.updated);
+  const userId = localStorage.getItem("userId");
   const isCompileButtonOn = useSelector((state) => state.toolBarAction.isCompileButtonOn);
   
   const dispatch = useDispatch();
-  const participant = props.participant;
+  
+  useEffect(() => {
+    if (participantsId) {
+      setParticipants(participantsInstances.get(participantsId));
+    }
+    
+    if (updated) {
+      setParticipants(participantsInstances.get(participantsId));
+      dispatch(setUpdated(false));
+    }
+  }, [participantsId, updated, dispatch])
   
     
   // WebRTC
@@ -69,7 +85,7 @@ function Ide(props) {
 
   return (
     <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
-      {participant.isHost && languageSelector}
+      {participants[userId]?.isHost && languageSelector}
       {/* {languageSelector} */}
       <Editor 
         id="editor"

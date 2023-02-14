@@ -2,12 +2,15 @@ import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { receiveChat, websocketInstances, setWebsocketId, setParticipantsId, participantsInstances, receiveImageData, setUpdated, setIsCompilePossible, setIsDrawPossible, setIsMicPossible, setCountUsers } from "../../../store/sessionSlice";
+import { receiveChat, websocketInstances, setWebsocketId, setParticipantsId, participantsInstances, receiveImageData, setUpdated, setCountUsers } from "../../../store/sessionSlice";
+import { setIsCompilePossible, setIsDrawPossible, setIsMicPossible } from "../../../store/toolBarActionSlice";
 
 import IdeArea from "../IdeArea";
 import SideArea from "../SideArea";
 import ToolBar from "../ToolBar";
 import adapter from "webrtc-adapter";
+import { getSessionDetail } from "../../../api/session";
+import { useState } from "react";
 
 let kurentoUtils = require("kurento-utils");
 // const adapter = require("webrtc-adapter");
@@ -28,14 +31,51 @@ const NormalSessionDiv = styled.div`
 function NormalSession(props) {
   let ws = useRef(null);
   const dispatch = useDispatch();
-  const userName = useSelector((state) => state.session.userName);
-  // const roomName = useSelector((state) => state.session.roomName);
-  // const userName = window.localStorage.getItem("userId");
+  const userName = localStorage.getItem("userId");
   const { roomId } = useParams();
   const roomName = roomId
-  console.log(roomName)
+  const [hostId, setHostId] = useState("");
 
-  const isDrawButtonOn = useSelector((state) => state.toolBarAction.isDrawButtonOn);
+
+  useEffect(() => {
+    const preventClose = (e) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    (() => {
+      window.addEventListener("beforeunload", preventClose);
+    })();
+
+    return () => {
+      window.removeEventListener("beforeunload", preventClose)
+    }
+  }, [])
+
+  
+  useEffect(() => {
+    const preventGoBack = () => {
+      window.history.pushState(null, "", window.location.href);
+    };
+    window.history.pushState(null, "", window.location.href);
+    window.addEventListener("popstate", preventGoBack);
+   
+    return () => {
+      window.removeEventListener("popstate", preventGoBack);
+    };
+  }, []);
+
+  useEffect(() => {
+    const getHostId = async () => {
+      await getSessionDetail(
+        roomId,
+        (data) => {return data.data},
+        (err) => console.log(err)
+        ).then((data) => {
+          setHostId(data.hostId);
+        })
+      }
+    getHostId();
+  }, [roomId])
       
   useEffect(() => {
     // window.addEventListener("resize", () => {
@@ -77,7 +117,7 @@ function NormalSession(props) {
     }
 
     // 세션 컴포넌트 마운트시 웹소켓 생성하고 register 함수를 통해 서버에 등록
-    if (!ws.current) {
+    if (hostId && !ws.current) {
       // ws.current = new WebSocket("wss://localhost:8443/groupcall");
       ws.current = new WebSocket(`wss://ssafy.cossafyco.kro.kr:8443/groupcall`);
       // console.log(ws.current);
@@ -267,8 +307,6 @@ function NormalSession(props) {
               participant.rtcPeer.audioEnabled = !participant.rtcPeer.audioEnabled;
               dispatch(setIsMicPossible());
               break;
-            case "drawButton":
-              break;
             default:
               break;
           }
@@ -299,15 +337,15 @@ function NormalSession(props) {
         this.name = name;
         this.rtcPeer = null;
         // 호스트 여부
-        this.isHost = (name==="admin") ? true : false;
+        this.isHost = name === hostId ? true : false;
+        
         // 권한 목록
         this.authorization = { 
           isCompilePossible: this.isHost, 
           isMicPossible: true,
           isDrawPossible: true
         }
-        // 캔버스 관리를 위해 isDrawButtonOn도 속성으로 관리
-        this.isDrawButtonOn = false;
+
         this.onToggleAuthorization = function(authorizationType) {
           switch (authorizationType) {
             case "compile":
@@ -315,14 +353,9 @@ function NormalSession(props) {
               break;
             case "mic":
               this.authorization.isMicPossible = !this.authorization.isMicPossible;
-              // console.log(this.rtcPeer);
-              // console.log(this.rtcPeer.peerConnection)
               break;
             case "draw":
               this.authorization.isDrawPossible = !this.authorization.isDrawPossible;
-              break;
-            case "drawButton":
-              this.isDrawButtonOn = !this.isDrawButtonOn;
               break;
             default:
               break;
@@ -369,7 +402,7 @@ function NormalSession(props) {
         }
 
         function isPresentMainParticipant() {
-          return ((document.getElementsByClassName(PARTICIPANT_MAIN_CLASS)).length != 0);
+          return ((document.getElementsByClassName(PARTICIPANT_MAIN_CLASS)).length !== 0);
         }
 
         this.offerToReceiveVideo = function(error, offerSdp, wp){
@@ -402,7 +435,7 @@ function NormalSession(props) {
         };
       }
     }
-  }, [dispatch, isDrawButtonOn, roomName, userName])
+  }, [dispatch, hostId, roomId, roomName, userName])
 
   useEffect(() => {
     return () => {
