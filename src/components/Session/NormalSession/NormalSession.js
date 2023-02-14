@@ -316,7 +316,6 @@ function NormalSession(props) {
             case "drawButton":
               break;
             case "micButton":
-              participant.rtcPeer.audioEnabled = !participant.rtcPeer.audioEnabled;
               break;
             default:
               break;
