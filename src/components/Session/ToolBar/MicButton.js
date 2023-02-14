@@ -22,7 +22,7 @@ function MicButton(props) {
   }, [participantsId])
 
   useEffect(() => {
-    if (participants[userName]) {
+    if (participants && participants[userName]) {
       if (isMicButtonOn) {
         participants[userName].rtcPeer.audioEnabled = true;
       } else {
