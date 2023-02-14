@@ -8,6 +8,8 @@ import IdeArea from "../IdeArea";
 import SideArea from "../SideArea";
 import ToolBar from "../ToolBar";
 import adapter from "webrtc-adapter";
+import { getSessionDetail } from "../../../api/session";
+import { useState } from "react";
 
 let kurentoUtils = require("kurento-utils");
 // const adapter = require("webrtc-adapter");
@@ -28,19 +30,29 @@ const NormalSessionDiv = styled.div`
 function NormalSession(props) {
   let ws = useRef(null);
   const dispatch = useDispatch();
-  const userName = useSelector((state) => state.session.userName);
-  // const roomName = useSelector((state) => state.session.roomName);
-  // const userName = window.localStorage.getItem("userId");
+  const userName = localStorage.getItem("userId");
   const { roomId } = useParams();
   const roomName = roomId
-  console.log(roomName)
+  const [hostId, setHostId] = useState("");
 
   const isDrawButtonOn = useSelector((state) => state.toolBarAction.isDrawButtonOn);
+
+  
       
   useEffect(() => {
     // window.addEventListener("resize", () => {
     //   window.resizeTo(1600, 900)
     // });
+    const getHostId = async () => {
+      await getSessionDetail(
+        roomId,
+        (data) => {return data.data},
+        (err) => console.log(err)
+        ).then((data) => {
+          setHostId(data.hostId);
+        })
+      }
+    getHostId();
 
     let participants = {};
 
@@ -299,7 +311,8 @@ function NormalSession(props) {
         this.name = name;
         this.rtcPeer = null;
         // 호스트 여부
-        this.isHost = (name==="admin") ? true : false;
+        this.isHost = name === hostId ? true : false;
+        
         // 권한 목록
         this.authorization = { 
           isCompilePossible: this.isHost, 
@@ -402,7 +415,7 @@ function NormalSession(props) {
         };
       }
     }
-  }, [dispatch, isDrawButtonOn, roomName, userName])
+  }, [dispatch, isDrawButtonOn, roomId, roomName, userName])
 
   useEffect(() => {
     return () => {
