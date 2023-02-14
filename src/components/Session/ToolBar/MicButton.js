@@ -11,7 +11,7 @@ import { useEffect } from "react";
 
 function MicButton(props) {
   const isMicButtonOn = useSelector((state) => state.toolBarAction.isMicButtonOn);
-  const isMicPossible = useSelector((state) => state.session.isMicPossible);
+  const isMicPossible = useSelector((state) => state.toolBarAction.isMicPossible);
   const participantsId = useSelector((state) => state.session.participantsId);
   const [participants, setParticipants] = useState(participantsInstances.get(participantsId));
   const userName = localStorage.getItem("userId")
