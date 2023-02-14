@@ -35,8 +35,6 @@ function NormalSession(props) {
   const roomName = roomId
   const [hostId, setHostId] = useState("");
 
-  const isDrawButtonOn = useSelector((state) => state.toolBarAction.isDrawButtonOn);
-
 
   useEffect(() => {
     const preventClose = (e) => {
@@ -64,11 +62,8 @@ function NormalSession(props) {
       window.removeEventListener("popstate", preventGoBack);
     };
   }, []);
-      
+
   useEffect(() => {
-    // window.addEventListener("resize", () => {
-    //   window.resizeTo(1600, 900)
-    // });
     const getHostId = async () => {
       await getSessionDetail(
         roomId,
@@ -79,6 +74,12 @@ function NormalSession(props) {
         })
       }
     getHostId();
+  }, [roomId])
+      
+  useEffect(() => {
+    // window.addEventListener("resize", () => {
+    //   window.resizeTo(1600, 900)
+    // });
 
     let participants = {};
 
@@ -115,7 +116,7 @@ function NormalSession(props) {
     }
 
     // 세션 컴포넌트 마운트시 웹소켓 생성하고 register 함수를 통해 서버에 등록
-    if (!ws.current) {
+    if (hostId && !ws.current) {
       // ws.current = new WebSocket("wss://localhost:8443/groupcall");
       ws.current = new WebSocket(`wss://ssafy.cossafyco.kro.kr:8443/groupcall`);
       // console.log(ws.current);
@@ -408,7 +409,7 @@ function NormalSession(props) {
         }
 
         function isPresentMainParticipant() {
-          return ((document.getElementsByClassName(PARTICIPANT_MAIN_CLASS)).length != 0);
+          return ((document.getElementsByClassName(PARTICIPANT_MAIN_CLASS)).length !== 0);
         }
 
         this.offerToReceiveVideo = function(error, offerSdp, wp){
@@ -441,7 +442,7 @@ function NormalSession(props) {
         };
       }
     }
-  }, [dispatch, isDrawButtonOn, roomId, roomName, userName])
+  }, [dispatch, hostId, roomId, roomName, userName])
 
   useEffect(() => {
     return () => {
