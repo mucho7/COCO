@@ -29,7 +29,7 @@ public class BoardFileService {
 	public Long save(long id, MultipartFile file) {
 
 		try {
-			file.transferTo(new File(path));
+			file.transferTo(new File(path+"/"+file.getOriginalFilename()));
 		} catch (IOException e) {
 			System.out.println(e);
 			throw new RuntimeException(e);
