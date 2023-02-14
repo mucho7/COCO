@@ -29,7 +29,7 @@ public class BoardFileController {
 
 	@GetMapping("/hello")
 	public String hello(){
-		File file = new File("/data/myfile.txt");
+		File file = new File("/data/boardItem/myfile.txt");
 		FileWriter writer = null;
 		try {
 			writer = new FileWriter(file);
