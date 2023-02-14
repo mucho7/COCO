@@ -7,7 +7,7 @@ import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined';
 
 function DrawButton(props) {
   const isDrawButtonOn = useSelector((state) => state.toolBarAction.isDrawButtonOn);
-  const isDrawPossible = useSelector((state) => state.session.isDrawPossible);
+  const isDrawPossible = useSelector((state) => state.toolBarAction.isDrawPossible);
   const dispatch = useDispatch();
   
   return (
