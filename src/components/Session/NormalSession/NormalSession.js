@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { receiveChat, websocketInstances, setWebsocketId, setParticipantsId, participantsInstances, receiveImageData, setUpdated, setCountUsers } from "../../../store/sessionSlice";
 import { setIsCompilePossible, setIsDrawPossible, setIsMicPossible } from "../../../store/toolBarActionSlice";
@@ -35,6 +35,7 @@ function NormalSession(props) {
   const { roomId } = useParams();
   const roomName = roomId
   const [hostId, setHostId] = useState("");
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -176,6 +177,9 @@ function NormalSession(props) {
             console.log("Receive ImageData")
             console.log(parsedMessage)
             break;
+          case "leaveByHost":
+            leaveRoom();
+            break;
           default:
             console.error('Unrecognized message', parsedMessage);
         }
@@ -242,6 +246,8 @@ function NormalSession(props) {
             }
             this.generateOffer (participant.offerToReceiveVideo.bind(participant));
         });
+        participant.rtcPeer.audioEnabled = false;
+        participant.rtcPeer.videoEnabled = false;
       
         msg.data.forEach(receiveVideo);
       }
@@ -252,6 +258,7 @@ function NormalSession(props) {
         }
       
         ws.current.close();
+        navigate("/session");
       }
 
       function receiveVideo(sender) {
@@ -304,7 +311,6 @@ function NormalSession(props) {
               dispatch(setIsDrawPossible());
               break;
             case "mic":
-              participant.rtcPeer.audioEnabled = !participant.rtcPeer.audioEnabled;
               dispatch(setIsMicPossible());
               break;
             case "drawButton":
@@ -442,7 +448,7 @@ function NormalSession(props) {
         };
       }
     }
-  }, [dispatch, hostId, roomId, roomName, userName])
+  }, [dispatch, hostId, navigate, roomId, roomName, userName])
 
   useEffect(() => {
     return () => {

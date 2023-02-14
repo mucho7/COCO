@@ -20,13 +20,21 @@ function MicButton(props) {
   useEffect(() => {
     setParticipants(participantsInstances.get(participantsId));
   }, [participantsId])
+
+  useEffect(() => {
+    if (participants[userName]) {
+      if (isMicButtonOn) {
+        participants[userName].rtcPeer.audioEnabled = true;
+      } else {
+        participants[userName].rtcPeer.audioEnabled = false;
+      }
+      console.log(participants[userName].rtcPeer.audioEnabled)
+    }
+  }, [isMicButtonOn, participants, userName])
   
   
   function handleClickMicButton() {
     dispatch(onClickMicButton())
-    if (participants[userName]) {
-      participants[userName].rtcPeer.audioEnabled = !participants[userName].rtcPeer.audioEnabled;
-    }
   }
 
   return (
