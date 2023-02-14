@@ -59,7 +59,7 @@ function ToolBar(props) {
         <CompileButton />
         <DrawButton />
         <MicButton />
-        {participants[userId].isHost && <AuthorizeButton />}
+        {participants[userId]?.isHost && <AuthorizeButton />}
         <ChatButton />
         <QuitButton />
         {isAuthorizeButtonOn && <AuthorizationSetting />}
