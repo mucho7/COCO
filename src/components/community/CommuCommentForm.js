@@ -55,6 +55,8 @@ function CommentForm(params) {
 const CommentFormBox = styled.div`
     display: flex;
     justify-content: center;
+
+    margin-top: 30px;
 `
 
 export default CommentForm

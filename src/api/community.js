@@ -1,13 +1,6 @@
-import axios from "axios";
+import http from "./http.js";
 
-// axios 객체 생성
-const api = axios.create({
-  baseURL: "https://ssafy.cossafyco.kro.kr/api/",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
+const api = http;
 
 async function boardPaging(pageInfo, success, fail) {
   const res = await api.get(`/board`, {params: {size: pageInfo.size, page: pageInfo.page}}).then(success).catch(fail);
@@ -15,7 +8,7 @@ async function boardPaging(pageInfo, success, fail) {
 }
 
 async function boardSearching(searchInfo, success, fail) {
-  const res = await api.get(`/board/search`, {params: {[searchInfo.searchTarget]: searchInfo.searchWord}}).then(success).catch(fail);
+  const res = await api.get(`/board/search`, {params: {[searchInfo.searchTarget]: searchInfo.searchWord, size: searchInfo.size,  page: searchInfo.page}}).then(success).catch(fail);
   return res
 }
 

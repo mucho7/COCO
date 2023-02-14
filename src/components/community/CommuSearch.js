@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { Paper, InputBase, IconButton } from '@mui/material';
+import { Paper, InputBase, IconButton, FormControl, Select, MenuItem } from '@mui/material';
 import { Search } from '@mui/icons-material';
 
 
@@ -16,29 +16,28 @@ export default function CommuSearchbar() {
     }
 
     // setSearchTarget을 활용할 수 있는 드롭박스
-
+    const onSelectHandler = (e) => {
+        setSearchTarget(e.target.value)
+    }
 
     const onSearchClickHandler = () => {
-        searchParams.set(searchTarget, searchWord)
+        searchParams.set("word", searchWord)
+        searchParams.set("target", searchTarget)
         setSearchParams(searchParams)
-        // const getSearchedList = async () => {
-        //     await boardSearching(
-        //         {searchWord: searchWord, searchTarget: searchTarget},
-        //         (data) => {
-        //             return data.data
-        //         },
-        //         (err) => console.log(err)
-        //     )
-        //     .then((res) => {
-        //         console.log(res)
-        //         console.log(searchParams)
-        //     })
-        // }
-        // getSearchedList()
     }
 
     return (
-        <Paper component="form" sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', height: '2rem' }}>
+        <Paper component="form" sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', height: '2.4rem' }}>
+            <FormControl size="small" >
+                <Select
+                    value={searchTarget}
+                    onChange={onSelectHandler}
+                >
+                    <MenuItem value={"title"}>제목</MenuItem>
+                    <MenuItem value={"content"}>내용</MenuItem>
+                    <MenuItem value={"writer"}>작성자</MenuItem>
+                </Select>
+            </FormControl>
             <InputBase sx={{ ml: 1, flex: 1 }} placeholder="Search For More" onChange={onTypingHandler}/>
             <IconButton onClick={onSearchClickHandler} type="button" sx={{ p: '10px', color: '#FCA311' }} aria-label="search">
                 <Search />

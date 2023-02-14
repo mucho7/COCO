@@ -80,8 +80,8 @@ function CommuArticleDetail() {
         <>
             <TitleSection>
                 <h2>{article.title}</h2>
-                {/* <h2>static Title</h2> */}
-                {localStorage.userId && article.writer === localStorage.userId ?  
+                {localStorage.userId && article.writer === localStorage.userId 
+                ?  
                     <div>
                         <Link to={`/community/update/${pk}`} state={article} style={{textDecoration: "none"}}>
                             <Button variant="contained">수정</Button>
@@ -96,7 +96,6 @@ function CommuArticleDetail() {
             </ArticleSection>
             <hr/>
             <CommentSectiom>
-                {/* comment 작성 시 append하는 방법으로 해결하자 */}
                 {window.localStorage.getItem("userId") !== null ? <CommentForm isRenderNeeded={() => setSival(sival + 1)} board_id={pk}/> : <Typography textAlign={"center"}>로그인 하시면 댓글을 쓸 수 있어요</Typography>}
                 {article.comments.empty ? <Typography textAlign={"center"}>아직 댓글이 없어요!</Typography> : <Comments isRenderNeeded={() => setSival(sival + 1)} comments={article.comments}/> }
                 <CommuCommentPaging maxPage={maxPage} onClick={onPagingClickHandler}/>
@@ -111,6 +110,7 @@ const TitleSection = styled.section`
     margin-top: 15px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 `
 
 const ArticleSection = styled.section`
@@ -120,17 +120,6 @@ const ArticleSection = styled.section`
     display: flex;
     justify-content: space-around;
 `
-
-// const ContentSection = styled.section`
-//     width: 45%;
-//     height: 500px;
-
-// `
-// const CodeSection = styled.section`
-//     width: 45%;
-//     height: 500px;
-// `
-
 const CommentSectiom = styled.section`
     width: 100%;
     margin-top: 15px;
