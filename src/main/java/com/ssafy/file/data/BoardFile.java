@@ -18,17 +18,17 @@ public class BoardFile {
 
 	@Id
 	@Column(name="id")
-	private Long id;
+	private int id;
 	@Column(name = "filename")
 	private String name;
 
 	@Builder
-	public BoardFile(Long boardId, String name) {
+	public BoardFile(int id, String name) {
 		this.id = id;
 		this.name = name;
 	}
 
-	public void update(Long id, String name) {
+	public void update(int id, String name) {
 		this.id = id;
 		this.name = name;
 	}

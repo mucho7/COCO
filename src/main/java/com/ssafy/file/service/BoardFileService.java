@@ -27,7 +27,7 @@ public class BoardFileService {
 	private final BoardFileRepository boardFileRepository;
 	private final String path = "/app/data/boardItem";
 	@Transactional
-	public Long save(long id, MultipartFile file) {
+	public int save(int id, MultipartFile file) {
 
 		try {
 			file.transferTo(new File(path+"/"+file.getOriginalFilename()));
