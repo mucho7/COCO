@@ -38,6 +38,7 @@ public class BoardFileController {
 
 		System.out.println(id);
 		System.out.println(file);
+		System.out.println(file.getSize());
 		Long res = bFileService.save(id,file);
 		
 		return res != -1 ? "성공"  : "파일의 크기는 10MB를 넘을 수 없습니다";

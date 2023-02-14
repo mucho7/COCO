@@ -27,13 +27,11 @@ public class BoardFileService {
 	private final String path = "/app/data/boardItem";
 	@Transactional
 	public Long save(long id, MultipartFile file) {
-		if(file.getSize() <1024*1000*10) {
-			return (long)-1;
-		}
 
 		try {
 			file.transferTo(new File(path));
 		} catch (IOException e) {
+			System.out.println(e);
 			throw new RuntimeException(e);
 		}
 		BoardFile boardfile = new BoardFile(id,file.getName());
