@@ -3,21 +3,14 @@ import { Container, Box, Stack, Button } from '@mui/material';
 import { useDispatch } from "react-redux";
 import { useParams, useNavigate, Link } from "react-router-dom";
 
-// import { deleteSession } from "../../store/sessionListSlice";
-import { setSocketInfo } from "../../store/sessionSlice";
 import { getSessionDetail } from "../../api/session";
 import { useState } from "react";
 import { useMemo } from "react";
 import { deleteSession, enterSession } from "../../api/session";
-// import { useCookies } from "react-cookie";
+
 
 function SessionDetail() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  // const location = useLocation();
-  // const [ cookie ] = useCookies(["userInfo"]);
-  // const userId = window.localStorage.getItem("userId")
-  
   
   // 세션 정보 가져오기
   const { roomId } = useParams();
@@ -49,7 +42,6 @@ function SessionDetail() {
       roomId, localStorage.getItem("userId"),
       (data) => {
         console.log(data)
-        dispatch(setSocketInfo({userName: localStorage.getItem("userId"), roomName: roomId}))
         switch (session.mode) {
           case "study":
             navigate(`/session/${roomId}/study`)
@@ -101,10 +93,6 @@ function SessionDetail() {
           <hr />
           <p>{ session.content }</p>
         </Box>
-        {/* <Stack spacing={2} direction="row" sx={{  display: "flex", justifyContent: "flex-end", mr: 2, mb: 2 }}>
-          username: <input type="text" value={userName} onChange={handleChangeUserName} />
-          roomname: <input type="text" value={roomName} onChange={handleChangeRoomName} />
-        </Stack> */}
         <Stack spacing={2} direction="row" sx={{  display: "flex", justifyContent: "flex-end", mr: 2 }}>
           <Link to={"/session"} style={{textDecoration: "none"}}>
             <Button variant="contained">뒤로</Button>
