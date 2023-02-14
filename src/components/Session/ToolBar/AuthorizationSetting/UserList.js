@@ -30,7 +30,6 @@ function UserList() {
 
   return (
     <UserListDiv>
-      <p>유저 권한 목록</p>
       {Object.values(participants).map((participant, index) => {
         return (
           <UserListItem participant={participant} key={index} />
