@@ -20,12 +20,10 @@ import lombok.NoArgsConstructor;
 public class BoardFile {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="id")
 	private int id;
 	@Column(name = "filename")
 	private String name;
-
 
 	@Builder
 	public BoardFile(int id, String name) {
