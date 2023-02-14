@@ -29,7 +29,7 @@ function QuitButton(props) {
     if (participants) {
       participants[userName].dispose();
     }
-    navigate("/room")
+    navigate("/session")
   }
   
   return (
