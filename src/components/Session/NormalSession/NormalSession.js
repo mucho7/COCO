@@ -37,7 +37,33 @@ function NormalSession(props) {
 
   const isDrawButtonOn = useSelector((state) => state.toolBarAction.isDrawButtonOn);
 
+
+  useEffect(() => {
+    const preventClose = (e) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    (() => {
+      window.addEventListener("beforeunload", preventClose);
+    })();
+
+    return () => {
+      window.removeEventListener("beforeunload", preventClose)
+    }
+  }, [])
+
   
+  useEffect(() => {
+    const preventGoBack = () => {
+      window.history.pushState(null, "", window.location.href);
+    };
+    window.history.pushState(null, "", window.location.href);
+    window.addEventListener("popstate", preventGoBack);
+   
+    return () => {
+      window.removeEventListener("popstate", preventGoBack);
+    };
+  }, []);
       
   useEffect(() => {
     // window.addEventListener("resize", () => {

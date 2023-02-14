@@ -45,7 +45,7 @@ function MyDrawLayer(props) {
   const [isDrawing, setIsDrawing] = useState(false);
   const [drawColor, setDrawColor] = useState("#ffffff");
   const [isEraseMode, setIsEraseMode] = useState(false);
-  const userName = useSelector((state) => state.session.userName);
+  const userName = localStorage.getItem("userId");
   const websocketId = useSelector((state) => state.session.websocketId);
   const ws = websocketInstances.get(websocketId);
   
