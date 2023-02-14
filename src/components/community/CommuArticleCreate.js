@@ -17,7 +17,7 @@ function ArticleCreate(params) {
     
     // 로그인 안했다면 퇴장
     useEffect(() => {
-        if (localStorage.getItem("userId") === null) {
+        if (cookie.userInfo === undefined || localStorage.getItem("userId") === null) {
             navigate('/useri/login')
             alert("로그인이 필요한 서비스입니다.")
         }
@@ -46,8 +46,8 @@ function ArticleCreate(params) {
         content: inputContent,
         code: inputCode,
         writer: window.localStorage.getItem("userId"),
-        jwt_token: cookie.userInfo.jwt_token,
-        refresh_token: cookie.userInfo.refresh_token
+        jwt_token: cookie.userInfo?.jwt_token,
+        refresh_token: cookie.userInfo?.refresh_token
     }
     
     async function onClickHandler() {
@@ -107,7 +107,6 @@ const TitleSection = styled.section`
     display: flex;
     justify-content: space-between;
 `
-
 const ArticleSection = styled.section`
     width: 100%;
     height: 490px;

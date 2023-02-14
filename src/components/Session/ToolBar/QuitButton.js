@@ -9,8 +9,8 @@ import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
 
 function QuitButton(props) {
   const navigate = useNavigate();
-  const websoketId = useSelector((state) => state.session.websoketId);
-  const [ws, setWs] = useState(websocketInstances.get(websoketId));
+  const websocketId = useSelector((state) => state.session.websoketId);
+  const [ws, setWs] = useState(websocketInstances.get(websocketId));
 
   const participantsId = useSelector((state) => state.session.participantsId);
   const [participants, setParticipants] = useState(participantsInstances.get(participantsId));
@@ -18,9 +18,9 @@ function QuitButton(props) {
   const userName = localStorage.getItem("userId")
   
   useEffect(() => {
-    setWs(websocketInstances.get(websoketId));
+    setWs(websocketInstances.get(websocketId));
     setParticipants(participantsInstances.get(participantsId));
-  }, [websoketId, participantsId])
+  }, [websocketId, participantsId])
 
   function onClickQuitButton() {
     if (ws) {

@@ -14,6 +14,7 @@ import { useState } from 'react';
 import { useDispatch } from "react-redux";
 
 
+
 function CompileForm() {
   const dispatch = useDispatch();
   
@@ -32,7 +33,7 @@ function CompileForm() {
     }
 
     event.preventDefault();
-  
+
   }
 
   function handleChangeTestInput(event) {
@@ -58,6 +59,7 @@ function CompileForm() {
       isCompileSubmit: false,
       testInput, isContainVisualization, variable, line, iterationVariable
     }
+
   }
 
   
