@@ -24,13 +24,12 @@ public class BoardFileService {
 
 
 	private final BoardFileRepository boardFileRepository;
+	private final String path = "/app/data/boardItem";
 	@Transactional
 	public Long save(long id, MultipartFile file) {
 		if(file.getSize() <1024*1000*10) {
 			return (long)-1;
 		}
-		String name = file.getName();
-		String path =  "/" + name;
 
 		try {
 			file.transferTo(new File(path));

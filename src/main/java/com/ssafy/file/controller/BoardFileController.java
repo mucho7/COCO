@@ -29,15 +29,6 @@ public class BoardFileController {
 
 	@GetMapping("/hello")
 	public String hello(){
-		File file = new File("/app/data/boardItem/myfile.txt");
-		FileWriter writer = null;
-		try {
-			writer = new FileWriter(file);
-			writer.write("Hello, world!");
-			writer.close();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
 		return "hello";
 	}
 
