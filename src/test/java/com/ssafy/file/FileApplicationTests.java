@@ -1,10 +1,10 @@
-package com.service.gateway;
+package com.ssafy.file;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class GatewayApplicationTests {
+class FileApplicationTests {
 
 	@Test
 	void contextLoads() {
