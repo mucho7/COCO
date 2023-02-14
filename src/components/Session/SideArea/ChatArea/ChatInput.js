@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 
 import { websocketInstances } from "../../../../store/sessionSlice";
+import { useParams } from 'react-router-dom';
 
 
 const boxSx = {
@@ -21,8 +22,9 @@ function ChatInput(props) {
   const [chatInput, setChatInput] = useState("");
   const websocketId = useSelector((state) => state.session.websocketId);
   const ws = websocketInstances.get(websocketId);
-  const userName = useSelector((state) => state.session.userName);
-  const roomName = useSelector((state) => state.session.roomName);
+  const userName = localStorage.getItem("userId");
+  const { roomId } = useParams();
+  const roomName = roomId;
 
   function handleChangeChatInput(event) {
     setChatInput(event.target.value);
