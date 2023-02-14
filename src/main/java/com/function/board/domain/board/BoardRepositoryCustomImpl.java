@@ -32,6 +32,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
 				writerContaining(condition.getWriter()))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
+			.orderBy(board.createdAt.desc())
 			.fetch();
 
 		return new PageImpl<>(content, pageable, content.size());
