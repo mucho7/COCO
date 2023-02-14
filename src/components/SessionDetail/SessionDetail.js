@@ -45,7 +45,7 @@ function SessionDetail() {
         switch (session.mode) {
           case "study":
             navigate(`/session/${roomId}/study`)
-            // const sessionWindow = window.open("http://localhost:3000/normal", "sessionWindow", "popup")
+            // window.open(`https://${window.location.host}/session/${roomId}/study`);
             // sessionWindow.resizeTo(1600, 900);
             break;
           case "relay":
