@@ -6,6 +6,21 @@ import IntegrationInstructionsOutlinedIcon from '@mui/icons-material/Integration
 import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined';
 import MicNoneOutlinedIcon from '@mui/icons-material/MicNoneOutlined';
 import MicOffOutlinedIcon from '@mui/icons-material/MicOffOutlined';
+import styled from 'styled-components';
+
+const NameDiv = styled.div`
+  margin-right: 5px;
+  display: inline-block;
+  width: 100px;
+  overflow: hidden;
+  text-align: right;
+  font-size: 18px;
+`
+
+const UserListItemDiv = styled.div`
+  display: flex;
+  align-items: center;
+`
 
 
 function UserListItem(props) {
@@ -26,8 +41,8 @@ function UserListItem(props) {
   
 
   return (
-    <div>
-      {participant.name}
+    <UserListItemDiv>
+      <NameDiv>{participant.name}</NameDiv>
       <IconButton 
         onClick={() => toggleAuthorization(participant, "compile")} 
         type="button"
@@ -67,7 +82,7 @@ function UserListItem(props) {
       >
         {participant.authorization.isMicPossible ? <MicNoneOutlinedIcon /> : <MicOffOutlinedIcon />}
       </IconButton>
-    </div>
+    </UserListItemDiv>
   );
 }
 
