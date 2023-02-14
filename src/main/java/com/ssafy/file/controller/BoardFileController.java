@@ -35,6 +35,9 @@ public class BoardFileController {
 	@PostMapping("/{id}")
 	public String uploadFile(@RequestBody MultipartFile file,
 		@PathVariable(value = "id") Long id) {
+
+		System.out.println(id);
+		System.out.println(file);
 		Long res = bFileService.save(id,file);
 		
 		return res != -1 ? "성공"  : "파일의 크기는 10MB를 넘을 수 없습니다";
