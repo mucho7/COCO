@@ -17,23 +17,20 @@ import lombok.Generated;
 public class BoardFile {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="file_did")
+	@Column(name="id")
 	private Long id;
-	@Column(name = "file_path")
-	private String path;
-	@Column(name="board_id")
-	private Long boardId;
+	@Column(name = "filename")
+	private String name;
 
 	@Builder
-	public BoardFile(Long boardId, String path) {
-		this.boardId = boardId;
-		this.path = path;
+	public BoardFile(Long boardId, String name) {
+		this.id = id;
+		this.name = name;
 	}
 
-	public void update(Long id, String path) {
-		this.boardId = boardId;
-		this.path = path;
+	public void update(Long id, String name) {
+		this.id = id;
+		this.name = name;
 	}
 
 

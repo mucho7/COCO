@@ -35,19 +35,16 @@ public class BoardFileController {
 	@PostMapping("/{id}")
 	public String uploadFile(@RequestBody MultipartFile file,
 		@PathVariable(value = "id") Long id) {
-
-		System.out.println(id);
-		System.out.println(file);
-		System.out.println(file.getSize());
-		System.out.println(file.getOriginalFilename());
 		Long res = bFileService.save(id,file);
 		
 		return res != -1 ? "성공"  : "파일의 크기는 10MB를 넘을 수 없습니다";
 	}
 
 	@GetMapping("/{id}")
-	public Resource getFile(@PathVariable(value = "id") Long id) {
-		return bFileService.findByBoardId(id);
+	public Resource getFile(@PathVariable(value = "id") int id) {
+
+		Resource res = bFileService.findByBoardId(id);
+		return res;
 	}
 
 

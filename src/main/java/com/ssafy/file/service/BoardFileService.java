@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import org.eclipse.jdt.core.compiler.InvalidInputException;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,17 +35,15 @@ public class BoardFileService {
 			System.out.println(e);
 			throw new RuntimeException(e);
 		}
-		BoardFile boardfile = new BoardFile(id,file.getName());
+		BoardFile boardfile = new BoardFile(id,file.getOriginalFilename());
 		return boardFileRepository.save(boardfile).getId();
 	}
 
 	@Transactional
-	public Resource findByBoardId(Long boardId) {
-		BoardFile boardfile = boardFileRepository.findByBoardId(boardId);
-		String path = boardfile.getPath();
-
-		//path로 파일 찾아서 리소스 불러고 리턴
-		Resource resource = new ClassPathResource("path/to/image.jpg");
+	public Resource findByBoardId(int id) {
+		BoardFile boardfile = boardFileRepository.findById(id);
+		String name = boardfile.getName();
+		Resource resource = new FileSystemResource(path+"/" + name);
 		return resource;
 	}
 }
