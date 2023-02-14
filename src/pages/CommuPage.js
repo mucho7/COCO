@@ -1,28 +1,17 @@
 import SidePaddingBox from './SidePaddingBox'
 import  { Navbar } from '../components/navbar';
-import { CommuArticleList, CommuSidebar,  } from "../components/community"
-
-import styled from "styled-components"
+import { CommuArticleList,  } from "../components/community"
+import CommuToolBar from '../components/community/CommuToolBar';
 
 function CommuPage() {
 
     return (
         <SidePaddingBox>
             <Navbar />
-            <CommuSection>
-                <CommuArticleList/>
-                <CommuSidebar/>
-            </CommuSection>
+            <CommuToolBar/>
+            <CommuArticleList/>
         </SidePaddingBox>
     )
 }
-
-const CommuSection = styled.section`
-    display: flex;
-    flex-direction: row;
-
-    height: 500px;
-
-`
 
 export default CommuPage

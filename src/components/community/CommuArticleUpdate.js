@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useCookies } from "react-cookie"
 import { useLocation, Link } from "react-router-dom"
+import MonacoEditor from "@monaco-editor/react"
 
 import { articleUpdate } from "../../api/community"
 
@@ -26,13 +27,15 @@ function ArticleUpdate() {
             case 'content':
                 setInputContent(e.target.value)
                 break
-            case 'code':
-                setInputCode(e.target.value)
-                break
             default:
                 // nothing
         }
     }
+
+    const onCodeTypingHandler = (e) => {
+        setInputCode(e)
+    }
+
     
     const updateArticle ={
         title: inputTitle,
@@ -88,7 +91,7 @@ function ArticleUpdate() {
                 </ContentSection>
                 <Vr/>
                 <CodeSection style={{paddingTop: 20}}>
-                    <TextField value={updateArticle.code} onChange={onTypingHandler} id="code" minRows={18} fullWidth multiline style={{maxHeight: 450, overflowY: "auto"}} />
+                    <MonacoEditor id="editor" value={updateArticle.code} onChange={onCodeTypingHandler} />
                 </CodeSection>
             </ArticleSection>
             <hr/>

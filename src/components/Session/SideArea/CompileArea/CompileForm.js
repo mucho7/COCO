@@ -12,7 +12,6 @@ import Stack from '@mui/material/Stack';
 
 import { useState } from 'react';
 import { useDispatch } from "react-redux";
-import { onCompileSubmit } from "../../../../store/compileSlice";
 
 
 function CompileForm() {
@@ -33,7 +32,7 @@ function CompileForm() {
     }
 
     event.preventDefault();
-    dispatch(onCompileSubmit(payload));
+  
   }
 
   function handleChangeTestInput(event) {
@@ -59,7 +58,6 @@ function CompileForm() {
       isCompileSubmit: false,
       testInput, isContainVisualization, variable, line, iterationVariable
     }
-    dispatch(onCompileSubmit(payload));
   }
 
   
