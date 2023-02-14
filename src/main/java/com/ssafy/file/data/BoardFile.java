@@ -10,10 +10,12 @@ import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Generated;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "board_file")
+@NoArgsConstructor
 public class BoardFile {
 
 	@Id
@@ -22,6 +24,7 @@ public class BoardFile {
 	private int id;
 	@Column(name = "filename")
 	private String name;
+
 
 	@Builder
 	public BoardFile(int id, String name) {

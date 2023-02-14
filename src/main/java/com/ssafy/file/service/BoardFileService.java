@@ -29,14 +29,15 @@ public class BoardFileService {
 	@Transactional
 	public int save(int id, MultipartFile file) {
 
+		BoardFile boardfile = new BoardFile(id,file.getOriginalFilename());
+		int res = boardFileRepository.save(boardfile).getId();
 		try {
 			file.transferTo(new File(path+"/"+file.getOriginalFilename()));
 		} catch (IOException e) {
 			System.out.println(e);
 			throw new RuntimeException(e);
 		}
-		BoardFile boardfile = new BoardFile(id,file.getOriginalFilename());
-		return boardFileRepository.save(boardfile).getId();
+		return res;
 	}
 
 	@Transactional
