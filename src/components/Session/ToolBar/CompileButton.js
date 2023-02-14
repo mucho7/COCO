@@ -8,7 +8,7 @@ import IntegrationInstructionsOutlinedIcon from '@mui/icons-material/Integration
 
 function CompileButton(props) {
   const isCompileButtonOn = useSelector((state) => state.toolBarAction.isCompileButtonOn);
-  const isCompilePossible = useSelector((state) => state.session.isCompilePossible);
+  const isCompilePossible = useSelector((state) => state.toolBarAction.isCompilePossible);
   
   const dispatch = useDispatch();
 
