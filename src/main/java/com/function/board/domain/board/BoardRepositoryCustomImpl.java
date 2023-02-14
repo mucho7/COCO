@@ -35,7 +35,15 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
 			.orderBy(board.createdAt.desc())
 			.fetch();
 
-		return new PageImpl<>(content, pageable, content.size());
+		Long resultCount = queryFactory
+			.select(board.count())
+			.from(board)
+			.where(titleContaining(condition.getTitle()),
+				contentContaining(condition.getContent()),
+				writerContaining(condition.getWriter()))
+			.fetchOne();
+		resultCount = (resultCount == null) ? 0 : resultCount;
+		return new PageImpl<>(content, pageable, resultCount);
 	}
 
 	private BooleanExpression titleContaining(String title) {
