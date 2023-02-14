@@ -14,13 +14,9 @@ const initialState = {
   websocketId: null,
   participantsId: null,
   updated: false,
-  isCompilePossible: true,
-  isDrawPossible: true,
-  isMicPossible: true,
   imageData: null,
   countUsers: null
 };
-
 
 
 const sessionSlice = createSlice({
@@ -40,15 +36,6 @@ const sessionSlice = createSlice({
     setParticipantsId(state, action) {
       state.participantsId = action.payload;
     },
-    setIsCompilePossible(state, action) {
-      state.isCompilePossible = !state.isCompilePossible;
-    },
-    setIsDrawPossible(state, action) {
-      state.isDrawPossible = !state.isDrawPossible;
-    },
-    setIsMicPossible(state, action) {
-      state.isMicPossible = !state.isMicPossible;
-    },
     receiveImageData(state, action) {
       state.imageData = action.payload;
     },
@@ -67,9 +54,6 @@ export const {
   setParticipantsId, 
   receiveImageData, 
   setUpdated,
-  setIsCompilePossible,
-  setIsDrawPossible,
-  setIsMicPossible,
   setCountUsers } = sessionSlice.actions;
 
 export default sessionSlice;
