@@ -1,7 +1,6 @@
 package com.function.board.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -40,6 +39,14 @@ public class BoardService {
 
 	@Transactional
 	public Long save(BoardSaveRequestDto requestDto) {
+		if(requestDto.getContent().length() > 3000) {
+			throw new InvalidInputException("내용은 3000자를 넘을 수 없습니다.");
+		}
+		return boardRepository.save(requestDto.toEntity()).getId();
+	}
+
+	@Transactional
+	public Long upload(BoardSaveRequestDto requestDto) {
 		if(requestDto.getContent().length() > 3000) {
 			throw new InvalidInputException("내용은 3000자를 넘을 수 없습니다.");
 		}

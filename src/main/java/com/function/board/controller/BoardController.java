@@ -18,8 +18,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.function.board.client.BoardUploadServiceClient;
 import com.function.board.dto.board.BoardDetailTransferDto;
 import com.function.board.dto.board.BoardListResponseDto;
 import com.function.board.dto.board.BoardSaveRequestDto;
@@ -36,11 +39,22 @@ import lombok.RequiredArgsConstructor;
 public class BoardController {
 
 	private final BoardService boardService;
+	private final BoardUploadServiceClient boardUploadServiceClient;
+
+	// @ApiOperation(value = "게시글 생성")
+	// @PostMapping()
+	// public ResponseEntity<Object> save(@RequestBody BoardSaveRequestDto requestDto) {
+	// 	boardService.save(requestDto);
+	// 	return ResponseEntity.status(HttpStatus.CREATED).build();
+	// }
 
 	@ApiOperation(value = "게시글 생성")
-	@PostMapping()
-	public ResponseEntity<Object> save(@RequestBody BoardSaveRequestDto requestDto) {
-		boardService.save(requestDto);
+	@PostMapping(produces = "multipart/form-data")
+	public ResponseEntity<Object> save(@RequestPart("board") BoardSaveRequestDto requestDto,
+										@RequestPart("file") MultipartFile file) throws Exception {
+		Long boardId = boardService.upload(requestDto);
+		String result = boardUploadServiceClient.uploadFile(file, boardId);
+		System.out.println("결과 = " + result);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
