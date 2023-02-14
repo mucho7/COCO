@@ -69,7 +69,7 @@ function Ide(props) {
 
   return (
     <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
-      {participant.isHost && languageSelector}
+      {participant?.isHost && languageSelector}
       {/* {languageSelector} */}
       <Editor 
         id="editor"
