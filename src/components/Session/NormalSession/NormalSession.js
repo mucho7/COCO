@@ -307,6 +307,8 @@ function NormalSession(props) {
               participant.rtcPeer.audioEnabled = !participant.rtcPeer.audioEnabled;
               dispatch(setIsMicPossible());
               break;
+            case "drawButton":
+              break;
             default:
               break;
           }
@@ -344,7 +346,9 @@ function NormalSession(props) {
           isCompilePossible: this.isHost, 
           isMicPossible: true,
           isDrawPossible: true
-        }
+        };
+
+        this.isDrawButtonOn = false;
 
         this.onToggleAuthorization = function(authorizationType) {
           switch (authorizationType) {
@@ -356,6 +360,9 @@ function NormalSession(props) {
               break;
             case "draw":
               this.authorization.isDrawPossible = !this.authorization.isDrawPossible;
+              break;
+            case "drawButton":
+              this.isDrawButtonOn = !this.isDrawButtonOn;
               break;
             default:
               break;
