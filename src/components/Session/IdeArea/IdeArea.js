@@ -25,14 +25,8 @@ function IdeArea(props) {
   const isDrawButtonOn = useSelector((state) => state.toolBarAction.isDrawButtonOn);
   const participantsId = useSelector((state) => state.session.participantsId);
   const [participants, setParticipants] = useState({});
-  const userId = localStorage.getItem("userId");
-  // const participants = participantsInstances.get(participantsId);
   const updated = useSelector((state) => state.session.updated);
   const dispatch = useDispatch();
-  // console.log("participantId: ", participantsId)
-  // console.log("participants: ", participants);
-  // console.log(participantsInstances)
-  // console.log(participantsInstances.get(participantsId))
 
   useEffect(() => {
     if (participantsId) {
@@ -50,11 +44,10 @@ function IdeArea(props) {
       {isDrawButtonOn && <MyDrawLayer />}
       {
         participantsId !== null && 
-        Object.values(participants).map((participant) => {
-          return (
-            <OthersDrawLayer participant={participant} key={participant?.name} />
+        Object.values(participants).map((participant) => (
+            participant && <OthersDrawLayer participant={participant} key={participant?.name} />
           )
-        })
+        )
       }
       {participantsId !== null && <Ide />}
     </IdeAreaDiv>

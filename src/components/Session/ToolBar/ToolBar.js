@@ -4,7 +4,6 @@ import CompileButton from "./CompileButton";
 import DrawButton from "./DrawButton";
 import MicButton from "./MicButton";
 import AuthorizeButton from "./AuthorizeButton";
-import ChatButton from "./ChatButton";
 import QuitButton from "./QuitButton";
 import AuthorizationSetting from "./AuthorizationSetting";
 
@@ -60,7 +59,6 @@ function ToolBar(props) {
         <DrawButton />
         <MicButton />
         {participants[userId]?.isHost && <AuthorizeButton />}
-        <ChatButton />
         <QuitButton />
         {isAuthorizeButtonOn && <AuthorizationSetting />}
       </div>

@@ -10,6 +10,7 @@ import { MonacoBinding } from 'y-monaco'
 import { useParams } from "react-router-dom";
 
 import Box from '@mui/material/Box';
+import { useEffect } from "react";
 
 
 function Ide(props) {
@@ -23,22 +24,30 @@ function Ide(props) {
     
   // WebRTC
   const editorRef = useRef(null);
+  const providerRef = useRef(null);
+  const docRef = useRef(null);
+  const bindingRef = useRef(null);
   const { roomId } = useParams();
   
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
-    const ydoc = new Y.Doc();
-    const provider = new WebrtcProvider(`monaco-${roomId}`, ydoc);
-    const yText = ydoc.getText("monaco");
+    docRef.current = new Y.Doc();
+    providerRef.current = new WebrtcProvider(`monaco-${roomId}`, docRef.current);
+    const yText = docRef.current.getText("monaco");
 
-    const monacoBinding = new MonacoBinding(
+    bindingRef.current = new MonacoBinding(
       yText,
       editorRef.current.getModel(),
       new Set([editorRef.current]),
-      provider.awareness
+      providerRef.current.awareness
     );
   }
 
+  useEffect(() => {
+    return () => {
+      providerRef.current?.disconnect();
+    }
+  }, [])
 
   return (
     <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>

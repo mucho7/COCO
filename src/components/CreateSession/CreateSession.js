@@ -3,10 +3,12 @@ import { Container, Box, Button, Typography, FormLabel, FormControlLabel,
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createSession } from '../../api/session';
+import { useCookies } from "react-cookie"
 
 
 function CreateSession() {
   const navigate = useNavigate();
+  const [ cookie ] = useCookies(["userInfo"])
 
   // 로그인 안했다면 퇴장
   useEffect(() => {
@@ -15,30 +17,33 @@ function CreateSession() {
         navigate('/useri/login')
         alert("로그인이 필요한 서비스입니다.")
     }
-  }, [navigate])
+  }, [navigate, cookie])
 
   async function handleCreateSession(event) {
     event.preventDefault();
     const sessionData = new FormData(event.currentTarget);
     const payload = {
-      // host_rating, max 추가로 전달
       hostId: localStorage.getItem("userId"),
       title: sessionData.get("title"),
       content: sessionData.get("content"),
       hostRating: 10,
-      mode: sessionData.get("mode"),
+      mode: "study",
       max: sessionData.get("max")
     }
-    
-    await createSession(
-      payload,
-      (data) => {
-        console.log(data)
-        const roomId = data.data;
-        navigate(`/session/${roomId}`);
-      },
-      (err) => console.log(err)
-    )
+
+    if (!sessionData.get("title").trim()) {
+      alert("제목 입력은 필수입니다.")
+    } else {
+      await createSession(
+        payload,
+        (data) => {
+          console.log(data)
+          const roomId = data.data;
+          navigate(`/session/${roomId}`);
+        },
+        (err) => console.log(err)
+      )
+    }
   }
   
   return (
@@ -70,13 +75,13 @@ function CreateSession() {
               autoComplete="content"
             />
           </Grid>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <FormLabel id="mode">모드</FormLabel>
             <RadioGroup name="mode" row>
               <FormControlLabel value="study" control={<Radio />} label="study" />
-              {/* <FormControlLabel value="relay" control={<Radio />} label="relay" /> */}
+              <FormControlLabel value="relay" control={<Radio />} label="relay" />
             </RadioGroup>
-          </Grid>
+          </Grid> */}
           <Grid item xs={12}>
             <TextField
               required
