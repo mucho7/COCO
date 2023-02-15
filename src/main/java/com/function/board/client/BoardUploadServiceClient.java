@@ -16,7 +16,7 @@ public interface BoardUploadServiceClient {
 	@PostMapping("/hello/{id}")
 	String posthello(@RequestBody String hi, @PathVariable int id);
 
-	@PostMapping(path = "/{id}")
+	@PostMapping(path = "/{id}", produces = "multipart/form-data")
 	String uploadFile(@RequestBody MultipartFile file, @PathVariable int id);
 
 }
