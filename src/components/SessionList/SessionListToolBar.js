@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import SessionListSearchbar from "./sessionListSearchBar";
+import SessionListSearchBar from "./sessionListSearchBar";
 
 import styled from "styled-components"
 import { Button, Grid, } from '@mui/material';
@@ -11,7 +11,7 @@ function SessionListToolBar() {
         <Toolbar>
             <Grid container>
                 <Grid item xs={8}>
-                    <SessionListSearchbar />
+                    <SessionListSearchBar />
                 </Grid>
                 <Grid item xs={2}/>
                 <Grid item xs={2}>
