@@ -49,4 +49,31 @@ public class BoardFileService {
 		Resource resource = new FileSystemResource(path+"/" + name);
 		return resource;
 	}
+
+	// @Transactional
+	// public int update(int id, MultipartFile file) {
+	// 	BoardFile boardfile = boardFileRepository.findById(id);
+	// 	if(boardfile != null) {
+	// 		String name = boardfile.getName();
+	// 		File deleteFile = new File(path + "/" + name);
+	// 		if (deleteFile.exists()) {
+	// 			deleteFile.delete();
+	// 		}
+	// 		boardfile.update(file.getName());
+	// 	}
+	//
+	// 	else{
+	// 		int res = boardFileRepository.save(boardfile).getId();
+	// 		try {
+	// 			file.transferTo(new File(path+"/"+file.getOriginalFilename()));
+	// 		} catch (IOException e) {
+	// 			System.out.println(e);
+	// 			throw new RuntimeException(e);
+	// 		}
+	// 	}
+	//
+	//
+	// 	return;
+	//
+	// }
 }

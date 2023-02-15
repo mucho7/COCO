@@ -31,8 +31,7 @@ public class BoardFile {
 		this.name = name;
 	}
 
-	public void update(int id, String name) {
-		this.id = id;
+	public void update(String name) {
 		this.name = name;
 	}
 
