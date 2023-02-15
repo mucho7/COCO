@@ -48,6 +48,16 @@ public class BoardController {
 	// 	return ResponseEntity.status(HttpStatus.CREATED).build();
 	// }
 
+	@GetMapping("/hello1")
+	public String hello() {
+		return boardUploadServiceClient.hello();
+	}
+
+	@GetMapping("/hello2")
+	public String postHello() {
+		return boardUploadServiceClient.posthello("hi", 123);
+	}
+
 	@ApiOperation(value = "게시글 생성")
 	@PostMapping(produces = "multipart/form-data")
 	public ResponseEntity<Object> save(@RequestPart("board") BoardSaveRequestDto requestDto,
