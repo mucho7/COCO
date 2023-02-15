@@ -24,23 +24,15 @@ function OthersDrawLayer(props) {
   const [isDrawing, setIsDrawing] = useState(false);
   const [drawColor, setDrawColor] = useState("#ffffff");
   const [isEraseMode, setIsEraseMode] = useState(false);
-  const userName = props.userName;
-  const participantsId = useSelector((state) => state.session.participantsId);
-  const [participants, setParticipants] = useState({});
-  const updated = useSelector((state) => state.session.updated);
-  const dispatch = useDispatch();
+  const userName = props.key;
+  const [participant, setParticipant] = useState(props.participant);
+  
   // console.log(participant)
 
   useEffect(() => {
-    if (participantsId) {
-      setParticipants(participantsInstances.get(participantsId));
-    }
-    
-    if (updated) {
-      setParticipants(participantsInstances.get(participantsId));
-      dispatch(setUpdated(false));
-    }
-  }, [participantsId, updated, dispatch])
+    setParticipant(props.participant);
+  }, [props.participant])
+
   
   const tagId = `canvas-${userName}`;
   // console.log(participant)  
@@ -146,11 +138,11 @@ function OthersDrawLayer(props) {
           break;
       }
     }
-    console.log(participants[userName].isDrawButtonOn)
-    if (!participants[userName].isDrawButtonOn) {
+    console.log(participant.isDrawButtonOn)
+    if (!participant.isDrawButtonOn) {
       eraseAll();
     }
-  }, [drawColor, imageData, isDrawing, isEraseMode, participants, userName])
+  }, [drawColor, imageData, isDrawing, isEraseMode, participant, userName])
 
   
   return (
