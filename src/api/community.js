@@ -1,5 +1,4 @@
 import http from "./http.js";
-import axios from "axios";
 
 const api = http;
 
