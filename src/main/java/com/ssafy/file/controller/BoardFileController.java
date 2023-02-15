@@ -28,9 +28,15 @@ public class BoardFileController {
 
 	@GetMapping("/hello")
 	public String hello(){
-		return "hello";
+		return "filehello";
 	}
 
+	@PostMapping("/hello/{id}")
+	public String posthello(@RequestBody MultipartFile file,
+		@PathVariable(value = "id") int id)
+	{
+		return "file post hello";
+	}
 	@PostMapping("/{id}")
 	public String uploadFile(@RequestBody MultipartFile file,
 		@PathVariable(value = "id") int id) {
