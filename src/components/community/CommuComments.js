@@ -94,9 +94,9 @@ function Comments(props) {
                             </Grid>
                             <Grid item xs={2} textAlign="center">
                                 {localStorage.getItem("userId") === comment.writer
-                                ?   <ButtonGroup>
-                                        {updateFlag === false ? <Button onClick={() => flagClickHandler(comment)}>수정</Button> : <Button variant="contained" onClick={() => {setUpdateFlag(false); setUpdateTarget("");}}>취소</Button>}
-                                        {updateFlag === false ? <Button onClick={() => onDeleteClick(comment)} style={{}}>삭제</Button> : <Button variant="contained" onClick={() => flagClickHandler(comment)}>완료</Button> }
+                                ?   <ButtonGroup >
+                                        {updateFlag === false ? <Button onClick={() => flagClickHandler(comment)} style={{color: "#FCA311", border: "solid 1px #FCA311"}}><b>수정</b></Button> : <Button variant="outlined" style={{color: "red", border: "solid 1px red"}} onClick={() => {setUpdateFlag(false); setUpdateTarget("");}}>취소</Button>}
+                                        {updateFlag === false ? <Button onClick={() => onDeleteClick(comment)} style={{color: "red", border: "solid 1px red"}}><b>삭제</b></Button> : <Button variant="contained" style={{background: "#FCA311", border: "solid 1px #FCA311"}} onClick={() => flagClickHandler(comment)}>완료</Button> }
                                     </ButtonGroup>
                                 : <></>
                                 }

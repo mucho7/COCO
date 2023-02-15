@@ -25,8 +25,8 @@ async function articleCreate(article, success, fail) {
   const formData = new FormData();
   
   // formData 형성
-  formData.append("user", JSON.stringify(article))
-  formData.append("image", article.profile_img)
+  formData.append("board", JSON.stringify(article))
+  formData.append("file", article.profile_img)
 
   axios.create({
     baseURL: "https://ssafy.cossafyco.kro.kr/api/", 
