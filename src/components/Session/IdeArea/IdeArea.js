@@ -27,7 +27,7 @@ function IdeArea(props) {
   const [participants, setParticipants] = useState({});
   const updated = useSelector((state) => state.session.updated);
   const dispatch = useDispatch();
-  const [layers, setLayers] = useState([]);
+  const [layers, setLayers] = useState({});
 
   useEffect(() => {
     if (participantsId) {
@@ -39,30 +39,27 @@ function IdeArea(props) {
       dispatch(setUpdated(false));
     }
 
-    const participantsKeys = Object.keys(participants);
-
-    setLayers((layers) => {
-      return layers.filter((layer) => {
-        return participantsKeys.includes(layer.props.id);
-      });
-    });
-
-    participantsKeys.forEach((key) => {
-      if (!layers.some((layer) => layer.props.id === key)) {
-        setLayers((layers) => {
-          return [
-            ...layers,
-            <OthersDrawLayer key={key} id={key} participant={participants[key]} />,
-          ];
-        });
+    // 새로 입장한 참여자의 레이어 추가
+    Object.keys(participants).forEach((user) => {
+      if (!Object.keys(layers).includes(user)) {
+        setLayers({...layers, user: <OthersDrawLayer user={user} />})
       }
-    });
+    })
+
+    Object.keys(layers).forEach((user) => {
+      if (!Object.keys(participants).includes(user)) {
+        const updatedLayers = {...layers};
+        delete updatedLayers[user];
+        setLayers(updatedLayers);
+      }
+    })
+    
   }, [participantsId, updated, dispatch, participants, layers])
 
   return (
     <IdeAreaDiv id="ideArea">
       {isDrawButtonOn && <MyDrawLayer />}
-      {layers}
+      {Object.values(layers)}
       {participantsId !== null && <Ide />}
     </IdeAreaDiv>
   );
