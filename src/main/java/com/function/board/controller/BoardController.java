@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.function.board.client.BoardUploadServiceClient;
 import com.function.board.dto.board.BoardDetailTransferDto;
-import com.function.board.dto.board.BoardListDto;
 import com.function.board.dto.board.BoardListResponseDto;
 import com.function.board.dto.board.BoardSaveRequestDto;
 import com.function.board.dto.board.BoardSearchCondition;
@@ -43,24 +41,12 @@ public class BoardController {
 	private final BoardService boardService;
 	private final BoardUploadServiceClient boardUploadServiceClient;
 
-	// @ApiOperation(value = "게시글 생성")
-	// @PostMapping()
-	// public ResponseEntity<Object> save(@RequestBody BoardSaveRequestDto requestDto) {
-	// 	boardService.save(requestDto);
-	// 	return ResponseEntity.status(HttpStatus.CREATED).build();
-	// }
-	@GetMapping("/hello1")
-	public Resource getFile() {
-		return boardUploadServiceClient.getFile(128);
-	}
-
 	@ApiOperation(value = "게시글 생성")
 	@PostMapping(produces = "multipart/form-data")
 	public ResponseEntity<Object> save(@RequestPart("board") BoardSaveRequestDto requestDto,
 										@RequestPart("file") MultipartFile file) throws Exception {
 		int boardId = boardService.upload(requestDto).intValue();
-		String result = boardUploadServiceClient.uploadFile(file, boardId);
-		System.out.println("결과 = " + result);
+		boardUploadServiceClient.uploadFile(file, boardId);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
@@ -72,23 +58,8 @@ public class BoardController {
 
 	@ApiOperation(value = "게시글 목록 페이징")
 	@GetMapping()
-	public ResponseEntity<Page<BoardListDto>> paging(@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-		Page<BoardListDto> list = boardService.paging(pageable);
-
-		for(BoardListDto board : list) {
-			Resource img = boardUploadServiceClient.getFile(board.getId().intValue());
-			if(img != null) {
-				board.setImg(img);
-			}
-		}
-		return ResponseEntity.ok(list);
-	}
-
-	@ApiOperation(value = "게시글 목록 페이징 TEST")
-	@GetMapping("/hello3")
-	public ResponseEntity<Page<BoardListDto>> paging2(@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-		Page<BoardListDto> list = boardService.paging(pageable);
-		return ResponseEntity.ok(list);
+	public ResponseEntity<Page<BoardListResponseDto>> paging(@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+		return ResponseEntity.ok(boardService.paging(pageable));
 	}
 
 	@ApiOperation(value = "{board_id}로 게시글 조회")
