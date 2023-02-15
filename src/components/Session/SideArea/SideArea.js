@@ -1,8 +1,5 @@
 import styled from "styled-components";
 
-import { useSelector } from "react-redux";
-
-import CompileArea from "./CompileArea";
 import ChatArea from "./ChatArea";
 
 
@@ -18,11 +15,9 @@ const Box = styled.div`
 `
 
 function SideArea(props) {
-  const isCompileButtonOn = useSelector((state) => state.toolBarAction.isCompileButtonOn);
 
   return (
     <Box>
-      {isCompileButtonOn && <CompileArea />}
       <ChatArea />
     </Box>
   );
