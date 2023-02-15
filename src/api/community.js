@@ -1,4 +1,5 @@
 import http from "./http.js";
+import axios from "axios";
 
 const api = http;
 
@@ -17,29 +18,18 @@ async function boardDetail(article, success, fail) {
   return res
 }
 
-// async function articleCreate(article, success, fail) {
-//   // await api.post(`/board`, JSON.stringify(article)).then(success).catch(fail);
+async function getBoardImg(article, success, fail) {
+  const api_mk2 =axios.create({
+    baseURL: "http://i8a703.p.ssafy.io:8019/file/board/",
   
-//   // formData 형성
-//   const formData = new FormData();
-//   formData.append("board", new Blob([JSON.stringify(article)], { type: "application/json" }))
-//   formData.append("file", article.profile_img)
-  
-  
-//   const api_mk2 = axios.create({
-//     baseURL: "https://ssafy.cossafyco.kro.kr/api/", 
-//     headers: {
-//       "Content-Type": "multipart/form-data",
-//       // "Authorization": article.jwt_token,
-//       // "refreshToken": article.refresh_token
-//     }
-//   })
-
-//   api_mk2.defaults.headers["Authorization"] = article.jwt_token
-//   api_mk2.defaults.headers["refreshToken"] = article.refresh_token
-
-//   await api_mk2.post(`/board`, formData).then(success).catch(fail)
-// }
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  // http://i8a703.p.ssafy.io:8019/file/board/128
+  const res = await api_mk2.get(`/${article.id}`).then(success).catch(fail);
+  return res
+}
 
 async function articleCreate(article, success, fail) {
   const formData = new FormData();
@@ -76,4 +66,4 @@ async function commentUpdate(comment, success, fail) {
   await api.put(`/comment/${comment.board_id}/modify/${comment.pk}`, JSON.stringify(comment)).then(success).catch(fail);
 }
 
-export { boardPaging, boardSearching, boardDetail, articleCreate, articleDelete, articleUpdate, commentCreate, commentDelete, commentUpdate }
+export { boardPaging, boardSearching, boardDetail, getBoardImg, articleCreate, articleDelete, articleUpdate, commentCreate, commentDelete, commentUpdate }

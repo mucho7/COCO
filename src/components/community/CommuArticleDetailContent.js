@@ -40,7 +40,7 @@ function CommuArticleDetailContent(params) {
         if (target.key === -2) return
         const editor = monaco.editor.getModels()[0];
         if (target.isActive) {
-            console.log(target)
+            editor.deltaDecorations(monacoId, [])
             setMonacoId(editor.deltaDecorations(
                 [], 
                 [{
