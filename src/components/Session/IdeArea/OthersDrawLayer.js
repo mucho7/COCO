@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { participantsInstances, setUpdated } from "../../../store/sessionSlice";
 
 const DrawDiv = styled.div`
   box-sizing: border-box;
@@ -23,11 +24,26 @@ function OthersDrawLayer(props) {
   const [isDrawing, setIsDrawing] = useState(false);
   const [drawColor, setDrawColor] = useState("#ffffff");
   const [isEraseMode, setIsEraseMode] = useState(false);
-  const participant = props.participant;
+  const userName = props.userName;
+  const participantsId = useSelector((state) => state.session.participantsId);
+  const [participants, setParticipants] = useState({});
+  const updated = useSelector((state) => state.session.updated);
+  const dispatch = useDispatch();
   // console.log(participant)
+
+  useEffect(() => {
+    if (participantsId) {
+      setParticipants(participantsInstances.get(participantsId));
+    }
+    
+    if (updated) {
+      setParticipants(participantsInstances.get(participantsId));
+      dispatch(setUpdated(false));
+    }
+  }, [participantsId, updated, dispatch])
   
-  const tagId = `canvas-${participant.name}`;
-  console.log(participant)  
+  const tagId = `canvas-${userName}`;
+  // console.log(participant)  
   
   useEffect(() => {
     function initCanvas() {
@@ -106,7 +122,7 @@ function OthersDrawLayer(props) {
       contextRef.current.strokeStyle = drawColor;
     }
 
-    if (imageData?.userName === participant.name) {
+    if (imageData?.userName === userName) {
       switch (imageData.imageData.type) {
         case "startDrawing":
           startDrawing(imageData.imageData.x, imageData.imageData.y);
@@ -130,11 +146,11 @@ function OthersDrawLayer(props) {
           break;
       }
     }
-    console.log(participant.isDrawButtonOn)
-    if (!participant.isDrawButtonOn) {
+    console.log(participants[userName].isDrawButtonOn)
+    if (!participants[userName].isDrawButtonOn) {
       eraseAll();
     }
-  }, [drawColor, imageData, isDrawing, isEraseMode, participant.isDrawButtonOn, participant.name])
+  }, [drawColor, imageData, isDrawing, isEraseMode, participants, userName])
 
   
   return (
