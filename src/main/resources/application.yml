@@ -90,11 +90,11 @@ spring:
           predicates:
             - Path=/validate
             - Method=POST
-        - id: sessionFunction
+        - id: function
           uri: http://SessionFunctionService:8013/
           #          uri: http://localhost:8013/
           predicates:
-            - Path=/sessionFunction/**
+            - Path=/function/**
         - id: session
           uri: https://ssafy.cossafyco.kro.kr/session/
           #          uri: https://localhost:8443/
