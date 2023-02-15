@@ -19,18 +19,22 @@ async function boardDetail(article, success, fail) {
 }
 
 async function articleCreate(article, success, fail) {
-  api.defaults.headers["Authorization"] = article.jwt_token
-  api.defaults.headers["refreshToken"] = article.refresh_token
+  // api.defaults.headers["Authorization"] = article.jwt_token
+  // api.defaults.headers["refreshToken"] = article.refresh_token
   // await api.post(`/board`, JSON.stringify(article)).then(success).catch(fail);
   const formData = new FormData();
   
   // formData 형성
   formData.append("user", JSON.stringify(article))
-  formData.append("image", article.image)
+  formData.append("image", article.profile_img)
 
   axios.create({
     baseURL: "https://ssafy.cossafyco.kro.kr/api/", 
-    headers: {"Content-Type": "multipart/form-data",}
+    headers: {
+      "Content-Type": "multipart/form-data",
+      "Authorization": article.jwt_token,
+      "refreshToken": article.refresh_token
+    }
   }).post(`/board`, formData).then(success).catch(fail)
 }
 

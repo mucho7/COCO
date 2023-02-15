@@ -7,7 +7,7 @@ function ArticleDetailPage(params) {
     return (
         <SidePaddingBox>
             <Navbar />
-            <CommuArticleDetail></CommuArticleDetail>
+            <CommuArticleDetail/>
         </SidePaddingBox>
     )
 }

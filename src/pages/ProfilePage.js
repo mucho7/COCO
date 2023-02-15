@@ -86,7 +86,7 @@ function ProfilePage(params) {
             <AccountCircle sx={{ fontSize: '150px', color: '#FCA311', position: 'absolute', left: '100px', top: '140px', background: 'white', borderRadius: '100%' }} />
             <PaddingBox>
                 {updateFlag === false
-                    ? <Button onClick={flagClickHandler} variant="contained" className="submit" fullWidth style={{ width: "7rem", height: "2.8rem", marginRight: "15px" }}> <b>프로필 편집</b></Button>
+                    ? <Button onClick={flagClickHandler} variant="contained" className="submit" fullWidth style={{ width: "7rem", height: "2.8rem", marginRight: "15px", background: "#FCA311" }}> <b>프로필 편집</b></Button>
                     : <>
                         <Button onClick={deleteUser} variant="contained" className="submit" fullWidth style={{ width: "7rem", height: "2.8rem", marginRight: "15px", backgroundColor: "red" }}><b>계정 삭제</b></Button>
                         <ProfilePasswordUpdateButton />
