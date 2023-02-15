@@ -66,7 +66,7 @@ function SigninForm() {
         }
     }, [inputPassword, inputCheckPassword])
 
-    useInsertionEffect(() => {
+    useEffect(() => {
         const koreanRegex = /[\u1100-\u11FF|\u3130-\u318F|\uA960-\uA97F|\uAC00-\uD7AF|\uD7B0-\uD7FF]/
         const englishRegex = /^[a-zA-Z\d]+$/
         const nameErrorMessage = {
