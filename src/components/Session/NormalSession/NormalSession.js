@@ -352,7 +352,7 @@ function NormalSession(props) {
         
         // 권한 목록
         this.authorization = { 
-          isCompilePossible: this.isHost, 
+          isCompilePossible: true, 
           isMicPossible: true,
           isDrawPossible: true
         };

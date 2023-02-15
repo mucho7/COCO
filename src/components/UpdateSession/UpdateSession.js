@@ -76,7 +76,7 @@ function UpdateSession() {
       session.roomId, updatedSessionInfo,
       (data) => {
         console.log(data)
-        navigate(`/room/${session.roomId}`);
+        navigate(`/session/${session.roomId}`);
       },
       (err) => console.log(err)
     )

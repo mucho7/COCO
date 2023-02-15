@@ -28,13 +28,17 @@ function SessionDetail() {
       await getSessionDetail(
         roomId,
         (data) => {return data.data},
-        (err) => console.log(err)
+        (err) => {
+          console.log(err);
+          alert("해당 세션이 종료, 삭제되었거나 존재하지 않는 세션입니다.")
+          navigate("/session")
+        }
         ).then((data) => {
           setSession(data);
         })
       }
       enterSessionDetail();
-    }, [roomId])
+    }, [navigate, roomId])
 
   // 세션 참여
   async function handleEnterSession() {
@@ -55,7 +59,7 @@ function SessionDetail() {
         }
       },
       (err) => {
-        // console.log(err)
+        console.log(err)
         switch (err.response.status) {
           case 404:
             alert("해당 세션이 종료, 삭제되었거나 존재하지 않는 방입니다.")
