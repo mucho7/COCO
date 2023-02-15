@@ -135,7 +135,8 @@ function SigninForm() {
         )
     }
 
-    const onClickHandler = () => {
+    const onSubmitHandler = (e) => {
+        e.preventDefault()
         setIsEmailValid(!(emailValidation.test(inputEmail)))
         if (isOkToSubmit) { signUp() } else { alert('잘못된 접근입니다.') }
     }
@@ -162,7 +163,7 @@ function SigninForm() {
                         <TextField onChange={onTypingHandler} error={isNameValid.isValid} helperText={isNameValid.isValid ? isNameValid.message : ""} id="outlined-name" label="Name" fullWidth />
                     </Grid>
                     <Grid item xs={6}>
-                        <Button onClick={onClickHandler} variant="contained" className="submit" fullWidth style={{ height: "3rem" }}> <b>회원가입</b></Button>
+                        <Button onClick={onSubmitHandler} variant="contained" className="submit" fullWidth style={{ height: "3rem" }}> <b>회원가입</b></Button>
                     </Grid>
                 </Grid>
             </Box>

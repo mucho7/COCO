@@ -84,9 +84,9 @@ function CommuArticleDetail() {
                 ?  
                     <div>
                         <Link to={`/community/update/${pk}`} state={article} style={{textDecoration: "none"}}>
-                            <Button variant="contained">수정</Button>
+                            <Button style={{color: "#FCA311", border: "solid 1px #FCA311"}} variant="outlined"><b>수정</b></Button>
                         </Link>
-                        <Button onClick={onClickDeleteHandler} variant="contained">삭제</Button>
+                        <Button onClick={onClickDeleteHandler} style={{background: "red", marginLeft: "10px"}} variant="contained">삭제</Button>
                     </div>
                 : ""}
             </TitleSection>

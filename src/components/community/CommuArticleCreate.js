@@ -8,8 +8,9 @@ import { articleCreate } from "../../api/community"
 import styled from "styled-components"
 import { Button, TextField, Select, MenuItem } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { margin } from "@mui/system"
 
-function ArticleCreate(params) {
+function ArticleCreate() {
     const navigate = useNavigate()
     const [ cookie ] = useCookies(["userInfo"])
     const [inputTitle, setInputTitle ] = useState()
@@ -110,16 +111,16 @@ function ArticleCreate(params) {
                     </Select>
                 </CodeSection>
             </ArticleSection>
-            <TextField type="file" accept="image/*" onChange={onImageChangeHandler} fullWidth
-            InputProps={{
-                startAdornment: <CloudUploadIcon />,
-                sx: {
-                    "& > input[type=file]": { opacity: 1, position: 'flex', right: 0, top: 0 }
-                  }
-            }} />
             <hr/>
-            <Button onClick={onClickHandler} variant="contained">작성 완료</Button>
-            
+            <TitleSection>
+                <TextField type="file" accept="image/*" onChange={onImageChangeHandler}
+                InputProps={{
+                    startAdornment: <CloudUploadIcon style={{marginRight: "15px"}} />,
+                    
+                }} />
+                <Button onClick={onClickHandler} style={{background: "#FCA311"}} variant="contained">작성 완료</Button>
+            </TitleSection>
+            <hr/>
         </>
     )
 }

@@ -96,7 +96,7 @@ function Comments(props) {
                                 {localStorage.getItem("userId") === comment.writer
                                 ?   <ButtonGroup>
                                         {updateFlag === false ? <Button onClick={() => flagClickHandler(comment)}>수정</Button> : <Button variant="contained" onClick={() => {setUpdateFlag(false); setUpdateTarget("");}}>취소</Button>}
-                                        {updateFlag === false ? <Button onClick={() => onDeleteClick(comment)}>삭제</Button> : <Button variant="contained" onClick={() => flagClickHandler(comment)}>완료</Button> }
+                                        {updateFlag === false ? <Button onClick={() => onDeleteClick(comment)} style={{}}>삭제</Button> : <Button variant="contained" onClick={() => flagClickHandler(comment)}>완료</Button> }
                                     </ButtonGroup>
                                 : <></>
                                 }

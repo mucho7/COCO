@@ -37,7 +37,6 @@ function LoginForm() {
             temp_user_info,
             (data) => {
                 const headers = data.headers
-                console.log(headers.get("Authorization"))
                 setCookie(
                     "userInfo",
                     {
