@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 
 import { websocketInstances } from "../../../../store/sessionSlice";
 import { useParams } from 'react-router-dom';
+import { handleBreakpoints } from '@mui/system';
 
 
 const boxSx = {
@@ -30,8 +31,7 @@ function ChatInput(props) {
     setChatInput(event.target.value);
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  function handleSubmit() {
     const message = {
       id: "sendChat",
       userName: userName,
@@ -55,6 +55,11 @@ function ChatInput(props) {
           maxRows={4}
           value={chatInput}
           onChange={handleChangeChatInput}
+          onKeyUp={(e) => {
+            if (e.key === "Enter") {
+              handleSubmit();
+            }
+          }}
         />
         <IconButton onClick={handleSubmit} type="button" sx={{ m: '5px', p: '5px', bgcolor: "#FCA311" }}>
           <SendOutlinedIcon />

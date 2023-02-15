@@ -31,7 +31,7 @@ function SessionList() {
   const [sessionList, setSessionList] = useState(samples);
   
 
-  useMemo(() => {
+  useEffect(() => {
     const params = {
       mode: "study",
       title: searchParams.title ? searchParams.title : "",
@@ -49,6 +49,25 @@ function SessionList() {
     }
     enterSessionList();
   }, [searchParams])
+
+  useEffect(() => {
+    const params = {
+      mode: "study",
+      title: "",
+      hostId: ""
+    }
+
+    const enterSessionList = async () => {
+      await getSessionList(
+        params,
+        (data) => {return data.data},
+        (err) => console.log(err)
+      ).then((data) => {
+        setSessionList(data);
+      })
+    }
+    enterSessionList();
+  }, [])
 
 
   return (
