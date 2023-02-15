@@ -64,16 +64,22 @@ async function articleUpdate(article, success, fail) {
   await api.put(`/board/${article.id}`, JSON.stringify(article)).then(success).catch(fail);
 }
 
-async function commentCreate(comment, success, fail) {
+async function commentCreate(comment, success, fail) {  
+  api.defaults.headers["Authorization"] = comment["Authorization"]
+  api.defaults.headers["refreshToken"] = comment["refreshToken"]
   await api.post(`/comment/${comment.board_id}`, JSON.stringify(comment)).then(success).catch(fail);
 }
 
 async function commentDelete(comment, success, fail) {
-  await api.delete(`/comment/${comment.board_id}/delete/${comment.pk}`).then(success).catch(fail);
+  api.defaults.headers["Authorization"] = comment["Authorization"]
+  api.defaults.headers["refreshToken"] = comment["refreshToken"]
+  await api.delete(`/comment/${comment.pk}`).then(success).catch(fail);
 }
 
 async function commentUpdate(comment, success, fail) {
-  await api.put(`/comment/${comment.board_id}/modify/${comment.pk}`, JSON.stringify(comment)).then(success).catch(fail);
+  api.defaults.headers["Authorization"] = comment["Authorization"]
+  api.defaults.headers["refreshToken"] = comment["refreshToken"]
+  await api.put(`/comment/${comment.pk}`, JSON.stringify(comment)).then(success).catch(fail);
 }
 
 export { boardPaging, boardSearching, boardDetail, articleCreate, articleDelete, articleUpdate, commentCreate, commentDelete, commentUpdate }

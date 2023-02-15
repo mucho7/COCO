@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 
 import { commentCreate } from "../../api/community"
+import { useCookies } from 'react-cookie'
 
 import styled from "styled-components"
 import { Button, TextField } from "@mui/material"
@@ -11,6 +12,8 @@ function CommentForm(params) {
     
     const board_id = params.board_id
     const [ comment, setComment ] = useState("")
+    const [userInfo, setUesrInfo] = useState([])
+    const [cookie, setCookie] = useCookies(["userInfo"])
 
     const onTypingHandler = (e) => {
         setComment(e.target.value)
@@ -28,7 +31,9 @@ function CommentForm(params) {
                 {
                     content: comment,
                     board_id: board_id,
-                    writer: localStorage.userId
+                    writer: localStorage.userId,
+                    'Authorization': cookie.userInfo.jwt_token,
+                    'refreshToken': cookie.userInfo.refresh_token,
                 },
                 (data) => {
                     console.log(data)
