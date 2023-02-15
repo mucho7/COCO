@@ -55,7 +55,7 @@ function Ide(props) {
         id="editor"
         options={{fontSize: 16, minimap: { enabled: false }, scrollbar: { vertical: "auto", horizontal: "auto" }}}
         width="100%"
-        height={isCompileButtonOn ? "calc(100% - 340px)" : " calc(100% - 40px)"}
+        height={isCompileButtonOn ? "calc(100% - 30px)" : "100%"}
         language={userLanguage}
         theme={userTheme}
         defaultValue="# 코드를 입력하세요."
