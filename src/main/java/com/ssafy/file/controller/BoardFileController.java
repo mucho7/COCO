@@ -27,6 +27,12 @@ import lombok.RequiredArgsConstructor;
 public class BoardFileController {
 	private final BoardFileService bFileService;
 
+
+	@GetMapping("/hello")
+	public String hello(){
+		return "hello";
+	}
+
 	@PostMapping("/{id}")
 	public String uploadFile(@RequestBody MultipartFile file,
 		@PathVariable(value = "id") int id) {
