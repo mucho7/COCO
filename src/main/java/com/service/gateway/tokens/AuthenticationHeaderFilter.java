@@ -40,6 +40,7 @@ public class AuthenticationHeaderFilter extends AbstractGatewayFilterFactory<Aut
 			JwtTokenDto tokenDto = jwtTokenProvider.resolveToken(
 				request); // 유효하지 않은 세션 (refreshToken이 DB에 있는 값과 다른 값)인지 판단
 
+
 			// Step 2. 토큰의 유효성 검사
 			if (tokenDto != null) { // 유효한 로그인 세션이라면
 				String accessToken = tokenDto.getAccessToken();
@@ -75,6 +76,7 @@ public class AuthenticationHeaderFilter extends AbstractGatewayFilterFactory<Aut
 				}
 				return chain.filter(newExchange);
 			} else {
+				System.out.println("tokenDto가 널이였어!!!");
 				return handleUnAuthorized(exchange);
 			}
 		});

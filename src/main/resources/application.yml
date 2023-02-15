@@ -102,7 +102,6 @@ spring:
             - Path=/session/**
         - id: file
           uri: https://FileService:8019/
-          #          uri: https://localhost:8443/
           predicates:
             - Path=/file/**
   datasource:
