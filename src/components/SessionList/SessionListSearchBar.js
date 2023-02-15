@@ -5,7 +5,7 @@ import { Paper, InputBase, IconButton, FormControl, Select, MenuItem } from '@mu
 import { Search } from '@mui/icons-material';
 
 
-function SessionListSearchbar() {
+function SessionListSearchBar() {
     const [ searchParams, setSearchParams ] = useSearchParams()
 
     const [ searchTarget, setSearchTarget ] = useState("title")
@@ -48,4 +48,4 @@ function SessionListSearchbar() {
     );
 }
 
-export default SessionListSearchbar;
+export default SessionListSearchBar;
