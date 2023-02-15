@@ -77,7 +77,9 @@ public class BoardController {
 
 		for(BoardListDto board : list) {
 			Resource img = boardUploadServiceClient.getFile(board.getId().intValue());
-			board.setImg(img);
+			if(img != null) {
+				board.setImg(img);
+			}
 		}
 		return ResponseEntity.ok(list);
 	}
