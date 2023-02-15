@@ -24,6 +24,5 @@ const sessionListSlice = createSlice({
 });
 
 export const {createSession, deleteSession} = sessionListSlice.actions;
-// export const sessionListActions = sessionListSlice.actions;
 
 export default sessionListSlice;
