@@ -10,6 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 public interface BoardUploadServiceClient {
 
 	@PostMapping(path = "/{id}")
-	String uploadFile(@RequestBody MultipartFile file, @PathVariable Long id);
+	String uploadFile(@RequestBody MultipartFile file, @PathVariable int id);
 
 }

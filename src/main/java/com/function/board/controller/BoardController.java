@@ -52,7 +52,7 @@ public class BoardController {
 	@PostMapping(produces = "multipart/form-data")
 	public ResponseEntity<Object> save(@RequestPart("board") BoardSaveRequestDto requestDto,
 										@RequestPart("file") MultipartFile file) throws Exception {
-		Long boardId = boardService.upload(requestDto);
+		int boardId = boardService.upload(requestDto).intValue();
 		String result = boardUploadServiceClient.uploadFile(file, boardId);
 		System.out.println("결과 = " + result);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
