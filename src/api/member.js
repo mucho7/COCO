@@ -16,6 +16,8 @@ function failHandler(params) {
 
 // image 추가하고 활성화활 것
 async function signup(user, success, fail) {
+  api.defaults.headers["Authorization"] = user["Authorization"]
+  api.defaults.headers["refreshToken"] = user["refreshToken"]
   await api.post(`/member/register`, JSON.stringify(user)).then(success).catch(fail)
   // const formData = new FormData();
   
