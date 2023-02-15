@@ -5,9 +5,6 @@ import java.io.IOException;
 
 import javax.transaction.Transactional;
 
-import org.eclipse.jdt.core.compiler.InvalidInputException;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -15,22 +12,22 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.file.data.BoardFile;
 import com.ssafy.file.data.BoardFileRepository;
+import com.ssafy.file.data.MemberFile;
+import com.ssafy.file.data.MemberFileRepository;
 
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 
 @Service
 @RequiredArgsConstructor
-public class BoardFileService {
+public class MemberFileService {
 
-
-	private final BoardFileRepository boardFileRepository;
-	private final String path = "/app/data/boardItem";
+	private final MemberFileRepository memberFileRepository;
+	private final String path = "/app/data/memberItem";
 	@Transactional
 	public int save(int id, MultipartFile file) {
 
-		BoardFile boardfile = new BoardFile(id,file.getOriginalFilename());
-		int res = boardFileRepository.save(boardfile).getId();
+		MemberFile memberfile = new MemberFile(id,file.getOriginalFilename());
+		int res = memberFileRepository.save(memberfile).getId();
 		try {
 			file.transferTo(new File(path+"/"+file.getOriginalFilename()));
 		} catch (IOException e) {
@@ -42,10 +39,8 @@ public class BoardFileService {
 
 	@Transactional
 	public Resource findByBoardId(int id) {
-		BoardFile boardfile = boardFileRepository.findById(id);
-		if(boardfile == null)
-			return null;
-		String name = boardfile.getName();
+		MemberFile memberfile = memberFileRepository.findById(id);
+		String name = memberfile.getName();
 		Resource resource = new FileSystemResource(path+"/" + name);
 		return resource;
 	}
