@@ -1,6 +1,6 @@
 
 server:
-  port: 9001
+  port: 8014
 
 spring:
   application:
@@ -11,4 +11,4 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone : http://127.0.0.1:8761/eureka
+      defaultZone : http://EurekaDiscoveryService:8761/eureka
