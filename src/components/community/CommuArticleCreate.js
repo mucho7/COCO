@@ -8,7 +8,6 @@ import { articleCreate } from "../../api/community"
 import styled from "styled-components"
 import { Button, TextField, Select, MenuItem } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { margin } from "@mui/system"
 
 function ArticleCreate() {
     const navigate = useNavigate()

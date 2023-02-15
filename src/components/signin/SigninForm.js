@@ -1,12 +1,11 @@
 // custom hook에 대한 이해가 필요함
 
-import { useInsertionEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { signup } from '../../api/member'
 
 import { Grid, Box, Container, Button, TextField } from '@mui/material'
-import { useEffect } from 'react'
 
 function SigninForm() {
     const navigate = useNavigate()

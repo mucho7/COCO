@@ -14,8 +14,8 @@ function CommuArticleDetail() {
     const [ cookie ] = useCookies(["userInfo"])
     const location = useLocation()
     console.log(location)
-    const pk = location.state.id
-    const hit = location.state.hit
+    const pk = location.pathname.slice(-3, location.pathname.length)
+    // const hit = location.state.hit
 
     const [ sival, setSival ] = useState(0)
     const [ pageNumber, setPageNumber ] = useState(1)
@@ -29,7 +29,7 @@ function CommuArticleDetail() {
             empty: true,
             totalPages: 1,
         },
-        hit: hit
+        // hit: hit
     })
     
     useMemo(() => {
@@ -41,7 +41,7 @@ function CommuArticleDetail() {
                 },
                 (error) => console.log(error)
             ).then((res) => {
-                console.log(res.headers.get("Set-Cookie"))
+                console.log(res)
                 setArticle(res.data)
                 setMaxPage(res.data.comments.totalPages)
             })
