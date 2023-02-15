@@ -284,6 +284,7 @@ function NormalSession(props) {
               }
               this.generateOffer (participant.offerToReceiveVideo.bind(participant));
         });
+        participant.rtcPeer.audioEnabled = false;
       }
 
       function onParticipantLeft(request) {
