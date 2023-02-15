@@ -46,6 +46,7 @@ function Ide(props) {
   useEffect(() => {
     return () => {
       providerRef.current?.disconnect();
+      docRef.current?.destroy();
     }
   }, [])
 
