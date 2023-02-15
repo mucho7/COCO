@@ -1,10 +1,10 @@
 
 server:
-  port: 8014
+  port: 8013
 
 spring:
   application:
-    name: sessionfunctionService
+    name: SessionFunctionService
 
 eureka:
   client:
