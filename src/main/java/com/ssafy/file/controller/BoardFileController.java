@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/file/board")
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin("*")
 public class BoardFileController {
 	private final BoardFileService bFileService;
 
