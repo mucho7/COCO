@@ -23,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/file/board")
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin("*")
 public class BoardFileController {
 	private final BoardFileService bFileService;
 
@@ -35,6 +34,8 @@ public class BoardFileController {
 	@PostMapping("/{id}")
 	public String uploadFile(@RequestBody MultipartFile file,
 		@PathVariable(value = "id") int id) {
+
+		System.out.println("board : " + id);
 		int res = bFileService.save(id,file);
 		
 		return res != -1 ? "성공"  : "파일의 크기는 10MB를 넘을 수 없습니다";
