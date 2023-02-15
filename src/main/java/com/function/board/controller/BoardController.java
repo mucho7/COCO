@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.function.board.client.BoardUploadServiceClient;
 import com.function.board.dto.board.BoardDetailTransferDto;
+import com.function.board.dto.board.BoardListDto;
 import com.function.board.dto.board.BoardListResponseDto;
 import com.function.board.dto.board.BoardSaveRequestDto;
 import com.function.board.dto.board.BoardSearchCondition;
@@ -71,8 +72,14 @@ public class BoardController {
 
 	@ApiOperation(value = "게시글 목록 페이징")
 	@GetMapping()
-	public ResponseEntity<Page<BoardListResponseDto>> paging(@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-		return ResponseEntity.ok(boardService.paging(pageable));
+	public ResponseEntity<Page<BoardListDto>> paging(@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+		Page<BoardListDto> list = boardService.paging(pageable);
+
+		for(BoardListDto board : list) {
+			Resource img = boardUploadServiceClient.getFile(board.getId().intValue());
+			board.setImg(img);
+		}
+		return ResponseEntity.ok(list);
 	}
 
 	@ApiOperation(value = "{board_id}로 게시글 조회")
