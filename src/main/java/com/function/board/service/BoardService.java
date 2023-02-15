@@ -19,6 +19,7 @@ import com.function.board.domain.board.BoardRepository;
 import com.function.board.domain.comment.Comment;
 import com.function.board.domain.comment.CommentRepository;
 import com.function.board.dto.board.BoardDetailTransferDto;
+import com.function.board.dto.board.BoardListDto;
 import com.function.board.dto.board.BoardListResponseDto;
 import com.function.board.dto.board.BoardSaveRequestDto;
 import com.function.board.dto.board.BoardSearchCondition;
@@ -54,9 +55,9 @@ public class BoardService {
 	}
 
 	@Transactional(readOnly = true)
-	public Page<BoardListResponseDto> paging(Pageable pageable) {
+	public Page<BoardListDto> paging(Pageable pageable) {
 		return boardRepository.findAll(pageable)
-			.map(BoardListResponseDto::new);
+			.map(BoardListDto::new);
 	}
 
 	@Transactional(readOnly = true)
