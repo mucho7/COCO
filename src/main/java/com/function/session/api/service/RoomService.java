@@ -59,32 +59,34 @@ public class RoomService {
 	public Room UpdateRoomEnter(Long roomId, String userId) {
 		Room room = roomRepository.findById(roomId).orElse(null);
 		if (room != null) {
-			// if (room.getIsLive() == 0) { // 아직 호스트 입장 전
-			// 	if (room.getHostId().equals(userId)) { // 호스트가 방에 입장할 때
-			// 		room.UpdateRoomIsLive();
-			// 		room.UpdateRoomNumberUsers(1);
-			// 	}else{
 			//
-			// 	}
-			// } else {
-			// 	if (room.getNumberUsers() >= room.getMax()) {
-			// 		throw new IllegalArgumentException("꽉 찬 방입니다. 최대 참여자 수: " + room.getMax());
-			// 	} else { // 입장하기
-			// 		room.UpdateRoomNumberUsers(1);
-			// 	}
-			// }
-			if (room.getHostId().equals(userId)) { // 호스트가 방에 입장할 때
-				room.UpdateRoomIsLive();
-				room.UpdateRoomNumberUsers(1);
-			} else { // 일반 사용자가 방에 입장할 때
+			if (room.getIsLive() == 0) { // 아직 호스트 입장 전
+				if (room.getHostId().equals(userId)) { // 호스트가 방에 입장할 때
+					room.UpdateRoomIsLive();
+					room.UpdateRoomNumberUsers(1);
+				} else {
+					throw new IllegalArgumentException("호스트가 아직 입장하지 않았습니다.");
+				}
+			} else {
 				if (room.getNumberUsers() >= room.getMax()) {
 					throw new IllegalArgumentException("꽉 찬 방입니다. 최대 참여자 수: " + room.getMax());
-				} else if (room.getIsLive() == 0) {
-					throw new IllegalArgumentException("호스트가 아직 입장하지 않았습니다.");
 				} else { // 입장하기
 					room.UpdateRoomNumberUsers(1);
 				}
 			}
+			//
+			// if (room.getHostId().equals(userId)) { // 호스트가 방에 입장할 때
+			// 	room.UpdateRoomIsLive();
+			// 	room.UpdateRoomNumberUsers(1);
+			// } else { // 일반 사용자가 방에 입장할 때
+			// 	if (room.getNumberUsers() >= room.getMax()) {
+			// 		throw new IllegalArgumentException("꽉 찬 방입니다. 최대 참여자 수: " + room.getMax());
+			// 	} else if (room.getIsLive() == 0) {
+			// 		throw new IllegalArgumentException("호스트가 아직 입장하지 않았습니다.");
+			// 	} else { // 입장하기
+			// 		room.UpdateRoomNumberUsers(1);
+			// 	}
+			// }
 		}
 		return room;
 	}
