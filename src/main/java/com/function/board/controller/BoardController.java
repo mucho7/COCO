@@ -84,6 +84,13 @@ public class BoardController {
 		return ResponseEntity.ok(list);
 	}
 
+	@ApiOperation(value = "게시글 목록 페이징 TEST")
+	@GetMapping("/hello3")
+	public ResponseEntity<Page<BoardListDto>> paging2(@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+		Page<BoardListDto> list = boardService.paging(pageable);
+		return ResponseEntity.ok(list);
+	}
+
 	@ApiOperation(value = "{board_id}로 게시글 조회")
 	@GetMapping("/{id}")
 	public ResponseEntity<BoardDetailTransferDto> findById(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response, @PageableDefault(size=20) Pageable pageable) {
