@@ -77,7 +77,7 @@ function Comments(props) {
                                 <Typography>{comment.writer}</Typography>
                             </Grid>
                             <Grid item xs={7}>
-                                {updateTarget !== comment.id ? <Typography style={{overflowWrap: "break-word"}}>{comment.content}</Typography> : <TextField onChange={onTypingHandler} value={updateComment} size="small"/>}
+                                {updateTarget !== comment.id ? <Typography style={{overflowWrap: "break-word"}}>{comment.content}</Typography> : <TextField onChange={onTypingHandler} value={updateComment} size="small" fullWidth/>}
                             </Grid>
                             <Grid item xs={1} textAlign="center">
                                 {/* 오늘 /  이번 년 / 그 외 */}

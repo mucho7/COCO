@@ -6,7 +6,7 @@ import MonacoEditor from "@monaco-editor/react"
 import { articleUpdate } from "../../api/community"
 
 import styled from "styled-components"
-import { Button, TextField } from "@mui/material"
+import { Button, TextField, Select, MenuItem } from '@mui/material';
 import { useEffect } from "react"
 
 function ArticleUpdate() {
@@ -16,6 +16,7 @@ function ArticleUpdate() {
     const [inputTitle, setInputTitle ] = useState("")
     const [inputContent, setInputContent ] = useState("")
     const [inputCode, setInputCode] = useState("")
+    const [ monacoLang, setMonacoLang ] = useState("java")
     const [pk, setPk] = useState("")
     
     const onTypingHandler = (e) => {
@@ -36,6 +37,9 @@ function ArticleUpdate() {
         setInputCode(e)
     }
 
+    const onSelectHandler = (e) => {
+        setMonacoLang(e.target.value)
+    }
     
     const updateArticle ={
         title: inputTitle,
@@ -91,7 +95,14 @@ function ArticleUpdate() {
                 </ContentSection>
                 <Vr/>
                 <CodeSection style={{paddingTop: 20}}>
-                    <MonacoEditor id="editor" value={updateArticle.code} onChange={onCodeTypingHandler} />
+                    <MonacoEditor height="430px" id="editor" language={monacoLang} value={updateArticle.code} onChange={onCodeTypingHandler} />
+                    <Select style={{position: "absolute", right: "13%", top: "580px"}} size="small" value={monacoLang} onChange={onSelectHandler}>
+                        <MenuItem value={"java"}>java</MenuItem>
+                        <MenuItem value={"javascript"}>javascript</MenuItem>
+                        <MenuItem value={"python"}>python</MenuItem>
+                        <MenuItem value={"csharp"}>C</MenuItem>
+                        <MenuItem value={"cpp"}>C++</MenuItem>
+                    </Select>
                 </CodeSection>
             </ArticleSection>
             <hr/>
@@ -120,13 +131,19 @@ const ArticleSection = styled.section`
 `
 const ContentSection = styled.section`
     width: 45%;
-    height: 500px;
+    height: auto;
 
+    padding-top: 15px;
 `
 const CodeSection = styled.section`
     width: 45%;
-    height: 500px;
+    height: auto;
+    border: solid 1px black;
+    border-radius: 5px;
 
+    padding-top: 15px;
+    margin-top: 15px;
+    margin-bottom: 25px;
 `
 const Vr = styled.div`
     width: 1px;

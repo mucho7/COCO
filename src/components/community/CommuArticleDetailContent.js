@@ -84,8 +84,9 @@ function CommuArticleDetailContent(params) {
 
 const ArticleContent = `
     width: 45%;
-    height: 500px;
-    overflow-wrap: break-word; 
+    height: auto;
+
+    padding-top: 15px;
 `
 const ContentSection = styled.section`
     ${ArticleContent}
