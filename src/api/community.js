@@ -18,24 +18,39 @@ async function boardDetail(article, success, fail) {
   return res
 }
 
-async function articleCreate(article, success, fail) {
-  // api.defaults.headers["Authorization"] = article.jwt_token
-  // api.defaults.headers["refreshToken"] = article.refresh_token
-  // await api.post(`/board`, JSON.stringify(article)).then(success).catch(fail);
-  const formData = new FormData();
+// async function articleCreate(article, success, fail) {
+//   // await api.post(`/board`, JSON.stringify(article)).then(success).catch(fail);
   
-  // formData 형성
-  formData.append("board", JSON.stringify(article))
+//   // formData 형성
+//   const formData = new FormData();
+//   formData.append("board", new Blob([JSON.stringify(article)], { type: "application/json" }))
+//   formData.append("file", article.profile_img)
+  
+  
+//   const api_mk2 = axios.create({
+//     baseURL: "https://ssafy.cossafyco.kro.kr/api/", 
+//     headers: {
+//       "Content-Type": "multipart/form-data",
+//       // "Authorization": article.jwt_token,
+//       // "refreshToken": article.refresh_token
+//     }
+//   })
+
+//   api_mk2.defaults.headers["Authorization"] = article.jwt_token
+//   api_mk2.defaults.headers["refreshToken"] = article.refresh_token
+
+//   await api_mk2.post(`/board`, formData).then(success).catch(fail)
+// }
+
+async function articleCreate(article, success, fail) {
+  const formData = new FormData();
+  formData.append("board", new Blob([JSON.stringify(article)], { type: "application/json" }))
   formData.append("file", article.profile_img)
 
-  axios.create({
-    baseURL: "https://ssafy.cossafyco.kro.kr/api/", 
-    headers: {
-      "Content-Type": "multipart/form-data",
-      "Authorization": article.jwt_token,
-      "refreshToken": article.refresh_token
-    }
-  }).post(`/board`, formData).then(success).catch(fail)
+  api.defaults.headers["Content-Type"] = "multipart/form-data"
+  api.defaults.headers["Authorization"] = article.jwt_token
+  api.defaults.headers["refreshToken"] = article.refresh_token
+  await api.post(`/board`, formData).then(success).catch(fail)
 }
 
 async function articleDelete(article, success, fail) {

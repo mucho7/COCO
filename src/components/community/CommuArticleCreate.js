@@ -59,8 +59,8 @@ function ArticleCreate() {
         code: inputCode,
         writer: window.localStorage.getItem("userId"),
         profile_img: inputImg, 
-        jwt_token: cookie.userInfo?.jwt_token,
-        refresh_token: cookie.userInfo?.refresh_token
+        jwt_token: cookie.userInfo.jwt_token,
+        refresh_token: cookie.userInfo.refresh_token
     }
     
     async function onClickHandler() {
