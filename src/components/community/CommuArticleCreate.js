@@ -6,7 +6,8 @@ import MonacoEditor from "@monaco-editor/react"
 import { articleCreate } from "../../api/community"
 
 import styled from "styled-components"
-import { Button, TextField } from "@mui/material"
+import { Button, TextField, Select, MenuItem } from '@mui/material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 function ArticleCreate(params) {
     const navigate = useNavigate()
@@ -14,6 +15,8 @@ function ArticleCreate(params) {
     const [inputTitle, setInputTitle ] = useState()
     const [inputContent, setInputContent ] = useState()
     const [inputCode, setInputCode] = useState()
+    const [inputImg, setInputImg] = useState(null)
+    const [ monacoLang, setMonacoLang ] = useState("java")
     
     // 로그인 안했다면 퇴장
     useEffect(() => {
@@ -41,11 +44,20 @@ function ArticleCreate(params) {
             setInputCode(e)
     }
 
+    const onSelectHandler = (e) => {
+        setMonacoLang(e.target.value)
+    }
+
+    const onImageChangeHandler = (e) => {
+        setInputImg(e.target.files[0])
+    }
+
     const newArticle ={
         title: inputTitle,
         content: inputContent,
         code: inputCode,
         writer: window.localStorage.getItem("userId"),
+        profile_img: inputImg, 
         jwt_token: cookie.userInfo?.jwt_token,
         refresh_token: cookie.userInfo?.refresh_token
     }
@@ -88,11 +100,26 @@ function ArticleCreate(params) {
                 </ContentSection>
                 <Vr/>
                 <CodeSection >
-                    <MonacoEditor id="editor" onChange={onCodeTypingHandler} />
+                    <MonacoEditor id="editor" height="430px" language={monacoLang} onChange={onCodeTypingHandler} />
+                    <Select style={{position: "absolute", right: "13%", top: "590px"}} size="small" value={monacoLang} onChange={onSelectHandler}>
+                        <MenuItem value={"java"}>java</MenuItem>
+                        <MenuItem value={"javascript"}>javascript</MenuItem>
+                        <MenuItem value={"python"}>python</MenuItem>
+                        <MenuItem value={"csharp"}>C</MenuItem>
+                        <MenuItem value={"cpp"}>C++</MenuItem>
+                    </Select>
                 </CodeSection>
             </ArticleSection>
+            <TextField type="file" accept="image/*" onChange={onImageChangeHandler} fullWidth
+            InputProps={{
+                startAdornment: <CloudUploadIcon />,
+                sx: {
+                    "& > input[type=file]": { opacity: 1, position: 'flex', right: 0, top: 0 }
+                  }
+            }} />
             <hr/>
             <Button onClick={onClickHandler} variant="contained">작성 완료</Button>
+            
         </>
     )
 }
@@ -123,7 +150,7 @@ const ContentSection = styled.section`
 const CodeSection = styled.section`
     width: 45%;
     height: auto;
-    border: solid black;
+    border: solid 1px black;
     border-radius: 5px;
 
     padding-top: 15px;

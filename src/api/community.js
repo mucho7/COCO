@@ -1,4 +1,5 @@
 import http from "./http.js";
+import axios from "axios";
 
 const api = http;
 
@@ -20,7 +21,17 @@ async function boardDetail(article, success, fail) {
 async function articleCreate(article, success, fail) {
   api.defaults.headers["Authorization"] = article.jwt_token
   api.defaults.headers["refreshToken"] = article.refresh_token
-  await api.post(`/board`, JSON.stringify(article)).then(success).catch(fail);
+  // await api.post(`/board`, JSON.stringify(article)).then(success).catch(fail);
+  const formData = new FormData();
+  
+  // formData 형성
+  formData.append("user", JSON.stringify(article))
+  formData.append("image", article.image)
+
+  axios.create({
+    baseURL: "https://ssafy.cossafyco.kro.kr/api/", 
+    headers: {"Content-Type": "multipart/form-data",}
+  }).post(`/board`, formData).then(success).catch(fail)
 }
 
 async function articleDelete(article, success, fail) {

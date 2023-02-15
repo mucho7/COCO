@@ -29,10 +29,7 @@ export default function CommuSearchbar() {
     return (
         <Paper component="form" sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', height: '2.4rem' }}>
             <FormControl size="small" >
-                <Select
-                    value={searchTarget}
-                    onChange={onSelectHandler}
-                >
+                <Select value={searchTarget} onChange={onSelectHandler}>
                     <MenuItem value={"title"}>제목</MenuItem>
                     <MenuItem value={"content"}>내용</MenuItem>
                     <MenuItem value={"writer"}>작성자</MenuItem>
