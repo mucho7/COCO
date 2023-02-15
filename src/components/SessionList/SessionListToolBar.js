@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import SessionListSearchBar from "./sessionListSearchBar";
+import SessionListSearchBar from "./SessionListSearchBar";
 
 import styled from "styled-components"
 import { Button, Grid, } from '@mui/material';
