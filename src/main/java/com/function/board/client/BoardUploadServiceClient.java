@@ -1,6 +1,7 @@
 package com.function.board.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +17,7 @@ public interface BoardUploadServiceClient {
 	@PostMapping("/hello/{id}")
 	String posthello(@RequestBody String hi, @PathVariable int id);
 
-	@PostMapping(path = "/{id}", produces = "multipart/form-data")
+	@PostMapping(path = "/{id}", produces = "multipart/form-data", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	String uploadFile(@RequestBody MultipartFile file, @PathVariable int id);
 
 }
