@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -47,15 +48,9 @@ public class BoardController {
 	// 	boardService.save(requestDto);
 	// 	return ResponseEntity.status(HttpStatus.CREATED).build();
 	// }
-
 	@GetMapping("/hello1")
-	public String hello() {
-		return boardUploadServiceClient.hello();
-	}
-
-	@GetMapping("/hello2")
-	public String postHello() {
-		return boardUploadServiceClient.posthello("hi", 123);
+	public Resource getFile() {
+		return boardUploadServiceClient.getFile(128);
 	}
 
 	@ApiOperation(value = "게시글 생성")
