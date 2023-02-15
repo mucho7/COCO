@@ -14,7 +14,7 @@ import com.ssafy.file.service.MemberFileService;
 
 import lombok.RequiredArgsConstructor;
 
-@RequestMapping("/function/Member")
+@RequestMapping("/file/Member")
 @RequiredArgsConstructor
 @RestController
 public class MemberFileController {

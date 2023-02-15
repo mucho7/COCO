@@ -21,7 +21,7 @@ import com.ssafy.file.service.BoardFileService;
 
 import lombok.RequiredArgsConstructor;
 
-@RequestMapping("/function/board")
+@RequestMapping("/file/board")
 @RequiredArgsConstructor
 @RestController
 public class BoardFileController {
