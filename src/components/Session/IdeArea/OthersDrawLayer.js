@@ -115,7 +115,7 @@ function OthersDrawLayer(props) {
     }
 
     if (imageData?.userName === userName) {
-      switch (imageData.imageData.type) {
+      switch (imageData?.imageData.type) {
         case "startDrawing":
           startDrawing(imageData.imageData.x, imageData.imageData.y);
           break;
