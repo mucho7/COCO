@@ -50,6 +50,12 @@ public class BoardController {
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
+	@ApiOperation(value = "TEST")
+	@PostMapping("/hello2")
+	public String hello2(@RequestBody String test) {
+		return test;
+	}
+
 	@ApiOperation(value = "게시글 목록 조회")
 	@GetMapping("/list")
 	public ResponseEntity<List<BoardListResponseDto>> boardList() {
