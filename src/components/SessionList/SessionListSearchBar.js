@@ -23,10 +23,10 @@ function SessionListSearchBar() {
     const onSearchClickHandler = () => {
         switch (searchTarget) {
             case "title":
-                setSearchParams({ mode: "study", title: searchWord })
+                setSearchParams({ mode: "study", title: searchWord, hostId: "" })
                 break;
             case "hostId":
-                setSearchParams({ mode: "study", hostId: searchWord })
+                setSearchParams({ mode: "study", title: "", hostId: searchWord })
                 break;
             default:
         }
