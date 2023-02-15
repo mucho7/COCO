@@ -27,7 +27,7 @@ public class CommentController {
 	private final CommentService commentService;
 
 	@ApiOperation(value = "댓글 생성")
-	@PostMapping("{board_id}")
+	@PostMapping("/{board_id}")
 	public ResponseEntity<Long> save(@PathVariable("board_id") Long boardId, @RequestBody CommentSaveRequestDto requestDto) {
 		commentService.save(boardId, requestDto);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
