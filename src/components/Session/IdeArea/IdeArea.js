@@ -39,7 +39,7 @@ function IdeArea(props) {
       dispatch(setUpdated(false));
       Object.keys(participants)?.forEach((userName) => {
         if (!layers[userName]) {
-          const newLayer = <OthersDrawLayer participant={participants[userName]} />
+          const newLayer = <OthersDrawLayer userName={userName} />
           const updatedLayers = layers;
           updatedLayers[userName] = newLayer;
           setLayers(updatedLayers);
