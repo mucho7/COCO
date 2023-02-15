@@ -13,10 +13,15 @@ import ArticleDetailPage from "./ArticleDetailPage";
 import ArticleCreatePage from "./ArticleCreatePage";
 import ArticleUpdatePage from "./ArticleUpdatePage"
 import UpdateSession from "./UpdateSessionPage";
+import Error404Page from "./Error404Page"
 
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
+  {
+    path: "*",
+    element: <Error404Page/>,
+  },
   // 일반 페이지 관련
   {
     path: "/",

@@ -46,7 +46,7 @@ function CommentForm(params) {
         <CommentFormBox>
             <TextField value={comment} onChange={onTypingHandler} size="small" style={{width: "60%"}} />
             <Link to={location.pathname} state={{id: board_id}} style={{textDecoration: "none"}}>
-                <Button onClick={onSubmitClickHandler} variant="contained" >작성</Button>
+                <Button onClick={onSubmitClickHandler} style={{background: "#FCA311", marginLeft: "10px"}} variant="contained" >작성</Button>
             </Link>
         </CommentFormBox>
     )    
@@ -55,6 +55,8 @@ function CommentForm(params) {
 const CommentFormBox = styled.div`
     display: flex;
     justify-content: center;
+
+    margin-top: 30px;
 `
 
 export default CommentForm

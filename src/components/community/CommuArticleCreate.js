@@ -6,18 +6,22 @@ import MonacoEditor from "@monaco-editor/react"
 import { articleCreate } from "../../api/community"
 
 import styled from "styled-components"
-import { Button, TextField } from "@mui/material"
+import { Button, TextField, Select, MenuItem } from '@mui/material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { margin } from "@mui/system"
 
-function ArticleCreate(params) {
+function ArticleCreate() {
     const navigate = useNavigate()
     const [ cookie ] = useCookies(["userInfo"])
     const [inputTitle, setInputTitle ] = useState()
     const [inputContent, setInputContent ] = useState()
     const [inputCode, setInputCode] = useState()
+    const [inputImg, setInputImg] = useState(null)
+    const [ monacoLang, setMonacoLang ] = useState("java")
     
     // 로그인 안했다면 퇴장
     useEffect(() => {
-        if (localStorage.getItem("userId") === null) {
+        if (cookie.userInfo === undefined || localStorage.getItem("userId") === null) {
             navigate('/useri/login')
             alert("로그인이 필요한 서비스입니다.")
         }
@@ -41,13 +45,22 @@ function ArticleCreate(params) {
             setInputCode(e)
     }
 
+    const onSelectHandler = (e) => {
+        setMonacoLang(e.target.value)
+    }
+
+    const onImageChangeHandler = (e) => {
+        setInputImg(e.target.files[0])
+    }
+
     const newArticle ={
         title: inputTitle,
         content: inputContent,
         code: inputCode,
         writer: window.localStorage.getItem("userId"),
-        jwt_token: cookie.userInfo.jwt_token,
-        refresh_token: cookie.userInfo.refresh_token
+        profile_img: inputImg, 
+        jwt_token: cookie.userInfo?.jwt_token,
+        refresh_token: cookie.userInfo?.refresh_token
     }
     
     async function onClickHandler() {
@@ -88,11 +101,26 @@ function ArticleCreate(params) {
                 </ContentSection>
                 <Vr/>
                 <CodeSection >
-                    <MonacoEditor id="editor" onChange={onCodeTypingHandler} />
+                    <MonacoEditor id="editor" height="430px" language={monacoLang} onChange={onCodeTypingHandler} />
+                    <Select style={{position: "absolute", right: "13%", top: "590px"}} size="small" value={monacoLang} onChange={onSelectHandler}>
+                        <MenuItem value={"java"}>java</MenuItem>
+                        <MenuItem value={"javascript"}>javascript</MenuItem>
+                        <MenuItem value={"python"}>python</MenuItem>
+                        <MenuItem value={"csharp"}>C</MenuItem>
+                        <MenuItem value={"cpp"}>C++</MenuItem>
+                    </Select>
                 </CodeSection>
             </ArticleSection>
             <hr/>
-            <Button onClick={onClickHandler} variant="contained">작성 완료</Button>
+            <TitleSection>
+                <TextField type="file" accept="image/*" onChange={onImageChangeHandler}
+                InputProps={{
+                    startAdornment: <CloudUploadIcon style={{marginRight: "15px"}} />,
+                    
+                }} />
+                <Button onClick={onClickHandler} style={{background: "#FCA311"}} variant="contained">작성 완료</Button>
+            </TitleSection>
+            <hr/>
         </>
     )
 }
@@ -107,7 +135,6 @@ const TitleSection = styled.section`
     display: flex;
     justify-content: space-between;
 `
-
 const ArticleSection = styled.section`
     width: 100%;
     height: 490px;
@@ -124,7 +151,7 @@ const ContentSection = styled.section`
 const CodeSection = styled.section`
     width: 45%;
     height: auto;
-    border: solid black;
+    border: solid 1px black;
     border-radius: 5px;
 
     padding-top: 15px;
