@@ -7,7 +7,6 @@ import IconButton from '@mui/material/IconButton';
 import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import AutoFixHighOutlinedIcon from '@mui/icons-material/AutoFixHighOutlined';
-import Button from '@mui/material/Button';
 
 const DrawDiv = styled.div`
   box-sizing: border-box;
@@ -29,12 +28,6 @@ const DrawingTool = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 10px;
-`
-
-const ColorPicker = styled.input`
-  width: 30px;
-  height: 30px;
-  border-radius: 15px;
 `
 
 
