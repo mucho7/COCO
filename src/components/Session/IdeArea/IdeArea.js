@@ -45,16 +45,20 @@ function IdeArea(props) {
     const users = Object.keys(participants)
     const prevUsers = Object.keys(layers)
 
+    // 레이어 추가
     users.forEach((user) => {
-      if (!prevUsers.includes(user)) {
+      // 아직 레이어가 생겨있지 않은 유저이면서 유저가 그림판 on 상태라면
+      if (!prevUsers.includes(user) && participants[user]?.isDrawButtonOn) {
         const addedLayers = {...layers}
         addedLayers[user] = <OthersDrawLayer key={user} user={user} />
         setLayers(addedLayers)
       }
     })
 
+    // 레이어 삭제
     prevUsers.forEach((user) => {
-      if (!users.includes(user)) {
+      // 나간 유저이거나 유저가 그림판 off상태라면
+      if (!users.includes(user) || !participants[user]?.isDrawButtonOn) {
         const deletedLayers = {...layers};
         delete deletedLayers[user];
         setLayers(deletedLayers);
