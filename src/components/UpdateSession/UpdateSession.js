@@ -34,11 +34,16 @@ function UpdateSession() {
     hostRating: 10,
     mode: inputMode,
     max: inputMax,
-    tokenL: {
-      jwt_token: cookie.userInfo,
-      refresh_token: cookie.userInfo
-    }
   }
+
+  // 로그인 안했다면 퇴장
+  useEffect(() => {
+    console.log(localStorage.getItem("userId"))
+    if (localStorage.getItem("userId") === null) {
+        navigate('/useri/login')
+        alert("로그인이 필요한 서비스입니다.")
+    }
+  }, [navigate, cookie])
 
   // 기존 세션 내용 가져오기
   const session = location.state;
@@ -59,9 +64,6 @@ function UpdateSession() {
         case "content":
             setInputContent(e.target.value)
             break
-        case "mode":
-            setInputMode(e.target.value)
-            break
         case "max":
           setInputMax(e.target.value)
           break;
@@ -72,14 +74,18 @@ function UpdateSession() {
 
   async function handleUpdateSession(event) {
     event.preventDefault();
-    await updateSession(
-      session.roomId, updatedSessionInfo,
-      (data) => {
-        console.log(data)
-        navigate(`/session/${session.roomId}`);
-      },
-      (err) => console.log(err)
-    )
+    if (!inputTitle.trim()) {
+      alert("제목 입력은 필수입니다.")
+    } else {
+      await updateSession(
+        session.roomId, updatedSessionInfo,
+        (data) => {
+          console.log(data)
+          navigate(`/session/${session.roomId}`);
+        },
+        (err) => console.log(err)
+      )
+    }
   }
   
   
@@ -90,16 +96,6 @@ function UpdateSession() {
       </Typography>
       <Box component="form" noValidate sx={{ mt: 3 }} onSubmit={handleUpdateSession}>
         <Grid container spacing={2}>
-          {/* <Grid item xs={12}>
-            <TextField
-              required
-              fullWidth
-              id="hostId"
-              label="HOST ID"
-              value={updateSession.hostId}
-              autoComplete="hostId"
-            />
-          </Grid> */}
           <Grid item xs={12}>
             <TextField
               required
@@ -125,13 +121,6 @@ function UpdateSession() {
             />
           </Grid>
           <Grid item xs={12}>
-            <FormLabel id="mode">모드</FormLabel>
-            <RadioGroup name="mode" row value={inputMode} onChange={onTypingHandler}>
-              <FormControlLabel value="study" control={<Radio />} label="study" />
-              <FormControlLabel value="relay" control={<Radio />} label="relay" />
-            </RadioGroup>
-          </Grid>
-          <Grid item xs={12}>
             <TextField
               required
               fullWidth
@@ -140,6 +129,7 @@ function UpdateSession() {
               value={inputMax}
               onChange={onTypingHandler}
               type="number"
+              InputProps={{ inputProps: { min: "2", max: "10", step: "1" } }}
               autoComplete="max"
             />
           </Grid>
@@ -147,19 +137,19 @@ function UpdateSession() {
         <Button
           type="submit"
           fullWidth
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
+          variant="filled"
+          sx={{ mt: 3, mb: 2, color:"white", background:"#FCA311" }}
         >
-          수정 완료
+          <b>수정</b>
         </Button>
-        <Link to={`/room/${session.roomId}`} style={{textDecoration: "none"}}>
+        <Link to={`/session/${session.roomId}`} style={{textDecoration: "none"}}>
           <Button
             type="button"
             fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            variant="filled"
+            sx={{ mt: 3, mb: 2, color: "white", background: "#4A4E69" }}
           >
-            취소
+            <b>취소</b>
           </Button>
         </Link>
       </Box>

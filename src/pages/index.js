@@ -1,6 +1,6 @@
 import NormalSession from "./NormalSessionPage";
-import RelaySession from "./RelaySessionPage";
-import CreateSession from "./CreateSessionPage";
+// import RelaySession from "./RelaySessionPage";
+import CreateSessionPage from "./CreateSessionPage";
 import SessionListPage from "./SessionListPage";
 import SessionDetailPage from "./SessionDetailPage";
 import HomePage from "./HomePage";
@@ -12,7 +12,7 @@ import LogoutPage from "./LogoutPage";
 import ArticleDetailPage from "./ArticleDetailPage";
 import ArticleCreatePage from "./ArticleCreatePage";
 import ArticleUpdatePage from "./ArticleUpdatePage"
-import UpdateSession from "./UpdateSessionPage";
+import UpdateSessionPage from "./UpdateSessionPage";
 import Error404Page from "./Error404Page"
 
 import { createBrowserRouter } from "react-router-dom";
@@ -65,17 +65,17 @@ const router = createBrowserRouter([
     path: "/session/:roomId/study",
     element: <NormalSession />,
   },
-  {
-    path: "/session/:roomId/relay",
-    element: <RelaySession />,
-  },
+  // {
+  //   path: "/session/:roomId/relay",
+  //   element: <RelaySession />,
+  // },
   {
     path: "/session/:roomId/update",
-    element: <UpdateSession />
+    element: <UpdateSessionPage />
   },
   {
     path: "/session/create",
-    element: <CreateSession />,
+    element: <CreateSessionPage />,
   },
   {
     path: "/session/:roomId",
