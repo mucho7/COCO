@@ -45,10 +45,9 @@ function CommuArticleListItem(props) {
                 {/* <Card sx={{height: "200px", margin: '4px', background: '#333333', backgroundImage: `url(${boardImg})`}} > */}
                 <Card sx={{height: "250px", margin: '4px', background: '#333333',}} >
                     <CardContent>
-                        <div style={{ width: '100%', maxHeight: '100px', overflow: 'hidden' }}>
-                            {/* <img src="../../assets/Board/static.jpg" alt="" style={{width: "100%", overflow: "hidden"}} /> */}
-                            <img src={boardImg ? boardImg : staticImg} style={{width: "100%", overflow: "hidden"}} />
-                        </div>
+                        <ImageBox >
+                            <img src={boardImg ? boardImg : "/assets/Board/static.jpg"} style={{width: "100%", overflow: "hidden"}} />
+                        </ImageBox>
                         <TitleBox>{article.title}</TitleBox>
                         <CardContentItem >
                             {createdAt.slice(5, 7) === month
@@ -91,6 +90,12 @@ const TitleBox = styled.h3`
 const CardContentItem = styled.span`
     color: white;
     font-family: "Open Sans", sans-serif;
+`
+
+const ImageBox = styled.div`
+    width: 100%;
+    max-height: 100px;
+    overflow: hidden;
 `
 
 const Row = styled.div`
