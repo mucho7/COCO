@@ -6,7 +6,7 @@ import { Card, CardActionArea, Typography, CardContent, Grid } from '@mui/materi
 function SessionListItem(props) {
     return (
         <>
-        {props.sessionList.map(session => {
+        {props.sessionList?.map(session => {
             return (
                 <Card sx={{ width: '100%', height: 'auto', margin: '4px'}} key={session.roomId}>
                     <CardActionArea>
