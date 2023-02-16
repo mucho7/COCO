@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useCookies } from 'react-cookie'
 
 import { signup } from '../../api/member'
 
@@ -23,8 +22,6 @@ function SigninForm() {
     const [isPasswordValid, setIsPasswordValid] = useState({ isValid: false })
     const [isNameValid, setIsNameValid] = useState({ isValid: false })
     
-    const [ cookie, setCookie ] = useCookies(["userInfo"])
-
     // validation
     const emailValidation = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}')
     useEffect(() => {
@@ -123,8 +120,6 @@ function SigninForm() {
             password: inputPassword,
             name: inputName,
             email: inputEmail,
-            'Authorization': typeof cookie.userInfo.jwt_token == "undefined" ? null : cookie.userInfo.jwt_token,
-            'refreshToken':  typeof cookie.userInfo.refresh_token == "undefined" ? null : cookie.userInfo.refresh_token
         }
         console.log(temp_user_info);
         await signup(

@@ -1,4 +1,5 @@
 import { Container, Box, Stack, Button, Typography } from '@mui/material';
+import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 
 import { useParams, useNavigate, Link } from "react-router-dom";
 
@@ -85,6 +86,23 @@ function SessionDetail() {
     )
   }
 
+  // 본문 링크, 줄바꿈 인식
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+  const replace = (content) => {
+    const convertContent = content.replace(urlRegex, function (url) {
+      return '<a href="' + url + '" target="_blank">' + url + '</a>';
+    })
+
+    const htmlArr = [];
+    convertContent.split('\n').forEach(function (text) {
+      const textHtml = "<p>" + text + "</p>";
+      htmlArr.push(textHtml)
+    })
+
+    return {__html: htmlArr.join("")}
+  }
+
   return (
     <Container>
       <Box sx={{ px: 2, py: 3, display: "flex", flexDirection: "column" }}>
@@ -92,7 +110,9 @@ function SessionDetail() {
           <Typography variant="h2" gutterBottom>{ session.title }</Typography>
           <Typography variant="h6" />
           <Stack direction="row" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-            <Typography variant="h6" gutterBottom>호스트: { session.hostId }</Typography>
+          <Typography variant="h6" gutterBottom sx={{ display: "flex", alignItems: "center" }}>
+              <ManageAccountsOutlinedIcon fontSize='large' sx={{ mr: 1 }} /> { session.hostId }
+            </Typography>
             {
               (session.hostId === localStorage.getItem("userId")) &&
               <Stack spacing={2} direction="row" sx={{  display: "flex", justifyContent: "flex-end", mr: 2 }}>
@@ -106,8 +126,10 @@ function SessionDetail() {
             }
           </Stack>
           <hr />
-          <Box sx={{ mx: 2, px: 2, py: 3, bgcolor: "#E5E5E5", borderRadius: "10px" }}>
-            { session.content }
+          <Box 
+            sx={{ mx: 2, px: 2, py: 3, bgcolor: "#E5E5E5", borderRadius: "10px", minHeight: "40%" }}
+            dangerouslySetInnerHTML={ replace(session.content) }
+          >
           </Box>
         </Box>
         <Stack spacing={2} direction="row" sx={{  display: "flex", justifyContent: "space-between", mr: 2 }}>

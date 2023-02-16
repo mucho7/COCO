@@ -36,7 +36,7 @@ export default function CommuSearchbar() {
                 </Select>
             </FormControl>
             <InputBase sx={{ ml: 1, flex: 1 }} placeholder="Search For More" onChange={onTypingHandler}/>
-            <IconButton onClick={onSearchClickHandler} type="button" sx={{ p: '10px', color: '#FCA311' }} aria-label="search">
+            <IconButton onClick={onSearchClickHandler} type="button" sx={{ p: '10px', color: 'blue' }} aria-label="search">
                 <Search />
             </IconButton>
         </Paper>

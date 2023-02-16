@@ -1,59 +1,36 @@
 import { useState, useEffect } from 'react';
-import { Box, IconButton } from '@mui/material';
+import { Box, Typography, Button, IconButton } from '@mui/material';
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 
-import FirstImg from '../../assets/HomeCarouselImg/1.png';
-import SecondImg from '../../assets/HomeCarouselImg/2.png';
-import ThirdImg from '../../assets/HomeCarouselImg/3.png';
+import FistImg from "../../assets/HomeCarouselImg/1.png"
+import SecondImg from "../../assets/HomeCarouselImg/2.png"
+import ThirdImg from "../../assets/HomeCarouselImg/3.png"
+
+import FistGif from "../../assets/HomeCarouselImg/IDE.gif"
+import SecondGif from "../../assets/HomeCarouselImg/after_crop.gif"
+import ThirdGif from "../../assets/HomeCarouselImg/after_crop.gif"
 
 
 const items = [
-  { title: 'Item 1', image: FirstImg },
-  { title: 'Item 2', image: SecondImg },
-  { title: 'Item 3', image: ThirdImg },
+  { title: 'Item 1', image: FistImg, gif: FistGif },
+  { title: 'Item 2', image: SecondImg, gif: "미구현" },
+  { title: 'Item 3', image: ThirdImg, gif: ThirdGif },
 ];
 
-const Carousel = () => {
+const HomeCarousel = () => {
   const [currentItem, setCurrentItem] = useState(0);
-  const [timer, setTimer] = useState(null);
-
-  useEffect(() => {
-    // Start the timer when the component mounts
-    setTimer(setInterval(handleNext, 10000));
-
-    // Clean up the timer when the component unmounts
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
 
   const handleNext = () => {
-    setCurrentItem(currentItem === items.length - 1 ? 0 : currentItem + 1);
+    setCurrentItem(currentItem === 2 ? 0 : currentItem + 1);
+
   };
 
   const handlePrevious = () => {
-    setCurrentItem(currentItem === 0 ? items.length - 1 : currentItem - 1);
-  };
-
-  const handleInteraction = () => {
-    // Reset the timer when the user interacts with the carousel
-    clearInterval(timer);
-    setTimer(setInterval(handleNext, 10000));
+    setCurrentItem(currentItem === 0 ? 2 : currentItem - 1);
   };
 
   return (
-    <Box
-      sx={{
-        width: 'inherit',
-        height: '640px',
-        margin: 'auto',
-        padding: '20px',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-      onTouchStart={handleInteraction}
-      onMouseDown={handleInteraction}
-    >
+    <Box sx={{width: 'inherit', height: '550px',margin: 'auto',padding: '20px',position: 'relative',overflow: 'hidden',}}>
       {items.map((item, index) => (
         <Box
           key={item.title}
@@ -63,22 +40,22 @@ const Carousel = () => {
             left: 0,
             width: '100%',
             height: '100%',
-            opacity: index === currentItem ? 1 : 0,
-            transition: 'opacity 0.5s',
-          }}
-        >
-          <img
-            src={item.image}
-            alt={item.title}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              transition: 'transform 0.5s',
-              transform:
-                index === currentItem ? 'translateX(0)' : 'translateX(100%)',
-            }}
-          />
+            zIndex:
+              index === currentItem 
+              ? 0 
+              : currentItem - index === 1 || index - currentItem === 2 
+              ? -1
+              : -2,
+            transition: 'transform 1s',
+            transform:
+              index === currentItem 
+              ? 'translateX(0)' 
+              : currentItem - index === 1 || index - currentItem === 2 
+              ? 'translateX(-100%)' 
+              : 'translateX(100%)'
+          }}>
+          <img src={item.image} alt={item.title} style={{width: '100%',height: '100%', objectFit: 'cover',}} />
+          <img src={item.gif} style={{width: '40%',height: '60%', right: '4%', top: '20%', zIndex: 3, position: 'absolute' }} />
         </Box>
       ))}
       <IconButton
@@ -97,4 +74,4 @@ const Carousel = () => {
   );
 };
 
-export default Carousel;
+export default HomeCarousel;
