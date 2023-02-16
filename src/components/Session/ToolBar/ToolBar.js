@@ -7,10 +7,10 @@ import AuthorizeButton from "./AuthorizeButton";
 import QuitButton from "./QuitButton";
 import AuthorizationSetting from "./AuthorizationSetting";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useState } from "react";
 import { useEffect } from "react";
-import { participantsInstances, setUpdated } from "../../../store/sessionSlice";
+import { participantsInstances } from "../../../store/sessionSlice";
 
 
 const Box = styled.div`
@@ -36,21 +36,13 @@ const CustomButton = styled.button`
 function ToolBar(props) {
   const isAuthorizeButtonOn = useSelector((state) => state.toolBarAction.isAuthorizeButtonOn);
   const participantsId = useSelector((state) => state.session.participantsId);
-  const [participants, setParticipants] = useState({});
+  const [participants, setParticipants] = useState(participantsInstances.get(participantsId));
   const userId = localStorage.getItem("userId");
   const updated = useSelector((state) => state.session.updated);
-  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (participantsId) {
-      setParticipants(participantsInstances.get(participantsId));
-    }
-    
-    if (updated) {
-      setParticipants(participantsInstances.get(participantsId));
-      dispatch(setUpdated(false));
-    }
-  }, [participantsId, updated, dispatch])
+    setParticipants(participantsInstances.get(participantsId));
+  }, [participantsId, updated])
   
   return (
     <Box>
