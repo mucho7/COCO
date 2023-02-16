@@ -172,12 +172,6 @@ function MyDrawLayer(props) {
     sendImageData("erase", {});
   }
 
-  // const onChangeColor = (event) => {
-  //   setDrawColor(event.target.value);
-  //   console.log(event.target.value)
-  //   contextRef.current.strokeStyle = drawColor;
-  //   sendImageData("onChangeColor", {color: event.target.value});
-  // }
   function onChangeColor(event) {
     setDrawColor(event.target.value);
     console.log(event.target.value);

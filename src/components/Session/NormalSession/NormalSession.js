@@ -145,14 +145,21 @@ function NormalSession(props) {
             countUsers();
             participantsInstances.set(1, participants);
             dispatch(setParticipantsId(1));
+            dispatch(setUpdated(true));
             break;
           case 'newParticipantArrived':
             onNewParticipant(parsedMessage);
             countUsers();
+            participantsInstances.set(1, participants);
+            dispatch(setParticipantsId(1));
+            dispatch(setUpdated(true));
             break;
           case 'participantLeft':
             onParticipantLeft(parsedMessage);
             countUsers();
+            participantsInstances.set(1, participants);
+            dispatch(setParticipantsId(1));
+            dispatch(setUpdated(true));
             break;
           case 'receiveVideoAnswer':
             receiveVideoResponse(parsedMessage);
