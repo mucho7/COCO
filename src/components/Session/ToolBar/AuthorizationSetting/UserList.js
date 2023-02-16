@@ -14,7 +14,7 @@ const UserListDiv = styled.div`
 
 function UserList() {
   const participantsId = useSelector((state) => state.session.participantsId);
-  const [participants, setParticipants] = useState(participantsInstances.get(participantsId));
+  const [participants, setParticipants] = useState(participantsInstances.get(participantsId) || {});
   const updated = useSelector((state) => state.session.updated);
 
   
