@@ -26,23 +26,20 @@ function HomeCarousel() {
     };
 
     return (
-        <Box sx={{ position: 'relative' }}>
-        <Typography variant="h5" sx={{ mb: 2 }}>
-          {items[currentItem].title}
-        </Typography>
-        <img src={items[currentItem].image} alt={items[currentItem].title} />
-        <IconButton
-          sx={{ position: 'absolute', left: 0 }}
-          onClick={handlePrevious}
-        >
-          <KeyboardArrowLeft />
-        </IconButton>
-        <IconButton
-          sx={{ position: 'absolute', right: 0 }}
-          onClick={handleNext}
-        >
-          <KeyboardArrowRight />
-        </IconButton>
+        <Box sx={{ position: '', width: "100%" }}>
+          <img src={items[currentItem].image} width="100%" alt={items[currentItem].title} />
+          <IconButton
+            sx={{ position: 'absolute', left: 0 }}
+            onClick={handlePrevious}
+          >
+            <KeyboardArrowLeft />
+          </IconButton>
+          <IconButton
+            sx={{ position: 'absolute', right: 0 }}
+            onClick={handleNext}
+          >
+            <KeyboardArrowRight />
+          </IconButton>
       </Box>
       
     )

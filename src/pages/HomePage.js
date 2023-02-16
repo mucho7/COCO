@@ -8,8 +8,8 @@ function HomePage() {
         <SidePaddingBox>
             <Navbar />
         </SidePaddingBox>
-            <HomeMainSession/>
-            <HomeSessionList/>
+            {/* <HomeMainSession/>
+            <HomeSessionList/> */}
             <HomeCarousel/>
         </>
     )

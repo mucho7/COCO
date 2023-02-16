@@ -71,8 +71,8 @@ function ArticleCreate() {
             alert("제목의 길이는 최대 255자 까지입니다.")
         } else if (newArticle.content.length > 10000) {
             alert("본문의 길이는 최대 10,000자 까지입니다.")
-        } else if (newArticle.code.length > 3000) {
-            alert("코드의 길이는 최대 3,000자 까지입니다.")
+        } else if (newArticle.code.length > 10000) {
+            alert("코드의 길이는 최대 10,000자 까지입니다.")
         } else {
             console.log(newArticle)
             await articleCreate(
