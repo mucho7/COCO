@@ -87,14 +87,6 @@ function OthersDrawLayer(props) {
       window.removeEventListener("resize", handleResize);
     }
   }, [tagId])
-
-  useEffect(() => {
-    if (!participant?.isDrawButtonOn) {
-      setIsDrawing(false);
-      setDrawColor("#ffffff");
-      setIsEraseMode(false);
-    }
-  }, [participant?.isDrawButtonOn])
   
   useEffect(() => {
     const startDrawing = (x, y) => {
