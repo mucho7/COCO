@@ -145,21 +145,21 @@ function NormalSession(props) {
             countUsers();
             participantsInstances.set(1, participants);
             dispatch(setParticipantsId(1));
-            dispatch(setUpdated(true));
+            dispatch(setUpdated());
             break;
           case 'newParticipantArrived':
             onNewParticipant(parsedMessage);
             countUsers();
             participantsInstances.set(1, participants);
             dispatch(setParticipantsId(1));
-            dispatch(setUpdated(true));
+            dispatch(setUpdated());
             break;
           case 'participantLeft':
             onParticipantLeft(parsedMessage);
             countUsers();
             participantsInstances.set(1, participants);
             dispatch(setParticipantsId(1));
-            dispatch(setUpdated(true));
+            dispatch(setUpdated());
             break;
           case 'receiveVideoAnswer':
             receiveVideoResponse(parsedMessage);
@@ -332,7 +332,7 @@ function NormalSession(props) {
         participant.onToggleAuthorization(authorizationType);
         participants[targetUserName] = participant;
         participantsInstances.set(1, participants);
-        dispatch(setUpdated(true));
+        dispatch(setUpdated());
         console.log("after onToggleAuth: ", participant)
       }
 
@@ -465,7 +465,9 @@ function NormalSession(props) {
 
   useEffect(() => {
     return () => {
-      ws.current.close();
+      if (ws.current) {
+        ws.current.close();
+      }
     }
   }, [])
   

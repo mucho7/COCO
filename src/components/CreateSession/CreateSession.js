@@ -12,8 +12,7 @@ function CreateSession() {
 
   // 로그인 안했다면 퇴장
   useEffect(() => {
-    console.log(cookie.userInfo === undefined || localStorage.getItem("userId") === null)
-    if (localStorage.getItem("userId") === null) {
+    if (cookie.userInfo === undefined || localStorage.getItem("userId") === null) {
         navigate('/useri/login')
         alert("로그인이 필요한 서비스입니다.")
     }
@@ -96,16 +95,15 @@ function CreateSession() {
         >
           <b>생성</b>
         </Button>
-        <Link to={"/session"} style={{textDecoration: "none"}}>
-          <Button
-            type="button"
-            fullWidth
-            variant="filled"
-            sx={{ mt: 3, mb: 2, color: "white", background: "#4A4E69" }}
-          >
-            <b>취소</b>
-          </Button>
-        </Link>
+        <Button
+          type="button"
+          fullWidth
+          variant="filled"
+          sx={{ mt: 3, mb: 2, color: "white", background: "#4A4E69" }}
+          onClick={() => {navigate("/session")}}
+        >
+          <b>취소</b>
+        </Button>
       </Box>
     </Container>
   )

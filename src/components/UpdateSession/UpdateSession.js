@@ -38,8 +38,7 @@ function UpdateSession() {
 
   // 로그인 안했다면 퇴장
   useEffect(() => {
-    console.log(localStorage.getItem("userId"))
-    if (localStorage.getItem("userId") === null) {
+    if (cookie.userInfo === undefined || localStorage.getItem("userId") === null) {
         navigate('/useri/login')
         alert("로그인이 필요한 서비스입니다.")
     }

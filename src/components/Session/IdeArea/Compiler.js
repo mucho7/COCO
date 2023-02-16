@@ -35,7 +35,7 @@ function Compiler(props) {
     setProcessing(true);
     const compileDto = {
       code: code,
-      userId: localStorage.getItem("userId"),
+      id: localStorage.getItem("userId"),
       input: userInput
     };
 
@@ -71,7 +71,8 @@ function Compiler(props) {
           size="small"
           onClick={handleCompile}
           disabled={!code || processing}
-          variant="contained"
+          variant="filled"
+          sx={{ color: "white", background: "#4A4E69" }}
         >
           {processing ? "Processing" : "Run"}
         </Button>

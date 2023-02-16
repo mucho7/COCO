@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 
 import Ide from "./Ide";
 import MyDrawLayer from "./MyDrawLayer";
 import OthersDrawLayer from "./OthersDrawLayer";
-import { participantsInstances, setUpdated } from "../../../store/sessionSlice";
+import { participantsInstances } from "../../../store/sessionSlice";
 
 
 const IdeAreaDiv = styled.div`
@@ -24,48 +24,53 @@ const IdeAreaDiv = styled.div`
 function IdeArea(props) {
   const isDrawButtonOn = useSelector((state) => state.toolBarAction.isDrawButtonOn);
   const participantsId = useSelector((state) => state.session.participantsId);
-  const [participants, setParticipants] = useState({});
+  const [participants, setParticipants] = useState(null);
   const updated = useSelector((state) => state.session.updated);
-  const dispatch = useDispatch();
-  const [layers, setLayers] = useState({});
+  const [layers, setLayers] = useState(null);
 
   useEffect(() => {
-    if (participantsId) {
-      setParticipants(participantsInstances.get(participantsId));
-    }
-    
-    if (updated) {
-      setParticipants(participantsInstances.get(participantsId));
-      dispatch(setUpdated(false));
-    }
-    
-  }, [participantsId, updated, dispatch])
+    setParticipants(participantsInstances.get(participantsId));
+  }, [participantsId, updated])
 
-  useEffect(() => {
-    const users = Object.keys(participants)
-    const prevUsers = Object.keys(layers)
-
-    users.forEach((user) => {
-      if (!prevUsers.includes(user)) {
-        const addedLayers = {...layers}
-        addedLayers[user] = <OthersDrawLayer key={user} user={user} />
-        setLayers(addedLayers)
-      }
-    })
-
-    prevUsers.forEach((user) => {
-      if (!users.includes(user)) {
-        const deletedLayers = {...layers};
-        delete deletedLayers[user];
-        setLayers(deletedLayers);
-      }
-    })
-  }, [participants])
+  // useEffect(() => {
+  //   if (participants !== null && layers !== null) {
+  //     const users = Object.keys(participants)
+  //     const prevUsers = Object.keys(layers)
+  //     console.log("users: ", users)
+  //     console.log("prevUsers: ", prevUsers)
+  //     console.log("participants: ", participants)
+  
+  //     // 레이어 추가
+  //     users.forEach((user) => {
+  //       // 아직 레이어가 생겨있지 않은 유저이면서 유저가 그림판 on 상태라면
+  //       if (!prevUsers.includes(user) && participants[user]?.isDrawButtonOn) {
+  //         const addedLayers = {...layers}
+  //         addedLayers[user] = <OthersDrawLayer key={user} user={user} />
+  //         setLayers(addedLayers)
+  //       }
+  //     })
+  
+  //     // 레이어 삭제
+  //     prevUsers.forEach((user) => {
+  //       // 나간 유저이거나 유저가 그림판 off상태라면
+  //       if (!users.includes(user) || !participants[user]?.isDrawButtonOn) {
+  //         const deletedLayers = {...layers};
+  //         delete deletedLayers[user];
+  //         setLayers(deletedLayers);
+  //       }
+  //     })
+  //   }
+  // }, [participants])
 
   return (
     <IdeAreaDiv id="ideArea">
       {isDrawButtonOn && <MyDrawLayer />}
-      {Object.values(layers)}
+      {/* {layers !== null && Object.values(layers)} */}
+      {typeof participants === "object" && participants !== null && Object.values(participants).map((participant, index) => {
+        return (
+          <OthersDrawLayer participant={participant} key={index} />
+        )
+      })}
       {participantsId !== null && <Ide />}
     </IdeAreaDiv>
   );
