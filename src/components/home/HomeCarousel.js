@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Box, Typography, IconButton } from '@mui/material';
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 
-import FirstImg from '../../assets/HomeCarouselImg/1.png';
-import SecondImg from '../../assets/HomeCarouselImg/2.png';
-import ThirdImg from '../../assets/HomeCarouselImg/3.png';
+// import FirstImg from '../../assets/HomeCarouselImg/1.png';
+// import SecondImg from '../../assets/HomeCarouselImg/2.png';
+// import ThirdImg from '../../assets/HomeCarouselImg/3.png';
 
 
 function HomeCarousel() {
