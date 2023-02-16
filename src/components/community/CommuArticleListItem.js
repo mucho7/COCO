@@ -5,7 +5,6 @@ import { getBoardImg } from "../../api/community";
 
 import styled from "styled-components"
 import { Card, CardContent, Grid,  } from '@mui/material'
-import staticImg from '../../assets/Board/static.jpg';
 
 function CommuArticleListItem(props) {
     const createdAt = props.article.createdAt
@@ -40,33 +39,31 @@ function CommuArticleListItem(props) {
     }, [])
 
     return (
-        <Grid item xs={4} key={article.id} >
+        <Grid item xs={3} key={article.id} >
             <Link to={`${article.id}`} state={article} style={{textDecoration: 'none', color: 'black'}}>
-                {/* <Card sx={{height: "200px", margin: '4px', background: '#333333', backgroundImage: `url(${boardImg})`}} > */}
-                <Card sx={{height: "250px", margin: '4px', background: '#333333',}} >
-                    <CardContent>
-                        <ImageBox >
-                            <img src={boardImg ? boardImg : "/assets/Board/static.jpg"} style={{width: "100%", overflow: "hidden"}} />
-                        </ImageBox>
-                        <TitleBox>{article.title}</TitleBox>
-                        <CardContentItem >
-                            {createdAt.slice(5, 7) === month
-                                ? createdAt.slice(8, 10) === day 
+                <Card sx={{height: "300px", margin: '4px', background: 'rgba(250, 247, 244, 1)',}} >
+                    <CardContent sx={{height: "100%", backgroundImage: `url(${boardImg})`, margin: "10px"}}>
+                        <CardContentItemBox>
+                            <TitleBox>{article.title}</TitleBox>
+                            <CardContentItem >
+                                {createdAt.slice(5, 7) === month
+                                    ? createdAt.slice(8, 10) === day 
                                     ? parseInt(createdAt.slice(11, 13)) + 9 === parseInt(hour) 
-                                        ? createdAt.slice(14, 16) === minute
-                                            ? "방금 전"
-                                        : parseInt(minute) - parseInt(createdAt.slice(14, 16)) + "분 전"
+                                    ? createdAt.slice(14, 16) === minute
+                                    ? "방금 전"
+                                    : parseInt(minute) - parseInt(createdAt.slice(14, 16)) + "분 전"
                                     : parseInt(hour) - parseInt(createdAt.slice(11, 13)) - 9 + "시간 전"
-                                : createdAt.slice(5, 10)
-                            : createdAt.slice(5, 10)
-                            }
-                        </CardContentItem>
-                        <CardContentItem> · {article.commentCnt} 개의 댓글</CardContentItem>
-                        <hr style={{color: "#CCCCCC"}}/>
-                        <Row>
-                            <CardContentItem>by <b>{article.writer}</b></CardContentItem>
-                            <CardContentItem>{article.hit} viewed</CardContentItem>
-                        </Row>
+                                    : createdAt.slice(5, 10)
+                                    : createdAt.slice(5, 10)
+                                }
+                            </CardContentItem>
+                            <CardContentItem> · {article.commentCnt} 개의 댓글</CardContentItem>
+                            <hr style={{color: "#CCCCCC"}}/>
+                            <Row>
+                                <CardContentItem>by <b>{article.writer}</b></CardContentItem>
+                                <CardContentItem>{article.hit} viewed</CardContentItem>
+                            </Row>
+                        </CardContentItemBox>
                     </CardContent>
                 </Card>
             </Link>
@@ -76,26 +73,26 @@ function CommuArticleListItem(props) {
 
 const TitleBox = styled.h3`
     width: 90%;
-    height: 24px;
-    
+    margin: 5px 5px 5px 0px;
+
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    
-    background: #333333;
-    color: white;
-
+    color: black;
 `
 
 const CardContentItem = styled.span`
-    color: white;
+    color: black;
     font-family: "Open Sans", sans-serif;
 `
 
-const ImageBox = styled.div`
-    width: 100%;
-    max-height: 100px;
-    overflow: hidden;
+const CardContentItemBox = styled.div`
+    position: relative;
+    top: 45%;
+    // background : rgba(250, 247, 244, 0.5);
+    background : white;
+    padding: 10px;
+    border-radius: 10px
 `
 
 const Row = styled.div`
