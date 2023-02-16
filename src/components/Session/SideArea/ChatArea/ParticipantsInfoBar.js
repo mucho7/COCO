@@ -1,11 +1,20 @@
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 
 
 const ParticipantsInfoBarDiv = styled.div`
-  flex-basis: 30px;
+  flex-basis: 40px;
   background-color: #14213D;
-  color: white;
+  color: #FCA311;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  padding: 0 15px;
+`
+
+const CountUserSpan = styled.span`
+  margin-left: 10px;
 `
 
 function ParticipantsInfoBar() {
@@ -13,7 +22,8 @@ function ParticipantsInfoBar() {
 
   return (
     <ParticipantsInfoBarDiv>
-      <p>현재 인원 수: { countUsers }</p>
+      <PeopleAltIcon />
+      <CountUserSpan>{ countUsers }</CountUserSpan>
     </ParticipantsInfoBarDiv>
   )
 }
