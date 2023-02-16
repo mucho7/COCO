@@ -14,13 +14,13 @@ const api = axios.create({
 // 목록 조회: /room?mode={mode}&hostId={host_id}&title={title}
 async function getSessionList(searchParams, success, fail) {
   let queryString = "";
-  if (searchParams.hostId) {
+  if (searchParams.hostId !== "") {
     queryString += `&hostId=${searchParams.hostId}`;
   }
-  if (searchParams.title) {
+  if (searchParams.title !== "") {
     queryString += `&title=${searchParams.title}`;
   }
-  const res = await api.get(`/session?mode=${searchParams.mode}` + queryString).then(success).catch(fail);
+  const res = await api.get(`/session?mode=study` + queryString).then(success).catch(fail);
   return res
 }
 
