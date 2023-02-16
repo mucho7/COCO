@@ -18,10 +18,17 @@
 세션 기능 | https://rural-hell-1ab.notion.site/417dbf6546434b3bb8406a62d40f4b82
 
 
-# erd 다이어그램
-
 # 컨벤션
 * IDE checkStyle 컨벤션은 naver-checkStyle을 사용. 전체적인 내용은 링크 참조
 https://bestinu.tistory.com/64
 
 * 개발 파트별, 깃 커밋에 대한 컨벤션은 각각 code.md, front.md, git.md를 참조
+
+# QA
+
+기능 | 링크
+---|---
+회원관리 | https://www.notion.so/MemberService-QA-699f277f9d4d41a3a998e0b97cbd603c?pvs=4
+API Gateway | https://www.notion.so/APIGateway-QA-a7b80d96392943418ccf1d777026756b?pvs=4
+세션 | https://www.notion.so/SessionService-QA-5f3e80a584454d0aa2a06ff1f313c402?pvs=4
+게시판 | https://www.notion.so/BoardService-QA-fb0dcacc989a4f63874e203dbed0fcf7
