@@ -39,7 +39,6 @@ function IdeArea(props) {
       dispatch(setUpdated(false));
     }
     
-    
   }, [participantsId, updated, dispatch])
 
   useEffect(() => {

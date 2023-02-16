@@ -89,7 +89,7 @@ function OthersDrawLayer(props) {
   }, [tagId])
 
   useEffect(() => {
-    if (!participant.isDrawButtonOn) {
+    if (!participant?.isDrawButtonOn) {
       setIsDrawing(false);
       setDrawColor("#ffffff");
       setIsEraseMode(false);
