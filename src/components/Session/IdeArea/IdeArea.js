@@ -66,7 +66,7 @@ function IdeArea(props) {
     <IdeAreaDiv id="ideArea">
       {isDrawButtonOn && <MyDrawLayer />}
       {/* {layers !== null && Object.values(layers)} */}
-      {participants !== null && Object.values(participants).map((participant, index) => {
+      {typeof participants === "object" && participants !== null && Object.values(participants).map((participant, index) => {
         return (
           <OthersDrawLayer participant={participant} key={index} />
         )
