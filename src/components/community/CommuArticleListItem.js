@@ -10,12 +10,16 @@ import { Card, CardContent, Grid,  } from '@mui/material'
 function CommuArticleListItem(props) {
     const createdAt = props.article.createdAt
     const article = props.article
+
     const date = new Date()
     const month = (date.getMonth() + 1).toString().padStart(2, '0')
     const day = date.getDate().toString().padStart(2, '0')
     const hour = date.getHours().toString().padStart(2, '0')
     const minute = date.getMinutes().toString().padStart(2, '0')
 
+    const paperColor = 'rgba(250, 247, 244, 1)'
+    const gradient = `linear-gradient(0deg, ${paperColor} 0%, ${paperColor} 100px, rgba(250, 247, 244, 0) 100%),`;
+    
     const [ boardImg, setBoardImg ] = useState()
 
     useMemo(() => {
@@ -39,11 +43,12 @@ function CommuArticleListItem(props) {
         getBoardIamge()
     }, [])
 
+
     return (
         <Grid item xs={3} key={article.id} >
             <Link to={`${article.id}`} state={article} style={{textDecoration: 'none', color: 'black'}}>
-                <Card sx={{height: "300px", margin: '4px', background: 'rgba(250, 247, 244, 1)',}} >
-                    <CardContent sx={{height: "100%", backgroundImage: `url(${boardImg})`, margin: "10px"}}>
+                <Card sx={{height: "290px", margin: '4px',}} >
+                    <CardContent sx={{height: "100%", backgroundImage: `${gradient} url(${boardImg})`, margin: "10px"}}>
                         <CardContentItemBox>
                             <TitleBox>{article.title}</TitleBox>
                             <CardContentItem >
@@ -90,8 +95,8 @@ const CardContentItem = styled.span`
 const CardContentItemBox = styled.div`
     position: relative;
     top: 45%;
-    // background : rgba(250, 247, 244, 0.5);
-    background : white;
+    background : rgba(250, 247, 244, 0.5);
+    // background : white;
     padding: 10px;
     border-radius: 10px
 `

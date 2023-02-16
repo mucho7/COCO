@@ -16,7 +16,7 @@ function CommuToolBar() {
                 <Grid item xs={2}/>
                 <Grid item xs={2}>
                     <Link to={"/community/write"} style={{textDecoration: "none"}}>
-                        <Button variant="contained" className="submit" fullWidth style={{height:"2.5rem", backgroundColor: "#FCA311"}}> <b>글 쓰기</b></Button>
+                        <Button variant="contained" className="submit" fullWidth style={{height:"2.5rem", backgroundColor: "blue"}}> <b>글 쓰기</b></Button>
                     </Link>
                 </Grid>
             </Grid>
