@@ -86,8 +86,8 @@ dependencyManagement {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
-apply plugin: 'application'
-applicationDefaultJvmArgs = ["-Dkms.url=ws://i8a703.p.ssafy.io:8888/kurento"]
+//apply plugin: 'application'
+//applicationDefaultJvmArgs = ["-Dkms.url=ws://i8a703.p.ssafy.io:8888/kurento"]
 test {
     useJUnitPlatform()
 }
