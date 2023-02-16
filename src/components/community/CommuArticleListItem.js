@@ -37,7 +37,7 @@ function CommuArticleListItem(props) {
             })
         }
         getBoardIamge()
-    }, [props])
+    }, [])
 
     return (
         <Grid item xs={3} key={article.id} >

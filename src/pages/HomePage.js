@@ -10,7 +10,7 @@ function HomePage() {
         </SidePaddingBox>
             {/* <HomeMainSession/>
             <HomeSessionList/> */}
-            <HomeCarousel/>
+            {/* <HomeCarousel /> */}
         </>
     )
 }
