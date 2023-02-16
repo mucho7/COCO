@@ -24,7 +24,7 @@ const IdeAreaDiv = styled.div`
 function IdeArea(props) {
   const isDrawButtonOn = useSelector((state) => state.toolBarAction.isDrawButtonOn);
   const participantsId = useSelector((state) => state.session.participantsId);
-  const [participants, setParticipants] = useState(participantsInstances.get(participantsId));
+  const [participants, setParticipants] = useState(participantsInstances.get(participantsId) || {});
   const updated = useSelector((state) => state.session.updated);
   const [layers, setLayers] = useState({});
 
