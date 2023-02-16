@@ -25,7 +25,7 @@ public class SessionFunctionServiceImpl {
 		String code = ChangeClassName(compileDto);
 		String input = compileDto.getInput();
 
-		String filePath = "";
+		String filePath = "/app/data/";
 		String fileName = "Main"+compileDto.getId();
 		try {
 			// Write the code and input to files
