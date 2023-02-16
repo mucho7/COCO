@@ -18,7 +18,7 @@ function NavbarItem(props) {
                 } else {
                     return ( 
                         <Link className='navbar-item' to={item.url} style={{textDecoration: "none"}} key={item.name}>
-                            <Button variant="text" className="submit" fullWidth style={{height:"2.5rem", color:"white", background:"#FCA311"}}> 
+                            <Button variant="text" className="submit" fullWidth style={{height:"2.5rem", color:"white", background:"blue"}}> 
                                 <b>{item.name}</b>
                             </Button>
                         </Link>

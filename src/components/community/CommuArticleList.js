@@ -67,7 +67,7 @@ function CommuArticleList() {
 
     return (
         <CommuArticleBox>
-            <Grid container height={"620px"}>
+            <Grid container height={"770px"}>
                 {someArticle.empty ? <div>해당 글 없음</div> 
                 : someArticle.content.map(article => {
                     return (

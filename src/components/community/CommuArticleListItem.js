@@ -4,7 +4,8 @@ import { Link } from "react-router-dom"
 import { getBoardImg } from "../../api/community";
 
 import styled from "styled-components"
-import { Card, CardActionArea, CardContent, Grid,  } from '@mui/material'
+import { Card, CardContent, Grid,  } from '@mui/material'
+import staticImg from '../../assets/Board/static.jpg';
 
 function CommuArticleListItem(props) {
     const createdAt = props.article.createdAt
@@ -15,49 +16,60 @@ function CommuArticleListItem(props) {
     const hour = date.getHours().toString().padStart(2, '0')
     const minute = date.getMinutes().toString().padStart(2, '0')
 
-    const [ boardImg, setBoardImg ] = useState()
+    const [ boardImg, setBoardImg ] = useState(null)
 
     useMemo(() => {
-        const boardImg = async () => {
+        const getBoardIamge = async () => {
             await getBoardImg(
                 props.article,
-                (data) => {return data.data},
+                (data) => {
+                    return data.data
+                },
                 (err) => console.log(err)
             ).then((data) => {
-                setBoardImg(data)
+                const newFile = new File([data], props.article.id);
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const previewImage = String(event.target?.result);
+                    setBoardImg(previewImage);
+                };
+                reader.readAsDataURL(newFile);
             })
         }
-        boardImg()
-    })
+        getBoardIamge()
+    }, [])
+
     return (
         <Grid item xs={4} key={article.id} >
-            <img src="data: ${boardImg}" alt="whereRU"/>
             <Link to={`${article.id}`} state={article} style={{textDecoration: 'none', color: 'black'}}>
-                <CardActionArea>
-                    <Card sx={{height: "200px", margin: '4px', background: '#333333'}} >
-                        <CardContent>
-                            <TitleBox>{article.title}</TitleBox>
-                            <CardContentItem >
-                                {createdAt.slice(5, 7) === month
-                                    ? createdAt.slice(8, 10) === day 
-                                        ? parseInt(createdAt.slice(11, 13)) + 9 === parseInt(hour) 
-                                            ? createdAt.slice(14, 16) === minute
-                                                ? "방금 전"
-                                            : parseInt(minute) - parseInt(createdAt.slice(14, 16)) + "분 전"
-                                        : parseInt(hour) - parseInt(createdAt.slice(11, 13)) - 9 + "시간 전"
-                                    : createdAt.slice(5, 10)
+                {/* <Card sx={{height: "200px", margin: '4px', background: '#333333', backgroundImage: `url(${boardImg})`}} > */}
+                <Card sx={{height: "250px", margin: '4px', background: '#333333',}} >
+                    <CardContent>
+                        <div style={{ width: '100%', maxHeight: '100px', overflow: 'hidden' }}>
+                            {/* <img src="../../assets/Board/static.jpg" alt="" style={{width: "100%", overflow: "hidden"}} /> */}
+                            <img src={boardImg ? boardImg : staticImg} style={{width: "100%", overflow: "hidden"}} />
+                        </div>
+                        <TitleBox>{article.title}</TitleBox>
+                        <CardContentItem >
+                            {createdAt.slice(5, 7) === month
+                                ? createdAt.slice(8, 10) === day 
+                                    ? parseInt(createdAt.slice(11, 13)) + 9 === parseInt(hour) 
+                                        ? createdAt.slice(14, 16) === minute
+                                            ? "방금 전"
+                                        : parseInt(minute) - parseInt(createdAt.slice(14, 16)) + "분 전"
+                                    : parseInt(hour) - parseInt(createdAt.slice(11, 13)) - 9 + "시간 전"
                                 : createdAt.slice(5, 10)
-                                }
-                            </CardContentItem>
-                            <CardContentItem> · {article.commentCnt} 개의 댓글</CardContentItem>
-                            <hr style={{color: "#CCCCCC"}}/>
-                            <Row>
-                                <CardContentItem>by <b>{article.writer}</b></CardContentItem>
-                                <CardContentItem>{article.hit} viewed</CardContentItem>
-                            </Row>
-                        </CardContent>
-                    </Card>
-                </CardActionArea>
+                            : createdAt.slice(5, 10)
+                            }
+                        </CardContentItem>
+                        <CardContentItem> · {article.commentCnt} 개의 댓글</CardContentItem>
+                        <hr style={{color: "#CCCCCC"}}/>
+                        <Row>
+                            <CardContentItem>by <b>{article.writer}</b></CardContentItem>
+                            <CardContentItem>{article.hit} viewed</CardContentItem>
+                        </Row>
+                    </CardContent>
+                </Card>
             </Link>
         </Grid>
     )
