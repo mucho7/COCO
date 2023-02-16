@@ -1,6 +1,5 @@
-import { Container, Box, Stack, Button } from '@mui/material';
+import { Container, Box, Stack, Button, Typography } from '@mui/material';
 
-import { useDispatch } from "react-redux";
 import { useParams, useNavigate, Link } from "react-router-dom";
 
 import { getSessionDetail } from "../../api/session";
@@ -88,31 +87,39 @@ function SessionDetail() {
 
   return (
     <Container>
-      <Box sx={{ px: 2, py: 3, display: "flex", flexDirection: "column", bgcolor: '#E5E5E5', height: '100vh' }}>
-        <Box sx={{ flexGrow: 1 }}>
-          <h1>세션: { session.title }</h1>
-          <p>호스트: { session.hostId }</p>
-          <p>모드: { session.mode }</p>
-          <p>시작 시간: </p>
+      <Box sx={{ px: 2, py: 3, display: "flex", flexDirection: "column" }}>
+        <Box sx={{ flexGrow: 1, mb: 3 }}>
+          <Typography variant="h2" gutterBottom>{ session.title }</Typography>
+          <Typography variant="h6" />
+          <Stack direction="row" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+            <Typography variant="h6" gutterBottom>호스트: { session.hostId }</Typography>
+            {
+              (session.hostId === localStorage.getItem("userId")) &&
+              <Stack spacing={2} direction="row" sx={{  display: "flex", justifyContent: "flex-end", mr: 2 }}>
+                <Link to={`/session/${roomId}/update`} state={session} style={{textDecoration: "none"}} session={session}>
+                  <Button variant="filled" sx={{ color: "white", background: "#4A4E69", height: "36px" }}><b>수정</b></Button>
+                </Link>
+                <Button variant="filled" sx={{ color: "white", background: "red", height: "36px" }} onClick={handleDeleteSession}>
+                  <b>삭제</b>
+                </Button>
+              </Stack>
+            }
+          </Stack>
           <hr />
-          <p>{ session.content }</p>
+          <Box sx={{ mx: 2, px: 2, py: 3, bgcolor: "#E5E5E5", borderRadius: "10px" }}>
+            { session.content }
+          </Box>
         </Box>
-        <Stack spacing={2} direction="row" sx={{  display: "flex", justifyContent: "flex-end", mr: 2 }}>
+        <Stack spacing={2} direction="row" sx={{  display: "flex", justifyContent: "space-between", mr: 2 }}>
           <Link to={"/session"} style={{textDecoration: "none"}}>
-            <Button variant="contained">뒤로</Button>
+            <Button variant="text" sx={{ color:"black" }}>
+              <b>뒤로</b>
+            </Button>
           </Link>
-          <Button variant="contained" onClick={handleEnterSession}>참여</Button>
-          {/* 작성자 여부에 따라 수정, 삭제 버튼 표시  */}
-          {
-            (session.hostId === localStorage.getItem("userId")) && 
-            <Link to={`/session/${roomId}/update`} state={session} style={{textDecoration: "none"}} session={session}>
-              <Button variant="contained">수정</Button>
-            </Link>
-          }
-          {
-            (session.hostId === localStorage.getItem("userId")) &&
-            <Button variant="contained" onClick={handleDeleteSession}>삭제</Button>
-          }
+          <Button variant="filled" onClick={handleEnterSession} sx={{ color:"white", background:"#FCA311" }}>
+            <b>참여</b>
+          </Button>
+          
         </Stack>
       </Box>
     </Container>

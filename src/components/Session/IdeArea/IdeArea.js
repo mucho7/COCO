@@ -38,23 +38,30 @@ function IdeArea(props) {
       setParticipants(participantsInstances.get(participantsId));
       dispatch(setUpdated(false));
     }
-
-    // 새로 입장한 참여자의 레이어 추가
-    Object.keys(participants).forEach((user) => {
-      if (!Object.keys(layers).includes(user)) {
-        setLayers({...layers, user: <OthersDrawLayer user={user} />})
-      }
-    })
-
-    Object.keys(layers).forEach((user) => {
-      if (!Object.keys(participants).includes(user)) {
-        const updatedLayers = {...layers};
-        delete updatedLayers[user];
-        setLayers(updatedLayers);
-      }
-    })
     
-  }, [participantsId, updated, dispatch, participants, layers])
+    
+  }, [participantsId, updated, dispatch])
+
+  useEffect(() => {
+    const users = Object.keys(participants)
+    const prevUsers = Object.keys(layers)
+
+    users.forEach((user) => {
+      if (!prevUsers.includes(user)) {
+        const addedLayers = {...layers}
+        addedLayers[user] = <OthersDrawLayer key={user} user={user} />
+        setLayers(addedLayers)
+      }
+    })
+
+    prevUsers.forEach((user) => {
+      if (!users.includes(user)) {
+        const deletedLayers = {...layers};
+        delete deletedLayers[user];
+        setLayers(deletedLayers);
+      }
+    })
+  }, [participants])
 
   return (
     <IdeAreaDiv id="ideArea">

@@ -2,7 +2,7 @@ import NormalSession from "./NormalSessionPage";
 import RelaySession from "./RelaySessionPage";
 import CreateSession from "./CreateSessionPage";
 import SessionListPage from "./SessionListPage";
-import SessionDetail from "./SessionDetailPage";
+import SessionDetailPage from "./SessionDetailPage";
 import HomePage from "./HomePage";
 import CommuPage from "./CommuPage";
 import SigninPage from "./SigninPage";
@@ -79,7 +79,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/session/:roomId",
-    element: <SessionDetail />,
+    element: <SessionDetailPage />,
   },
   {
     path: "/session",
