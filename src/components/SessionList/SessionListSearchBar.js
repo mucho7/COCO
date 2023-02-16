@@ -23,10 +23,10 @@ function SessionListSearchBar() {
     const onSearchClickHandler = () => {
         switch (searchTarget) {
             case "title":
-                setSearchParams({ mode: "study", title: searchWord, hostId: "" })
+                setSearchParams({ title: searchWord })
                 break;
             case "hostId":
-                setSearchParams({ mode: "study", title: "", hostId: searchWord })
+                setSearchParams({ hostId: searchWord })
                 break;
             default:
         }
@@ -41,7 +41,7 @@ function SessionListSearchBar() {
                 </Select>
             </FormControl>
             <InputBase sx={{ ml: 1, flex: 1 }} placeholder="Search For More" onChange={onTypingHandler}/>
-            <IconButton onClick={onSearchClickHandler} type="button" sx={{ p: '10px', color: '#FCA311' }} aria-label="search">
+            <IconButton onClick={onSearchClickHandler} type="button" sx={{ p: '10px', color: '#FCA311' }}>
                 <Search />
             </IconButton>
         </Paper>

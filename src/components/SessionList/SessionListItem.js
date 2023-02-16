@@ -20,7 +20,7 @@ function SessionListItem(props) {
                                         <Typography>{session.hostId}</Typography>
                                     </Grid>
                                     <Grid item xs={4} textAlign="center">
-                                        <Typography>{session.mode}</Typography>
+                                        <Typography>{session.numberUsers}</Typography>
                                     </Grid>
                                 </Grid>
                             </CardContent>
