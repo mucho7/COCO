@@ -50,7 +50,7 @@ public class RoomService {
 	public Room UpdateRoom(RoomUpdateRequestDto requestDto, Long roomId) {
 		Room room = roomRepository.findById(roomId).orElse(null);
 		if (room != null) {
-			room.UpdateRoom(requestDto.getTitle(), requestDto.getContent(), requestDto.getMode(), requestDto.getMax());
+			room.UpdateRoom(requestDto.getTitle(), requestDto.getContent(), requestDto.getMax());
 		}
 		return room;
 	}
