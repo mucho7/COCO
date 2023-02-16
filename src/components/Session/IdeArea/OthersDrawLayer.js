@@ -25,25 +25,26 @@ function OthersDrawLayer(props) {
   const [drawColor, setDrawColor] = useState("#ffffff");
   const [isEraseMode, setIsEraseMode] = useState(false);
   
-  const userName = props.user;
-  const participantsId = useSelector((state) => state.session.participantsId);
-  const [participants, setParticipants] = useState({});
-  const updated = useSelector((state) => state.session.updated);
-  const [participant, setParticipant] = useState(null);
+  // const userName = props.user;
+  // const participantsId = useSelector((state) => state.session.participantsId);
+  // const [participants, setParticipants] = useState({});
+  // const updated = useSelector((state) => state.session.updated);
+  // const [participant, setParticipant] = useState(null);
+  const participant = props.participant
 
 
-  useEffect(() => {
-    setParticipants(participantsInstances.get(participantsId));
+  // useEffect(() => {
+  //   setParticipants(participantsInstances.get(participantsId));
 
-  }, [participantsId, updated])
+  // }, [participantsId, updated])
   
 
-  useEffect(() => {
-    setParticipant(participants[userName]);
-  }, [participants, userName])
+  // useEffect(() => {
+  //   setParticipant(participants[userName]);
+  // }, [participants, userName])
 
   
-  const tagId = `canvas-${userName}`;
+  const tagId = `canvas-${participant.name}`;
   
   useEffect(() => {
     function initCanvas() {
@@ -79,6 +80,16 @@ function OthersDrawLayer(props) {
       window.removeEventListener("resize", handleResize);
     }
   }, [tagId])
+
+
+  useEffect(() => {
+    if (!participant.isDrawButtonOn) {
+      contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
+      setIsDrawing(false)
+      setIsEraseMode(false)
+      setDrawColor("#ffffff")
+    }
+  }, [participant.isDrawButtonOn])
   
   useEffect(() => {
     const startDrawing = (x, y) => {
@@ -123,7 +134,7 @@ function OthersDrawLayer(props) {
     }
 
     // 다른 사용자로부터 그림판 동작 이벤트 수신
-    if (imageData?.userName === userName) {
+    if (imageData?.userName === participant.name) {
       switch (imageData?.imageData.type) {
         case "startDrawing":
           startDrawing(imageData.imageData.x, imageData.imageData.y);
@@ -147,7 +158,7 @@ function OthersDrawLayer(props) {
           break;
       }
     }
-  }, [drawColor, imageData, isDrawing, isEraseMode, userName])
+  }, [drawColor, imageData, isDrawing, isEraseMode, participant.name])
 
   
   return (

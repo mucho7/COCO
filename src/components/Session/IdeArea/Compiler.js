@@ -71,7 +71,8 @@ function Compiler(props) {
           size="small"
           onClick={handleCompile}
           disabled={!code || processing}
-          variant="contained"
+          variant="filled"
+          sx={{ color: "white", background: "#4A4E69" }}
         >
           {processing ? "Processing" : "Run"}
         </Button>

@@ -24,49 +24,53 @@ const IdeAreaDiv = styled.div`
 function IdeArea(props) {
   const isDrawButtonOn = useSelector((state) => state.toolBarAction.isDrawButtonOn);
   const participantsId = useSelector((state) => state.session.participantsId);
-  const [participants, setParticipants] = useState(null);
+  const [participants, setParticipants] = useState(participantsInstances.get(participantsId) || null);
   const updated = useSelector((state) => state.session.updated);
   const [layers, setLayers] = useState(null);
 
   useEffect(() => {
     setParticipants(participantsInstances.get(participantsId));
-    
   }, [participantsId, updated])
 
-  useEffect(() => {
-    if (participants !== null && layers !== null) {
-      const users = Object.keys(participants)
-      const prevUsers = Object.keys(layers)
-      console.log("users: ", users)
-      console.log("prevUsers: ", prevUsers)
-      console.log("participants: ", participants)
+  // useEffect(() => {
+  //   if (participants !== null && layers !== null) {
+  //     const users = Object.keys(participants)
+  //     const prevUsers = Object.keys(layers)
+  //     console.log("users: ", users)
+  //     console.log("prevUsers: ", prevUsers)
+  //     console.log("participants: ", participants)
   
-      // 레이어 추가
-      users.forEach((user) => {
-        // 아직 레이어가 생겨있지 않은 유저이면서 유저가 그림판 on 상태라면
-        if (!prevUsers.includes(user) && participants[user]?.isDrawButtonOn) {
-          const addedLayers = {...layers}
-          addedLayers[user] = <OthersDrawLayer key={user} user={user} />
-          setLayers(addedLayers)
-        }
-      })
+  //     // 레이어 추가
+  //     users.forEach((user) => {
+  //       // 아직 레이어가 생겨있지 않은 유저이면서 유저가 그림판 on 상태라면
+  //       if (!prevUsers.includes(user) && participants[user]?.isDrawButtonOn) {
+  //         const addedLayers = {...layers}
+  //         addedLayers[user] = <OthersDrawLayer key={user} user={user} />
+  //         setLayers(addedLayers)
+  //       }
+  //     })
   
-      // 레이어 삭제
-      prevUsers.forEach((user) => {
-        // 나간 유저이거나 유저가 그림판 off상태라면
-        if (!users.includes(user) || !participants[user]?.isDrawButtonOn) {
-          const deletedLayers = {...layers};
-          delete deletedLayers[user];
-          setLayers(deletedLayers);
-        }
-      })
-    }
-  }, [participants])
+  //     // 레이어 삭제
+  //     prevUsers.forEach((user) => {
+  //       // 나간 유저이거나 유저가 그림판 off상태라면
+  //       if (!users.includes(user) || !participants[user]?.isDrawButtonOn) {
+  //         const deletedLayers = {...layers};
+  //         delete deletedLayers[user];
+  //         setLayers(deletedLayers);
+  //       }
+  //     })
+  //   }
+  // }, [participants])
 
   return (
     <IdeAreaDiv id="ideArea">
       {isDrawButtonOn && <MyDrawLayer />}
-      {layers !== null && Object.values(layers)}
+      {/* {layers !== null && Object.values(layers)} */}
+      {participants !== null && Object.values(participants).map((participant, index) => {
+        return (
+          <OthersDrawLayer participant={participant} key={index} />
+        )
+      })}
       {participantsId !== null && <Ide />}
     </IdeAreaDiv>
   );
