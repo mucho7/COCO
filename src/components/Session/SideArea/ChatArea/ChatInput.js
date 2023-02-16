@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 
 import { websocketInstances } from "../../../../store/sessionSlice";
 import { useParams } from 'react-router-dom';
-import { handleBreakpoints } from '@mui/system';
 
 
 const boxSx = {

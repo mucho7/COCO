@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { participantsInstances, setUpdated } from "../../../store/sessionSlice";
+import { useSelector } from "react-redux";
+import { participantsInstances } from "../../../store/sessionSlice";
 
 const DrawDiv = styled.div`
   box-sizing: border-box;
@@ -29,21 +29,13 @@ function OthersDrawLayer(props) {
   const participantsId = useSelector((state) => state.session.participantsId);
   const [participants, setParticipants] = useState({});
   const updated = useSelector((state) => state.session.updated);
-  const dispatch = useDispatch();
   const [participant, setParticipant] = useState(null);
 
 
   useEffect(() => {
-    if (participantsId) {
-      setParticipants(participantsInstances.get(participantsId));
-    }
-    
-    if (updated) {
-      setParticipants(participantsInstances.get(participantsId));
-      dispatch(setUpdated(false));
-    }
+    setParticipants(participantsInstances.get(participantsId));
 
-  }, [dispatch, participantsId, updated])
+  }, [participantsId, updated])
   
 
   useEffect(() => {
