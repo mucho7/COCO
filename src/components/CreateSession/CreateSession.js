@@ -1,5 +1,5 @@
-import { Container, Box, Button, Typography, FormLabel, FormControlLabel, 
-  RadioGroup, Radio, TextField, Grid } from '@mui/material';
+import { Container, Box, Button, Typography, 
+  Link, TextField, Grid } from '@mui/material';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createSession } from '../../api/session';
@@ -12,7 +12,7 @@ function CreateSession() {
 
   // 로그인 안했다면 퇴장
   useEffect(() => {
-    console.log(localStorage.getItem("userId"))
+    console.log(cookie.userInfo === undefined || localStorage.getItem("userId") === null)
     if (localStorage.getItem("userId") === null) {
         navigate('/useri/login')
         alert("로그인이 필요한 서비스입니다.")
@@ -75,13 +75,6 @@ function CreateSession() {
               autoComplete="content"
             />
           </Grid>
-          {/* <Grid item xs={12}>
-            <FormLabel id="mode">모드</FormLabel>
-            <RadioGroup name="mode" row>
-              <FormControlLabel value="study" control={<Radio />} label="study" />
-              <FormControlLabel value="relay" control={<Radio />} label="relay" />
-            </RadioGroup>
-          </Grid> */}
           <Grid item xs={12}>
             <TextField
               required
@@ -98,20 +91,21 @@ function CreateSession() {
         <Button
           type="submit"
           fullWidth
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
+          variant="filled"
+          sx={{ mt: 3, mb: 2, color:"white", background:"#FCA311" }}
         >
-          생성
+          <b>생성</b>
         </Button>
-        <Button
-          type="button"
-          fullWidth
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
-          onClick={() => {navigate("/session")}}
-        >
-          취소
-        </Button>
+        <Link to={"/session"} style={{textDecoration: "none"}}>
+          <Button
+            type="button"
+            fullWidth
+            variant="filled"
+            sx={{ mt: 3, mb: 2, color: "white", background: "#4A4E69" }}
+          >
+            <b>취소</b>
+          </Button>
+        </Link>
       </Box>
     </Container>
   )

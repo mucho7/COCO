@@ -87,6 +87,14 @@ function OthersDrawLayer(props) {
       window.removeEventListener("resize", handleResize);
     }
   }, [tagId])
+
+  useEffect(() => {
+    if (!participant.isDrawButtonOn) {
+      setIsDrawing(false);
+      setDrawColor("#ffffff");
+      setIsEraseMode(false);
+    }
+  }, [participant.isDrawButtonOn])
   
   useEffect(() => {
     const startDrawing = (x, y) => {
@@ -155,13 +163,7 @@ function OthersDrawLayer(props) {
           break;
       }
     }
-
-    // console.log(participant?.isDrawButtonOn)
-    if (!participant?.isDrawButtonOn) {
-      eraseAll();
-    }
-    
-  }, [drawColor, imageData, isDrawing, isEraseMode, participant, userName])
+  }, [drawColor, imageData, isDrawing, isEraseMode, userName])
 
   
   return (
