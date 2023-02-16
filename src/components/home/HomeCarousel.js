@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Box, Typography, Button, IconButton } from '@mui/material';
+import { useState,  } from 'react';
+import { Box, IconButton } from '@mui/material';
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 
 import FistImg from "../../assets/HomeCarouselImg/1.png"
@@ -7,7 +7,7 @@ import SecondImg from "../../assets/HomeCarouselImg/2.png"
 import ThirdImg from "../../assets/HomeCarouselImg/3.png"
 
 import FistGif from "../../assets/HomeCarouselImg/IDE.gif"
-import SecondGif from "../../assets/HomeCarouselImg/after_crop.gif"
+// import SecondGif from "../../assets/HomeCarouselImg/after_crop.gif"
 import ThirdGif from "../../assets/HomeCarouselImg/after_crop.gif"
 
 
@@ -55,7 +55,7 @@ const HomeCarousel = () => {
               : 'translateX(100%)'
           }}>
           <img src={item.image} alt={item.title} style={{width: '100%',height: '100%', objectFit: 'cover',}} />
-          <img src={item.gif} style={{width: '40%',height: '60%', right: '4%', top: '20%', zIndex: 3, position: 'absolute' }} />
+          <img src={item.gif} alt={item.title} style={{width: '40%',height: '60%', right: '4%', top: '20%', zIndex: 3, position: 'absolute' }} />
         </Box>
       ))}
       <IconButton

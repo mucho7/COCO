@@ -13,7 +13,6 @@ function CommuArticleDetail() {
     const navigate = useNavigate()
     const [ cookie ] = useCookies(["userInfo"])
     const location = useLocation()
-    console.log(location)
     const pk = location.pathname.slice(-3, location.pathname.length)
     // const hit = location.state.hit
 
@@ -97,7 +96,7 @@ function CommuArticleDetail() {
             <hr/>
             <CommentSectiom>
                 {window.localStorage.getItem("userId") !== null ? <CommentForm isRenderNeeded={() => setSival(sival + 1)} board_id={pk}/> : <Typography textAlign={"center"}>로그인 하시면 댓글을 쓸 수 있어요</Typography>}
-                {article.comments.empty ? <Typography textAlign={"center"}>아직 댓글이 없어요!</Typography> : <Comments isRenderNeeded={() => setSival(sival + 1)} comments={article.comments}/> }
+                {article.comments.empty ? <Typography textAlign={"center"} style={{marginTop: "15px"}} >아직 댓글이 없어요!</Typography> : <Comments isRenderNeeded={() => setSival(sival + 1)} comments={article.comments}/> }
                 <CommuCommentPaging maxPage={maxPage} onClick={onPagingClickHandler}/>
             </CommentSectiom>
         </>

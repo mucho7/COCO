@@ -41,7 +41,7 @@ function CommuArticleListItem(props) {
             })
         }
         getBoardIamge()
-    }, [])
+    }, [props.article])
 
 
     return (

@@ -28,7 +28,7 @@ function CommuArticleList() {
             ).then((data) => {
                 setSomeArticle(data)
                 setMaxPage(data.totalPages)
-
+                console.log(data.totalPages)
             })
         }
 

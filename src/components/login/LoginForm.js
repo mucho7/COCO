@@ -88,7 +88,7 @@ function LoginForm() {
                         <LoginTempPassword />
                     </Grid>
                     <Grid item xs={6}>
-                        <Button onClick={onClickHandler} variant="contained" className="submit" style={{ height: '3rem' }} fullWidth> <b>로그인</b></Button>
+                        <Button onClick={onClickHandler} variant="contained" className="submit" style={{ height: '3rem', background: "blue" }} fullWidth> <b>로그인</b></Button>
                     </Grid>
                 </Grid>
             </Box>

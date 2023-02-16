@@ -11,8 +11,8 @@ function Comments(props) {
     const [ updateComment, setUpdateComment ] = useState("")
     const [ updateTarget, setUpdateTarget ] = useState("")
     
-    const [userInfo, setUesrInfo] = useState([])
-    const [cookie, setCookie] = useCookies(["userInfo"])
+    // const [userInfo, setUesrInfo] = useState([])
+    const [cookie, ] = useCookies(["userInfo"])
 
     const date = new Date()
     const month = (date.getMonth() + 1).toString().padStart(2, '0')

@@ -34,7 +34,7 @@ function CommuPaging(params) {
                 )
             })}
             <Button value={index[0] + 5} style={{textDecoration: "none"}} onClick={onArrClickHandler} 
-            disabled={index[0] + 5 >= params.maxPage ? true : false}> &gt;&gt;&gt; </Button>
+            disabled={index[0] + 5 >= params.maxPage ? false : true}> &gt;&gt;&gt; </Button>
         </PagingNumberBox>
     )
 }
@@ -45,6 +45,7 @@ const PagingNumberBox = styled.div`
     justify-content: space-around;
 
     margin-top: 15px;
+    margin-bottom: 15px;
 `
 
 export default CommuPaging
