@@ -465,7 +465,9 @@ function NormalSession(props) {
 
   useEffect(() => {
     return () => {
-      ws.current.close();
+      if (ws.current) {
+        ws.current.close();
+      }
     }
   }, [])
   
