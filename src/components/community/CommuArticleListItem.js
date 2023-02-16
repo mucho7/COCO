@@ -6,6 +6,7 @@ import { getBoardImg } from "../../api/community";
 import styled from "styled-components"
 import { Card, CardContent, Grid,  } from '@mui/material'
 
+
 function CommuArticleListItem(props) {
     const createdAt = props.article.createdAt
     const article = props.article
@@ -15,7 +16,7 @@ function CommuArticleListItem(props) {
     const hour = date.getHours().toString().padStart(2, '0')
     const minute = date.getMinutes().toString().padStart(2, '0')
 
-    const [ boardImg, setBoardImg ] = useState(null)
+    const [ boardImg, setBoardImg ] = useState()
 
     useMemo(() => {
         const getBoardIamge = async () => {
@@ -36,7 +37,7 @@ function CommuArticleListItem(props) {
             })
         }
         getBoardIamge()
-    }, [])
+    }, [props])
 
     return (
         <Grid item xs={3} key={article.id} >

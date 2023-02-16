@@ -27,7 +27,6 @@ function CommuArticleList() {
                 (err) => console.log(err)
             ).then((data) => {
                 setSomeArticle(data)
-                console.log(searchParams.get("page"))
                 setMaxPage(data.totalPages)
 
             })
