@@ -24,18 +24,34 @@ function OthersDrawLayer(props) {
   const [isDrawing, setIsDrawing] = useState(false);
   const [drawColor, setDrawColor] = useState("#ffffff");
   const [isEraseMode, setIsEraseMode] = useState(false);
-  const userName = props.key;
-  const [participant, setParticipant] = useState(props.participant);
   
-  // console.log(participant)
+  const userName = props.user;
+  const participantsId = useSelector((state) => state.session.participantsId);
+  const [participants, setParticipants] = useState({});
+  const updated = useSelector((state) => state.session.updated);
+  const dispatch = useDispatch();
+  const [participant, setParticipant] = useState(null);
+
 
   useEffect(() => {
-    setParticipant(props.participant);
-  }, [props.participant])
+    if (participantsId) {
+      setParticipants(participantsInstances.get(participantsId));
+    }
+    
+    if (updated) {
+      setParticipants(participantsInstances.get(participantsId));
+      dispatch(setUpdated(false));
+    }
+
+  }, [dispatch, participantsId, updated])
+  
+
+  useEffect(() => {
+    setParticipant(participants[userName]);
+  }, [participants, userName])
 
   
   const tagId = `canvas-${userName}`;
-  // console.log(participant)  
   
   useEffect(() => {
     function initCanvas() {
@@ -114,6 +130,7 @@ function OthersDrawLayer(props) {
       contextRef.current.strokeStyle = drawColor;
     }
 
+    // 다른 사용자로부터 그림판 동작 이벤트 수신
     if (imageData?.userName === userName) {
       switch (imageData?.imageData.type) {
         case "startDrawing":
@@ -138,10 +155,12 @@ function OthersDrawLayer(props) {
           break;
       }
     }
-    console.log(participant.isDrawButtonOn)
-    if (!participant.isDrawButtonOn) {
+
+    // console.log(participant?.isDrawButtonOn)
+    if (!participant?.isDrawButtonOn) {
       eraseAll();
     }
+    
   }, [drawColor, imageData, isDrawing, isEraseMode, participant, userName])
 
   
