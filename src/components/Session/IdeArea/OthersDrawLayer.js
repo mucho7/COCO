@@ -94,7 +94,7 @@ function OthersDrawLayer(props) {
       setDrawColor("#ffffff");
       setIsEraseMode(false);
     }
-  }, [participant.isDrawButtonOn])
+  }, [participant?.isDrawButtonOn])
   
   useEffect(() => {
     const startDrawing = (x, y) => {
