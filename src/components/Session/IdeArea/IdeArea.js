@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 
 import Ide from "./Ide";
 import MyDrawLayer from "./MyDrawLayer";
 import OthersDrawLayer from "./OthersDrawLayer";
-import { participantsInstances, setUpdated } from "../../../store/sessionSlice";
+import { participantsInstances } from "../../../store/sessionSlice";
 
 
 const IdeAreaDiv = styled.div`
@@ -24,22 +24,14 @@ const IdeAreaDiv = styled.div`
 function IdeArea(props) {
   const isDrawButtonOn = useSelector((state) => state.toolBarAction.isDrawButtonOn);
   const participantsId = useSelector((state) => state.session.participantsId);
-  const [participants, setParticipants] = useState({});
+  const [participants, setParticipants] = useState(participantsInstances.get(participantsId));
   const updated = useSelector((state) => state.session.updated);
-  const dispatch = useDispatch();
   const [layers, setLayers] = useState({});
 
   useEffect(() => {
-    if (participantsId) {
-      setParticipants(participantsInstances.get(participantsId));
-    }
+    setParticipants(participantsInstances.get(participantsId));
     
-    if (updated) {
-      setParticipants(participantsInstances.get(participantsId));
-      dispatch(setUpdated(false));
-    }
-    
-  }, [participantsId, updated, dispatch])
+  }, [participantsId, updated])
 
   useEffect(() => {
     const users = Object.keys(participants)

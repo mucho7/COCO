@@ -13,7 +13,7 @@ const initialState = {
   sendMessage: "",
   websocketId: null,
   participantsId: null,
-  updated: false,
+  updated: 0,
   imageData: null,
   countUsers: null
 };
@@ -40,7 +40,7 @@ const sessionSlice = createSlice({
       state.imageData = action.payload;
     },
     setUpdated(state, action) {
-      state.updated = action.payload;
+      state.updated = (state.updated + 1) % 1000;
     },
     setCountUsers(state, action) {
       state.countUsers = action.payload;

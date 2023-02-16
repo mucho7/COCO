@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { participantsInstances } from "../../../../store/sessionSlice";
 import UserListItem from "./UserListItem";
-import { setUpdated } from "../../../../store/sessionSlice";
 
 
 const UserListDiv = styled.div`
@@ -17,15 +16,11 @@ function UserList() {
   const participantsId = useSelector((state) => state.session.participantsId);
   const [participants, setParticipants] = useState(participantsInstances.get(participantsId));
   const updated = useSelector((state) => state.session.updated);
-  const dispatch = useDispatch();
 
   
   useEffect(() => {
-    if (updated) {
-      setParticipants(participantsInstances.get(participantsId));
-      dispatch(setUpdated(false));
-    }
-  }, [dispatch, participantsId, updated])
+    setParticipants(participantsInstances.get(participantsId));
+  }, [participantsId, updated])
 
 
   return (
