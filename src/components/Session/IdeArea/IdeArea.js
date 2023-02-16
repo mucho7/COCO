@@ -27,7 +27,7 @@ function IdeArea(props) {
   const [participants, setParticipants] = useState({});
   const updated = useSelector((state) => state.session.updated);
   const dispatch = useDispatch();
-  const [layers, setLayers] = useState([]);
+  const [layers, setLayers] = useState({});
 
   useEffect(() => {
     if (participantsId) {
@@ -38,31 +38,35 @@ function IdeArea(props) {
       setParticipants(participantsInstances.get(participantsId));
       dispatch(setUpdated(false));
     }
+    
+    
+  }, [participantsId, updated, dispatch])
 
-    const participantsKeys = Object.keys(participants);
+  useEffect(() => {
+    const users = Object.keys(participants)
+    const prevUsers = Object.keys(layers)
 
-    setLayers((layers) => {
-      return layers.filter((layer) => {
-        return participantsKeys.includes(layer.props.id);
-      });
-    });
-
-    participantsKeys.forEach((key) => {
-      if (!layers.some((layer) => layer.props.id === key)) {
-        setLayers((layers) => {
-          return [
-            ...layers,
-            <OthersDrawLayer key={key} id={key} participant={participants[key]} />,
-          ];
-        });
+    users.forEach((user) => {
+      if (!prevUsers.includes(user)) {
+        const addedLayers = {...layers}
+        addedLayers[user] = <OthersDrawLayer key={user} user={user} />
+        setLayers(addedLayers)
       }
-    });
-  }, [participantsId, updated, dispatch, participants, layers])
+    })
+
+    prevUsers.forEach((user) => {
+      if (!users.includes(user)) {
+        const deletedLayers = {...layers};
+        delete deletedLayers[user];
+        setLayers(deletedLayers);
+      }
+    })
+  }, [participants])
 
   return (
     <IdeAreaDiv id="ideArea">
       {isDrawButtonOn && <MyDrawLayer />}
-      {layers}
+      {Object.values(layers)}
       {participantsId !== null && <Ide />}
     </IdeAreaDiv>
   );

@@ -1,3 +1,15 @@
 import UpdateSession from "../components/UpdateSession";
+import SidePaddingBox from './SidePaddingBox'
+import  { Navbar } from '../components/navbar';
 
-export default UpdateSession;
+function UpdateSessionPage() {
+
+  return (
+    <SidePaddingBox>
+        <Navbar />
+        <UpdateSession />
+    </SidePaddingBox>
+  )
+}
+
+export default UpdateSessionPage;

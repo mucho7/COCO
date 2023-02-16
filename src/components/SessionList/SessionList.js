@@ -5,8 +5,6 @@ import { useSearchParams } from "react-router-dom";
 
 import { getSessionList } from '../../api/session';
 import SessionListItem from './SessionListItem';
-import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
 
 function SessionList() {
 
@@ -31,11 +29,10 @@ function SessionList() {
   const [sessionList, setSessionList] = useState(samples);
   
 
-  useEffect(() => {
+  useMemo(() => {
     const params = {
-      mode: "study",
-      title: searchParams.title ? searchParams.title : "",
-      hostId: searchParams.hostId ? searchParams.hostId : ""
+      title: searchParams.get("title") ? searchParams.get("title") : "",
+      hostId: searchParams.get("hostId") ? searchParams.get("hostId") : ""
     }
     
     const enterSessionList = async () => {
@@ -49,25 +46,6 @@ function SessionList() {
     }
     enterSessionList();
   }, [searchParams])
-
-  useEffect(() => {
-    const params = {
-      mode: "study",
-      title: "",
-      hostId: ""
-    }
-
-    const enterSessionList = async () => {
-      await getSessionList(
-        params,
-        (data) => {return data.data},
-        (err) => console.log(err)
-      ).then((data) => {
-        setSessionList(data);
-      })
-    }
-    enterSessionList();
-  }, [])
 
 
   return (
@@ -83,7 +61,7 @@ const SessionListBox = styled.article`
     flex-direction: column;
     justify-content: space-between;
     align-items: start;
-    width: 80%;
+    width: 100%;
 `
 
 export default SessionList;
