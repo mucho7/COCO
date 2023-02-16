@@ -44,6 +44,9 @@ function IdeArea(props) {
   useEffect(() => {
     const users = Object.keys(participants)
     const prevUsers = Object.keys(layers)
+    console.log("users: ", users)
+    console.log("prevUsers: ", prevUsers)
+    console.log("participants: ", participants)
 
     // 레이어 추가
     users.forEach((user) => {
