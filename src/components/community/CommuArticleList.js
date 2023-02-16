@@ -37,7 +37,6 @@ function CommuArticleList() {
             await boardSearching(
                 {searchTarget: target, searchWord: word, size: pageSize, page: pageNumber},
                 (data) => {
-                    console.log(data.data.totalPages)
                     return data.data
                 },
                 (err) => console.log(err)
@@ -69,7 +68,12 @@ function CommuArticleList() {
     return (
         <CommuArticleBox>
             <Grid container height={"620px"}>
-                {someArticle.empty ? <div>해당 글 없음</div> : <CommuArticleListItem articles={someArticle.content}/> }
+                {someArticle.empty ? <div>해당 글 없음</div> 
+                : someArticle.content.map(article => {
+                    return (
+                        <CommuArticleListItem key={article.id} article={article}/> 
+                    )
+                })}
             </Grid>
             <CommuPaging maxPage={maxPage} onClick={onPagingClickHandler}/>
         </CommuArticleBox>

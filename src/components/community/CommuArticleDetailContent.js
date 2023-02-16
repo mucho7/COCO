@@ -1,7 +1,8 @@
 /* eslint-disable */
-import React, { useState, useEffect } from "react";
-import MonacoEditor from "@monaco-editor/react"
+import React, { useState, useEffect,  } from "react";
 
+import MonacoEditor from "@monaco-editor/react"
+// import * as monaco from "monaco-editor"
 
 import styled from "styled-components";
 import { Typography,  } from "@mui/material";
@@ -13,9 +14,14 @@ function CommuArticleDetailContent(params) {
     const [ hoverTarget, setHoverTarget ] = useState([-1, -1])
     const [ target, setTarget ] = useState({isActive: false, key:-2, startIndex: -2, endIndex: -2})
     const [ monacoId, setMonacoId ] = useState(-2)
+    const [editor, setEditor] = useState(null);
 
     const code = (params.content.code)
     const content = (params.content.content)
+
+    const onEditorDidMount = (editor, monaco) => {
+        setEditor(editor);
+    };
     
     const onMouseEnterHandler = (startIndex, endIndex, uniqueKey) => {
         if (startIndex === -1){
@@ -34,13 +40,16 @@ function CommuArticleDetailContent(params) {
         } else {
             setTarget({isActive: true, key: uniqueKey, startIndex: startIndex, endIndex: endIndex})
         }
-    }
+    }   
     
     useEffect(() => {
         if (target.key === -2) return
-        const editor = monaco.editor.getModels()[0];
+        // const editor = monaco.editor.getModels()[0];
+        console.log(editor)
         if (target.isActive) {
-            console.log(target)
+            editor.deltaDecorations(monacoId, [])
+            // editorRef.current.editor.setScrollPosition(target.startIndex)
+            editor.revealLineInCenter(target.startIndex);
             setMonacoId(editor.deltaDecorations(
                 [], 
                 [{
@@ -76,7 +85,7 @@ function CommuArticleDetailContent(params) {
             </ContentSection>
             <Vr/>
             <CodeSection>
-                <MonacoEditor language="javascript" value={code} lineNumbers="on" options={{ readOnly: true }} theme="vs"/>
+                <MonacoEditor language="javascript" onMount={onEditorDidMount} value={code} lineNumbers="on" options={{ readOnly: true }} theme="vs"/>
             </CodeSection>
         </>
     )
