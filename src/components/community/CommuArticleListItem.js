@@ -4,7 +4,8 @@ import { Link } from "react-router-dom"
 import { getBoardImg } from "../../api/community";
 
 import styled from "styled-components"
-import { Card, CardActionArea, CardContent, Grid,  } from '@mui/material'
+import { Card, CardContent, Grid,  } from '@mui/material'
+
 
 function CommuArticleListItem(props) {
     const createdAt = props.article.createdAt
@@ -18,35 +19,43 @@ function CommuArticleListItem(props) {
     const [ boardImg, setBoardImg ] = useState()
 
     useMemo(() => {
-        const boardImg = async () => {
+        const getBoardIamge = async () => {
             await getBoardImg(
                 props.article,
-                (data) => {return data.data},
+                (data) => {
+                    return data.data
+                },
                 (err) => console.log(err)
             ).then((data) => {
-                setBoardImg(data)
+                const newFile = new File([data], props.article.id);
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const previewImage = String(event.target?.result);
+                    setBoardImg(previewImage);
+                };
+                reader.readAsDataURL(newFile);
             })
         }
-        boardImg()
-    })
+        getBoardIamge()
+    }, [props])
+
     return (
-        <Grid item xs={4} key={article.id} >
-            <img src="data: ${boardImg}" alt="whereRU"/>
+        <Grid item xs={3} key={article.id} >
             <Link to={`${article.id}`} state={article} style={{textDecoration: 'none', color: 'black'}}>
-                <CardActionArea>
-                    <Card sx={{height: "200px", margin: '4px', background: '#333333'}} >
-                        <CardContent>
+                <Card sx={{height: "300px", margin: '4px', background: 'rgba(250, 247, 244, 1)',}} >
+                    <CardContent sx={{height: "100%", backgroundImage: `url(${boardImg})`, margin: "10px"}}>
+                        <CardContentItemBox>
                             <TitleBox>{article.title}</TitleBox>
                             <CardContentItem >
                                 {createdAt.slice(5, 7) === month
                                     ? createdAt.slice(8, 10) === day 
-                                        ? parseInt(createdAt.slice(11, 13)) + 9 === parseInt(hour) 
-                                            ? createdAt.slice(14, 16) === minute
-                                                ? "방금 전"
-                                            : parseInt(minute) - parseInt(createdAt.slice(14, 16)) + "분 전"
-                                        : parseInt(hour) - parseInt(createdAt.slice(11, 13)) - 9 + "시간 전"
+                                    ? parseInt(createdAt.slice(11, 13)) + 9 === parseInt(hour) 
+                                    ? createdAt.slice(14, 16) === minute
+                                    ? "방금 전"
+                                    : parseInt(minute) - parseInt(createdAt.slice(14, 16)) + "분 전"
+                                    : parseInt(hour) - parseInt(createdAt.slice(11, 13)) - 9 + "시간 전"
                                     : createdAt.slice(5, 10)
-                                : createdAt.slice(5, 10)
+                                    : createdAt.slice(5, 10)
                                 }
                             </CardContentItem>
                             <CardContentItem> · {article.commentCnt} 개의 댓글</CardContentItem>
@@ -55,9 +64,9 @@ function CommuArticleListItem(props) {
                                 <CardContentItem>by <b>{article.writer}</b></CardContentItem>
                                 <CardContentItem>{article.hit} viewed</CardContentItem>
                             </Row>
-                        </CardContent>
-                    </Card>
-                </CardActionArea>
+                        </CardContentItemBox>
+                    </CardContent>
+                </Card>
             </Link>
         </Grid>
     )
@@ -65,20 +74,26 @@ function CommuArticleListItem(props) {
 
 const TitleBox = styled.h3`
     width: 90%;
-    height: 24px;
-    
+    margin: 5px 5px 5px 0px;
+
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    
-    background: #333333;
-    color: white;
-
+    color: black;
 `
 
 const CardContentItem = styled.span`
-    color: white;
+    color: black;
     font-family: "Open Sans", sans-serif;
+`
+
+const CardContentItemBox = styled.div`
+    position: relative;
+    top: 45%;
+    // background : rgba(250, 247, 244, 0.5);
+    background : white;
+    padding: 10px;
+    border-radius: 10px
 `
 
 const Row = styled.div`

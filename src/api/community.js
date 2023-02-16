@@ -25,6 +25,7 @@ async function getBoardImg(article, success, fail) {
     headers: {
       "Content-Type": "application/json",
     },
+    responseType: "blob",
   });
   // http://i8a703.p.ssafy.io:8019/file/board/128
   const res = await api_mk2.get(`/${article.id}`).then(success).catch(fail);

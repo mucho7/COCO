@@ -12,8 +12,8 @@ function CommuArticleList() {
     const [ searchParams, setSearchParams ] = useSearchParams()
     const [ someArticle, setSomeArticle ] = useState({empty: true, content: [{id: 1, createdAt: "i dont know when i was born"}, {id: 2, createdAt: "i dont know when i was born"}]})
     // 일단은 8로 고정하고 심화기능이 필요하다면 변경하는 버튼을 추가 예정
-    const [ pageSize ] = useState(9)
-    const [ pageNumber, setPageNumber ] = useState(1)
+    const [ pageSize ] = useState(8)
+    const [ pageNumber, setPageNumber ] = useState(searchParams.get("page") ? searchParams.get("page") : 1)
     const [ maxPage, setMaxPage ] = useState(5)
 
     useMemo(() => {
@@ -27,7 +27,6 @@ function CommuArticleList() {
                 (err) => console.log(err)
             ).then((data) => {
                 setSomeArticle(data)
-                console.log(data)
                 setMaxPage(data.totalPages)
 
             })
@@ -74,6 +73,8 @@ function CommuArticleList() {
                         <CommuArticleListItem key={article.id} article={article}/> 
                     )
                 })}
+                <Grid item xs={2}>
+                </Grid>
             </Grid>
             <CommuPaging maxPage={maxPage} onClick={onPagingClickHandler}/>
         </CommuArticleBox>

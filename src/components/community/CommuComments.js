@@ -30,7 +30,11 @@ function Comments(props) {
         }
         await commentDelete(
             commentInfo,
-            (data) => console.log(data),
+            (data) => {
+                console.log(data)
+                props.isRenderNeeded()
+                alert("삭제 완료!")
+            },
             (err) => console.log(err)
         )
     }
