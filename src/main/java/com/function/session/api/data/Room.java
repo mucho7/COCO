@@ -58,15 +58,12 @@ public class Room {
 		this.max = max;
 	}
 
-	public void UpdateRoom(String title, String content, String mode, Integer max) {
+	public void UpdateRoom(String title, String content, Integer max) {
 		if (title != null && title.length() != 0) {
 			this.title = title;
 		}
 		if (content != null && content.length() != 0) {
 			this.content = content;
-		}
-		if (mode != null && mode.length() != 0) {
-			this.mode = mode;
 		}
 		if (max != null) {
 			this.max = max;
