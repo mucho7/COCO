@@ -1,6 +1,7 @@
 import { useState,  } from "react"
 import { useLocation } from "react-router-dom"
 import { commentDelete, commentUpdate } from "../../api/community"
+import { useCookies } from 'react-cookie'
 
 import { Card, Button, CardContent, Typography, Grid, ButtonGroup, TextField } from "@mui/material"
 
@@ -9,6 +10,9 @@ function Comments(props) {
     const [ updateFlag, setUpdateFlag ] = useState(false)
     const [ updateComment, setUpdateComment ] = useState("")
     const [ updateTarget, setUpdateTarget ] = useState("")
+    
+    const [userInfo, setUesrInfo] = useState([])
+    const [cookie, setCookie] = useCookies(["userInfo"])
 
     const date = new Date()
     const month = (date.getMonth() + 1).toString().padStart(2, '0')
@@ -20,7 +24,9 @@ function Comments(props) {
         console.log(params)
         const commentInfo = {
             pk: params.id,
-            board_id:location.state.id
+            board_id:location.state.id,
+            'Authorization': cookie.userInfo.jwt_token,
+            'refreshToken': cookie.userInfo.refresh_token,
         }
         await commentDelete(
             commentInfo,
@@ -38,7 +44,9 @@ function Comments(props) {
         const commentInfo = {
             pk: params.id,
             content: updateComment,
-            board_id:location.state.id
+            board_id:location.state.id,
+            'Authorization': cookie.userInfo.jwt_token,
+            'refreshToken': cookie.userInfo.refresh_token,
         }
         await commentUpdate(
             commentInfo,

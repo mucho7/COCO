@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { participantsInstances, setUpdated } from "../../../store/sessionSlice";
 
 const DrawDiv = styled.div`
   box-sizing: border-box;
@@ -23,11 +24,18 @@ function OthersDrawLayer(props) {
   const [isDrawing, setIsDrawing] = useState(false);
   const [drawColor, setDrawColor] = useState("#ffffff");
   const [isEraseMode, setIsEraseMode] = useState(false);
-  const participant = props.participant;
-  // console.log(participant)
+  const userName = props.key;
+  const [participant, setParticipant] = useState(props.participant);
   
-  const tagId = `canvas-${participant.name}`;
-  console.log(participant)  
+  // console.log(participant)
+
+  useEffect(() => {
+    setParticipant(props.participant);
+  }, [props.participant])
+
+  
+  const tagId = `canvas-${userName}`;
+  // console.log(participant)  
   
   useEffect(() => {
     function initCanvas() {
@@ -106,8 +114,8 @@ function OthersDrawLayer(props) {
       contextRef.current.strokeStyle = drawColor;
     }
 
-    if (imageData?.userName === participant.name) {
-      switch (imageData.imageData.type) {
+    if (imageData?.userName === userName) {
+      switch (imageData?.imageData.type) {
         case "startDrawing":
           startDrawing(imageData.imageData.x, imageData.imageData.y);
           break;
@@ -134,7 +142,7 @@ function OthersDrawLayer(props) {
     if (!participant.isDrawButtonOn) {
       eraseAll();
     }
-  }, [drawColor, imageData, isDrawing, isEraseMode, participant.isDrawButtonOn, participant.name])
+  }, [drawColor, imageData, isDrawing, isEraseMode, participant, userName])
 
   
   return (

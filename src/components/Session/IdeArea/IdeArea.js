@@ -25,14 +25,9 @@ function IdeArea(props) {
   const isDrawButtonOn = useSelector((state) => state.toolBarAction.isDrawButtonOn);
   const participantsId = useSelector((state) => state.session.participantsId);
   const [participants, setParticipants] = useState({});
-  const userId = localStorage.getItem("userId");
-  // const participants = participantsInstances.get(participantsId);
   const updated = useSelector((state) => state.session.updated);
   const dispatch = useDispatch();
-  // console.log("participantId: ", participantsId)
-  // console.log("participants: ", participants);
-  // console.log(participantsInstances)
-  // console.log(participantsInstances.get(participantsId))
+  const [layers, setLayers] = useState([]);
 
   useEffect(() => {
     if (participantsId) {
@@ -43,19 +38,31 @@ function IdeArea(props) {
       setParticipants(participantsInstances.get(participantsId));
       dispatch(setUpdated(false));
     }
-  }, [participantsId, updated, dispatch])
+
+    const participantsKeys = Object.keys(participants);
+
+    setLayers((layers) => {
+      return layers.filter((layer) => {
+        return participantsKeys.includes(layer.props.id);
+      });
+    });
+
+    participantsKeys.forEach((key) => {
+      if (!layers.some((layer) => layer.props.id === key)) {
+        setLayers((layers) => {
+          return [
+            ...layers,
+            <OthersDrawLayer key={key} id={key} participant={participants[key]} />,
+          ];
+        });
+      }
+    });
+  }, [participantsId, updated, dispatch, participants, layers])
 
   return (
     <IdeAreaDiv id="ideArea">
       {isDrawButtonOn && <MyDrawLayer />}
-      {
-        participantsId !== null && 
-        Object.values(participants).map((participant) => {
-          return (
-            <OthersDrawLayer participant={participant} key={participant?.name} />
-          )
-        })
-      }
+      {layers}
       {participantsId !== null && <Ide />}
     </IdeAreaDiv>
   );

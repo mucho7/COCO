@@ -1,22 +1,14 @@
-import Box from '@mui/material/Box';
-import Container from "@mui/material/Container";
 import styled from 'styled-components';
 
 import { useState, useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useSearchParams } from "react-router-dom";
 
 import { getSessionList } from '../../api/session';
 import SessionListItem from './SessionListItem';
-import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
 function SessionList() {
-  // const sessionList = useSelector((state) => state.sessionList.sessionList);
-  // const navigate = useNavigate();
-
-  // function goToDetail(id) {
-  //   navigate(`/room/${id}`);
-  // }
 
   const samples = [
     {
@@ -34,12 +26,40 @@ function SessionList() {
       mode: "study"
     }
   ]
-  const [sessionList, setSessionList] = useState(samples);
 
-  useMemo(() => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [sessionList, setSessionList] = useState(samples);
+  
+
+  useEffect(() => {
+    const params = {
+      mode: "study",
+      title: searchParams.title ? searchParams.title : "",
+      hostId: searchParams.hostId ? searchParams.hostId : ""
+    }
+    
     const enterSessionList = async () => {
       await getSessionList(
-        "study",
+        params,
+        (data) => {return data.data},
+        (err) => console.log(err)
+      ).then((data) => {
+        setSessionList(data);
+      })
+    }
+    enterSessionList();
+  }, [searchParams])
+
+  useEffect(() => {
+    const params = {
+      mode: "study",
+      title: "",
+      hostId: ""
+    }
+
+    const enterSessionList = async () => {
+      await getSessionList(
+        params,
         (data) => {return data.data},
         (err) => console.log(err)
       ).then((data) => {
@@ -48,6 +68,7 @@ function SessionList() {
     }
     enterSessionList();
   }, [])
+
 
   return (
     <SessionListBox>

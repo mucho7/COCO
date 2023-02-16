@@ -12,17 +12,9 @@ function CompileButton(props) {
   
   const dispatch = useDispatch();
 
-  function handleOnClick() {
-    if (isCompileButtonOn) {
-      dispatch(onClickCompileButton());
-    } else {
-      dispatch(onClickCompileButton());
-    }
-  }
-
   return (
     <IconButton 
-      onClick={handleOnClick} 
+      onClick={() => {dispatch(onClickCompileButton())}} 
       isButtonOn={isCompileButtonOn}
       disabled={!isCompilePossible}
       sx={{ 

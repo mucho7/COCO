@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://i8a703.p.ssafy.io:8013/function",
+  baseURL: "https://ssafy.cossafyco.kro.kr/api/function",
 
   headers: {
     "Content-Type": "application/json",
@@ -9,7 +9,7 @@ const api = axios.create({
 });
 
 async function compileCode(compileDto, success, fail) {
-  const res = await api.post(compileDto).then(success).catch(fail);
+  const res = await api.post("/compile", compileDto).then(success).catch(fail);
   return res
 }
 
