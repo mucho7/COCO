@@ -55,7 +55,9 @@ const HomeCarousel = () => {
               : 'translateX(100%)'
           }}>
           <img src={item.image} alt={item.title} style={{width: '100%',height: '100%', objectFit: 'cover',}} />
-          <img src={item.gif} alt={item.title} style={{width: '40%',height: '60%', right: '4%', top: '20%', zIndex: 3, position: 'absolute' }} />
+          {index === 1
+          ? <div hidden></div>
+          : <img src={item.gif} alt={item.title} style={{width: '40%',height: '60%', right: '4%', top: '20%', zIndex: 3, position: 'absolute' }} />}
         </Box>
       ))}
       <IconButton
