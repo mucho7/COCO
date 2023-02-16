@@ -83,13 +83,13 @@ function OthersDrawLayer(props) {
 
 
   useEffect(() => {
-    if (!participant.isDrawButtonOn) {
+    if (!participant?.isDrawButtonOn) {
       contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
       setIsDrawing(false)
       setIsEraseMode(false)
       setDrawColor("#ffffff")
     }
-  }, [participant.isDrawButtonOn])
+  }, [participant])
   
   useEffect(() => {
     const startDrawing = (x, y) => {
@@ -134,7 +134,7 @@ function OthersDrawLayer(props) {
     }
 
     // 다른 사용자로부터 그림판 동작 이벤트 수신
-    if (imageData?.userName === participant.name) {
+    if (imageData?.userName === participant?.name) {
       switch (imageData?.imageData.type) {
         case "startDrawing":
           startDrawing(imageData.imageData.x, imageData.imageData.y);
@@ -158,7 +158,7 @@ function OthersDrawLayer(props) {
           break;
       }
     }
-  }, [drawColor, imageData, isDrawing, isEraseMode, participant.name])
+  }, [drawColor, imageData, isDrawing, isEraseMode, participant])
 
   
   return (
