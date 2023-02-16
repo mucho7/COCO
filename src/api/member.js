@@ -17,16 +17,6 @@ function failHandler(params) {
 // image 추가하고 활성화활 것
 async function signup(user, success, fail) {
   await api.post(`/member/register`, JSON.stringify(user)).then(success).catch(fail)
-  // const formData = new FormData();
-  
-  // // formData 형성
-  // formData.append("user", JSON.stringify(user))
-  // formData.append("image", image)
-
-  // axios.create({
-  //   baseURL: "https://ssafy.cossafyco.kro.kr/api/", 
-  //   headers: {"Content-Type": "multipart/form-data",}
-  // }).post(`/member/register`, formData).then(success).catch(fail)
 }
 
 async function login(user, success, fail) {
@@ -64,8 +54,13 @@ async function deleteUserInfo(user, success, fail) {
   await api.post(`/member/delete/${user.userId}`, JSON.stringify(user.userId)).then(success).catch(failHandler);
 }
   
+async function checkSignUp(user, success) {
+  const res = await api.get(`/check/${user.key}/${user.value}`, JSON.stringify(user)).then(success).catch(failHandler);
+  return res
+}
+
 async function visaTempPassword(user, success, fail) {
   await api.post(`/member/tempPassword`, JSON.stringify(user)).then(success).catch(failHandler);
 }
 
-export { signup, login, logout, readUserInfo, updateUserInfo, changeUserPassword, deleteUserInfo, visaTempPassword } ; 
+export { signup, login, logout, readUserInfo, updateUserInfo, changeUserPassword, deleteUserInfo, checkSignUp, visaTempPassword } ; 

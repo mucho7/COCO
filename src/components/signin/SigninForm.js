@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { signup } from '../../api/member'
+import { signup, checkSignUp } from '../../api/member'
 
 import { Grid, Box, Container, Button, TextField } from '@mui/material'
 
@@ -21,26 +21,25 @@ function SigninForm() {
     const [isEmailValid, setIsEmailValid] = useState(false)
     const [isPasswordValid, setIsPasswordValid] = useState({ isValid: false })
     const [isNameValid, setIsNameValid] = useState({ isValid: false })
+    const [isSubmitFailed, setIsSubmitFailed] = useState(false)
     
     // validation
     const emailValidation = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}')
-    useEffect(() => {
+    const idValidation = (() => {
         const idForm = /^(?=.*\d{0,16})(?=.*[_.]{0,16})(?=.*[A-Za-z]{0,16}).{4,16}$/
         const idErrorMessage = {
             null: "필수 입력입니다.",
             form: "ID는 영문자, 숫자, 언더스코어(_) 로 구성하여 4자 ~ 16자 로 작성해주세요.",
+            exist: "중복되는 아이디입니다!"
         }
         if (inputID === undefined || inputID === '') {
-            setIsOkToSubmit(false)
             setIsIdValid({ isValid: true, message: idErrorMessage.null })
         } else if (!idForm.test(inputID)) {
-            setIsOkToSubmit(false)
             setIsIdValid({ isValid: true, message: idErrorMessage.form })
         } else {
-            setIsOkToSubmit(true)
             setIsIdValid({ isValid: false })
         }
-    }, [inputID])
+    })
 
     useEffect(() => {
         const passwordForm = /^(?=.*\d{1,32})(?=.*[~`!@#$%^&*()-+=_]{0,32})(?=.*[a-zA-Z]{1,32}).{4,32}$/
@@ -113,8 +112,6 @@ function SigninForm() {
 
 
     async function signUp() {
-
-
         const temp_user_info = {
             userId: inputID,
             password: inputPassword,
@@ -136,35 +133,83 @@ function SigninForm() {
         )
     }
 
-    const onSubmitHandler = (e) => {
-        e.preventDefault()
-        setIsEmailValid(!(emailValidation.test(inputEmail)))
-        if (isOkToSubmit) { signUp() } else { alert('잘못된 접근입니다.') }
+    const SignUpIdCheck = async (user) => {
+        await checkSignUp(
+            user,
+            (data) => {
+                return data.data
+            }
+            )
+            .then((res) => {
+                if (res) {
+                    idValidation(inputID)
+                    if (!isIdValid.isValid) setIsIdValid({isValid: false})
+                } else {
+                    setIsIdValid({
+                    isValid: true, 
+                    message: "중복되는 아이디입니다."
+                })
+                alert("중복되는 아이디입니다.")
+            }
+        })
+    }
+    
+    const SignUpEmailCheck = async (user) => {
+        await checkSignUp(
+            user,
+            (data) => {
+                return data.data
+            }
+            )
+            .then((res) => {
+                if (res) {
+                if (emailValidation.test(inputEmail)) setIsEmailValid({isValid: false})
+                else setIsEmailValid({isValid: true, message: "유효하지 않은 이메일입니다."})
+            } else {
+                setIsEmailValid({isValid: true, message: "중복되는 이메일입니다."})
+                alert("중복되는 이메일입니다.")
+            }
+        })
+    }
+    
+    const onCheckCLickHandler = (e) => {
+        const target = e.target.value
+        if (target === "id") SignUpIdCheck({key: target, value: inputID,})
+        if (target === "email") SignUpEmailCheck({key: target, value: inputEmail,})
     }
 
+    const onSubmitHandler = (e) => {
+        e.preventDefault()
+        if (isOkToSubmit && isIdValid && isEmailValid) { signUp() } 
+        else { 
+            alert('입력 사항들을 다시 확인해주세요.')
+            setIsSubmitFailed(true)
+        }
+    }
+    
     return (
         <Container fixed>
             <Box component="form">
                 <Grid container spacing={2} style={{ padding: '2rem', justifyContent: 'center' }}>
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} error={isIdValid.isValid} helperText={isIdValid.isValid ? isIdValid.message : "좋은 ID네요!"} id="outlined-id" label="ID" fullWidth/>
-                        <Button  style={{position: "absolute", right: "30%", top: "190px"}}>중복 검사</Button>
+                        <TextField onChange={onTypingHandler} error={isIdValid.isValid || isSubmitFailed} helperText={isIdValid.isValid ? inputID ? isIdValid.message : "좋은 ID네요!" : "필수 입력입니다."} id="outlined-id" label="ID" fullWidth/>
+                        <Button id="idCheck" value="id" onClick={onCheckCLickHandler} style={{position: "absolute", right: "30%", top: "190px"}}>중복 검사</Button>
                     </Grid>
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} error={isEmailValid} helperText={isEmailValid ? "유효한 이메일을 입력해주십시오." : ""} id="outlined-email" label="E-Mail" fullWidth />
-                        <Button  style={{position: "absolute", right: "30%", top: "285px"}}>중복 검사</Button>
+                        <TextField onChange={onTypingHandler} error={isEmailValid || isSubmitFailed} helperText={isEmailValid ? inputEmail ? isEmailValid.message : "멋진 E-Mail인걸요?" : "필수 입력입니다."} id="outlined-email" label="E-Mail" fullWidth />
+                        <Button id="emailCheck" value="email" onClick={onCheckCLickHandler} style={{position: "absolute", right: "30%", top: "285px"}}>중복 검사</Button>
                     </Grid>
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} error={isPasswordValid.isValid} helperText={isPasswordValid.isValid ? isPasswordValid.message : ""} id="outlined-password" type="password" label="Password" fullWidth />
+                        <TextField onChange={onTypingHandler} error={isSubmitFailed} helperText={isPasswordValid.isValid ? isPasswordValid.message : ""} id="outlined-password" type="password" label="Password" fullWidth />
                     </Grid>
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} error={isPasswordValid.isValid} helperText={isPasswordValid.isValid ? isPasswordValid.message : ""} id="outlined-password-check" type="password" label="Password Check" fullWidth />
+                        <TextField onChange={onTypingHandler} error={isSubmitFailed} helperText={isPasswordValid.isValid ? isPasswordValid.message : ""} id="outlined-password-check" type="password" label="Password Check" fullWidth />
                     </Grid>
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} error={isNameValid.isValid} helperText={isNameValid.isValid ? isNameValid.message : ""} id="outlined-name" label="Name" fullWidth />
+                        <TextField onChange={onTypingHandler} error={isSubmitFailed} helperText={isNameValid.isValid ? isNameValid.message : ""} id="outlined-name" label="Name" fullWidth />
                     </Grid>
                     <Grid item xs={6}>
-                        <Button onClick={onSubmitHandler} variant="contained" className="submit" fullWidth style={{ height: "3rem" }}> <b>회원가입</b></Button>
+                        <Button onClick={onSubmitHandler} variant="contained" className="submit" fullWidth style={{ height: "3rem", background: "blue" }}> <b>회원가입</b></Button>
                     </Grid>
                 </Grid>
             </Box>
