@@ -66,7 +66,7 @@ function IdeArea(props) {
   return (
     <IdeAreaDiv id="ideArea">
       {isDrawButtonOn && <MyDrawLayer />}
-      {Object.values(layers)}
+      {layers !== null && Object.values(layers)}
       {participantsId !== null && <Ide />}
     </IdeAreaDiv>
   );
