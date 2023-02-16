@@ -1,5 +1,8 @@
 package com.function.sessionFunction.controller;
 
+import java.sql.SQLOutput;
+import java.util.Scanner;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.function.sessionFunction.compileDto.CompileDto;
-import com.function.sessionFunction.service.SessionFunctionService;
+import com.function.sessionFunction.service.SessionFunctionServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SessionController {
 
-	private SessionFunctionService sessionFunctionService;
+	private final SessionFunctionServiceImpl sessionFunctionService;
 
 	@GetMapping("/hello")
 	public String hello(){
@@ -29,6 +32,7 @@ public class SessionController {
 	public String CompileCode(@RequestBody CompileDto compileDto) {
 
 		System.out.println(compileDto);
+		System.out.println(sessionFunctionService);
 		return sessionFunctionService.judge(compileDto);
 	}
 
@@ -39,5 +43,6 @@ public class SessionController {
 		return new ResponseEntity<CompileDto>(c, HttpStatus.OK);
 
 	}
+
 
 }

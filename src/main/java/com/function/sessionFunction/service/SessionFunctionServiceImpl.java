@@ -12,10 +12,12 @@ import org.springframework.stereotype.Service;
 
 import com.function.sessionFunction.compileDto.CompileDto;
 
-@Service
-public class SessionFunctionServiceImpl implements SessionFunctionService {
+import lombok.RequiredArgsConstructor;
 
-	@Override
+@Service
+@RequiredArgsConstructor
+public class SessionFunctionServiceImpl {
+
 	public String judge(CompileDto compileDto) {
 		File inputFile = null;
 		File codeFile = null;
@@ -31,7 +33,7 @@ public class SessionFunctionServiceImpl implements SessionFunctionService {
 			FileWriter codeWriter = new FileWriter(codeFile);
 			codeWriter.write(code);
 			codeWriter.close();
-			inputFile = new File("input.txt");
+			inputFile = new File(filePath+fileName+".txt");
 			FileWriter inputWriter = new FileWriter(inputFile);
 			inputWriter.write(input);
 			inputWriter.close();
@@ -80,25 +82,9 @@ public class SessionFunctionServiceImpl implements SessionFunctionService {
 		}
 	}
 
-	private String fileio(String filepath) {
-		StringBuilder sb = new StringBuilder();
-		try (BufferedReader reader = new BufferedReader(
-			new InputStreamReader(new FileInputStream(filepath), "UTF-8"))) {
-			String line;
-			while ((line = reader.readLine()) != null) {
-				sb.append(line).append("\n");
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return sb.toString();
-	}
-
-	@Override
 	public String ChangeClassName(CompileDto compiledto) {
 
-		String code = compiledto.getCode().replace("class Main","Class Main"+ compiledto.getId());
+		String code = compiledto.getCode().replace("class Main","class Main"+ compiledto.getId());
 		return code;
 	}
 }
