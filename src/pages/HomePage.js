@@ -1,4 +1,4 @@
-import  {HomeMainSession, HomeSessionList, HomeCarousel } from '../components/home'
+import  { HomeCarousel } from '../components/home'
 import SidePaddingBox from './SidePaddingBox'
 import  { Navbar } from '../components/navbar';
 
@@ -8,8 +8,7 @@ function HomePage() {
         <SidePaddingBox>
             <Navbar />
         </SidePaddingBox>
-            {/* <HomeMainSession/>
-            <HomeSessionList/> */}
+
             <HomeCarousel />
         </>
     )

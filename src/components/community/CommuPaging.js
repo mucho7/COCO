@@ -45,6 +45,7 @@ const PagingNumberBox = styled.div`
     justify-content: space-around;
 
     margin-top: 15px;
+    margin-bottom: 15px;
 `
 
 export default CommuPaging

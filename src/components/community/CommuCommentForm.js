@@ -12,8 +12,8 @@ function CommentForm(params) {
     
     const board_id = params.board_id
     const [ comment, setComment ] = useState("")
-    const [userInfo, setUesrInfo] = useState([])
-    const [cookie, setCookie] = useCookies(["userInfo"])
+    // const [userInfo, setUesrInfo] = useState([])
+    const [cookie, ] = useCookies(["userInfo"])
 
     const onTypingHandler = (e) => {
         setComment(e.target.value)
@@ -51,7 +51,7 @@ function CommentForm(params) {
         <CommentFormBox>
             <TextField value={comment} onChange={onTypingHandler} size="small" style={{width: "60%"}} />
             <Link to={location.pathname} state={{id: board_id}} style={{textDecoration: "none"}}>
-                <Button onClick={onSubmitClickHandler} style={{background: "#FCA311", marginLeft: "10px"}} variant="contained" >작성</Button>
+                <Button onClick={onSubmitClickHandler} style={{background: "blue", marginLeft: "10px"}} variant="contained" >작성</Button>
             </Link>
         </CommentFormBox>
     )    

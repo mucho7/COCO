@@ -20,11 +20,11 @@ function ArticleCreate() {
     
     // 로그인 안했다면 퇴장
     useEffect(() => {
-        if (cookie.userInfo === undefined || localStorage.getItem("userId") === null) {
+        if (cookie?.userInfo === undefined || localStorage.getItem("userId") === null) {
             navigate('/useri/login')
             alert("로그인이 필요한 서비스입니다.")
         }
-    }, [navigate, cookie])
+    }, [cookie, navigate])
 
     const onTypingHandler = (e) => {
         // 4개의 케이스에 따라 각자의 스테이트에 저장
@@ -58,8 +58,8 @@ function ArticleCreate() {
         code: inputCode,
         writer: window.localStorage.getItem("userId"),
         profile_img: inputImg, 
-        jwt_token: cookie.userInfo.jwt_token,
-        refresh_token: cookie.userInfo.refresh_token
+        jwt_token: cookie.userInfo?.jwt_token,
+        refresh_token: cookie.userInfo?.refresh_token
     }
     
     async function onClickHandler() {
