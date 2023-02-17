@@ -44,7 +44,7 @@ function CommuArticleDetail() {
             })
         }
         getArticlelDetail()
-        setSival(sival + 1)
+        console.log(`IT RENDERED ${sival} TIME`)
     }, [pk, pageNumber, sival])
 
     
