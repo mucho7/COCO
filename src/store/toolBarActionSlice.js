@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   isCompileButtonOn: false,
   isDrawButtonOn: false,
-  isMicButtonOn: false,
+  isMicButtonOn: true,
   isAuthorizeButtonOn: false,
   isChatButtonOn: false,
   isCompilePossible: true,
