@@ -1,13 +1,13 @@
 
 server:
-  port: 8019
+  port: 0
 
 spring:
   application:
     name: fileService
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://i8a703.p.ssafy.io:3306/project1db?serverTimezone=UTC&characterEncoding=UTF-8
+    url: jdbc:mysql://mysql:3306/project1db?serverTimezone=UTC&characterEncoding=UTF-8
     username: root
     password: cossafyco
   data:
@@ -30,3 +30,5 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://i8a703.p.ssafy.io:8761/eureka
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
