@@ -34,7 +34,8 @@ public class SessionApplication implements WebSocketConfigurer {
 	@Bean
 	public KurentoClient kurentoClient() {
 		// return KurentoClient.create();
-		return KurentoClient.create("ws://i8a703.p.ssafy.io:8888/kurento");
+		// return KurentoClient.create("ws://i8a703.p.ssafy.io:8888/kurento");
+		return KurentoClient.create("ws://54.180.146.230:8888/kurento");
 	}
 
 	@Bean
