@@ -1,5 +1,5 @@
 import { useState, useEffect, } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 
 import { Navbar } from '../components/navbar';
@@ -14,6 +14,7 @@ import { AccountCircle } from '@mui/icons-material'
 
 function ProfilePage() {
     const navigate = useNavigate()
+    const location = useLocation()
     const [userInfo, setUesrInfo] = useState([])
     const [cookie, setCookie] = useCookies(["userInfo"])
     const [updateFlag, setUpdateFlag] = useState(false)
@@ -57,18 +58,21 @@ function ProfilePage() {
         const readUser = async () => {
             await readUserInfo(
                 {
-                    userId: cookie.userInfo.user_id,
-                    'Authorization': cookie.userInfo.jwt_token,
-                    'refreshToken': cookie.userInfo.refresh_token,
+                    userId: location.pathname.slice(7).trim(),
+                    // 'Authorization': cookie?.userInfo.jwt_token,
+                    // 'refreshToken': cookie?.userInfo.refresh_token,
                 },
-                (data) => { return data.data },
+                (data) => {
+                    console.log(data) 
+                    return data.data 
+                },
             ).then(data => {
                 setUesrInfo(filterObject(data, ['id', 'name', 'email', 'regTime']))
             })
         }
         readUser()
         setUpdateFlag(updateFlag)
-    }, [cookie, updateFlag])
+    }, [cookie, updateFlag, location])
 
     return (
         <SidePaddingBox>
