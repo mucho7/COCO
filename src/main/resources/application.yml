@@ -39,7 +39,7 @@ spring:
               - OPTIONS
       routes:
         - id: communityCreate
-          uri: http://BoardService:8011/
+          uri: lb://BoardService
           #          uri: http://localhost:8011/
           predicates:
             - Path=/board, /comment/**
@@ -47,7 +47,7 @@ spring:
           filters:
             - AuthenticationHeaderFilter
         - id: communityEdit
-          uri: http://BoardService:8011/
+          uri: lb://BoardService
           #          uri: http://localhost:8011/
           predicates:
             - Path=/board/**, /comment/**
@@ -55,12 +55,12 @@ spring:
           filters:
             - AuthenticationHeaderFilter
         - id: community
-          uri: http://BoardService:8011/
+          uri: lb://BoardService
           #          uri: http://localhost:8011/
           predicates:
             - Path=/board/**, /comment/**
         - id: member
-          uri: http://MemberService:8012/
+          uri: lb://MemberService
           #          uri: http://localhost:8012/
           predicates:
             - Path=/member/changePassword, /member/delete/**, /member/logout, /member/extract
@@ -68,30 +68,30 @@ spring:
           filters:
             - AuthenticationHeaderFilter
         - id: member
-          uri: http://MemberService:8012/
+          uri: lb://MemberService
           #          uri: http://localhost:8012/
           predicates:
             - Path=/member/info/**
           filters:
             - AuthenticationHeaderFilter
         - id: member
-          uri: http://MemberService:8012/
+          uri: lb://MemberService
           #          uri: http://localhost:8012/
           predicates:
             - Path=/member/**
         - id: uniqueCheck
-          uri: http://MemberService:8012/
+          uri: lb://MemberService
           #          uri: http://localhost:8012/
           predicates:
             - Path=/check/**
         - id: validateRequest
-          uri: http://MemberService:8012/
+          uri: lb://MemberService
           #          uri: http://localhost:8012/
           predicates:
             - Path=/validate
             - Method=POST
         - id: function
-          uri: http://SessionFunctionService:8013/
+          uri: lb://SessionFunctionService
           #          uri: http://localhost:8013/
           predicates:
             - Path=/function/**
@@ -101,7 +101,7 @@ spring:
           predicates:
             - Path=/session/**
         - id: file
-          uri: http://FileService:8019/
+          uri: lb://FileService
           predicates:
             - Path=/file/**
   datasource:
