@@ -1,5 +1,5 @@
 import { useState,  } from "react"
-import { useLocation } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import { commentDelete, commentUpdate } from "../../api/community"
 import { useCookies } from 'react-cookie'
 
@@ -80,7 +80,9 @@ function Comments(props) {
                     <CardContent>
                         <Grid container style={{display: "flex", alignItems: "center"}}>
                             <Grid item xs={2} textAlign="center">
-                                <Typography>{comment.writer}</Typography>
+                                <Link to={`/useri/${comment.writer}`} style={{textDecoration: "none"}} >
+                                    <Typography>{comment.writer}</Typography>
+                                </Link>
                             </Grid>
                             <Grid item xs={7}>
                                 {updateTarget !== comment.id ? <Typography style={{overflowWrap: "break-word"}}>{comment.content}</Typography> : <TextField onChange={onTypingHandler} value={updateComment} size="small" fullWidth/>}
