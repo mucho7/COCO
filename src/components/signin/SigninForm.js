@@ -17,8 +17,8 @@ function SigninForm() {
     const [inputEmail, setInputEmail] = useState(null)
 
     const [isOkToSubmit, setIsOkToSubmit] = useState(false)
-    const [isIdValid, setIsIdValid] = useState({ isValid: false })
-    const [isEmailValid, setIsEmailValid] = useState(false)
+    const [isIdValid, setIsIdValid] = useState({ isValid: true, isChecked: false, message: "중복검사를 해주세요!" })
+    const [isEmailValid, setIsEmailValid] = useState({ isValid: true, isChecked: false, message: "중복검사를 해주세요!" })
     const [isPasswordValid, setIsPasswordValid] = useState({ isValid: false })
     const [isNameValid, setIsNameValid] = useState({ isValid: false })
     const [isSubmitFailed, setIsSubmitFailed] = useState(false)
@@ -34,10 +34,14 @@ function SigninForm() {
         }
         if (inputID === undefined || inputID === '') {
             setIsIdValid({ isValid: true, message: idErrorMessage.null })
+            return true
         } else if (!idForm.test(inputID)) {
             setIsIdValid({ isValid: true, message: idErrorMessage.form })
+            return true
         } else {
             setIsIdValid({ isValid: false })
+            return false
+
         }
     })
 
@@ -142,11 +146,12 @@ function SigninForm() {
             )
             .then((res) => {
                 if (res) {
-                    idValidation(inputID)
-                    if (!isIdValid.isValid) setIsIdValid({isValid: false})
+                    const tempIdValid = idValidation(inputID)
+                    if (!tempIdValid) setIsIdValid({isValid: false})
                 } else {
                     setIsIdValid({
                     isValid: true, 
+                    isChecked: true,
                     message: "중복되는 아이디입니다."
                 })
                 alert("중복되는 아이디입니다.")
@@ -163,17 +168,19 @@ function SigninForm() {
             )
             .then((res) => {
                 if (res) {
-                if (emailValidation.test(inputEmail)) setIsEmailValid({isValid: false})
-                else setIsEmailValid({isValid: true, message: "유효하지 않은 이메일입니다."})
+                    if (emailValidation.test(inputEmail)) setIsEmailValid({isValid: false})
+                    else setIsEmailValid({isValid: true, isChecked: true, message: "유효하지 않은 이메일입니다."})
             } else {
-                setIsEmailValid({isValid: true, message: "중복되는 이메일입니다."})
+                setIsEmailValid({isValid: true, isChecked: true, message: "중복되는 이메일입니다."})
                 alert("중복되는 이메일입니다.")
             }
         })
     }
     
     const onCheckCLickHandler = (e) => {
+        e.preventDefault()
         const target = e.target.value
+        console.log(target)
         if (target === "id") SignUpIdCheck({key: target, value: inputID,})
         if (target === "email") SignUpEmailCheck({key: target, value: inputEmail,})
     }
@@ -187,16 +194,20 @@ function SigninForm() {
         }
     }
     
+    useEffect(() => {
+
+    }, [isIdValid, isEmailValid])
+
     return (
         <Container fixed>
             <Box component="form">
                 <Grid container spacing={2} style={{ padding: '2rem', justifyContent: 'center' }}>
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} error={isIdValid.isValid || isSubmitFailed} helperText={isIdValid.isValid ? inputID ? isIdValid.message : "좋은 ID네요!" : inputID === null || inputID === "" ? "필수 입력입니다." : "중복검사를 실행해주세요!" } id="outlined-id" label="ID" fullWidth/>
+                        <TextField onChange={onTypingHandler} error={isIdValid.isChecked || isSubmitFailed} helperText={isIdValid.isValid ? isIdValid.message : "좋은 아이디네요"} id="outlined-id" label="ID" fullWidth/>
                         <Button id="idCheck" value="id" onClick={onCheckCLickHandler} style={{position: "absolute", right: "30%", top: "190px"}}>중복 검사</Button>
                     </Grid>
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} error={isEmailValid || isSubmitFailed} helperText={isEmailValid ? inputEmail ? isEmailValid.message : "멋진 E-Mail인걸요?" : inputEmail=== null || inputEmail === "" ? "필수 입력입니다." : "중복검사를 실행해주세요!"} id="outlined-email" label="E-Mail" fullWidth />
+                        <TextField onChange={onTypingHandler} error={isEmailValid.isChecked || isSubmitFailed} helperText={isEmailValid.isValid ? inputEmail ? isEmailValid.message : inputEmail=== null || inputEmail === "" ? "필수 입력입니다." : "중복검사를 실행해주세요!" : "멋진 E-Mail인걸요?"} id="outlined-email" label="E-Mail" fullWidth />
                         <Button id="emailCheck" value="email" onClick={onCheckCLickHandler} style={{position: "absolute", right: "30%", top: "285px"}}>중복 검사</Button>
                     </Grid>
                     <Grid item xs={7}>
