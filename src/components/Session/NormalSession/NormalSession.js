@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { receiveChat, websocketInstances, setWebsocketId, setParticipantsId, participantsInstances, receiveImageData, setUpdated, setCountUsers } from "../../../store/sessionSlice";
@@ -88,7 +88,7 @@ function NormalSession(props) {
     // 웹소켓 서버로 메세지 보내기
     function sendMessage(message) {
       let jsonMessage = JSON.stringify(message);
-      console.log('Sending message: ' + jsonMessage);
+      // console.log('Sending message: ' + jsonMessage);
       ws.current.send(jsonMessage);
     }
   
@@ -123,21 +123,21 @@ function NormalSession(props) {
       ws.current = new WebSocket(`wss://ssafy.cossafyco.kro.kr:8443/groupcall`);
       // console.log(ws.current);
       ws.current.addEventListener('error', (event) => {
-        console.log('WebSocket error: ', event);
+        // console.log('WebSocket error: ', event);
       });
       ws.current.onopen = () => {
-        console.log(ws.current);
+        // console.log(ws.current);
         register();
       }
       
       websocketInstances.set(1, ws.current);
       dispatch(setWebsocketId(1));
-      console.log(participants);
+      // console.log(participants);
   
       // 서버로부터 메시지 수신
       ws.current.onmessage = function(message) {
         let parsedMessage = JSON.parse(message.data);
-        console.info("received message: " + message.data);
+        // console.info("received message: " + message.data);
   
         switch (parsedMessage.id) {
           case 'existingParticipants':
@@ -163,12 +163,12 @@ function NormalSession(props) {
             break;
           case 'receiveVideoAnswer':
             receiveVideoResponse(parsedMessage);
-            console.log("after receiveVideoResponse: ", participants)
+            // console.log("after receiveVideoResponse: ", participants)
             break;
           case 'iceCandidate':
             participants[parsedMessage.name].rtcPeer.addIceCandidate(parsedMessage.candidate, function (error) {
                   if (error) {
-                  console.error("Error adding candidate: " + error);
+                  // console.error("Error adding candidate: " + error);
                   return;
                   }
               });
@@ -181,14 +181,14 @@ function NormalSession(props) {
             break;
           case "sendImageData":
             dispatch(receiveImageData(parsedMessage));
-            console.log("Receive ImageData")
-            console.log(parsedMessage)
+            // console.log("Receive ImageData")
+            // console.log(parsedMessage)
             break;
           case "leaveByHost":
             leaveRoom();
             break;
           default:
-            console.error('Unrecognized message', parsedMessage);
+            // console.error('Unrecognized message', parsedMessage);
         }
       }
 
@@ -231,13 +231,11 @@ function NormalSession(props) {
               minFrameRate : 15
            }
           }
-          // 크롬 브라우저의 버그(?) 때문에 video를 false로 설정할 수 없는 것 같음
-          // video: false
         };
         console.log(userName + " registered in room " + roomName);
         var participant = new Participant(userName);
         participants[userName] = participant;
-        console.log("participants: ", participants)
+        // console.log("participants: ", participants)
         // var video = participant.getVideoElement();
       
         var options = {
@@ -253,8 +251,6 @@ function NormalSession(props) {
             }
             this.generateOffer (participant.offerToReceiveVideo.bind(participant));
         });
-        participant.rtcPeer.audioEnabled = false;
-        // participant.rtcPeer.videoEnabled = false;
       
         msg.data.forEach(receiveVideo);
       }
@@ -269,7 +265,7 @@ function NormalSession(props) {
       }
 
       function receiveVideo(sender) {
-        console.log("receiveVideo executed?")
+        // console.log("receiveVideo executed?")
         let participant;
         if (!participants[sender]) {
           participant = new Participant(sender);
@@ -295,7 +291,7 @@ function NormalSession(props) {
       }
 
       function onParticipantLeft(request) {
-        console.log('Participant ' + request.name + ' left');
+        // console.log('Participant ' + request.name + ' left');
         var participant = participants[request.name];
         participant.dispose();
         delete participants[request.name];
@@ -333,7 +329,7 @@ function NormalSession(props) {
         participants[targetUserName] = participant;
         participantsInstances.set(1, participants);
         dispatch(setUpdated());
-        console.log("after onToggleAuth: ", participant)
+        // console.log("after onToggleAuth: ", participant)
       }
 
   
@@ -433,7 +429,7 @@ function NormalSession(props) {
 
         this.offerToReceiveVideo = function(error, offerSdp, wp){
           if (error) return console.error ("sdp offer error")
-          console.log('Invoking SDP offer callback function');
+          // console.log('Invoking SDP offer callback function');
           var msg =  { id : "receiveVideoFrom",
               sender : name,
               sdpOffer : offerSdp
@@ -443,7 +439,7 @@ function NormalSession(props) {
 
 
         this.onIceCandidate = function (candidate, wp) {
-            console.log("Local candidate" + JSON.stringify(candidate));
+            // console.log("Local candidate" + JSON.stringify(candidate));
 
             var message = {
               id: 'onIceCandidate',
@@ -456,7 +452,7 @@ function NormalSession(props) {
         Object.defineProperty(this, 'rtcPeer', { writable: true});
 
         this.dispose = function() {
-          console.log('Disposing participant ' + this.name);
+          // console.log('Disposing participant ' + this.name);
           this.rtcPeer.dispose();
         };
       }

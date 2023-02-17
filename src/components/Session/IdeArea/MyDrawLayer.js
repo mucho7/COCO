@@ -127,7 +127,7 @@ function MyDrawLayer(props) {
       imageData: imageData
     }
     ws.send(JSON.stringify(message));
-    console.log("Send Image")
+    // console.log("Send Image")
   }
 
 
@@ -157,7 +157,7 @@ function MyDrawLayer(props) {
       contextRef.current.lineTo(offsetX, offsetY);
       contextRef.current.stroke()
     }
-    console.log(offsetX)
+    // console.log(offsetX)
     sendImageData("draw", {x: offsetX, y: offsetY});
   }
 
@@ -174,7 +174,7 @@ function MyDrawLayer(props) {
 
   function onChangeColor(event) {
     setDrawColor(event.target.value);
-    console.log(event.target.value);
+    // console.log(event.target.value);
     contextRef.current.strokeStyle = drawColor;
     sendImageData("onChangeColor", {color: event.target.value});
   }

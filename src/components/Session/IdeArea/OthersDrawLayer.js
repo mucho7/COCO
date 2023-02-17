@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { participantsInstances } from "../../../store/sessionSlice";
 
 const DrawDiv = styled.div`
   box-sizing: border-box;
@@ -25,23 +24,8 @@ function OthersDrawLayer(props) {
   const [drawColor, setDrawColor] = useState("#ffffff");
   const [isEraseMode, setIsEraseMode] = useState(false);
   
-  // const userName = props.user;
-  // const participantsId = useSelector((state) => state.session.participantsId);
-  // const [participants, setParticipants] = useState({});
-  // const updated = useSelector((state) => state.session.updated);
-  // const [participant, setParticipant] = useState(null);
   const participant = props.participant
 
-
-  // useEffect(() => {
-  //   setParticipants(participantsInstances.get(participantsId));
-
-  // }, [participantsId, updated])
-  
-
-  // useEffect(() => {
-  //   setParticipant(participants[userName]);
-  // }, [participants, userName])
 
   
   const tagId = `canvas-${participant.name}`;
