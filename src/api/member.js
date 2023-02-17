@@ -29,8 +29,8 @@ async function logout(token, success) {
 }
 
 async function readUserInfo(user, success) {
-  // api.defaults.headers["Authorization"] = user["Authorization"]
-  // api.defaults.headers["refreshToken"] = user["refreshToken"]
+  api.defaults.headers["Authorization"] = user["Authorization"]
+  api.defaults.headers["refreshToken"] = user["refreshToken"]
   const res = await api.get(`/member/info/${user.userId}`, JSON.stringify(user)).then(success).catch(failHandler);
   return res
 }
