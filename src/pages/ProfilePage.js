@@ -4,7 +4,7 @@ import { useCookies } from 'react-cookie'
 
 import { Navbar } from '../components/navbar';
 import { deleteUserInfo, readUserInfo } from "../api/member"
-import { ProfileUserInfoItem, ProfileUserInfoForm, ProfileUserTrophy, ProfilePasswordUpdateButton } from '../components/profile'
+import { ProfileUserInfoItem, ProfileUserInfoForm, ProfilePasswordUpdateButton } from '../components/profile'
 
 import styled from 'styled-components'
 import SidePaddingBox from './SidePaddingBox'
@@ -87,9 +87,9 @@ function ProfilePage() {
                     </>}
             </PaddingBox>
             <TestingBox>
-                <LeftBox>
+                {/* <LeftBox>
                     <ProfileUserTrophy />
-                </LeftBox>
+                </LeftBox> */}
                 <RightBox>
                     {updateFlag === false ? <ProfileUserInfoItem userInfo={(userInfo)} /> : <ProfileUserInfoForm userInfo={userInfo} />}
                 </RightBox>
@@ -119,19 +119,18 @@ const TestingBox = styled.div`
     align-items: center;
 
     width: 100%;
-    height: 400px;
+    height: 500px;
 `
-const LeftBox = styled.div`
-    width: 50%;
-    height: 400px;
-    margin: 15px;
+// const LeftBox = styled.div`
+//     width: 50%;
+//     height: 400px;
+//     margin: 15px;
 
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-`
-
+//     display: flex;
+//     flex-direction: row;
+//     justify-content: center;
+//     align-items: center;
+// `
 const PaddingBox = styled.div`
     width: 100%;    
     height: 90px;

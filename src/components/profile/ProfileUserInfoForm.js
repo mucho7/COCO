@@ -1,10 +1,10 @@
 import { useState } from "react"
-import { Button } from "@mui/material"
 import { useCookies } from "react-cookie"
 
 import { updateUserInfo } from "../../api/member"
 
 import styled from "styled-components"
+import { Button } from "@mui/material"
 
 function ProfileUserInfoForm(props) {
     const emailValidation = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}')
@@ -47,9 +47,11 @@ function ProfileUserInfoForm(props) {
             alert('사용자명은 한글, 영문자, 숫자만 입력할 수 있습니다.')
             return;
         }
+
+        if (!isOkToUpdate) return;
         await updateUserInfo(
             updating_user_info,
-            (data) => {
+            () => {
                 alert('정상적으로 수정되었습니다.')
             },
             () => {
@@ -86,16 +88,16 @@ function ProfileUserInfoForm(props) {
                     return (
                         <UserInfoBox key={item[0]}>
                             <UserInfoNameBox>
-                                {item[0]}
+                                {item[0] === "regTime" ? "Since" : item[0]}
                             </UserInfoNameBox>
                             <UserInfoContentBox>
-                                {item[1]}
+                                {item[0] === "regTime" ? item[1].slice(5, 10) : item[1]}
                             </UserInfoContentBox>
                         </UserInfoBox>
                     )
                 }
             })}
-            <Button disabled={isOkToUpdate} onClick={updateUser} >임시 버튼</Button>
+            <Button variant="contained" style={{background: "blue"}} onClick={updateUser}>편집 사항 저장</Button>
         </Col>
     )
 }
