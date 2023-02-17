@@ -19,12 +19,10 @@ function ProfileUserInfoForm(props) {
             case 'email':
                 setInputEmail(e.target.value)
                 setISOkToUpdate(emailValidation.test(e.target.value))
-                // console.log(e.target.value, inputEmail)
                 break
             case 'name':
                 setInputName(e.target.value)
                 setISOkToUpdate(checkString(e.target.value))
-                // console.log(e.target.value, isOkToUpdate)
                 break
             default:
             // nothing
@@ -39,7 +37,6 @@ function ProfileUserInfoForm(props) {
         "Authorization": cookie.userInfo.jwt_token,
         "refreshToken": cookie.userInfo.refresh_token,
     }
-    console.log(updating_user_info)
 
     async function updateUser() {
         if (updating_user_info.email !== undefined && !emailValidation.test(updating_user_info.email)) {
@@ -55,9 +52,8 @@ function ProfileUserInfoForm(props) {
             (data) => {
                 alert('정상적으로 수정되었습니다.')
             },
-            (err) => {
+            () => {
                 alert('변경에 실패하였습니다.')
-                console.log(err)
             }
         )
     }

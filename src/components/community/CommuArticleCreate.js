@@ -74,16 +74,13 @@ function ArticleCreate() {
         } else if (newArticle.code.length > 10000) {
             alert("코드의 길이는 최대 10,000자 까지입니다.")
         } else {
-            console.log(newArticle)
             await articleCreate(
                 newArticle,
                 // 성공 시에 해당 글로 navigate 해야함, response에 따라 좀 달라질듯
-                (data) => {
-                    console.log(data)
+                () => {
                     alert("작성완료")
                     navigate("/community")
-                },
-                (err) => console.log(err)
+                }
             )
         }
     }

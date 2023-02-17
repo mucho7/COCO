@@ -12,13 +12,11 @@ import { Button } from '@mui/material'
 import { AccountCircle } from '@mui/icons-material'
 
 
-function ProfilePage(params) {
+function ProfilePage() {
     const navigate = useNavigate()
     const [userInfo, setUesrInfo] = useState([])
     const [cookie, setCookie] = useCookies(["userInfo"])
     const [updateFlag, setUpdateFlag] = useState(false)
-
-    console.log(cookie)
 
     async function deleteUser() {
         if (window.confirm('정말 탈퇴하시겠습니까?')) {
@@ -28,13 +26,11 @@ function ProfilePage(params) {
                     "Authorization": cookie.userInfo.jwt_token,
                     "refreshToken": cookie.userInfo.refresh_token,
                 },
-                (data) => {
-                    console.log(data)
+                () => {
                     setCookie("userInfo", "undefined")
                     localStorage.setItem("userId", undefined)
                     navigate('/')
                 },
-                (err) => console.log(err)
             )
         }
     }
@@ -66,16 +62,13 @@ function ProfilePage(params) {
                     'refreshToken': cookie.userInfo.refresh_token,
                 },
                 (data) => { return data.data },
-                (err) => { console.log(err) }
             ).then(data => {
                 setUesrInfo(filterObject(data, ['id', 'name', 'email', 'regTime']))
             })
         }
         readUser()
-        console.log(updateFlag)
+        setUpdateFlag(updateFlag)
     }, [cookie, updateFlag])
-
-    console.log(userInfo)
 
     return (
         <SidePaddingBox>

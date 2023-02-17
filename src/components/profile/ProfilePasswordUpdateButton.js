@@ -64,10 +64,10 @@ function ProfilePasswordUpdateButton(params) {
 
 
     async function updatePassword() {
-        console.log(inputPassword)
         await changeUserPassword(
             {
                 newPassword: inputUpdatedPassword,
+                password: inputPassword,
                 "Authorization": cookie.userInfo.jwt_token,
                 "refreshToken": cookie.userInfo.refresh_token,
             },

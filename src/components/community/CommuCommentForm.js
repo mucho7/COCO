@@ -35,13 +35,11 @@ function CommentForm(params) {
                     'Authorization': cookie.userInfo.jwt_token,
                     'refreshToken': cookie.userInfo.refresh_token,
                 },
-                (data) => {
-                    console.log(data)
+                () => {
                     setComment("")
                     params.isRenderNeeded()
                     alert("댓글 작성 완료")
                 },
-                (err) => console.log(err)
             )
         }
     }

@@ -122,17 +122,14 @@ function SigninForm() {
             name: inputName,
             email: inputEmail,
         }
-        console.log(temp_user_info);
         await signup(
             temp_user_info,
-            (data) => {
-                console.log(data)
+            () => {
                 alert(temp_user_info.userId + '님, 가입을 환영합니다.');
                 navigate("/")
             },
-            (error) => {
+            () => {
                 alert('가입에 실패하였습니다.')
-                console.log(error);
             }
         )
     }
@@ -180,7 +177,6 @@ function SigninForm() {
     const onCheckCLickHandler = (e) => {
         e.preventDefault()
         const target = e.target.value
-        console.log(target)
         if (target === "id") SignUpIdCheck({key: target, value: inputID,})
         if (target === "email") SignUpEmailCheck({key: target, value: inputEmail,})
     }

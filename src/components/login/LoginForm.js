@@ -40,6 +40,7 @@ function LoginForm() {
                 setCookie(
                     "userInfo",
                     {
+                        ...cookie,
                         user_id: temp_user_info.userId,
                         jwt_token: headers.get("Authorization"),
                         refresh_token: headers.get("refreshToken"),
@@ -48,12 +49,10 @@ function LoginForm() {
                     { path: '/' }
                 )
                 window.localStorage.setItem("userId", temp_user_info.userId)
-                console.log(cookie)
                 navigate("/")
             },
-            (error) => {
+            () => {
                 alert('아이디, 비밀번호를 다시 확인하세요.')
-                console.log(error);
             }
         )
     }

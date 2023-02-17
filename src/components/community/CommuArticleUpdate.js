@@ -75,14 +75,11 @@ function ArticleUpdate() {
         } else if (inputCode.length > 10000) {
             alert("코드의 길이는 최대 10,000자 까지입니다.")
         } else {
-            console.log(updateArticle)
             await articleUpdate(
                 updateArticle,
-                (data) => {
-                    console.log(data)
+                () => {
                     navigate(`/community/${updateArticle.id}`)
                 },
-                (err) => console.log(err)
             )
         }
     }
