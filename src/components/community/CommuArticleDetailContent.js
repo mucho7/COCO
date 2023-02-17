@@ -45,7 +45,6 @@ function CommuArticleDetailContent(params) {
     useEffect(() => {
         if (target.key === -2) return
         // const editor = monaco.editor.getModels()[0];
-        console.log(editor)
         if (target.isActive) {
             editor.deltaDecorations(monacoId, [])
             // editorRef.current.editor.setScrollPosition(target.startIndex)

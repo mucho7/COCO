@@ -9,10 +9,10 @@ function ProfileUserInfoItem(props) {
                 return (
                     <UserInfoBox key={item[0]}>
                         <UserInfoNameBox>
-                            {item[0]}
+                            {item[0] === "regTime" ? "Since" : item[0]}
                         </UserInfoNameBox>
                         <UserInfoContentBox>
-                            {item[1]}
+                            {item[0] === "regTime" ? item[1].slice(5, 10) : item[1]}
                         </UserInfoContentBox>
                     </UserInfoBox>
                 )

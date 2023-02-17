@@ -6,7 +6,6 @@ const api = http;
 function failHandler(params) {
   const statusCode = params.response.status
   if (statusCode === 401) {
-    console.log("STATUS CODE IS 401")
     localStorage.clear()
     document.cookie = "userInfo=undefined"
     window.location.href = "/"

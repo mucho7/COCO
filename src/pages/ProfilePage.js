@@ -4,7 +4,7 @@ import { useCookies } from 'react-cookie'
 
 import { Navbar } from '../components/navbar';
 import { deleteUserInfo, readUserInfo } from "../api/member"
-import { ProfileUserInfoItem, ProfileUserInfoForm, ProfileUserTrophy, ProfilePasswordUpdateButton } from '../components/profile'
+import { ProfileUserInfoItem, ProfileUserInfoForm, ProfilePasswordUpdateButton } from '../components/profile'
 
 import styled from 'styled-components'
 import SidePaddingBox from './SidePaddingBox'
@@ -12,13 +12,11 @@ import { Button } from '@mui/material'
 import { AccountCircle } from '@mui/icons-material'
 
 
-function ProfilePage(params) {
+function ProfilePage() {
     const navigate = useNavigate()
     const [userInfo, setUesrInfo] = useState([])
     const [cookie, setCookie] = useCookies(["userInfo"])
     const [updateFlag, setUpdateFlag] = useState(false)
-
-    console.log(cookie)
 
     async function deleteUser() {
         if (window.confirm('정말 탈퇴하시겠습니까?')) {
@@ -28,13 +26,11 @@ function ProfilePage(params) {
                     "Authorization": cookie.userInfo.jwt_token,
                     "refreshToken": cookie.userInfo.refresh_token,
                 },
-                (data) => {
-                    console.log(data)
+                () => {
                     setCookie("userInfo", "undefined")
                     localStorage.setItem("userId", undefined)
                     navigate('/')
                 },
-                (err) => console.log(err)
             )
         }
     }
@@ -66,16 +62,13 @@ function ProfilePage(params) {
                     'refreshToken': cookie.userInfo.refresh_token,
                 },
                 (data) => { return data.data },
-                (err) => { console.log(err) }
             ).then(data => {
                 setUesrInfo(filterObject(data, ['id', 'name', 'email', 'regTime']))
             })
         }
         readUser()
-        console.log(updateFlag)
+        setUpdateFlag(updateFlag)
     }, [cookie, updateFlag])
-
-    console.log(userInfo)
 
     return (
         <SidePaddingBox>
@@ -94,9 +87,9 @@ function ProfilePage(params) {
                     </>}
             </PaddingBox>
             <TestingBox>
-                <LeftBox>
+                {/* <LeftBox>
                     <ProfileUserTrophy />
-                </LeftBox>
+                </LeftBox> */}
                 <RightBox>
                     {updateFlag === false ? <ProfileUserInfoItem userInfo={(userInfo)} /> : <ProfileUserInfoForm userInfo={userInfo} />}
                 </RightBox>
@@ -126,19 +119,18 @@ const TestingBox = styled.div`
     align-items: center;
 
     width: 100%;
-    height: 400px;
+    height: 500px;
 `
-const LeftBox = styled.div`
-    width: 50%;
-    height: 400px;
-    margin: 15px;
+// const LeftBox = styled.div`
+//     width: 50%;
+//     height: 400px;
+//     margin: 15px;
 
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-`
-
+//     display: flex;
+//     flex-direction: row;
+//     justify-content: center;
+//     align-items: center;
+// `
 const PaddingBox = styled.div`
     width: 100%;    
     height: 90px;

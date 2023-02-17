@@ -29,7 +29,6 @@ function CommuArticleListItem(props) {
                 (data) => {
                     return data.data
                 },
-                (err) => console.log(err)
             ).then((data) => {
                 const newFile = new File([data], props.article.id);
                 const reader = new FileReader();

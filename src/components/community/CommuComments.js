@@ -21,7 +21,6 @@ function Comments(props) {
     const minute = date.getMinutes().toString().padStart(2, '0')
 
     async function onDeleteClick(params) {
-        console.log(params)
         const commentInfo = {
             pk: params.id,
             board_id:location.state.id,
@@ -30,12 +29,10 @@ function Comments(props) {
         }
         await commentDelete(
             commentInfo,
-            (data) => {
-                console.log(data)
+            () => {
                 props.isRenderNeeded()
                 alert("삭제 완료!")
             },
-            (err) => console.log(err)
         )
     }
 
@@ -44,7 +41,6 @@ function Comments(props) {
     }
 
     async function onUpdateClick(params) {
-        console.log(props)
         const commentInfo = {
             pk: params.id,
             content: updateComment,
@@ -55,13 +51,11 @@ function Comments(props) {
         await commentUpdate(
             commentInfo,
             (data) => {
-                console.log(data)
                 setUpdateFlag(false)
                 setUpdateTarget("")
                 props.isRenderNeeded()
                 alert("수정 완료!")
             },
-            (err) => console.log(err)
         )
     }
 

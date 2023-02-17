@@ -36,7 +36,6 @@ function LoginTempPassword(params) {
             },
             // 차후에 custom alert로 변경하여 화면의 중앙에 display 됐으면 함
             (data) => alert(data.data),
-            (err) => console.log(err)
         )
     } 
 

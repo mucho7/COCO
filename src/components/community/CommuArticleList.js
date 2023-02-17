@@ -24,11 +24,9 @@ function CommuArticleList() {
             await boardPaging(
                 {size: pageSize, page: pageNumber, },
                 (data) => {return data.data},
-                (err) => console.log(err)
             ).then((data) => {
                 setSomeArticle(data)
                 setMaxPage(data.totalPages)
-                console.log(data.totalPages)
             })
         }
 
@@ -38,7 +36,6 @@ function CommuArticleList() {
                 (data) => {
                     return data.data
                 },
-                (err) => console.log(err)
             )
             .then((data) => {
                 setSomeArticle(data)

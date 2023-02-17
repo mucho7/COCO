@@ -45,12 +45,10 @@ function CommuSidebar() {
                 (data) => {
                     return data.data
                 },
-                (err) => console.log(err)
             )
             .then((data) => {
                 setSearchParams({title: searchTitle, content: searchContent, writer: searchWriter})
                 dispatch(setBoardSearch(data))
-                console.log(searchParams)
             })
         }
         getSearchedList()
@@ -69,6 +67,9 @@ function CommuSidebar() {
             <Link to={"/community/write"} style={{textDecoration: "none"}}>
                 <Button variant="contained" className="submit" fullWidth style={{height:"2.5rem", backgroundColor: "#FCA311"}}> <b>글 쓰기</b></Button>
             </Link>
+            <div>
+                {searchParams}
+            </div>
         </Sidebar>
     )
 }

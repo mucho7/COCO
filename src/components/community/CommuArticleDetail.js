@@ -38,15 +38,13 @@ function CommuArticleDetail() {
                 (data) => {
                     return data
                 },
-                (error) => console.log(error)
             ).then((res) => {
-                console.log(res)
                 setArticle(res.data)
                 setMaxPage(res.data.comments.totalPages)
             })
         }
         getArticlelDetail()
-        console.log("It's rerendered " + sival + " time")
+        console.log(`IT RENDERED ${sival} TIME`)
     }, [pk, pageNumber, sival])
 
     
@@ -58,16 +56,13 @@ function CommuArticleDetail() {
                 jwt_token: cookie.userInfo.jwt_token,
                 refresh_token: cookie.userInfo.refresh_token,
             },
-            (data) => {
-                console.log(data)
+            () => {
                 navigate("/community")
             },
-            (err) => console.log(err)
             )
     }
 
     const onPagingClickHandler = (page) => {
-        // console.log(page)
         if (page.target === undefined) {
             setPageNumber(page)
         } else {
