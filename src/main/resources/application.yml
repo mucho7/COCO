@@ -57,13 +57,15 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://EurekaDiscoveryService:8761/eureka
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 server:
   servlet:
     encoding:
       enabled: true
       force: true
       charset: UTF-8
-  port: 8012
+  port: 0
   compression:
     enabled: true
     mime-types: application/json,application/xml,text/html,text/xml,text/plain,application/javascript,text/css
