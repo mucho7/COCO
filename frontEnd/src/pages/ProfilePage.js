@@ -59,8 +59,8 @@ function ProfilePage() {
             await readUserInfo(
                 {
                     userId: location.pathname.slice(7).trim(),
-                    // 'Authorization': cookie?.userInfo.jwt_token,
-                    // 'refreshToken': cookie?.userInfo.refresh_token,
+                    'Authorization': cookie?.userInfo.jwt_token,
+                    'refreshToken': cookie?.userInfo.refresh_token,
                 },
                 (data) => {
                     console.log(data) 
