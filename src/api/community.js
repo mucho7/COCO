@@ -20,7 +20,7 @@ async function boardDetail(article, success, fail) {
 
 async function getBoardImg(article, success, fail) {
   const api_mk2 =axios.create({
-    baseURL: "http://i8a703.p.ssafy.io:8019/file/board/",
+    baseURL: "https://ssafy.cossafyco.kro.kr/api/",
   
     headers: {
       "Content-Type": "application/json",

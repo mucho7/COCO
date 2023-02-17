@@ -10,11 +10,11 @@ import { Grid, Box, Container, Button, TextField } from '@mui/material'
 function SigninForm() {
     const navigate = useNavigate()
 
-    const [inputID, setInputID] = useState()
+    const [inputID, setInputID] = useState(null)
     const [inputName, setInputName] = useState()
     const [inputPassword, setInputPassword] = useState()
     const [inputCheckPassword, setInputChcekPassword] = useState()
-    const [inputEmail, setInputEmail] = useState()
+    const [inputEmail, setInputEmail] = useState(null)
 
     const [isOkToSubmit, setIsOkToSubmit] = useState(false)
     const [isIdValid, setIsIdValid] = useState({ isValid: false })
@@ -192,11 +192,11 @@ function SigninForm() {
             <Box component="form">
                 <Grid container spacing={2} style={{ padding: '2rem', justifyContent: 'center' }}>
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} error={isIdValid.isValid || isSubmitFailed} helperText={isIdValid.isValid ? inputID ? isIdValid.message : "좋은 ID네요!" : "필수 입력입니다."} id="outlined-id" label="ID" fullWidth/>
+                        <TextField onChange={onTypingHandler} error={isIdValid.isValid || isSubmitFailed} helperText={isIdValid.isValid ? inputID ? isIdValid.message : "좋은 ID네요!" : inputID === null || inputID === "" ? "필수 입력입니다." : "중복검사를 실행해주세요!" } id="outlined-id" label="ID" fullWidth/>
                         <Button id="idCheck" value="id" onClick={onCheckCLickHandler} style={{position: "absolute", right: "30%", top: "190px"}}>중복 검사</Button>
                     </Grid>
                     <Grid item xs={7}>
-                        <TextField onChange={onTypingHandler} error={isEmailValid || isSubmitFailed} helperText={isEmailValid ? inputEmail ? isEmailValid.message : "멋진 E-Mail인걸요?" : "필수 입력입니다."} id="outlined-email" label="E-Mail" fullWidth />
+                        <TextField onChange={onTypingHandler} error={isEmailValid || isSubmitFailed} helperText={isEmailValid ? inputEmail ? isEmailValid.message : "멋진 E-Mail인걸요?" : inputEmail=== null || inputEmail === "" ? "필수 입력입니다." : "중복검사를 실행해주세요!"} id="outlined-email" label="E-Mail" fullWidth />
                         <Button id="emailCheck" value="email" onClick={onCheckCLickHandler} style={{position: "absolute", right: "30%", top: "285px"}}>중복 검사</Button>
                     </Grid>
                     <Grid item xs={7}>
