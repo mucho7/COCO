@@ -74,12 +74,12 @@ function SigninForm() {
         const nameErrorMessage = {
             null: "필수 입력입니다.",
             form: "사용자 이름은 한글, 영문자, 숫자만 허용합니다.",
-            length: "사용자 이름은 4자이상 16자 이하이어야 합니다."
+            length: "사용자 이름은 2자이상 16자 이하이어야 합니다."
         }
         if (inputName === undefined || inputName.trim().length === 0) {
             setIsOkToSubmit(false)
             setIsNameValid({ isValid: true, message: nameErrorMessage.null })
-        } else if (inputName.length < 4 || inputName.length > 32) {
+        } else if (inputName.length < 2 || inputName.length > 32) {
             setIsOkToSubmit(false)
             setIsNameValid({ isValid: true, message: nameErrorMessage.length })
         } else if (!koreanRegex.test(inputName) && !englishRegex.test(inputName)) {
