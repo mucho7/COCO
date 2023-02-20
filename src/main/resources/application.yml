@@ -91,7 +91,7 @@ spring:
             - Path=/validate
             - Method=POST
         - id: function
-          uri: http://SessionFunctionService:8013/
+          uri: http://SessionFunctionService:8014
           #          uri: http://localhost:8013/
           predicates:
             - Path=/function/**
