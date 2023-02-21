@@ -75,7 +75,7 @@ function CommuArticleDetailContent(params) {
                         >
                             {item.content.map((string, uniqueKey) => {
                                 return(
-                                    <Typography key={uniqueKey} >{string}</Typography>
+                                    string === "" ? <br key={uniqueKey}/>  : <Typography key={uniqueKey}>{string}</Typography>
                                 )
                             })}
                         </StyeldCard>
