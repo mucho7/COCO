@@ -84,7 +84,7 @@ function CommuArticleDetailContent(params) {
             </ContentSection>
             <Vr/>
             <CodeSection>
-                <MonacoEditor language="javascript" onMount={onEditorDidMount} value={code} lineNumbers="on" options={{ readOnly: true }} theme="vs"/>
+                <MonacoEditor language="java" onMount={onEditorDidMount} value={code} lineNumbers="on" options={{ readOnly: true }} theme="vs"/>
             </CodeSection>
         </>
     )
