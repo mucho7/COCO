@@ -28,12 +28,13 @@ function Ide(props) {
   const docRef = useRef(null);
   const bindingRef = useRef(null);
   const { roomId } = useParams();
-  
+  const socket = useRef(null);
+
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
     docRef.current = new Y.Doc();
-    const socket = new WebSocket(`wss://ssafy.cossafyco.kro.kr/session/session`);
-    providerRef.current = new WebrtcProvider(`monaco-${roomId}`, docRef.current,{ signaling: [socket] });
+    socket.current = new WebSocket(`wss://ssafy.cossafyco.kro.kr/session/session`);
+    providerRef.current = new WebrtcProvider(`monaco-${roomId}`, docRef.current,{ signaling: [socket.current] });
     const yText = docRef.current.getText("monaco");
 
     bindingRef.current = new MonacoBinding(
