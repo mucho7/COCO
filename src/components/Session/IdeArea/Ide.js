@@ -32,7 +32,8 @@ function Ide(props) {
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
     docRef.current = new Y.Doc();
-    providerRef.current = new WebrtcProvider(`monaco-${roomId}`, docRef.current);
+    const socket = new WebSocket(`wss://ssafy.cossafyco.kro.kr:8443/groupcall`);
+    providerRef.current = new WebrtcProvider(`monaco-${roomId}`, docRef.current,{ signaling: [socket] });
     const yText = docRef.current.getText("monaco");
 
     bindingRef.current = new MonacoBinding(
